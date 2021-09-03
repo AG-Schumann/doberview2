@@ -9,11 +9,16 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var statusRouter = require('./routes/status');
 var detailRouter = require('./routes/detail');
+var sensorRouter = require('./routes/sensors');
 
 var app = express();
 
-var db = monk(process.env.DOBERVIEW_DATABASE_URI, {authSource: 'admin'});
-var doberman_db = require('./routes/database').Database(db);
+// uri has format mongodb://{user}:{pass}@{host}:{port}
+var experiment = process.env.DOBERVIEW_EXPERIMENT
+// TODO figure out some way of changing experiments dynamically
+var db = monk(process.env.DOBERVIEW_DATABASE_URI + '/' + experiment + '_settings', {authSource: 'admin'});
+var log_db = monk(process.env.DOBERVIEW_DATABASE_URI + '/' + experiment + '_logging', {authSource: 'admin'});
+var common_db = monk(process.env.DOBERVIEW_DATABASE_URI + '/common', {authSource: 'admin'});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,7 +33,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // make all our stuff visible to the router
 app.use((req, res, next) => {
   if (!req.isAuthenticated()) return res.redirect('/login');
-  req.db = doberman_db;
+  req.db = db;
+  req.log_db = log_db;
+  req.common_db = common_db;
 
   return next();
 });

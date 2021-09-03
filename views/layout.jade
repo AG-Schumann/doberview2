@@ -1,7 +1,85 @@
 doctype html
 html
   head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    title=DOBERview
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous")
+    link(rel='stylesheet' href='/stylesheets/default_style.css')
+    script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" type="text/javascript")
+    script(src="https://kit.fontawesome.com/abb8282784.js" crossorigin="anonymous" type="text/javascript")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous" type="text/javascript")
+    script(src="javascripts/default_scripts.js" type="text/javascript")
+
+    meta(name="application-name" content="pagetitle")
+
+    block extrahead
+
   body
-    block content
+    div.overlay
+    div.wrapper
+      nav#topbar.colored.active
+        button.navbar-btn.colored.sidebarCollapse(type="button")
+          // hamburger icon
+          span.anticolored(style="background-color:white")
+          span.anticolored(style="background-color:white")
+          span.anticolored(style="background-color:white")
+        span.pagetitle #{pagetitle}
+      div#sidebar_wrapper.active
+        nav#sidebar.colored.active
+          button.navbar-btn.colored.sidebarCollapse(type="button")
+            span.anticolored
+            span.anticolored
+            span.anticolored
+          div.sidebar-header.colored
+            div.CTAs.desktop_title(style="width:100%")
+              //img.second_logo(src="/images/navbar_logo_bar.svg")
+          //img.logo(src="/images/navbar_logo.svg")
+          div.experimentIconDiv(style="margin-top:0px;background:#0e0e75;height:30px;padding-top:5px;padding-left:3px")
+            span.CTAs(style="float:left;color:white") &nbsp; Experiment: &nbsp;
+              select.cselect#experiment_select
+                option(value="pancake" selected) Pancake
+                option(value="xebra") Xebra
+                option(value="gemse") GeMSE (wip)
+          ul.list-unstyled.components
+            li#loberview(class="colored")
+              a(href="/")
+                i.fas.fa-dragon
+                span Overview
+                span.extralabel Main landing page
+              a(href="/subsystem")
+                i.fas.fa-spider
+                span Subsystems
+                span.extralabel Look at subsystems in detail
+              a(href='/sensors')
+                i.fas.fa-hippo
+                span Sensors
+                span.extralabel Configure sensors and readings
+              a(href='/hosts')
+                i.fas.fa-cat
+                span Hosts
+                span.extralabel Configure hosts
+              a(href='/contacts')
+                i.fas.fa-crow
+                span Shifters
+                span.extralabel Configure contacts and shifters
+              a(href='')
+                i.fas.fa-frog
+                span Grafana
+              a(href='/daq')
+                i.fas.fa-kiwi-bird
+                span DAQ
+                span Eventually
+      div#content(style="padding-left:5px;padding-right:5px;padding-top:0px;padding-bottom:0px")
+        block content
+
+    script.
+      $(document).ready(()=>{
+
+        $('.sidebarCollapse').on('click', () => {
+          $("#sidebar").toggleClass('active');
+          $(".overlay").toggleClass('active');
+          $("#sidebar_wrapper").toggleClass("active");
+          $(".sidebarCollapse").toggleClass("active");
+          $("#topbar").toggleClass("active");
+        });
+      });

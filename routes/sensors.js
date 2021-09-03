@@ -7,7 +7,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/sensor_list', function(req, res) {
-  return res.json(req.db.distinct('sensors', 'name'));
+  return res.json(req.db.sensors.distinct('name'));
 });
 
 router.get('/sensor_detail', function(req, res) {
@@ -15,11 +15,13 @@ router.get('/sensor_detail', function(req, res) {
   var sensor = q.sensor;
   if (typeof sensor == 'undefined')
     return res.json({});
-  return res.json(req.db.getSensorDetail(sensor));
+  req.db.sensors.findOne({sensor: sensor})
+  .then(doc => res.json(doc))
+  .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 router.get('/reading_list', function(req, res) {
-  return res.json(req.db.getReadingNames());
+  return res.json(req.db.readings.distinct('name'));
 });
 
 router.get('/reading_detail', function(req, res) {
@@ -27,7 +29,9 @@ router.get('/reading_detail', function(req, res) {
   var reading = q.reading;
   if (typeof reading == 'undefined')
     return res.json({});
-  return res.json(req.db.getReadingDetail(reading));
+  req.db.readings.findOne({name: reading})
+  .then(doc => res.json(doc))
+  .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 router.post('/update_sensor_address', function(req, res) {
@@ -54,11 +58,45 @@ router.post('/update_sensor_address', function(req, res) {
     }
   if (typeof data.serial_id != 'undefined')
     updates['address.serialID'] = data.serial_id;
-  return res.json(req.db.updateSensor(sensor, updates));
+  if (Object.keys(updates).length != 0) {
+    req.db.sensors.update({sensor: sensor}, {$set: updates})
+      .then(() => res.json({msg: 'Success'}))
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
+  } else
+    return res.json({});
 });
 
 router.post('/update_reading', function(req, res) {
-
+  var updates = {};
+  var data = req.body.data;
+  var sensor = data.sensor;
+  var reading = data.reading;
+  if (typeof sensor == 'undefined' || typeof reading == 'undefined')
+    return res.json({err: 'Invalid or missing parameters'});
+  var query = {sensor: sensor, name: reading};
+  if (typeof data.readout_interval != 'undefined') {
+    try{
+      updates['readout_interval'] = parseFloat(data.readout_interval);
+    }catch(err) {
+      console.log(err.message);
+    }
+  }
+  if (typeof data.status != 'undefined' && (data.status == "online" || data.status == "offline"))
+    updates['status'] = data.status;
+  if (typeof data.runmode != 'undefined')
+    updates['runmode'] = data.runmode;
+  var promises = [];
+  if (Object.keys(updates).length != 0)
+    promises.push(req.db.readings.update({sensor: sensor, name: reading}, {$set: updates}));
+  if (typeof data.alarms != 'undefined' && data.alarms.length != 0) {
+    // TODO finish and/or make own endpoint
+  }
+  if (promises.length > 0) {
+    Promise.all(promises)
+    .then(() => res.json({msg: 'Success'}))
+    .catch(err => {console.log(err.message); return res.json({err: err.message});});
+  } else
+    return res.json({});
 });
 
 module.exports = router;
