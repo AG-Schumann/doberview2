@@ -5,7 +5,7 @@ var readings = [];
 function PopulateReadings() {
   $.getJSON("/sensors/reading_list", (data) => {
     readings = data;
-    setInterval(UpdateLoop, 5000);
+    //setInterval(UpdateLoop, 5000);
   });
 }
 
@@ -14,27 +14,36 @@ function ReadingDropdown(reading) {
     if (Object.keys(data).length == 0)
       return;
     $("#detail_reading_name").html(data.name);
-    $("#reading_desc").val(data.description);
-    $("#reading_active").prop('checked', data.status === 'online');
+    $("#reading_desc").val(data.description).attr('size', data.description.length + 3);
+    $("#reading_status").prop('checked', data.status === 'online');
     $("#readout_interval").val(data.readout_interval);
 
     $("#runmode option").filter(function() {return this.value == data.runmode;}).prop('selected', true);
     // TODO alarms
+    $("#readingbox").css("display", "block");
 
   });
   DrawReadingHistory(reading);
-  $("#detailbox").css("display", "block");
 }
 
 function SensorDropdown(sensor) {
   $.getJSON(`/sensors/sensor_detail?sensor=${sensor}`, (data) => {
     if (Object.keys(data).length == 0)
       return;
-    $("#sensor_ip").val(data.address.ip || null);
-    $("#sensor_port").val(data.address.port || null);
-    $("#sensor_tty").val(data.address.tty || null);
-    $("#sensor_baud option").filter(function() {return this.value == data.address.baud;}).prop('selected', true);
-    $("#sensor_serial_id").val(data.address.serialID || null);
+    $("#detail_sensor_name").html(data.name);
+    if (typeof data.address.ip != 'undefined') {
+      $("#sensor_ip").val(data.address.ip);
+      $("#sensor_port").val(data.address.port);
+      $("#sensor_eth").attr('hidden', false);
+      $("#sensor_serial").attr('hidden', true);
+    } else {
+      $("#sensor_tty").val(data.address.tty);
+      $("#sensor_baud option").filter(function() {return this.value == data.address.baud;}).prop('selected', true);
+      $("#sensor_serial_id").val(data.address.serialID || null);
+      $("#sensor_eth").attr('hidden', true);
+      $("#sensor_serial").attr('hidden', false);
+    }
+    $("#sensorbox").css("display", "block");
   });
 }
 
@@ -45,7 +54,7 @@ function RangeSliders() {
 
 function DrawReadingHistory(reading) {
 
-  var bin_i = $("#reading_granularity").val();
+  var bin_i = $("#reading_binning").val();
   var hist_i = $("#reading_history").val();
 
   $.getJSON(`/sensors/get_data?reading=${reading}&history=${history[hist_i]}&binning=${binning[bin_i]}`, data => {
@@ -55,11 +64,11 @@ function DrawReadingHistory(reading) {
 
 function UpdateReading() {
   var data = {
-    reading: $("#detail_reading_name").html();
+    reading: $("#detail_reading_name").html(),
     readout_interval: $("#readout_interval").val(),
     description: $("#reading_desc").val(),
     status: $("#reading_status").is(":checked") ? "online" : 'offline',
-    runmode: $("#runmode").val();
+    runmode: $("#runmode").val(),
     alarms: [], // TODO
   };
   $.ajax({
@@ -86,7 +95,7 @@ function UpdateSensor() {
     data['serial_id'] = $("#sensor_serial_id").val();
   if (Object.keys(data).length > 1) {
     $.ajax({
-      type='POST',
+      type:'POST',
       url: '/sensors/update_sensor_address',
       data: {data: data},
       success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
@@ -100,12 +109,12 @@ function UpdateLoop() {
   readings.forEach(r => {
     $.getJSON(`/sensors/reading_detail?reading=${r}`, (data) => {
       if (data.status === 'online')
-        $(`#{r}_status`).html(`Online (${data.runmode})`);
+        $(`#${r}_status`).html(`Online (${data.runmode})`);
       else
-        $(`#{r}_status`).html(`Offline`);
+        $(`#${r}_status`).html(`Offline`);
     });
-    $.getJSON(`/sensors/get_last_point?reading=${r}`, (data) => {
+ /*   $.getJSON(`/sensors/get_last_point?reading=${r}`, (data) => {
       $(`{r}_value`).html(`${data.value} (${data.time_ago}s ago)`);
-    });
+    }); */
   });
 }

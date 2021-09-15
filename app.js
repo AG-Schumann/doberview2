@@ -17,21 +17,16 @@ var app = express();
 var experiment = process.env.DOBERVIEW_EXPERIMENT;
 // TODO figure out some way of changing experiments dynamically
 var uri = `${process.env.DOBERVIEW_DATABASE_URI}/${experiment}_settings`;
-console.log('Base uri');
 console.log(uri);
 var db = monk(uri, {authSource: 'admin'});
 uri = `${process.env.DOBERVIEW_DATABASE_URI}/${experiment}_logging`;
-console.log('Logging uri');
-console.log(uri);
 var log_db = monk(uri, {authSource: 'admin'});
 uri = `${process.env.DOBERVIEW_DATABASE_URI}/common`;
-console.log('Common uri');
-console.log(uri);
 var common_db = monk(uri, {authSource: 'admin'});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -49,8 +44,8 @@ app.use((req, res, next) => {
   return next();
 });
 
-app.use('/', sensorRouter);
-//app.use('/users', usersRouter);
+app.use('/', indexRouter);
+app.use('/sensors', sensorRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

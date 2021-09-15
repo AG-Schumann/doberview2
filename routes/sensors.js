@@ -3,11 +3,15 @@ var url = require('url');
 var router = express.Router();
 
 router.get('/', function(req, res) {
-  res.render('sensors', { title: 'Express' });
+  req.db.get('readings').aggregate([{'$group': {'_id': '$sensor', 'readings': {'$push': {'name': '$name', 'desc': '$description'}, }}}, {'$sort': {'_id': 1}}])
+  .then(docs => res.render('full_system', {all_readings: docs}))
+  .catch(err => {console.log(err.message); res.render('full_system', {'all_readings': []});});
 });
 
 router.get('/sensor_list', function(req, res) {
-  return res.json(req.db.sensors.distinct('name'));
+  req.db.get('sensors').distinct('name')
+  .then(docs => res.json(docs))
+  .catch(err => {console.log(err.message); res.json([]);});
 });
 
 router.get('/sensor_detail', function(req, res) {
@@ -15,13 +19,15 @@ router.get('/sensor_detail', function(req, res) {
   var sensor = q.sensor;
   if (typeof sensor == 'undefined')
     return res.json({});
-  req.db.sensors.findOne({sensor: sensor})
+  req.db.get('sensors').findOne({name: sensor})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 router.get('/reading_list', function(req, res) {
-  return res.json(req.db.readings.distinct('name'));
+  req.db.get('readings').distinct('name')
+  .then(docs => res.json(docs))
+  .catch(err => {console.log(err.message); res.json([]);});
 });
 
 router.get('/reading_detail', function(req, res) {
@@ -29,7 +35,7 @@ router.get('/reading_detail', function(req, res) {
   var reading = q.reading;
   if (typeof reading == 'undefined')
     return res.json({});
-  req.db.readings.findOne({name: reading})
+  req.db.get('readings').findOne({name: reading})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -59,7 +65,7 @@ router.post('/update_sensor_address', function(req, res) {
   if (typeof data.serial_id != 'undefined')
     updates['address.serialID'] = data.serial_id;
   if (Object.keys(updates).length != 0) {
-    req.db.sensors.update({sensor: sensor}, {$set: updates})
+    req.db.get('sensors').update({sensor: sensor}, {$set: updates})
       .then(() => res.json({msg: 'Success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else
@@ -86,7 +92,7 @@ router.post('/update_reading', function(req, res) {
     updates['runmode'] = data.runmode;
   var promises = [];
   if (Object.keys(updates).length != 0)
-    promises.push(req.db.readings.update({sensor: sensor, name: reading}, {$set: updates}));
+    promises.push(req.db.get('readings').update({sensor: sensor, name: reading}, {$set: updates}));
   if (typeof data.alarms != 'undefined' && data.alarms.length != 0) {
     // TODO finish and/or make own endpoint
   }
@@ -106,7 +112,7 @@ router.get("get_data", function(req, res) {
 
   if (typeof reading == 'undefined')
     return res.json([]);
-
+  return res.json([]);
   var url = "";
 
   // TODO finish here
@@ -122,6 +128,7 @@ router.get('get_last_point', function(req, res) {
   if (typeof reading == 'undefined')
     return res.json({});
   var url = ""
+  return res.json({});
 
   // TODO ask influx
 });
