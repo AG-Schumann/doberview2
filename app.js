@@ -6,19 +6,28 @@ var logger = require('morgan');
 var monk = require('monk');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var statusRouter = require('./routes/status');
-var detailRouter = require('./routes/detail');
+//var usersRouter = require('./routes/users');
+//var statusRouter = require('./routes/status');
+//var detailRouter = require('./routes/detail');
 var sensorRouter = require('./routes/sensors');
 
 var app = express();
 
 // uri has format mongodb://{user}:{pass}@{host}:{port}
-var experiment = process.env.DOBERVIEW_EXPERIMENT
+var experiment = process.env.DOBERVIEW_EXPERIMENT;
 // TODO figure out some way of changing experiments dynamically
-var db = monk(process.env.DOBERVIEW_DATABASE_URI + '/' + experiment + '_settings', {authSource: 'admin'});
-var log_db = monk(process.env.DOBERVIEW_DATABASE_URI + '/' + experiment + '_logging', {authSource: 'admin'});
-var common_db = monk(process.env.DOBERVIEW_DATABASE_URI + '/common', {authSource: 'admin'});
+var uri = `${process.env.DOBERVIEW_DATABASE_URI}/${experiment}_settings`;
+console.log('Base uri');
+console.log(uri);
+var db = monk(uri, {authSource: 'admin'});
+uri = `${process.env.DOBERVIEW_DATABASE_URI}/${experiment}_logging`;
+console.log('Logging uri');
+console.log(uri);
+var log_db = monk(uri, {authSource: 'admin'});
+uri = `${process.env.DOBERVIEW_DATABASE_URI}/common`;
+console.log('Common uri');
+console.log(uri);
+var common_db = monk(uri, {authSource: 'admin'});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,7 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // make all our stuff visible to the router
 app.use((req, res, next) => {
-  if (!req.isAuthenticated()) return res.redirect('/login');
+  //if (!req.isAuthenticated()) return res.redirect('/login');
   req.db = db;
   req.log_db = log_db;
   req.common_db = common_db;
@@ -40,8 +49,8 @@ app.use((req, res, next) => {
   return next();
 });
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', sensorRouter);
+//app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
