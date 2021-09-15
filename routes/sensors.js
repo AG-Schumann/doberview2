@@ -70,10 +70,9 @@ router.post('/update_reading', function(req, res) {
   var updates = {};
   var data = req.body.data;
   var sensor = data.sensor;
-  var reading = data.reading;
-  if (typeof sensor == 'undefined' || typeof reading == 'undefined')
+  if (typeof reading == 'undefined')
     return res.json({err: 'Invalid or missing parameters'});
-  var query = {sensor: sensor, name: reading};
+  var query = {name: reading};
   if (typeof data.readout_interval != 'undefined') {
     try{
       updates['readout_interval'] = parseFloat(data.readout_interval);
@@ -97,6 +96,34 @@ router.post('/update_reading', function(req, res) {
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else
     return res.json({});
+});
+
+router.get("get_data", function(req, res) {
+  var q = url.parse(req.url, true).query;
+  var reading = q.reading;
+  var binning = q.binning;
+  var history = q.history;
+
+  if (typeof reading == 'undefined')
+    return res.json([]);
+
+  var url = "";
+
+  // TODO finish here
+
+  axios.get(url)
+  .then(response => {
+
+  }).catch(err => {console.log(err); res.send({err: err});});
+});
+
+router.get('get_last_point', function(req, res) {
+  var reading = url.parse(req.url, true).query.reading;
+  if (typeof reading == 'undefined')
+    return res.json({});
+  var url = ""
+
+  // TODO ask influx
 });
 
 module.exports = router;
