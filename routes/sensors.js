@@ -3,9 +3,7 @@ var url = require('url');
 var router = express.Router();
 
 router.get('/', function(req, res) {
-  req.db.get('readings').aggregate([{'$group': {'_id': '$sensor', 'readings': {'$push': {'name': '$name', 'desc': '$description'}, }}}, {'$sort': {'_id': 1}}])
-  .then(docs => res.render('full_system', {all_readings: docs}))
-  .catch(err => {console.log(err.message); res.render('full_system', {'all_readings': []});});
+  res.render('full_system');
 });
 
 router.get('/sensor_list', function(req, res) {
@@ -22,6 +20,21 @@ router.get('/sensor_detail', function(req, res) {
   req.db.get('sensors').findOne({name: sensor})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
+router.get('/readings_grouped', function(req, res) {
+  var q = url.parse(req.url, true).query;
+  var group_by = q.group_by;
+  if (typeof group_by == 'undefined')
+    return res.json([]);
+  req.db.get('readings').aggregate([
+    {$group: {
+      _id: '$' + group_by,
+      readings: {$push: {name: '$name', desc: '$description'}}
+    }},
+    {$sort: {_id: 1}}
+  ]).then(docs => res.json(docs))
+  .catch(err => {console.log(err.message); return res.json([]);});
 });
 
 router.get('/reading_list', function(req, res) {
@@ -104,15 +117,15 @@ router.post('/update_reading', function(req, res) {
     return res.json({});
 });
 
-router.get("get_data", function(req, res) {
+router.get("/get_data", function(req, res) {
   var q = url.parse(req.url, true).query;
   var reading = q.reading;
   var binning = q.binning;
   var history = q.history;
+  return res.json([]);
 
   if (typeof reading == 'undefined')
     return res.json([]);
-  return res.json([]);
   var url = "";
 
   // TODO finish here
@@ -123,7 +136,7 @@ router.get("get_data", function(req, res) {
   }).catch(err => {console.log(err); res.send({err: err});});
 });
 
-router.get('get_last_point', function(req, res) {
+router.get('/get_last_point', function(req, res) {
   var reading = url.parse(req.url, true).query.reading;
   if (typeof reading == 'undefined')
     return res.json({});

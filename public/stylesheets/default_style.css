@@ -1,0 +1,157 @@
+
+.btn.btn-default{
+  background-color: #0c1178;
+  color: #eee;
+}
+
+#sidebar_wrapper{
+  z-index: 100;
+  width: 500px;
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+}
+
+#sidebar_wrapper.active {
+  width: 65px;
+  min-width: 65px;
+  max-width: 65px;
+  overflow: hidden;
+  top: 0;
+  position: fixed;
+}
+
+
+.wrapper {
+  display: flex;
+  align-items: stretch;
+}
+
+#sidebar ul li {
+  width: 50%;
+  height: 58px;
+  float: left;
+}
+#sidebar.active ul li {
+  width: 100%;
+  height: 60px;
+  float: left;
+}
+#sidebar ul li.active>a, a[aria-expanded="true"] {
+  color: #0e0e75;
+  background: #eee;
+}
+#sidebar.active ul li a {
+  padding: 10px 2px;
+  text-align: center;
+  font-size: 0.85em;
+  color: #eee;
+}
+#sidebar.active ul li a span.extralabel {
+  display: none;
+}
+#sidebar.active ul li a i {
+  margin-right: 5px;
+  display: block
+  font-size: 1.8em;
+  margin-bottom: 3px;
+}
+#sidebar ul li a span.extralabel {
+  margin-left: 0px;
+  font-size: 0.9em;
+  display: block;
+  margin-bottom: 3px;
+}
+#sidebar ul li a {
+  font-size: 1.1em;
+  height: 100%;
+}
+.sidebarCollapse {
+  width: 40px;
+  height: 40px;
+}
+.sidebarCollapse span {
+  width: 80%;
+  height: 2px;
+}
+.sidebarCollapse span:first-of-type,
+.sidebarCollapse span:nth-of-type(2),
+.sidebarCollapse span:last-of-type {
+  margin: 5px auto;
+}
+ul.CTAs {
+  padding: 10px;
+}
+ul.CTAs li a {
+  text-align: center;
+  font-size: 1em !important;
+  display: block;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+#sidebar.active .sidebar-header,
+#sidebar.active .CTAs {
+  display: none;
+}
+#sidebar.active .sidebar-header strong {
+  display: block;
+}
+#sidebar .CTAs {
+  display: block;
+}
+
+.sidebarCollapse.active span {
+  margin: 0 auto;
+}
+
+.sidebarCollapse.active span:first-of-type{
+  transform: rotate(45deg) translate(2px, 2px);
+}
+.sidebarCollapse.active span:nth-of-type(2) {
+  opacity: 0;
+}
+.sidebarCollapse.active span:last-of-type {
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+#sidebar {
+  margin-top: 0px;
+  width: 100%;
+  min-width: 350px;
+  display: block;
+
+  background: #eee;
+  color: #333;
+  transition: all 0.3s;
+  height: 100vh !important;
+  overlow-y: auto;
+}
+#sidebar.active {
+  display: block;
+  width: 100%;
+  min-width: 55px;
+  max-width: 55px;
+  text-align: center;
+  background: #0c1178;
+  color: #fff;
+  margin-left: 0 !important;
+  height: 100vh !important;
+  overflow-y: auto;
+}
+
+.modalbox {
+  padding-top: 5%;
+  padding-left: 100px;
+  padding-right: 20px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 55%;
+  background-color: #eee;
+}
+
+.main-container {
+  padding-left: 10px;
+  width: 100%;
+}

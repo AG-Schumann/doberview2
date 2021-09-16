@@ -48,7 +48,7 @@ html
                 span.extralabel Main landing page
               a(href="/subsystem")
                 i.fas.fa-spider
-                span Subsystems
+                span Systems
                 span.extralabel Look at subsystems in detail
               a(href='/sensors')
                 i.fas.fa-hippo
@@ -65,11 +65,83 @@ html
               a(href='')
                 i.fas.fa-frog
                 span Grafana
+                span.extralabel Your own plots, with blackjack and hookers
               a(href='/daq')
                 i.fas.fa-kiwi-bird
                 span DAQ
-                span Eventually
+                span.extralabel Eventually
       div#content(style="padding-left:5px;padding-right:5px;padding-top:0px;padding-bottom:0px")
+        div.readingbox.modalbox#readingbox(style="display:none")
+          div.row.modal_content
+            div.main_container
+              strong Reading detail: &nbsp;
+              span#detail_reading_name
+                span.btn.top-right(onclick="$('#readingbox').css('display', 'none')") &times;
+              br
+              form#update_reading_form
+                label(for="reading_desc") Description &nbsp;
+                input(type="text" id="reading_desc" name="reading_desc")
+                br
+                label(for="reading_status") Active &nbsp;
+                input(type="checkbox" id="reading_status" name="reading_status")
+                br
+                label(for="readout_interval") Readout interval &nbsp;
+                input(type="number" id="readout_interval" name="readout_interval" min="0.1" max="300" size=3 width=3)
+                br
+                label(for="runmode") Runmode: &nbsp;
+                select(id="runmode" name="runmode")
+                  option(value="testing") testing
+                  option(value="default") default
+                br
+                label(for="alarms") Alarms:
+                table#alarm_table
+                // TODO this will probably be a bit awkward
+                br
+                button.btn.btn-info(onclick="UpdateReading()") Update reading
+              br
+              div.main_container.chart_header
+                strong Recent history &nbsp; &nbsp;
+                br
+                label(for="reading_history") History &nbsp;
+                input#reading_history(type="range" onchange="RangeSliders()" min=0 max=9 value=1 style="width:100px")
+                span#reading_history_label 1h
+                br
+                label(for="reading_binning") Binning &nbsp;
+                input#reading_binning(type="range" onchange="RangeSliders()" min=0 max=4 value=1 style="width:100px")
+                span#reading_binning_label 10s
+                br
+                button.btn.btn-info#get_data(onclick="DrawReadingHistory()") Update plot
+                button.btn.btn-info(onclick="$('#readingbox').css('display', 'none')") Close
+              div.main_container.reading_chart#reading_chart
+        div.sensorbox.modalbox#sensorbox(style="display:none")
+          div.row.modal_content(style="padding:5px")
+            div.main_container
+              strong Sensor detail: &nbsp;
+              span#detail_sensor_name
+              span.btn.top-right(onclick="$('#sensorbox').css('display','none')") &times;
+              br
+              form#update_sensor_form
+                fieldset#sensor_eth
+                  label(for="sensor_ip") IP &nbsp
+                  input(type="text" id="sensor_ip" name="sensor_ip" pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
+                  span &nbsp; &nbsp; &nbsp;
+                  label(for="sensor_port") Port &nbsp
+                  input(type="number" id="sensor_port" name="sensor_port" min="1025" max="65535" step="1")
+                fieldset#sensor_serial
+                  label(for="sensor_tty") TTY 
+                  input(type="text" id="sensor_tty" name="sensor_tty")
+                  span &nbsp; &nbsp; &nbsp;
+                  label(for="sensor_baud") Baud 
+                  select(id="sensor_baud" name="sensor_baud")
+                    option(value="9600") 9600
+                    option(value="19200") 19,200
+                  span &nbsp; &nbsp; &nbsp;
+                  label(for="sensor_serial_id") SerialID 
+                  input(type="text" id="sensor_serial_id" name="sensor_serial_id")
+                button.btn.btn-info(onclick="UpdateSensor()") Update
+                span &nbsp; &nbsp;
+                button.btn.btn-info(onclick="$('#sensorbox').css('display','none')") Close
+
         block content
 
     script.
