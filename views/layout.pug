@@ -42,7 +42,7 @@ html
                 option(value="gemse") GeMSE (wip)
           ul.list-unstyled.components
             li#loberview(class="colored")
-              a(href="/")
+              a(href="/sensors")
                 i.fas.fa-dragon
                 span Overview
                 span.extralabel Main landing page
@@ -50,10 +50,10 @@ html
                 i.fas.fa-spider
                 span Systems
                 span.extralabel Look at subsystems in detail
-              a(href='/sensors')
+              a(href='/pipeline')
                 i.fas.fa-hippo
-                span Sensors
-                span.extralabel Configure sensors and readings
+                span Pipeline
+                span.extralabel Configure alarms and pipelines
               a(href='/hosts')
                 i.fas.fa-cat
                 span Hosts
@@ -142,7 +142,7 @@ html
                 span &nbsp; &nbsp;
                 button.btn.btn-info(onclick="$('#sensorbox').css('display','none')") Close
 
-        block content
+      block content
 
     script.
       $(document).ready(()=>{

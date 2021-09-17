@@ -50,6 +50,11 @@
 #sidebar.active ul li a span.extralabel {
   display: none;
 }
+#sidebar.active i {
+  width: 100%;
+  font-size: 1.8em;
+  margin-top: 10px;
+}
 #sidebar.active ul li a i {
   margin-right: 5px;
   display: block

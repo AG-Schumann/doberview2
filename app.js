@@ -6,10 +6,8 @@ var logger = require('morgan');
 var monk = require('monk');
 
 var indexRouter = require('./routes/index');
-//var usersRouter = require('./routes/users');
-//var statusRouter = require('./routes/status');
-//var detailRouter = require('./routes/detail');
 var sensorRouter = require('./routes/sensors');
+var pipelineRouter = require('./routes/pipeline');
 
 var app = express();
 
@@ -47,6 +45,7 @@ app.use((req, res, next) => {
 
 app.use('/', indexRouter);
 app.use('/sensors', sensorRouter);
+app.use('/pipeline', pipelineRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
