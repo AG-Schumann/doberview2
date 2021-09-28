@@ -35,7 +35,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // make all our stuff visible to the router
 app.use((req, res, next) => {
   //if (!req.isAuthenticated()) return res.redirect('/login');
-  console.log('Req');
   req.db = db;
   req.log_db = log_db;
   req.common_db = common_db;

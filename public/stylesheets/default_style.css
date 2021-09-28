@@ -160,3 +160,13 @@ ul.CTAs li a {
   padding-left: 10px;
   width: 100%;
 }
+
+.small-button {
+  /*border: 1px outset;*/
+  background-color: #ccc;
+  border-radius: 3px;
+  padding: 1px;
+  margin: 1px;
+  width: auto;
+  height: auto;
+}

@@ -78,37 +78,36 @@ html
               span#detail_reading_name
               span.btn.top-right(onclick="$('#readingbox').css('display', 'none')") &times;
               br
-              form#update_reading_form
-                label(for="reading_desc") Description &nbsp;
-                input(type="text" id="reading_desc" name="reading_desc")
-                br
-                label(for="reading_status") Active &nbsp;
-                input(type="checkbox" id="reading_status" name="reading_status")
-                br
-                label(for="readout_interval") Readout interval &nbsp;
-                input(type="number" id="readout_interval" name="readout_interval" min="0.1" max="300" size=3 width=3)
-                br
-                label(for="runmode") Runmode: &nbsp;
-                select(id="runmode" name="runmode")
-                  option(value="testing") testing
-                  option(value="default") default
-                br
-                label(for="alarms") Alarms:
-                table#alarm_table
-                // TODO this will probably be a bit awkward
-                br
-                button.btn.btn-info(onclick="UpdateReading()") Update reading
+              //form#update_reading_form
+              label(for="reading_desc") Description &nbsp;
+              input(type="text" id="reading_desc" name="reading_desc")
+              br
+              label(for="reading_status") Active &nbsp;
+              input(type="checkbox" id="reading_status" name="reading_status")
+              br
+              label(for="readout_interval") Readout interval &nbsp;
+              input(type="number" id="readout_interval" name="readout_interval" max="300" size='4')
+              br
+              button.btn.btn-info(onclick="UpdateReading()") Update reading
+              br
+              br
+              label(for="alarms") Pipelines involving this reading:
+              ul#pipeline_list
+              br
+              span Sensor: &nbsp;
+                button.small-button#reading_sensor_name
+              br
               br
               div.main_container.chart_header
                 strong Recent history &nbsp; &nbsp;
                 br
                 label(for="reading_history") History &nbsp;
-                input#reading_history(type="range" onchange="RangeSliders()" min=0 max=9 value=1 style="width:100px")
-                span#reading_history_label 1h
+                input#reading_history(type="range" onchange="RangeSliders()" min=0 value=1 style="width:100px")
+                span#reading_history_label
                 br
                 label(for="reading_binning") Binning &nbsp;
-                input#reading_binning(type="range" onchange="RangeSliders()" min=0 max=4 value=1 style="width:100px")
-                span#reading_binning_label 10s
+                input#reading_binning(type="range" onchange="RangeSliders()" min=0 value=1 style="width:100px")
+                span#reading_binning_label
                 br
                 button.btn.btn-info#get_data(onclick="DrawReadingHistory()") Update plot
                 button.btn.btn-info(onclick="$('#readingbox').css('display', 'none')") Close
@@ -139,7 +138,14 @@ html
                   label(for="sensor_serial_id") SerialID 
                   input(type="text" id="sensor_serial_id" name="sensor_serial_id")
                 button.btn.btn-info(onclick="UpdateSensor()") Update
-                span &nbsp; &nbsp;
+                br
+                span This sensor's readings:
+                ul#sensor_readings
+                span Accepted commands:
+                ul#sensor_commands_list
+                label(for="sensor_commands") Send a command:
+                input(type="text" id="sensor_commands" name="sensor_commands")
+                br
                 button.btn.btn-info(onclick="$('#sensorbox').css('display','none')") Close
 
       block content

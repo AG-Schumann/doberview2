@@ -1,6 +1,10 @@
 var express = require('express');
 var url = require('url');
+var axios = require('axios').default;
 var router = express.Router();
+
+const influx_url = `http://localhost:8086/query?u=${process.env.INFLUX_USERNAME}&p=${process.env.INFLUX_PASSWORD}&db=pancake`;
+const reading_lut = {T: 'temperature', 'n2lm': 'level', F: 'flow', M: 'weight', P: 'pressure'};
 
 router.get('/', function(req, res) {
   res.render('full_system');
@@ -106,9 +110,6 @@ router.post('/update_reading', function(req, res) {
   var promises = [];
   if (Object.keys(updates).length != 0)
     promises.push(req.db.get('readings').update({sensor: sensor, name: reading}, {$set: updates}));
-  if (typeof data.alarms != 'undefined' && data.alarms.length != 0) {
-    // TODO finish and/or make own endpoint
-  }
   if (promises.length > 0) {
     Promise.all(promises)
     .then(() => res.json({msg: 'Success'}))
@@ -117,33 +118,31 @@ router.post('/update_reading', function(req, res) {
     return res.json({});
 });
 
-router.get("/get_data", function(req, res) {
+router.get('/get_last_point', function(req, res) {
+  var q = url.parse(req.url, true).query;
+  var reading = q.reading;
+  var topic = reading_lut[reading.split('_')[0]];
+  if (typeof reading == 'undefined' || typeof topic == 'undefined')
+    return res.json({});
+  var get_url = influx_url + `&q=SELECT last(${reading}) FROM ${topic};`;
+  axios.get(get_url).then(
+    data => res.json(data)
+  ).catch(err => {console.log(err); return res.json([]);});
+});
+
+router.get('/get_data', function(req, res) {
   var q = url.parse(req.url, true).query;
   var reading = q.reading;
   var binning = q.binning;
   var history = q.history;
-  return res.json([]);
-
-  if (typeof reading == 'undefined')
+  var topic = reading_lut[reading.split('_')[0]];
+  if (typeof reading == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
-  var url = "";
 
-  // TODO finish here
-
-  axios.get(url)
-  .then(response => {
-
-  }).catch(err => {console.log(err); res.send({err: err});});
-});
-
-router.get('/get_last_point', function(req, res) {
-  var reading = url.parse(req.url, true).query.reading;
-  if (typeof reading == 'undefined')
-    return res.json({});
-  var url = ""
-  return res.json({});
-
-  // TODO ask influx
+  var get_url = influx_url + `&q=SELECT ${reading} FROM ${topic} WHERE time > now()-${history} GROUP BY time(${binning});`;
+  axios.get(get_url).then(
+    data => res.json(data)
+  ).catch(err => {console.log(err); return res.json([]);});
 });
 
 module.exports = router;

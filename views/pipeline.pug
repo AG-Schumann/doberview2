@@ -14,18 +14,38 @@ block content
   div.main-container(style="width:100%")
     h2 Pipeline control
     div
-      h4 Active pipelines
+      h4 Active pipelines &nbsp;
+        i.fas.fa-bell
         table#active_pipelines.pipeline_table
           tr
             th Name
+            th Period
+            th Latest cycle
+            th Last error
             th Stop
             th Restart
-            th Reconfigure
-      h4 Inactive pipelines
+            th Silence
+      h4 Silent pipelines &nbsp;
+        i.fas.fa-bell-slash
+        table#silent_pipelines.pipeline_table
+          tr
+            th Name
+            th Period
+            th Latest cycle
+            th Last error
+            th Activate
+            th Restart
+            th Stop
+      h4 Inactive pipelines &nbsp;
+        i.fas.fa-hand-paper
         table#inactive_pipelines.pipeline_table
           tr
             th Name
-            th Start
+            th Start silent
+            th Start active
+      br
+      p
+        Some comments on pipeline cycles: the internal buffers take a few cycles to fill, so there will always be "errors" shortly after pipeline startup. As long as the error number is small and the cycle number isn't, it's fine
     div#pipeline_vis
 
   div.main-container
@@ -38,16 +58,22 @@ block content
     br
     div#json_text(style="width:100%;height:75%;resize:both")
     br
-    button.btn-btn-info(onclick="VisualizeConfig()") Visualize
+    button.btn-btn-info(onclick="Visualize()") Visualize
     button.btn.btn-default(onclick="AddNewPipeline()") Add new
-    button.btn.btn-default(onclick="UpdatePipeline(0)") Update and restart
-    button.btn.btn-default(onclick="UpdatePipeline(1)") Update and reconfigure
+    button.btn.btn-default(onclick="UpdatePipeline()") Update
     button.btn.btn-warning(onclick="DeletePipeline()") Delete
-    span#load_me(hidden disabled) #load
+    button.btn.btn-info(onclick="FillTemplate()") Alarm template
+    br
+    div
+      table#alarm_table
+    br
+    span#load_me(hidden disabled) #{load}
 
   script.
     $(document).ready(function() {
       PopulatePipelines();
       document.jsoneditor = new JSONEditor(document.getElementById('json_text',
       {"modes":  ['tree', 'view', 'form', 'code', 'text']}));
+      if ($("#load_me").html() != "")
+        Fetch($("#load_me").html());
     });

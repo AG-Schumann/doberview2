@@ -6,11 +6,15 @@ function PopulateReadings() {
   $.getJSON("/sensors/reading_list", (data) => {
     readings = data;
     //setInterval(UpdateLoop, 5000);
+    $("#reading_history").attr('max', history.length);
+    $("#reading_binning").attr('max', binning.length);
+    RangeSliders();
   });
 }
 
 function ReadingDropdown(reading) {
   $.getJSON(`/sensors/reading_detail?reading=${reading}`, (data) => {
+    $("#sensorbox").css("display", "none");
     if (Object.keys(data).length == 0)
       return;
     $("#detail_reading_name").html(data.name);
@@ -18,73 +22,54 @@ function ReadingDropdown(reading) {
     $("#reading_status").prop('checked', data.status === 'online');
     $("#readout_interval").val(data.readout_interval);
 
-    $("#runmode option").filter(function() {return this.value == data.runmode;}).prop('selected', true);
-    function alarm_row(i) {
-      var tot = "";
-      tot += `<tr id="alarm_${i}" onclick="$('#alarm_${i}').remove()"><th colspan=2>Remove level</th></tr>`;
-      tot += `<tr><td>Low: <input type="number" id="alarm_${i}_low" onchange="SetAlarmMidRange(${i})"></td>`;
-      tot += `<td>Mid: <input type="number" id="alarm_${i}_mid" onchange="SetAlarmLowHigh(${i})"></td></tr>`;
-      tot += `<tr><td>High: <input type="number" id="alarm_${i}_high" onchange="SetAlarmMidRange(${i})"><td>`;
-      tot += `<td>Half-range: <input type="number" id="alarm_${i}_range" onchange="SetAlarmLowHigh(${i})"></td></tr>`;
-      return tot;
-    }
-    // TODO alarms. The following code only works for simple alarms
-    $("#alarm_table").html(data.alarms.reduce((tot, alarm, i) => {
-      tot += alarm_row(i);
-      if (i == data.alarms.length-1)
-        tot += `<tr id="alarm_new" onclick="$('#alarm_table').append(alarm_row(${i+1}))"><th colspan=2>Add new</th></tr>`;
-      return tot;}, ""));
-    data.alarms.forEach((alarm, i) => {
-      var low = alarm[0];
-      var high = alarm[1];
-      var mid = (high+low)/2;
-      var range = (high-low)/2;
-      $(`#alarm_${i}_low`).val(low);
-      $(`#alarm_${i}_high`).val(high);
-      $(`#alarm_${i}_mid`).val(mid);
-      $(`#alarm_${i}_range`).val(range);
-    });
+    $("#pipeline_list").empty();
+    if (typeof data.pipelines != 'undefined')
+      data.pipelines.forEach(name => $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="small-button">${name}</button></a></li>`));
+    else
+      $("#pipeline_list").append("<li>None</li>");
+    $("#reading_sensor_name").text(data.sensor).attr('onclick', `SensorDropdown("${data.sensor}")`);
     $("#readingbox").css("display", "block");
 
   });
   DrawReadingHistory(reading);
 }
 
-function SetAlarmLowHigh(i) {
-  var mid = $(`#alarm_${i}_mid`).val();
-  var range = $(`#alarm+${i}_range`).val();
-  $(`#alarm_${i}_low`).val(mid-range/2);
-  $(`#alarm_${i}_high`).val(mid+range/2);
-}
-function SetAlarmMidRange(i) {
-  var low = $(`#alarm_${i}_low`).val();
-  var high = $(`#alarm+${i}_high`).val();
-  $(`#alarm_${i}_mid`).val((high+low)/2);
-  $(`#alarm_${i}_range`).val((high-low)/2);
-}
-
 function SensorDropdown(sensor) {
   $.getJSON(`/sensors/sensor_detail?sensor=${sensor}`, (data) => {
+    console.log(data);
+    $("#readingbox").css("display", "none");
     if (Object.keys(data).length == 0)
       return;
     $("#detail_sensor_name").html(data.name);
-    if (typeof data.address.ip != 'undefined') {
-      $("#sensor_ip").val(data.address.ip);
-      $("#sensor_port").val(data.address.port);
-      $("#sensor_eth").attr('hidden', false);
-      $("#sensor_serial").attr('hidden', true);
+    if (typeof data.address != 'undefined') {
+      if (typeof data.address.ip != 'undefined') {
+        $("#sensor_ip").val(data.address.ip);
+        $("#sensor_port").val(data.address.port);
+        $("#sensor_eth").attr('hidden', false);
+        $("#sensor_serial").attr('hidden', true);
+      } else if (typeof data.address.tty != 'undefined') {
+        $("#sensor_tty").val(data.address.tty);
+        $("#sensor_baud option").filter(function() {return this.value == data.address.baud;}).prop('selected', true);
+        $("#sensor_serial_id").val(data.address.serialID || null);
+        $("#sensor_eth").attr('hidden', true);
+        $("#sensor_serial").attr('hidden', false);
+      }
     } else {
-      $("#sensor_tty").val(data.address.tty);
-      $("#sensor_baud option").filter(function() {return this.value == data.address.baud;}).prop('selected', true);
-      $("#sensor_serial_id").val(data.address.serialID || null);
       $("#sensor_eth").attr('hidden', true);
-      $("#sensor_serial").attr('hidden', false);
+      $("#sensor_serial").attr('hidden', true);
     }
+    $("#sensor_readings").empty();
+    Object.keys(data.readings).forEach(rd => $("#sensor_readings").append(`<li><button class="small-button" onclick="ReadingDropdown('${rd}')">${rd}</button></li>`));
+    //$("#sensor_readings").html(Object.keys(data.readings).reduce((tot, rd) => tot + `<li><span onclick="ReadingDropdown('${rd}')">${rd}</span></li>`));
+    if (typeof data.commands != 'undefined')
+      $("#sensor_command_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd}</li>`) || "<li>None</li>");
+    else
+      $("#sensor_command_list").html("<li>None</li>");
     $("#sensorbox").css("display", "block");
   });
 }
 
-function RangeSliders(name, val) {
+function RangeSliders() {
   $("#reading_binning_label").html(binning[$("#reading_binning").val()]);
   $("#reading_history_label").html(history[$("#reading_history").val()]);
 }
@@ -95,7 +80,8 @@ function DrawReadingHistory(reading) {
   var hist_i = $("#reading_history").val();
 
   $.getJSON(`/sensors/get_data?reading=${reading}&history=${history[hist_i]}&binning=${binning[bin_i]}`, data => {
-
+    console.log(70);
+    return;
   });
 }
 
@@ -105,8 +91,7 @@ function UpdateReading() {
     readout_interval: $("#readout_interval").val(),
     description: $("#reading_desc").val(),
     status: $("#reading_status").is(":checked") ? "online" : 'offline',
-    runmode: $("#runmode").val(),
-    alarms: [], // TODO
+    runmode: $("#runmode").val()
   };
   $.ajax({
     type: 'POST',
@@ -120,16 +105,11 @@ function UpdateReading() {
 
 function UpdateSensor() {
   var data = {sensor: $("#detail_sensor_name").html()};
-  if ($("#sensor_ip").val())
-    data['ip'] = $("#sensor_ip").val();
-  if ($("#sensor_port").val())
-    data['port'] = $("#sensor_port").val();
-  if ($("#sensor_tty").val())
-    data['tty'] = $("#sensor_tty").val();
-  if ($("#sensor_baud").val())
-    data['baud'] = $("#sensor_baud").val();
-  if ($("#sensor_serial_id").val())
-    data['serial_id'] = $("#sensor_serial_id").val();
+  ['ip', 'port', 'tty', 'baud', 'serial_id'].forEach(key => {
+    if ($(`#sensor_${key}`).val())
+      data[key] = $(`#sensor_${key}`).val();
+    $(`#sensor_${key}`).val(null);
+  });
   if (Object.keys(data).length > 1) {
     $.ajax({
       type:'POST',
