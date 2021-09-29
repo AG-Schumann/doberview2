@@ -3,7 +3,7 @@ var url = require('url');
 var axios = require('axios').default;
 var router = express.Router();
 
-const influx_url = `http://localhost:8086/query?u=${process.env.INFLUX_USERNAME}&p=${process.env.INFLUX_PASSWORD}&db=pancake`;
+const influx_url = `http://localhost:8086/query`;
 const reading_lut = {T: 'temperature', 'n2lm': 'level', F: 'flow', M: 'weight', P: 'pressure'};
 
 router.get('/', function(req, res) {
@@ -124,10 +124,20 @@ router.get('/get_last_point', function(req, res) {
   var topic = reading_lut[reading.split('_')[0]];
   if (typeof reading == 'undefined' || typeof topic == 'undefined')
     return res.json({});
-  var get_url = influx_url + `&q=SELECT last(${reading}) FROM ${topic};`;
-  axios.get(get_url).then(
-    data => res.json(data)
-  ).catch(err => {console.log(err); return res.json([]);});
+
+  var get_url = new URL(influx_url);
+  var params = new URLSearchParams({
+    u: process.env.INFLUX_USERNAME,
+    p: process.env.INFLUX_PASSWORD,
+    db: process.env.DOBERVIEW_EXPERIMENT,
+    q: `SELECT last(${reading}) FROM ${topic};`
+  });
+  get_url.search=params.toString();
+  axios.get(get_url.toString()).then(
+    data => {var blob = data.data.results[0]['series'][0]['values'][0];
+      // The formatting on this is monstrous
+      return res.json({'value': blob[1], 'time_ago': ((new Date()-new Date(blob[0]))/1000).toFixed(1)});
+    }).catch(err => {console.log(err); return res.json([]);});
 });
 
 router.get('/get_data', function(req, res) {
@@ -139,9 +149,16 @@ router.get('/get_data', function(req, res) {
   if (typeof reading == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
 
-  var get_url = influx_url + `&q=SELECT ${reading} FROM ${topic} WHERE time > now()-${history} GROUP BY time(${binning});`;
-  axios.get(get_url).then(
-    data => res.json(data)
+  var get_url = new URL(influx_url);
+  var params = new URLSearchParams({
+    u: process.env.INFLUX_USERNAME,
+    p: process.env.INFLUX_PASSWORD,
+    db: process.env.DOBERVIEW_EXPERIMENT,
+    q: `SELECT mean(${reading}) FROM ${topic} WHERE time > now()-${history} GROUP BY time(${binning}) fill(none);`
+  });
+  get_url.search=params.toString();
+  axios.get(get_url.toString()).then(
+    data => res.json(data.data.results[0]['series'][0]['values'].map(row => [new Date(row[0]).getTime(), row[1]]))
   ).catch(err => {console.log(err); return res.json([]);});
 });
 

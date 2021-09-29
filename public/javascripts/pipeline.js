@@ -112,7 +112,7 @@ function AddNewPipeline() {
   }catch(err){alert('Is the period a valid number?'); return;}
   doc['status'] = 'offline';
 
-  $.post("/pipeline/
+  //$.post("/pipeline/
 }
 
 function PipelineControl(action, pipeline) {

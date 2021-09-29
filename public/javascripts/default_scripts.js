@@ -1,16 +1,5 @@
 const binning = ['1s', '10s', '1m', '10m', '1h'];
 const history = ['10m', '1h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
-var readings = [];
-
-function PopulateReadings() {
-  $.getJSON("/sensors/reading_list", (data) => {
-    readings = data;
-    //setInterval(UpdateLoop, 5000);
-    $("#reading_history").attr('max', history.length);
-    $("#reading_binning").attr('max', binning.length);
-    RangeSliders();
-  });
-}
 
 function ReadingDropdown(reading) {
   $.getJSON(`/sensors/reading_detail?reading=${reading}`, (data) => {
@@ -60,9 +49,8 @@ function SensorDropdown(sensor) {
     }
     $("#sensor_readings").empty();
     Object.keys(data.readings).forEach(rd => $("#sensor_readings").append(`<li><button class="small-button" onclick="ReadingDropdown('${rd}')">${rd}</button></li>`));
-    //$("#sensor_readings").html(Object.keys(data.readings).reduce((tot, rd) => tot + `<li><span onclick="ReadingDropdown('${rd}')">${rd}</span></li>`));
     if (typeof data.commands != 'undefined')
-      $("#sensor_command_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd}</li>`) || "<li>None</li>");
+      $("#sensor_command_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd}</li>`,"") || "<li>None</li>");
     else
       $("#sensor_command_list").html("<li>None</li>");
     $("#sensorbox").css("display", "block");
@@ -76,11 +64,23 @@ function RangeSliders() {
 
 function DrawReadingHistory(reading) {
 
+  reading = reading || $("#detail_reading_name").html();
   var bin_i = $("#reading_binning").val();
   var hist_i = $("#reading_history").val();
 
   $.getJSON(`/sensors/get_data?reading=${reading}&history=${history[hist_i]}&binning=${binning[bin_i]}`, data => {
-    console.log(70);
+    Highcharts.chart('reading_chart', {
+      chart: {
+        zoomtype: 'xy',
+        height: 'auto',
+      },
+      title: {text: null},
+      credits: {enabled: false},
+      series: [{type: 'line', data: data, animation: {duration: 250}}],
+      xAxis: {type: 'datetime'},
+      yAxis: {title: {text: null}},
+      legend: {enabled: false},
+    });
     return;
   });
 }

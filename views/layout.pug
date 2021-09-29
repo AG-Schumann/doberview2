@@ -2,13 +2,12 @@ doctype html
 html
   head
     title=DOBERview
-    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
-    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous")
+    link(rel="stylesheet" href="/stylesheets/bootstrap.min.css")
+    link(rel="stylesheet" href="/stylesheets/bootstrap-theme.min.css")
     link(rel='stylesheet' href='/stylesheets/default_style.css')
-    script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" type="text/javascript")
-    script(src="https://kit.fontawesome.com/abb8282784.js" crossorigin="anonymous" type="text/javascript")
-    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous" type="text/javascript")
+    script(src="javascripts/jquery-3.6.0.min.js" type="text/javascript")
     script(src="javascripts/default_scripts.js" type="text/javascript")
+    script(src="https://kit.fontawesome.com/abb8282784.js" crossorigin="anonymous" type="text/javascript")
 
     meta(name="application-name" content="pagetitle")
 
@@ -17,68 +16,55 @@ html
   body
     div.overlay
     div.wrapper
-      nav#topbar.colored.active
-        button.navbar-btn.colored.sidebarCollapse(type="button")
-          // hamburger icon
-          span.anticolored(style="background-color:white")
-          span.anticolored(style="background-color:white")
-          span.anticolored(style="background-color:white")
-        span.pagetitle #{pagetitle}
-      div#sidebar_wrapper.active
-        nav#sidebar.colored.active
-          button.navbar-btn.colored.sidebarCollapse(type="button")
-            span.anticolored
-            span.anticolored
-            span.anticolored
-          div.sidebar-header.colored
-            div.CTAs.desktop_title(style="width:100%")
-              //img.second_logo(src="/images/navbar_logo_bar.svg")
-          //img.logo(src="/images/navbar_logo.svg")
+      div#sidebar_wrapper
+        nav#sidebar.colored
           div.experimentIconDiv(style="margin-top:0px;background:#0e0e75;height:30px;padding-top:5px;padding-left:3px")
-            span.CTAs(style="float:left;color:white") &nbsp; Experiment: &nbsp;
+            //span.CTAs(style="float:left;color:white") Experiment
+              i.fas.fa-hamburger
               select.cselect#experiment_select
                 option(value="pancake" selected) Pancake
                 option(value="xebra") Xebra
-                option(value="gemse") GeMSE (wip)
+                option(value="gemse") GeMSE
           ul.list-unstyled.components
             li#loberview(class="colored")
               a(href="/sensors")
                 i.fas.fa-dragon
                 span Overview
-                span.extralabel Main landing page
+                //span.extralabel Main landing page
               a(href="/subsystem")
                 i.fas.fa-spider
                 span Systems
-                span.extralabel Look at subsystems in detail
+                //span.extralabel Look at subsystems in detail
               a(href='/pipeline')
                 i.fas.fa-hippo
                 span Pipeline
-                span.extralabel Configure alarms and pipelines
+                //span.extralabel Configure alarms and pipelines
               a(href='/hosts')
                 i.fas.fa-cat
                 span Hosts
-                span.extralabel Configure hosts
+                //span.extralabel Configure hosts
               a(href='/contacts')
                 i.fas.fa-crow
                 span Shifters
-                span.extralabel Configure contacts and shifters
+                //span.extralabel Configure contacts and shifters
               a(href='')
                 i.fas.fa-frog
                 span Grafana
-                span.extralabel Your own plots, with blackjack and hookers
+                //span.extralabel Your own plots, with blackjack and hookers
               a(href='/daq')
                 i.fas.fa-kiwi-bird
                 span DAQ
-                span.extralabel Eventually
+                //span.extralabel Eventually
       div#content(style="padding-left:5px;padding-right:5px;padding-top:0px;padding-bottom:0px")
         div.readingbox.modalbox#readingbox(style="display:none")
-          div.row.modal_content
-            div.main_container
+          div.row.modal_content.container
+            div.col-md-8
               strong Reading detail: &nbsp;
               span#detail_reading_name
+              span &nbsp; &nbsp; &nbsp; Sensor: &nbsp;
+                button.small-button#reading_sensor_name
               span.btn.top-right(onclick="$('#readingbox').css('display', 'none')") &times;
               br
-              //form#update_reading_form
               label(for="reading_desc") Description &nbsp;
               input(type="text" id="reading_desc" name="reading_desc")
               br
@@ -93,25 +79,20 @@ html
               br
               label(for="alarms") Pipelines involving this reading:
               ul#pipeline_list
+            div.col-md-4.chart_header
+              strong Recent history &nbsp; &nbsp;
               br
-              span Sensor: &nbsp;
-                button.small-button#reading_sensor_name
+              label(for="reading_history") History &nbsp;
+              input#reading_history(type="range" onchange="RangeSliders()" min=0 value=4 style="width:100px")
+              span#reading_history_label
               br
+              label(for="reading_binning") Binning &nbsp;
+              input#reading_binning(type="range" onchange="RangeSliders()" min=0 value=2 style="width:100px")
+              span#reading_binning_label
               br
-              div.main_container.chart_header
-                strong Recent history &nbsp; &nbsp;
-                br
-                label(for="reading_history") History &nbsp;
-                input#reading_history(type="range" onchange="RangeSliders()" min=0 value=1 style="width:100px")
-                span#reading_history_label
-                br
-                label(for="reading_binning") Binning &nbsp;
-                input#reading_binning(type="range" onchange="RangeSliders()" min=0 value=1 style="width:100px")
-                span#reading_binning_label
-                br
-                button.btn.btn-info#get_data(onclick="DrawReadingHistory()") Update plot
-                button.btn.btn-info(onclick="$('#readingbox').css('display', 'none')") Close
-              div.main_container.reading_chart#reading_chart
+              button.btn.btn-info#get_data(onclick="DrawReadingHistory()") Update plot
+              button.btn.btn-info(onclick="$('#readingbox').css('display', 'none')") Close
+          div.main_container.reading_chart#reading_chart
         div.sensorbox.modalbox#sensorbox(style="display:none")
           div.row.modal_content(style="padding:5px")
             div.main_container
@@ -161,3 +142,7 @@ html
           $("#topbar").toggleClass("active");
         });
       });
+      window.onclick = function(event) {
+        if (event.target == document.getElementById("readingbox")) event.target.style.display = 'none';
+        if (event.target == document.getElementById("sensorbox")) event.target.style.display = 'none';
+      }

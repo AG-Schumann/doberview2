@@ -16,7 +16,7 @@ block content
     div
       h4 Active pipelines &nbsp;
         i.fas.fa-bell
-        table#active_pipelines.pipeline_table
+        table.table.table-hover.table-striped#active_pipelines
           tr
             th Name
             th Period
@@ -27,7 +27,7 @@ block content
             th Silence
       h4 Silent pipelines &nbsp;
         i.fas.fa-bell-slash
-        table#silent_pipelines.pipeline_table
+        table.table.table-hover.table-striped#silent_pipelines
           tr
             th Name
             th Period
@@ -38,14 +38,13 @@ block content
             th Stop
       h4 Inactive pipelines &nbsp;
         i.fas.fa-hand-paper
-        table#inactive_pipelines.pipeline_table
+        table.table.table-hover.table-striped#inactive_pipelines
           tr
             th Name
             th Start silent
             th Start active
       br
-      p
-        Some comments on pipeline cycles: the internal buffers take a few cycles to fill, so there will always be "errors" shortly after pipeline startup. As long as the error number is small and the cycle number isn't, it's fine
+      p A comment on pipeline cycles: the internal buffers take a few cycles to fill, so there will always be "errors" shortly after pipeline startup. As long as the error number is small and the cycle number isn't, it's fine
     div#pipeline_vis
 
   div.main-container

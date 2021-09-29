@@ -17,14 +17,11 @@ block content
       option(value="sensor") Sensor
       option(value="topic" selected) Topic
     div.reading-div
-      table.reading-table#reading_table
+      table.table.table-striped.table-hover#reading_table
 
   script.
     $(document).ready(function () {
       GetGroupedReadings();
       PopulateReadings();
+      setInterval(UpdateOnce, 5000);
     });
-    window.onclick = function(event) {
-      if (event.target == document.getElementById("readingbox")) event.target.style.display = 'none';
-      if (event.target == document.getElementById("sensorbox")) event.target.style.display = 'none';
-    }
