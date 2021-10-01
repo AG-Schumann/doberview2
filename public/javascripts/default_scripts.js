@@ -17,7 +17,6 @@ function ReadingDropdown(reading) {
     $("#reading_desc").val(data.description).attr('size', data.description.length + 3);
     $("#reading_status").prop('checked', data.status === 'online');
     $("#readout_interval").val(data.readout_interval);
-
     $("#runmode option").filter(function() {return this.value == data.runmode;}).prop('selected', true);
     function alarm_row(i) {
       var tot = "";
@@ -44,8 +43,6 @@ function ReadingDropdown(reading) {
       $(`#alarm_${i}_mid`).val(mid);
       $(`#alarm_${i}_range`).val(range);
     });
-    $("#readingbox").css("display", "block");
-
   });
   DrawReadingHistory(reading);
 }
@@ -80,7 +77,6 @@ function SensorDropdown(sensor) {
       $("#sensor_eth").attr('hidden', true);
       $("#sensor_serial").attr('hidden', false);
     }
-    $("#sensorbox").css("display", "block");
   });
 }
 

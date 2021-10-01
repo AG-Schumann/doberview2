@@ -6,11 +6,6 @@ router.get('/', function(req, res) {
   res.render('full_system');
 });
 
-router.get('/sensor_list', function(req, res) {
-  req.db.get('sensors').distinct('name')
-  .then(docs => res.json(docs))
-  .catch(err => {console.log(err.message); res.json([]);});
-});
 
 router.get('/sensor_detail', function(req, res) {
   var q = url.parse(req.url, true).query;

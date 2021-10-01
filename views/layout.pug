@@ -2,12 +2,10 @@ doctype html
 html
   head
     title=DOBERview
-    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
-    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous")
-    link(rel='stylesheet' href='/stylesheets/default_style.css')
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous')
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM' crossorigin='anonymous')
     script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" type="text/javascript")
-    script(src="https://kit.fontawesome.com/abb8282784.js" crossorigin="anonymous" type="text/javascript")
-    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous" type="text/javascript")
+    script(src='https://kit.fontawesome.com/73df3ddf45.js' crossorigin='anonymous')
     script(src="javascripts/default_scripts.js" type="text/javascript")
 
     meta(name="application-name" content="pagetitle")
@@ -16,142 +14,106 @@ html
 
   body
     div.overlay
-    div.wrapper
-      nav#topbar.colored.active
-        button.navbar-btn.colored.sidebarCollapse(type="button")
-          // hamburger icon
-          span.anticolored(style="background-color:white")
-          span.anticolored(style="background-color:white")
-          span.anticolored(style="background-color:white")
-        span.pagetitle #{pagetitle}
-      div#sidebar_wrapper.active
-        nav#sidebar.colored.active
-          button.navbar-btn.colored.sidebarCollapse(type="button")
-            span.anticolored
-            span.anticolored
-            span.anticolored
-          div.sidebar-header.colored
-            div.CTAs.desktop_title(style="width:100%")
-              //img.second_logo(src="/images/navbar_logo_bar.svg")
-          //img.logo(src="/images/navbar_logo.svg")
-          div.experimentIconDiv(style="margin-top:0px;background:#0e0e75;height:30px;padding-top:5px;padding-left:3px")
-            span.CTAs(style="float:left;color:white") &nbsp; Experiment: &nbsp;
-              select.cselect#experiment_select
-                option(value="pancake" selected) Pancake
-                option(value="xebra") Xebra
-                option(value="gemse") GeMSE (wip)
-          ul.list-unstyled.components
-            li#loberview(class="colored")
-              a(href="/sensors")
-                i.fas.fa-dragon
-                span Overview
-                span.extralabel Main landing page
-              a(href="/subsystem")
-                i.fas.fa-spider
-                span Systems
-                span.extralabel Look at subsystems in detail
-              a(href='/pipeline')
-                i.fas.fa-hippo
-                span Pipeline
-                span.extralabel Configure alarms and pipelines
-              a(href='/hosts')
-                i.fas.fa-cat
-                span Hosts
-                span.extralabel Configure hosts
-              a(href='/contacts')
-                i.fas.fa-crow
-                span Shifters
-                span.extralabel Configure contacts and shifters
-              a(href='')
-                i.fas.fa-frog
-                span Grafana
-                span.extralabel Your own plots, with blackjack and hookers
-              a(href='/daq')
-                i.fas.fa-kiwi-bird
-                span DAQ
-                span.extralabel Eventually
-      div#content(style="padding-left:5px;padding-right:5px;padding-top:0px;padding-bottom:0px")
-        div.readingbox.modalbox#readingbox(style="display:none")
-          div.row.modal_content
-            div.main_container
-              strong Reading detail: &nbsp;
-              span#detail_reading_name
-              span.btn.top-right(onclick="$('#readingbox').css('display', 'none')") &times;
-              br
-              form#update_reading_form
-                label(for="reading_desc") Description &nbsp;
-                input(type="text" id="reading_desc" name="reading_desc")
-                br
-                label(for="reading_status") Active &nbsp;
-                input(type="checkbox" id="reading_status" name="reading_status")
-                br
-                label(for="readout_interval") Readout interval &nbsp;
-                input(type="number" id="readout_interval" name="readout_interval" min="0.1" max="300" size=3 width=3)
-                br
-                label(for="runmode") Runmode: &nbsp;
-                select(id="runmode" name="runmode")
-                  option(value="testing") testing
-                  option(value="default") default
-                br
-                label(for="alarms") Alarms:
-                table#alarm_table
-                // TODO this will probably be a bit awkward
-                br
-                button.btn.btn-info(onclick="UpdateReading()") Update reading
-              br
-              div.main_container.chart_header
-                strong Recent history &nbsp; &nbsp;
-                br
-                label(for="reading_history") History &nbsp;
-                input#reading_history(type="range" onchange="RangeSliders()" min=0 max=9 value=1 style="width:100px")
-                span#reading_history_label 1h
-                br
-                label(for="reading_binning") Binning &nbsp;
-                input#reading_binning(type="range" onchange="RangeSliders()" min=0 max=4 value=1 style="width:100px")
-                span#reading_binning_label 10s
-                br
-                button.btn.btn-info#get_data(onclick="DrawReadingHistory()") Update plot
-                button.btn.btn-info(onclick="$('#readingbox').css('display', 'none')") Close
-              div.main_container.reading_chart#reading_chart
-        div.sensorbox.modalbox#sensorbox(style="display:none")
-          div.row.modal_content(style="padding:5px")
-            div.main_container
-              strong Sensor detail: &nbsp;
-              span#detail_sensor_name
-              span.btn.top-right(onclick="$('#sensorbox').css('display','none')") &times;
-              br
-              form#update_sensor_form
-                fieldset#sensor_eth
-                  label(for="sensor_ip") IP &nbsp
-                  input(type="text" id="sensor_ip" name="sensor_ip" pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
-                  span &nbsp; &nbsp; &nbsp;
-                  label(for="sensor_port") Port &nbsp
-                  input(type="number" id="sensor_port" name="sensor_port" min="1025" max="65535" step="1")
-                fieldset#sensor_serial
-                  label(for="sensor_tty") TTY 
-                  input(type="text" id="sensor_tty" name="sensor_tty")
-                  span &nbsp; &nbsp; &nbsp;
-                  label(for="sensor_baud") Baud 
-                  select(id="sensor_baud" name="sensor_baud")
-                    option(value="9600") 9600
-                    option(value="19200") 19,200
-                  span &nbsp; &nbsp; &nbsp;
-                  label(for="sensor_serial_id") SerialID 
-                  input(type="text" id="sensor_serial_id" name="sensor_serial_id")
-                button.btn.btn-info(onclick="UpdateSensor()") Update
-                span &nbsp; &nbsp;
-                button.btn.btn-info(onclick="$('#sensorbox').css('display','none')") Close
+      nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
+        .container.mx-1
+          a.navbar-brand(href='/sensors') DOBERview
+          button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navmenu")
+            span.navbar-toggler-icon
+          div.collapse.navbar-collapse(id="#navmenu")
+            ul.navbar-nav
+              li.nav-item
+                a.nav-link(href='/subsystem') Systems
+              li.nav-item
+                a.nav-link(href='/pipeline') Pipeline
+              li.nav-item
+                a.nav-link(href='/hosts') Hosts
+              li.nav-item
+                a.nav-link(href='/contacts') Shifters
+              li.nav-item
+                a.nav-link(href='/grafana') Grafana
+              li.nav-item
+                a.nav-link(href='/daq') DAQ
+            ul.navbar-nav.ms-auto
+              li.nav-item
+                select.form-select.bg-warning
+                  option(value='pancake' selected='') PANCAKE
+                  option(value='xebra') XeBRA
+                  option(value='gemse') GeMSE
+
+    div#content(style="padding-left:5px;padding-right:5px;padding-top:0px;padding-bottom:0px")
+      #readingbox.modal.fade(tabindex='-1' aria-labelledby='readingboxLabel' aria-hidden='true')
+        .modal-dialog
+          .modal-content
+            form#update_reading_form
+              .modal-header
+                h5#readingboxLabel.modal-title
+                  .form-check.form-switch
+                    input#reading_status.form-check-input(type='checkbox')
+                    label.form-check-label(for='reading_status')
+                      span#detail_reading_name
+                button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+              .modal-body
+                div.main_container
+                  table
+                    tbody
+                      tr
+                        th Description
+                        th
+                          input(type="text" id="reading_desc" name="reading_desc")
+                      tr
+                        th.py-3 Readout interval &nbsp
+                        th
+                          input(type="number" id="readout_interval" name="readout_interval" min="0.1" max="300" size=3 width=3)
+                      tr
+                        th Runmode
+                        th
+                          #runmode.btn-group(role='group')
+                            input#default_btn.btn-check(type='radio' name='runmode_btn' value='default' autocomplete='off')
+                            label.btn.btn-outline-primary(for='default_btn') Default
+                            input#testing_btn.btn-check(type='radio' name='runmode_btn'  value='testing' autocomplete='off')
+                            label.btn.btn-outline-primary(for='testing_btn') Testing
+            .modal-footer
+              button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+              button.btn.btn-primary(type='button') Save changes
+
+      #sensorbox.modal.fade
+        .modal-dialog
+          .modal-content
+              .modal-header
+                h5#sensorboxLabel.modal-title
+                  span#detail_sensor_name
+                button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+              .modal-body
+                form#update_sensor_form
+                  fieldset#sensor_eth
+                    table
+                      tr
+                        th.py-3 IP &nbsp
+                        td
+                          input(type="text" id="sensor_ip" name="sensor_ip" pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
+                      tr
+                        th Port &nbsp
+                        td
+                          input(type="number" id="sensor_port" name="sensor_port" min="1025" max="65535" step="1")
+                  fieldset#sensor_serial
+                    table
+                        tr
+                          th TTY &nbsp
+                          td
+                            input(type="text" id="sensor_tty" name="sensor_tty")
+                        tr
+                          th.py-3 Baud &nbsp
+                          td
+                            select.form-select.form-select-sm(id="sensor_baud" name="sensor_baud")
+                              option(value="9600") 9600
+                              option(value="19200") 19,200
+                        tr
+                          th SerialID &nbsp
+                          td
+                           input(type="text" id="sensor_serial_id" name="sensor_serial_id")
+              .modal-footer
+                button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+                button.btn.btn-primary(type='button') Save changes
 
       block content
 
-    script.
-      $(document).ready(()=>{
-
-        $('.sidebarCollapse').on('click', () => {
-          $("#sidebar").toggleClass('active');
-          $(".overlay").toggleClass('active');
-          $("#sidebar_wrapper").toggleClass("active");
-          $(".sidebarCollapse").toggleClass("active");
-          $("#topbar").toggleClass("active");
-        });
-      });

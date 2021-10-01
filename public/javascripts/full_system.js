@@ -1,12 +1,11 @@
-
-function GetGroupedReadings() {
-  var group_by = $("#reading_grouping").val();
+function GetGroupedReadings(group_by) {
   $.getJSON(`/sensors/readings_grouped?group_by=${group_by}`, (data) => {
     $("#reading_table").empty();
     data.forEach(group => {
-      var click = group_by == 'sensor' ? `onclick='SensorDropdown("${group._id}")'` : "";
-      var head = `<tr ${click}><th colspan=3><strong>${group._id}</strong></th></tr>`;
-      $("#reading_table").append(head + group['readings'].reduce((tot, rd) => tot + `<tr onclick="ReadingDropdown('${rd.name}')"><td>${rd.desc} (${rd.name})</td><td id="${rd.name}_status">Unknown</td><td id="${rd.name}_value">-</td></tr>`));
+      var click = group_by == 'sensor' ? `data-bs-toggle="modal" data-bs-target="#sensorbox" onclick='SensorDropdown("${group._id}")'` : "";
+      var head = `<thead><tr ${click}><th colspan=3>${group._id}</th></tr></thead><tbody>`;
+      $("#reading_table").append(head + group['readings'].reduce((tot, rd) => tot + `<tr data-bs-toggle="modal" data-bs-target="#readingbox" onclick="ReadingDropdown('${rd.name}')"><td>${rd.desc} (${rd.name})</td><td id="${rd.name}_status">Unknown</td><td id="${rd.name}_value">-</td></tr>`));
+      $("#reading_table").append('</tbody>');
     }); // data.forEach
   }); // getJSON
 }

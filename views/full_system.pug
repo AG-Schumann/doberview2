@@ -3,28 +3,94 @@ extends layout
 block extrahead
   script(src="javascripts/full_system.js", type="text/javascript")
   script(src="javascripts/highcharts.js", type="text/javascript")
-  link(href="stylesheets/full_system.css", rel="stylesheet")
+  script(src="https://unpkg.com/mustache@latest", type="text/javascript")
   link(href="stylesheets/highcharts.css", rel="stylesheet")
 
 
 block content
-  div.main-container
+  section.bg-light.text-dark.p-3
+    .main-container
+      .row
+        .col-md-8
+          .card
+            .card-body
+              span
+                strong Group by: &nbsp;
+              #groupButtons.btn-group(role='group')
+                input#btnradio1.btn-check(type='radio' name='btnradio' value='sensor' autocomplete='off' checked='')
+                label.btn.btn-outline-primary(for='btnradio1') Sensor
+                input#btnradio2.btn-check(type='radio' name='btnradio' value='subsystem' autocomplete='off')
+                label.btn.btn-outline-primary(for='btnradio2') Subsystem
+                input#btnradio3.btn-check(type='radio' name='btnradio'  value='topic' autocomplete='off')
+                label.btn.btn-outline-primary(for='btnradio3') Quantity
+              table.table.table-striped.table-hover#reading_table
+        .col-md-4
+          .row
+            .card
+              .card-body
+                .h3.card-title Hosts
+              .card-text
+                table.table.table-hover.table-borderless#host_table
+                  tr
+                    td Hermes
+                    td
+                      i.fas.fa-heartbeat
+                    td 12 seconds ago
+                  tr.table-danger
+                    td Apollo
+                    td
+                      i.fas.fa-heartbeat
+                    td more than one our ago
+                  tr
+                    td Charon
+                    td
+                      i(hidden='').fas.fa-heartbeat
+                    td.text-secondary OFFLINE
 
-    span
-      strong Group readings by: &nbsp;
-    select#reading_grouping(onchange="GetGroupedReadings()")
-      option(value="subsystem") Subsystem
-      option(value="sensor") Sensor
-      option(value="topic" selected) Topic
-    div.reading-div
-      table.reading-table#reading_table
-
+            .card
+              .card-body
+                .h3.card-title Shifters
+              .card-text
+                ul.list-group.list-group-flush
+                  li.list-group-item
+                    h4 Primary
+                    i.fa.fa-user
+                    | &nbsp John Doe
+                    br
+                    i.fa.fa-envelope
+                    | &nbsp john.doe@googlemail.com
+                    br
+                    i.fa.fa-phone
+                    | &nbsp 012312345678
+                  li.list-group-item
+                    h4 Secondary
+                    i.fa.fa-user
+                    | &nbsp Jane Doe
+                    br
+                    i.fa.fa-envelope
+                    | &nbsp jane.doe@mail.com
+                    br
+                    i.fa.fa-phone
+                    | &nbsp 012312345678
+                  li.list-group-item
+                    h4 Alarm Duty
+                    i.fa.fa-user
+                    | &nbsp Elroy Freakinglongname
+                    br
+                    i.fa.fa-envelope
+                    | &nbsp; elroy.freakinglongname@longmail.com
+                    br
+                    i.fa.fa-phone
+                    | &nbsp 012312345678
   script.
+
     $(document).ready(function () {
-      GetGroupedReadings();
+
+      GetGroupedReadings('sensor');
       PopulateReadings();
+
     });
-    window.onclick = function(event) {
-      if (event.target == document.getElementById("readingbox")) event.target.style.display = 'none';
-      if (event.target == document.getElementById("sensorbox")) event.target.style.display = 'none';
-    }
+
+    $("#groupButtons :input").change(function () {
+      GetGroupedReadings(this.value);
+    });
