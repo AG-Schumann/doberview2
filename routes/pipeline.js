@@ -30,6 +30,10 @@ router.post('/update_pipeline', function(req, res) {
 
 });
 
+router.get('/delete_pipeline', function(req, res) {
+
+});
+
 router.post('/pipeline_ctl', function(req, res) {
   var data = req.body.data;
 });

@@ -46,7 +46,6 @@ block content
                     td
                       i(hidden='').fas.fa-heartbeat
                     td.text-secondary OFFLINE
-
             .card
               .card-body
                 .h3.card-title Shifters
@@ -88,6 +87,7 @@ block content
 
       GetGroupedReadings('sensor');
       PopulateReadings();
+      setInterval(UpdateOnce, 5000);
 
     });
 

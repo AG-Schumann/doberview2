@@ -1,6 +1,10 @@
 var express = require('express');
 var url = require('url');
+var axios = require('axios').default;
 var router = express.Router();
+
+const influx_url = `http://localhost:8086/query`;
+const reading_lut = {T: 'temperature', 'n2lm': 'level', F: 'flow', M: 'weight', P: 'pressure'};
 
 router.get('/', function(req, res) {
   res.render('full_system');
@@ -101,9 +105,6 @@ router.post('/update_reading', function(req, res) {
   var promises = [];
   if (Object.keys(updates).length != 0)
     promises.push(req.db.get('readings').update({sensor: sensor, name: reading}, {$set: updates}));
-  if (typeof data.alarms != 'undefined' && data.alarms.length != 0) {
-    // TODO finish and/or make own endpoint
-  }
   if (promises.length > 0) {
     Promise.all(promises)
     .then(() => res.json({msg: 'Success'}))
@@ -112,33 +113,48 @@ router.post('/update_reading', function(req, res) {
     return res.json({});
 });
 
-router.get("/get_data", function(req, res) {
+router.get('/get_last_point', function(req, res) {
+  var q = url.parse(req.url, true).query;
+  var reading = q.reading;
+  var topic = reading_lut[reading.split('_')[0]];
+  if (typeof reading == 'undefined' || typeof topic == 'undefined')
+    return res.json({});
+
+  var get_url = new URL(influx_url);
+  var params = new URLSearchParams({
+    u: process.env.INFLUX_USERNAME,
+    p: process.env.INFLUX_PASSWORD,
+    db: process.env.DOBERVIEW_EXPERIMENT,
+    q: `SELECT last(${reading}) FROM ${topic};`
+  });
+  get_url.search=params.toString();
+  axios.get(get_url.toString()).then(
+    data => {var blob = data.data.results[0]['series'][0]['values'][0];
+      // The formatting on this is monstrous
+      return res.json({'value': blob[1], 'time_ago': ((new Date()-new Date(blob[0]))/1000).toFixed(1)});
+    }).catch(err => {console.log(err); return res.json([]);});
+});
+
+router.get('/get_data', function(req, res) {
   var q = url.parse(req.url, true).query;
   var reading = q.reading;
   var binning = q.binning;
   var history = q.history;
-  return res.json([]);
-
-  if (typeof reading == 'undefined')
+  var topic = reading_lut[reading.split('_')[0]];
+  if (typeof reading == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
-  var url = "";
 
-  // TODO finish here
-
-  axios.get(url)
-  .then(response => {
-
-  }).catch(err => {console.log(err); res.send({err: err});});
-});
-
-router.get('/get_last_point', function(req, res) {
-  var reading = url.parse(req.url, true).query.reading;
-  if (typeof reading == 'undefined')
-    return res.json({});
-  var url = ""
-  return res.json({});
-
-  // TODO ask influx
+  var get_url = new URL(influx_url);
+  var params = new URLSearchParams({
+    u: process.env.INFLUX_USERNAME,
+    p: process.env.INFLUX_PASSWORD,
+    db: process.env.DOBERVIEW_EXPERIMENT,
+    q: `SELECT mean(${reading}) FROM ${topic} WHERE time > now()-${history} GROUP BY time(${binning}) fill(none);`
+  });
+  get_url.search=params.toString();
+  axios.get(get_url.toString()).then(
+    data => res.json(data.data.results[0]['series'][0]['values'].map(row => [new Date(row[0]).getTime(), row[1]]))
+  ).catch(err => {console.log(err); return res.json([]);});
 });
 
 module.exports = router;
