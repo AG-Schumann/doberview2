@@ -11,41 +11,34 @@ block content
   section.bg-light.text-dark.p-3
     .main-container
       .row
-        .col-md-8
+        .col-lg-8
           .card
             .card-body
-              span
-                strong Group by: &nbsp;
-              #groupButtons.btn-group(role='group')
-                input#btnradio1.btn-check(type='radio' name='btnradio' value='sensor' autocomplete='off' checked='')
-                label.btn.btn-outline-primary(for='btnradio1') Sensor
-                input#btnradio2.btn-check(type='radio' name='btnradio' value='subsystem' autocomplete='off')
-                label.btn.btn-outline-primary(for='btnradio2') Subsystem
-                input#btnradio3.btn-check(type='radio' name='btnradio'  value='topic' autocomplete='off')
-                label.btn.btn-outline-primary(for='btnradio3') Quantity
+              .d-flex.justify-content-between
+                div
+                  span
+                    strong Group by: &nbsp;
+                  #groupButtons.btn-group(role='group')
+                    input#btnradio1.btn-check(type='radio' name='btnradio' value='sensor' autocomplete='off' onclick='UpdateOnce()' checked='')
+                    label.btn.btn-outline-primary(for='btnradio1') Sensor
+                    input#btnradio2.btn-check(type='radio' name='btnradio' value='subsystem' autocomplete='off' onclick='UpdateOnce()')
+                    label.btn.btn-outline-primary(for='btnradio2') Subsystem
+                    input#btnradio3.btn-check(type='radio' name='btnradio'  value='topic' autocomplete='off' onclick='UpdateOnce()')
+                    label.btn.btn-outline-primary(for='btnradio3') Quantity
+                div.form-check.form-switch
+                  label.h5.form-check-label(for='show_unmonitored')
+                    strong show unmonitored
+
+                    input#show_unmonitored.form-check-input(type='checkbox')
+            .card-text
               table.table.table-striped.table-hover#reading_table
-        .col-md-4
+        .col-lg-4
           .row
             .card
               .card-body
                 .h3.card-title Hosts
               .card-text
                 table.table.table-hover.table-borderless#host_table
-                  tr
-                    td Hermes
-                    td
-                      i.fas.fa-heartbeat
-                    td 12 seconds ago
-                  tr.table-danger
-                    td Apollo
-                    td
-                      i.fas.fa-heartbeat
-                    td more than one our ago
-                  tr
-                    td Charon
-                    td
-                      i(hidden='').fas.fa-heartbeat
-                    td.text-secondary OFFLINE
             .card
               .card-body
                 .h3.card-title Shifters
@@ -87,7 +80,9 @@ block content
 
       GetGroupedReadings('sensor');
       PopulateReadings();
+      GetHosts();
       setInterval(UpdateOnce, 5000);
+      setInterval(GetHosts, 5000);
 
     });
 

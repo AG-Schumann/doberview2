@@ -27,8 +27,6 @@ html
               li.nav-item
                 a.nav-link(href='/pipeline') Pipeline
               li.nav-item
-                a.nav-link(href='/hosts') Hosts
-              li.nav-item
                 a.nav-link(href='/contacts') Shifters
               li.nav-item
                 a.nav-link(href='/grafana') Grafana
@@ -42,18 +40,18 @@ html
                   option(value='gemse') GeMSE
     div#content(style="padding-left:5px;padding-right:5px;padding-top:0px;padding-bottom:0px")
       #readingbox.modal.fade(tabindex='-1' aria-labelledby='readingboxLabel' aria-hidden='true')
-        .modal-dialog
+        .modal-dialog.modal-xl
           .modal-content
-            form#update_reading_form
-              .modal-header
-                h5#readingboxLabel.modal-title
-                  .form-check.form-switch
-                    input#reading_status.form-check-input(type='checkbox')
-                    label.form-check-label(for='reading_status')
-                      span#detail_reading_name
-                button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-              .modal-body
-                div.main_container
+            .modal-header
+              h5#readingboxLabel.modal-title
+                .form-check.form-switch
+                  input#reading_status.form-check-input(type='checkbox')
+                  label.form-check-label(for='reading_status')
+                    span#detail_reading_name
+              button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+            .modal-body.row
+              .col-lg-6
+                form#update_reading_form
                   table
                     tbody
                       tr
@@ -72,6 +70,23 @@ html
                             label.btn.btn-outline-primary(for='default_btn') Default
                             input#testing_btn.btn-check(type='radio' name='runmode_btn'  value='testing' autocomplete='off')
                             label.btn.btn-outline-primary(for='testing_btn') Testing
+              .col-lg-6
+                .d-flex.flex-row-reverse
+                  .dropdown
+                    button#reading_history.btn.btn-outline-secondary.dropdown-toggle(type='button' data-bs-toggle='dropdown' aria-expanded='false')
+                      | 10m
+                    ul.dropdown-menu(aria-labelledby='dropdownMenu2')
+                      li
+                        button.dropdown-item(type='button' onclick='DrawReadingHistory("None", "10m")') 10m
+                      li
+                        button.dropdown-item(type='button' onclick='DrawReadingHistory("None", "1h")') 1h
+                      li
+                        button.dropdown-item(type='button' onclick='DrawReadingHistory("None", "1d")') 1d
+                      li
+                        button.dropdown-item(type='button' onclick='DrawReadingHistory("None", "1w")') 1w
+                    button#refresh_btn.btn.btn-outline-secondary.mx-1
+                      i.fa.fa-sync-alt
+                div.main_container.reading_chart#reading_chart
             .modal-footer
               button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
               button.btn.btn-primary(type='button') Save changes
@@ -115,5 +130,40 @@ html
                 button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
                 button.btn.btn-primary(type='button') Save changes
 
+      #hostbox.modal.fade
+        .modal-dialog
+          .modal-content
+            .modal-header
+              h5#hostboxLabel.modal-title
+                span#detail_host_name
+              button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+            .modal-body.row
+              .col-md-6
+                ul.list-group
+                  li.list-group-item An item
+                  li.list-group-item A second item
+                  li.list-group-item A third item
+                  li.list-group-item A fourth item
+                  li.list-group-item And a fifth one
+              .col-md-6
+                ul.list-group
+                  li.list-group-item An item
+                  li.list-group-item A second item
+                  li.list-group-item A third item
+                  li.list-group-item A fourth item
+                  li.list-group-item And a fifth one
+
       block content
 
+  script.
+    $(".dropdown-menu li .dropdown-item").click(function () {
+      var selText = $(this).text();
+      $(this).parents('.dropdown').find('.dropdown-toggle').html(selText);
+    });
+    $("#refresh_btn").click(function () {
+      var interval = $(this).parents('.dropdown').find('.dropdown-toggle').text();
+      DrawReadingHistory('None', interval);
+    });
+    $("#readingbox").on('hide.bs.modal', function(){
+      $("#reading_history").html('10m')
+    });

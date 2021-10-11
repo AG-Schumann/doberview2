@@ -1,5 +1,5 @@
-const binning = ['1s', '10s', '1m', '10m', '1h'];
-const history = ['10m', '1h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
+const binning = {'10m': '1s', '1h': '6s', '1d': '2m', '1w': '15m'};
+const default_interval = '10m'
 
 function ReadingDropdown(reading) {
   $.getJSON(`/sensors/reading_detail?reading=${reading}`, (data) => {
@@ -7,24 +7,24 @@ function ReadingDropdown(reading) {
     if (Object.keys(data).length == 0)
       return;
     $("#detail_reading_name").html(data.name);
-    $("#reading_desc").val(data.description).attr('size', data.description.length + 3);
+    $("#reading_desc").val(data.description).attr('size', data.description.length + 1);
     $("#reading_status").prop('checked', data.status === 'online');
     $("#readout_interval").val(data.readout_interval);
     $("#runmode option").filter(function() {return this.value == data.runmode;}).prop('selected', true);
     $("#pipeline_list").empty();
     if (typeof data.pipelines != 'undefined')
-      data.pipelines.forEach(name => $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="small-button">${name}</button></a></li>`));
+      data.pipelines.forEach(name => $("#pipeline_list")
+          .append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="small-button">${name}</button></a></li>`));
     else
       $("#pipeline_list").append("<li>None</li>");
     $("#reading_sensor_name").text(data.sensor).attr('onclick', `SensorDropdown("${data.sensor}")`);
     $("#readingbox").css("display", "block");
   });
-  DrawReadingHistory(reading);
+  DrawReadingHistory(reading, default_interval);
 }
 
 function SensorDropdown(sensor) {
   $.getJSON(`/sensors/sensor_detail?sensor=${sensor}`, (data) => {
-    console.log(data);
     $("#readingbox").css("display", "none");
     if (Object.keys(data).length == 0)
       return;
@@ -56,18 +56,29 @@ function SensorDropdown(sensor) {
   });
 }
 
-function RangeSliders() {
-  $("#reading_binning_label").html(binning[$("#reading_binning").val()]);
-  $("#reading_history_label").html(history[$("#reading_history").val()]);
+function GetMonitoringHost(sensor) {
+  $.getJSON(`/sensors/monitoring?sensor=${sensor}`, (data) => {
+    if(data == null) {
+      $(`#${sensor}_monitoring_host`).text("unmonitored");
+    }
+    $(`#${sensor}_monitoring_host`).text("monitored by " + data.hostname);
+
+  });
 }
 
-function DrawReadingHistory(reading) {
+function HostDropdown(host) {
+  $.getJSON(`/hosts/host_detail?host=${host}`, (data) => {
+    $("#host_heartbeat_timer").val(data.heartbeat_timer);
+    $("#host_sysmon_timer").val(data.sysmon_timer);
+    $("#host_default_list").html(data.default.reduce((tot, def) => tot + `<li>${def} <button class="btn btn-success" onclick="StopSensor('${host}', '${def}')"></button></li>`,"") || "<li>None</li>");
+  });
+}
 
-  reading = reading || $("#detail_reading_name").html();
-  var bin_i = $("#reading_binning").val();
-  var hist_i = $("#reading_history").val();
-
-  $.getJSON(`/sensors/get_data?reading=${reading}&history=${history[hist_i]}&binning=${binning[bin_i]}`, data => {
+function DrawReadingHistory(reading, interval) {
+  if (reading === 'None') {
+    reading = $("#detail_reading_name").html();
+  }
+  $.getJSON(`/sensors/get_data?reading=${reading}&history=${interval}&binning=${binning[interval]}`, data => {
     Highcharts.chart('reading_chart', {
       chart: {
         zoomtype: 'xy',
@@ -79,6 +90,12 @@ function DrawReadingHistory(reading) {
       xAxis: {type: 'datetime'},
       yAxis: {title: {text: null}},
       legend: {enabled: false},
+      plotOptions: {
+        series: {
+          color: "#f0ad4e",
+          lineWidth: 5,
+        }
+      },
     });
     return;
   });

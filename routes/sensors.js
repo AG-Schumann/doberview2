@@ -3,7 +3,7 @@ var url = require('url');
 var axios = require('axios').default;
 var router = express.Router();
 
-const influx_url = `http://localhost:8086/query`;
+const influx_url = `http://10.4.73.172:8086/query`;
 const reading_lut = {T: 'temperature', 'n2lm': 'level', F: 'flow', M: 'weight', P: 'pressure'};
 
 router.get('/', function(req, res) {
@@ -17,6 +17,16 @@ router.get('/sensor_detail', function(req, res) {
   if (typeof sensor == 'undefined')
     return res.json({});
   req.db.get('sensors').findOne({name: sensor})
+  .then(doc => res.json(doc))
+  .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
+router.get('/monitoring', function(req, res) {
+  var q = url.parse(req.url, true).query;
+  var sensor = q.sensor;
+  if (typeof sensor == 'undefined')
+    return res.json({});
+  req.common_db.get('hosts').findOne({default: sensor})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
