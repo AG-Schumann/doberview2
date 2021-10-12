@@ -22,9 +22,11 @@ block content
             th Period
             th Latest cycle
             th Last error
+            th Silence
             th Stop
             th Restart
-            th Silence
+          tr
+            td(colspan=7) Loading!
       h4 Silent pipelines &nbsp;
         i.fas.fa-bell-slash
         table.table.table-hover.table-striped#silent_pipelines
@@ -34,8 +36,10 @@ block content
             th Latest cycle
             th Last error
             th Activate
-            th Restart
             th Stop
+            th Restart
+          tr
+            td(colspan=7) Loading!
       h4 Inactive pipelines &nbsp;
         i.fas.fa-hand-paper
         table.table.table-hover.table-striped#inactive_pipelines
@@ -43,6 +47,8 @@ block content
             th Name
             th Start silent
             th Start active
+          tr
+            td(colspan=3) Loading!
       br
       p A comment on pipeline cycles: the internal buffers take a few cycles to fill, so there will always be "errors" shortly after pipeline startup. As long as the error number is small and the cycle number isn't, it's fine
     div#pipeline_vis
@@ -61,10 +67,6 @@ block content
     button.btn.btn-default(onclick="AddNewPipeline()") Add new
     button.btn.btn-default(onclick="UpdatePipeline()") Update
     button.btn.btn-warning(onclick="DeletePipeline()") Delete
-    button.btn.btn-info(onclick="FillTemplate()") Alarm template
-    br
-    div
-      table#alarm_table
     br
     span#load_me(hidden disabled) #{load}
 
@@ -76,3 +78,8 @@ block content
       if ($("#load_me").html() != "")
         Fetch($("#load_me").html());
     });
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+        document.getElementsByClassName("dropdown-content").forEach(e => e.style.display('none'));
+      }
+    }

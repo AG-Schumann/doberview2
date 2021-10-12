@@ -11,8 +11,22 @@ function ReadingDropdown(reading) {
     $("#reading_status").prop('checked', data.status === 'online');
     $("#readout_interval").val(data.readout_interval);
 
+    if (typeof data.alarm != 'undefined' && data.alarm.length == 2) {
+      $("#alarm_low").val(data.alarm[0]);
+      $("#alarm_high").val(data.alarm[1]);
+      $("#alarm_mid").val((data.alarm[1]+data.alarm[0])/2);
+      $("#alarm_range").val((data.alarm[1]-data.alarm[0])/2);
+      $("#alarm_recurrence").val(data.alarm_recurrence);
+    } else {
+      $("#alarm_low").val(null);
+      $("#alarm_high").val(null);
+      $("#alarm_mid").val(null);
+      $("#alarm_range").val(null);
+      $("#alarm_recurrence").val(null);
+    }
+
     $("#pipeline_list").empty();
-    if (typeof data.pipelines != 'undefined')
+    if (typeof data.pipelines != 'undefined' && data.pipelines.length > 0)
       data.pipelines.forEach(name => $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="small-button">${name}</button></a></li>`));
     else
       $("#pipeline_list").append("<li>None</li>");
@@ -91,8 +105,11 @@ function UpdateReading() {
     readout_interval: $("#readout_interval").val(),
     description: $("#reading_desc").val(),
     status: $("#reading_status").is(":checked") ? "online" : 'offline',
-    runmode: $("#runmode").val()
   };
+  if ($("#alarm_low").val() && $("#alarm_high").val()) {
+    data.alarm = [$("#alarm_low").val(), $("#alarm_high").val()];
+    data.alarm_recurrence = $("#alarm_recurrence").val();
+  }
   $.ajax({
     type: 'POST',
     url: '/sensors/update_reading',

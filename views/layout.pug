@@ -74,10 +74,31 @@ html
               label(for="readout_interval") Readout interval &nbsp;
               input(type="number" id="readout_interval" name="readout_interval" max="300" size='4')
               br
+              label Alarms
+              table
+                tr
+                  td
+                    label(for="alarm_low") Low
+                    input(type="number" id="alarm_low" name="alarm_low")
+                  td
+                    label(for="alarm_mid") Setpoint
+                    input(type="number" id="alarm_mid" name="alarm_mid")
+                tr
+                  td
+                    label(for="alarm_high") High
+                    input(type="number" id="alarm_high" name="alarm_high")
+                  td
+                    label(for="alarm_range") Half-range
+                    input(type="number" id="alarm_range" name="alarm_range")
+                tr
+                  td
+                    label(for="alarm_recurrence") Recurrence
+                    input(type="number" id="alarm_recurrence" name="alarm_recurrence" min="1" step="1")
+              br
               button.btn.btn-info(onclick="UpdateReading()") Update reading
               br
               br
-              label(for="alarms") Pipelines involving this reading:
+              label Pipelines involving this reading:
               ul#pipeline_list
             div.col-md-4.chart_header
               strong Recent history &nbsp; &nbsp;
@@ -133,16 +154,15 @@ html
 
     script.
       $(document).ready(()=>{
-
-        $('.sidebarCollapse').on('click', () => {
-          $("#sidebar").toggleClass('active');
-          $(".overlay").toggleClass('active');
-          $("#sidebar_wrapper").toggleClass("active");
-          $(".sidebarCollapse").toggleClass("active");
-          $("#topbar").toggleClass("active");
-        });
+        let changelowhigh = () => {var low = $("#alarm_low").val(); var high = $("#alarm_high").val(); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}};
+        let changemidrange = () => {var mid = $("#alarm_mid").val(); var range = $("#alarm_range").val(); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}};
+        $("#alarm_low").attr('onchange', changelowhigh);
+        $("#alarm_high").attr('onchange', changelowhigh);
+        $("#alarm_mid").attr('onchange', changemidrange);
+        $("#alarm_range").attr('onchange', changemidrange);
       });
       window.onclick = function(event) {
-        if (event.target == document.getElementById("readingbox")) event.target.style.display = 'none';
-        if (event.target == document.getElementById("sensorbox")) event.target.style.display = 'none';
+        document.getElementsByClassName("modalbox").forEach(elem => {if (event.target == elem) elem.style.display = 'none';});
+        //if (event.target == document.getElementById("readingbox")) event.target.style.display = 'none';
+        //if (event.target == document.getElementById("sensorbox")) event.target.style.display = 'none';
       }

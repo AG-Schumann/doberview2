@@ -105,17 +105,13 @@ router.post('/update_reading', function(req, res) {
   }
   if (typeof data.status != 'undefined' && (data.status == "online" || data.status == "offline"))
     updates['status'] = data.status;
-  if (typeof data.runmode != 'undefined')
-    updates['runmode'] = data.runmode;
-  var promises = [];
-  if (Object.keys(updates).length != 0)
-    promises.push(req.db.get('readings').update({sensor: sensor, name: reading}, {$set: updates}));
-  if (promises.length > 0) {
-    Promise.all(promises)
+  if (typeof data.alarm != 'undefined' && data.alarm.length == 2) {
+    updates['alarm'] = [data.alarm[0], data.alarm[1]];
+    updates['alarm_recurrence'] = data.alarm_recurrence;
+  }
+  req.db.get('readings').update({sensor: sensor, name: reading}, {$set: updates})
     .then(() => res.json({msg: 'Success'}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
-  } else
-    return res.json({});
 });
 
 router.get('/get_last_point', function(req, res) {
@@ -133,10 +129,12 @@ router.get('/get_last_point', function(req, res) {
     q: `SELECT last(${reading}) FROM ${topic};`
   });
   get_url.search=params.toString();
-  axios.get(get_url.toString()).then(
-    data => {var blob = data.data.results[0]['series'][0]['values'][0];
-      // The formatting on this is monstrous
-      return res.json({'value': blob[1], 'time_ago': ((new Date()-new Date(blob[0]))/1000).toFixed(1)});
+  axios({url: get_url.toString(),
+    method: 'get',
+    headers: {'Accept': 'application/csv'}
+  }).then(resp => {
+    var blob = resp.data.split('\n')[1].split(',');
+    return res.json({'value': parseFloat(blob[3]), 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
     }).catch(err => {console.log(err); return res.json([]);});
 });
 
@@ -157,8 +155,12 @@ router.get('/get_data', function(req, res) {
     q: `SELECT mean(${reading}) FROM ${topic} WHERE time > now()-${history} GROUP BY time(${binning}) fill(none);`
   });
   get_url.search=params.toString();
-  axios.get(get_url.toString()).then(
-    data => res.json(data.data.results[0]['series'][0]['values'].map(row => [new Date(row[0]).getTime(), row[1]]))
+  axios({url: get_url.toString(),
+    method: 'get',
+    headers: {'Accept': 'application/csv'}
+  }).then( blob => {
+    var data = blob.data.split('\n');
+    return res.json(data.filter((e, i) => i > 0).map(row => {var x = row.split(); return [x[2]/1e6, parseFloat(x[3])];}));
   ).catch(err => {console.log(err); return res.json([]);});
 });
 
