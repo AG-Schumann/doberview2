@@ -2,6 +2,10 @@ const binning = ['1s', '10s', '1m', '10m', '1h'];
 const history = ['10m', '1h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
 
 function ReadingDropdown(reading) {
+  $("#alarm_low").change(() => {var low = $("#alarm_low").val(); var high = $("#alarm_high").val(); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}});
+  $("#alarm_high").change(() => {var low = $("#alarm_low").val(); var high = $("#alarm_high").val(); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}});
+  $("#alarm_mid").change(() => {var mid = $("#alarm_mid").val(); var range = $("#alarm_range").val(); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
+  $("#alarm_range").change(() => {var mid = $("#alarm_mid").val(); var range = $("#alarm_range").val(); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
   $.getJSON(`/sensors/reading_detail?reading=${reading}`, (data) => {
     $("#sensorbox").css("display", "none");
     if (Object.keys(data).length == 0)
@@ -11,11 +15,11 @@ function ReadingDropdown(reading) {
     $("#reading_status").prop('checked', data.status === 'online');
     $("#readout_interval").val(data.readout_interval);
 
-    if (typeof data.alarm != 'undefined' && data.alarm.length == 2) {
-      $("#alarm_low").val(data.alarm[0]);
-      $("#alarm_high").val(data.alarm[1]);
-      $("#alarm_mid").val((data.alarm[1]+data.alarm[0])/2);
-      $("#alarm_range").val((data.alarm[1]-data.alarm[0])/2);
+    if (typeof data.alarm_thresholds != 'undefined' && data.alarm_thresholds.length == 2) {
+      $("#alarm_low").val(data.alarm_thresholds[0]);
+      $("#alarm_high").val(data.alarm_thresholds[1]);
+      $("#alarm_mid").val((data.alarm_thresholds[1]+data.alarm_thresholds[0])/2);
+      $("#alarm_range").val((data.alarm_thresholds[1]-data.alarm_thresholds[0])/2);
       $("#alarm_recurrence").val(data.alarm_recurrence);
     } else {
       $("#alarm_low").val(null);
@@ -90,7 +94,7 @@ function DrawReadingHistory(reading) {
       },
       title: {text: null},
       credits: {enabled: false},
-      series: [{type: 'line', data: data, animation: {duration: 250}}],
+      series: [{type: 'line', data: data.filter(row => (row[0] && row[1])), animation: {duration: 250}}],
       xAxis: {type: 'datetime'},
       yAxis: {title: {text: null}},
       legend: {enabled: false},

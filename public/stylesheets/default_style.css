@@ -81,7 +81,7 @@ ul.CTAs li a {
   background-color: #0c1178;
   color: #fff;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .modalbox {

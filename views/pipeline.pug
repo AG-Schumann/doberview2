@@ -72,6 +72,7 @@ block content
 
   script.
     $(document).ready(function() {
+      PopulateDropdown();
       PopulatePipelines();
       document.jsoneditor = new JSONEditor(document.getElementById('json_text',
       {"modes":  ['tree', 'view', 'form', 'code', 'text']}));

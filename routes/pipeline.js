@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
 
 router.get('/get_pipelines', function(req, res) {
   var now = new Date();
-  req.db.get('pipelines').find({}, {fields: {name: 1, status: 1, heartbeat: 1, cycles: 1, period: 1}})
+  req.db.get('pipelines').find({}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, period: 1}})
   .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.hearbeat)/1000, cycle: doc.cycles, error: doc.error, period: doc.period}))))
   .catch(err => {console.log(err.message); return res.json([]);});
 });

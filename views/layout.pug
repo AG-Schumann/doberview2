@@ -2,6 +2,12 @@ doctype html
 html
   head
     title=DOBERview
+    link(rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png")
+    link(rel="icon" type="image/png" href="/images/favicon-196x196.png" sizes="196x196")
+    link(rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96")
+    link(rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32")
+    link(rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16")
+    link(rel="icon" type="image/png" href="/images/favicon-128.png" sizes="128x128")
     link(rel="stylesheet" href="/stylesheets/bootstrap.min.css")
     link(rel="stylesheet" href="/stylesheets/bootstrap-theme.min.css")
     link(rel='stylesheet' href='/stylesheets/default_style.css')
@@ -18,9 +24,10 @@ html
     div.wrapper
       div#sidebar_wrapper
         nav#sidebar.colored
-          div.experimentIconDiv(style="margin-top:0px;background:#0e0e75;height:30px;padding-top:5px;padding-left:3px")
+          img#exp_logo(src="/images/pancake.png" alt="Pancake" width="65")
+          //div.experimentIconDiv(style="margin-top:0px;background:#0e0e75;height:30px;padding-top:5px;padding-left:3px;padding-bottom:5px")
+            //i.fas.fa-hamburger
             //span.CTAs(style="float:left;color:white") Experiment
-              i.fas.fa-hamburger
               select.cselect#experiment_select
                 option(value="pancake" selected) Pancake
                 option(value="xebra") Xebra
@@ -154,15 +161,11 @@ html
 
     script.
       $(document).ready(()=>{
-        let changelowhigh = () => {var low = $("#alarm_low").val(); var high = $("#alarm_high").val(); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}};
-        let changemidrange = () => {var mid = $("#alarm_mid").val(); var range = $("#alarm_range").val(); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}};
-        $("#alarm_low").attr('onchange', changelowhigh);
-        $("#alarm_high").attr('onchange', changelowhigh);
-        $("#alarm_mid").attr('onchange', changemidrange);
-        $("#alarm_range").attr('onchange', changemidrange);
       });
       window.onclick = function(event) {
-        document.getElementsByClassName("modalbox").forEach(elem => {if (event.target == elem) elem.style.display = 'none';});
+        var elems = document.getElementsByClassName("modalbox");
+        for (var i = 0; i < elems.length; i++)
+          if (event.target == elems[i]) elems[i].style.display = 'none';
         //if (event.target == document.getElementById("readingbox")) event.target.style.display = 'none';
         //if (event.target == document.getElementById("sensorbox")) event.target.style.display = 'none';
       }

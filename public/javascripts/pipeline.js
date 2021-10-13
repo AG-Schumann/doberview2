@@ -1,8 +1,7 @@
 function PopulateDropdown() {
   $.getJSON("/pipeline/get_pipelines", data => {
-    data.forEach(doc => {
-      doc['names'].forEach(n => $("#pipeline_select").append(`<option value='${n}'>${n}</option>`));
-    });
+    $("#pipeline_select").empty();
+    data.forEach(doc => $("#pipeline_select").append(`<option value='${doc.name}'>${doc.name}</option>`));
   });
 }
 

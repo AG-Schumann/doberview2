@@ -159,9 +159,9 @@ router.get('/get_data', function(req, res) {
     method: 'get',
     headers: {'Accept': 'application/csv'}
   }).then( blob => {
-    var data = blob.data.split('\n');
-    return res.json(data.filter((e, i) => i > 0).map(row => {var x = row.split(); return [x[2]/1e6, parseFloat(x[3])];}));
-  ).catch(err => {console.log(err); return res.json([]);});
+    var data = blob.data.split('\n').slice(1);
+    return res.json(data.map(row => {var x = row.split(','); return [parseFloat(x[2]/1e6), parseFloat(x[3])];}));
+  }).catch(err => {console.log(err); return res.json([]);});
 });
 
 module.exports = router;

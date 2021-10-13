@@ -14,12 +14,12 @@ var app = express();
 // uri has format mongodb://{user}:{pass}@{host}:{port}
 var experiment = process.env.DOBERVIEW_EXPERIMENT;
 // TODO figure out some way of changing experiments dynamically
-var uri = `${process.env.DOBERVIEW_DATABASE_URI}/${experiment}_settings`;
+var uri = `${process.env.DOBERVIEW_MONGO_URI}/${experiment}_settings`;
 console.log(uri);
 var db = monk(uri, {authSource: 'admin'});
-uri = `${process.env.DOBERVIEW_DATABASE_URI}/${experiment}_logging`;
+uri = `${process.env.DOBERVIEW_MONGO_URI}/${experiment}_logging`;
 var log_db = monk(uri, {authSource: 'admin'});
-uri = `${process.env.DOBERVIEW_DATABASE_URI}/common`;
+uri = `${process.env.DOBERVIEW_MONGO_URI}/common`;
 var common_db = monk(uri, {authSource: 'admin'});
 
 // view engine setup
