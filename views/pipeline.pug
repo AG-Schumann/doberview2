@@ -16,41 +16,50 @@ block content
     div
       h4 Active pipelines &nbsp;
         i.fas.fa-bell
-        table.table.table-hover.table-striped#active_pipelines
-          tr
-            th Name
-            th Period
-            th Latest cycle
-            th Last error
-            th Silence
-            th Stop
-            th Restart
-          tr
-            td(colspan=7) Loading!
+        table.table.table-hover.table-striped
+          thead
+            tr
+              th Name
+              th Cycle rate
+              th Latest cycle
+              th Last error
+              th Silence
+              th Stop
+              th Restart
+          tbody#active_pipelines
+            tr
+              td(colspan=7) Loading!
       h4 Silent pipelines &nbsp;
         i.fas.fa-bell-slash
-        table.table.table-hover.table-striped#silent_pipelines
-          tr
-            th Name
-            th Period
-            th Latest cycle
-            th Last error
-            th Activate
-            th Stop
-            th Restart
-          tr
-            td(colspan=7) Loading!
+        table.table.table-hover.table-striped
+          thead
+            tr
+              th Name
+              th Cycle rate
+              th Latest cycle
+              th Last error
+              th Activate
+              th Stop
+              th Restart
+          tbody#silent_pipelines
+            tr
+              td(colspan=7) Loading!
       h4 Inactive pipelines &nbsp;
         i.fas.fa-hand-paper
-        table.table.table-hover.table-striped#inactive_pipelines
-          tr
-            th Name
-            th Start silent
-            th Start active
+        table.table.table-hover.table-striped
+          thead
+            tr
+              th Name
+              th Start silent
+              th Start active
+          tbody#inactive_pipelines
           tr
             td(colspan=3) Loading!
       br
-      p A comment on pipeline cycles: the internal buffers take a few cycles to fill, so there will always be "errors" shortly after pipeline startup. As long as the error number is small and the cycle number isn't, it's fine
+      p Comments on pipelines:
+        ul
+          li Cycles: the internal buffers take a few cycles to fill, so there will always be "errors" shortly after pipeline startup. As long as the error number is small and the cycle number isn't, it's fine
+          li Timing: It takes of order 10ms to get a value from Influx. If the cycle rate is lower than this, something's not working.
     div#pipeline_vis
 
   div.main-container

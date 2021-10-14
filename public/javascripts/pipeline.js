@@ -23,14 +23,14 @@ function PopulatePipelines() {
       var n = doc.name;
       if (doc.status == 'active') {
         var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
-        row += `<td>${doc.period}</td><td>${doc.cycle}>/td><td>${doc.error}</td>`;
+        row += `<td>${doc.rate.toPrecision(3)}</td><td>${doc.cycle}>/td><td>${doc.error}</td>`;
         row += `<td class="dropdown"><i onclick="$('#${n}_drop').css('display', 'block')" class="${silent}"><div id="${n}_drop" class="dropbtn-content">` + durations.reduce((tot, row) => tot + `<button onclick=PipelineControl('silent','${n}',${row[0]}) class="btn btn-info dropbtn">${row[1]}</button>`, '') + '</div></td>';
         row += `<td><i onclick="PipelineControl('stop','${n}')" class="${stop}"></td>`;
         row += `<td><i onclick="PipelineControl('restart','${n}')" class="${restart}"></td></tr>`;
         $("#active_pipelines").append(row);
       } else if (doc.status == 'silent') {
         var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
-        row += `<td>${doc.period}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
+        row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
         row += `<td><i onclick="PipelineControl('active','${n}') class="${active}"></td>`;
         row += `<td><i onclick="PipelineControl('stop','${n}') class="${stop}"></td>`;
         row += `<td><i onclick="PipelineControl('restart','${n}')" class="${restart}"</td></tr>`;
@@ -49,26 +49,20 @@ function PopulatePipelines() {
 function FillTemplate() {
   var doc = {
     name: "INSERT NAME HERE",
-    pipeline: {
-      config: {
-        source: {
-          type: "InfluxSourceNode",
-          input_var: "INSERT READING NAME HERE",
-          downstream: ['alarm'],
-        },
-        alarm: {
-          type: 'SimpleAlarmNode',
-          upstream: ['source'],
-          input_var: 'INSERT READING NAME HERE'
-        }
+    pipeline: [
+      {
+        name: 'source'
+        type: "SensorRespondingAlarm",
+        input_var: "INSERT READING NAME HERE",
       },
-    },
-    period: "INSERT PERIOD HERE",
-    node_config: {
-      alarm: {
-        recurrence: 3,
-        alarm_levels: [[-1, 1], [-2, 2]]
-      }}
+      {
+        name: 'alarm',
+        type: 'SimpleAlarmNode',
+        upstream: ['source'],
+        input_var: 'INSERT READING NAME HERE'
+      }
+    ],
+    node_config: {}
   };
   Visualize(doc)
   document.jsoneditor.set(doc);
@@ -131,15 +125,21 @@ function AddNewPipeline() {
     return;
   }
   try{
-    parseFloat(doc.period);
-  }catch(err){alert('Is the period a valid number?'); return;}
-  doc['status'] = 'offline';
+    if (doc.pipeline.filter(n => n.input_var == 'INSERT READING NAME HERE').length > 0) {
+      alert('You didn\'t specify reading names');
+      return;
+    }
+  }catch(err){alert(err); return;}
 
-  //$.post("/pipeline/
+  $.post("/pipeline/add_pipeline", {doc: doc}, (data, status) => {
+    if (typeof data.err != 'undefined')
+      alert(data.err);
+  });
 }
 
-function DeletePipeline() {
-  $.post(`/pipeline/delete_pipeline`, {pipeline: $("#pipeline_select").val()}, (data, status) => {
+function DeletePipeline(name=null) {
+  name = name || $("#pipeline_select").val();
+  $.post(`/pipeline/delete_pipeline`, {pipeline: name}, (data, status) => {
     console.log(data);
     console.log(status);
   });

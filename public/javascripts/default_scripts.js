@@ -33,12 +33,36 @@ function ReadingDropdown(reading) {
     if (typeof data.pipelines != 'undefined' && data.pipelines.length > 0)
       data.pipelines.forEach(name => $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="small-button">${name}</button></a></li>`));
     else
-      $("#pipeline_list").append("<li>None</li>");
+      $("#pipeline_list").append(`<li><button class="btn btn-info" onclick=MakeAlarm("${data.name}")>Make new alarm</button></li>`);
     $("#reading_sensor_name").text(data.sensor).attr('onclick', `SensorDropdown("${data.sensor}")`);
     $("#readingbox").css("display", "block");
 
   });
   DrawReadingHistory(reading);
+}
+
+function MakeAlarm(name) {
+  var template = {
+    name: `alarm_${name}`,
+    node_config: {},
+    pipeline: [
+      {
+        name: 'source',
+        type: 'SensorRespondingAlarm',
+        input_var: name
+      },
+      {
+        name: 'alarm',
+        type: 'SimpleAlarmNode',
+        input_var: name,
+        upstream: ['source']
+      }
+    ]
+  };
+  $.post('/pipeline/add_pipeline', {doc: template}, (data, status) => {
+    if (typeof data.err != 'undefined')
+      alert(data.err);
+  });
 }
 
 function SensorDropdown(sensor) {
