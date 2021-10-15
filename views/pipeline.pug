@@ -60,6 +60,7 @@ block content
         ul
           li Cycles: the internal buffers take a few cycles to fill, so there will always be "errors" shortly after pipeline startup. As long as the error number is small and the cycle number isn't, it's fine
           li Timing: It takes of order 10ms to get a value from Influx. If the cycle rate is lower than this, something's not working.
+          li Timing: Pipelines only run as fast as the slowest reading they depend on. If you want a faster pipeline, speed up the readings.
     div#pipeline_vis
 
   div.main-container
@@ -74,7 +75,7 @@ block content
     br
     button.btn-btn-info(onclick="Visualize()") Visualize
     button.btn.btn-default(onclick="AddNewPipeline()") Add new
-    button.btn.btn-default(onclick="UpdatePipeline()") Update
+    button.btn.btn-default(onclick="DeletePipeline(null, AddNewPipeline)") Update
     button.btn.btn-warning(onclick="DeletePipeline()") Delete
     br
     span#load_me(hidden disabled) #{load}
@@ -90,6 +91,8 @@ block content
     });
     window.onclick = function(event) {
       if (!event.target.matches('.dropbtn')) {
-        document.getElementsByClassName("dropdown-content").forEach(e => e.style.display('none'));
+        var elems = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < elems.length; i++)
+          elems[e].style.display='none';
       }
     }

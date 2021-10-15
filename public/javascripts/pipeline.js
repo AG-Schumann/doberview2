@@ -24,7 +24,9 @@ function PopulatePipelines() {
       if (doc.status == 'active') {
         var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
         row += `<td>${doc.rate.toPrecision(3)}</td><td>${doc.cycle}>/td><td>${doc.error}</td>`;
-        row += `<td class="dropdown"><i onclick="$('#${n}_drop').css('display', 'block')" class="${silent}"><div id="${n}_drop" class="dropbtn-content">` + durations.reduce((tot, row) => tot + `<button onclick=PipelineControl('silent','${n}',${row[0]}) class="btn btn-info dropbtn">${row[1]}</button>`, '') + '</div></td>';
+        row += `<td class="dropdown"><i onclick="$('#${n}_drop').css('display', 'block')" class="${silent}">`;
+        row += `<div id="${n}_drop" class="dropbtn-content">`
+        row += durations.reduce((tot, row) => tot + `<button onclick=PipelineControl('silent','${n}',${row[0]}) class="btn btn-info dropbtn">${row[1]}</button>`, '') + '</div></td>';
         row += `<td><i onclick="PipelineControl('stop','${n}')" class="${stop}"></td>`;
         row += `<td><i onclick="PipelineControl('restart','${n}')" class="${restart}"></td></tr>`;
         $("#active_pipelines").append(row);
@@ -37,35 +39,13 @@ function PopulatePipelines() {
         $("#silent_pipelines").append(row);
       } else if (doc.status == 'inactive') {
         var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
-        row += `<td><i onclick="" class="${silent}"></td>`;
-        row += `<td><i class="${active}" onclick=''></td></tr>`;
+        row += `<td><i onclick="StartPipeline('${n}', 'silent')" class="${silent}"></td>`;
+        row += `<td><i class="${active}" onclick="StartPipeline('${n}', 'active')"></td></tr>`;
         $("#inactive_pipelines").append(row);
       } else
         console.log(doc);
     }); // data.forEach
   }); // getJSON
-}
-
-function FillTemplate() {
-  var doc = {
-    name: "INSERT NAME HERE",
-    pipeline: [
-      {
-        name: 'source'
-        type: "SensorRespondingAlarm",
-        input_var: "INSERT READING NAME HERE",
-      },
-      {
-        name: 'alarm',
-        type: 'SimpleAlarmNode',
-        upstream: ['source'],
-        input_var: 'INSERT READING NAME HERE'
-      }
-    ],
-    node_config: {}
-  };
-  Visualize(doc)
-  document.jsoneditor.set(doc);
 }
 
 function Fetch(pipeline) {
@@ -76,6 +56,7 @@ function Fetch(pipeline) {
     }
     Visualize(doc);
     document.jsoneditor.set(doc);
+    $("#pipeline_select option").filter(function() {return this.value === doc.name;}).prop('selected', 'true');
   }); // getJSON
 }
 
@@ -137,11 +118,29 @@ function AddNewPipeline() {
   });
 }
 
-function DeletePipeline(name=null) {
+function DeletePipeline(name=null, cb=null) {
   name = name || $("#pipeline_select").val();
   $.post(`/pipeline/delete_pipeline`, {pipeline: name}, (data, status) => {
-    console.log(data);
-    console.log(status);
+    if (typeof data.err != 'undefined') {
+      alert(data.err);
+      return;
+    }
+    if (cb) cb();
+  });
+}
+
+function StartPipeline(name, status) {
+  $.post('/pipeline/pipeline_ctl', {name: name, cmd: status}, (data, status) => {
+    if (typeof data.err != 'undefined') {
+      alert(data.err);
+      return;
+    }
+    $.post('/pipeline/pipeline_ctl', {name: name, cmd: 'start'}, (data, status) => {
+      if (typeof data.err != 'undefined') {
+        alert(data.err);
+        return;
+      }
+    });
   });
 }
 

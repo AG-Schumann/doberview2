@@ -25,18 +25,15 @@ router.get('/get_pipeline', function(req, res) {
 
 router.post('/add_pipeline', function(req, res) {
   var doc = req.body.doc;
-  doc['status'] = 'offline';
+  doc['status'] = 'inactive';
   doc['cycles'] = parseInt('0');
   doc['error'] = parseInt('0');
-  doc['depends_on'] = doc.pipeline.filter(node => node.type == 'InfluxSourceNode').map(node => node.input_var);
+  doc['rate'] = -1;
+  doc['depends_on'] = doc.pipeline.filter(n => (typeof n.upstream == 'undefined' || n.upstream.length == 0)).map(n => n.input_var);
   req.db.get('pipelines').insert(doc)
   .then(() => req.db.get('readings').update({name: {$in: doc['depends_on']}}, {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
   .then(() => res.json({}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
-});
-
-router.post('/update_pipeline', function(req, res) {
-
 });
 
 router.post('/delete_pipeline', function(req, res) {
@@ -44,21 +41,25 @@ router.post('/delete_pipeline', function(req, res) {
   if (typeof data.pipeline == 'undefined')
     return res.sendStatus(403);
   req.db.get('pipelines').remove({name: data.pipeline})
-  .then(() => res.redirect('/pipelines'))
-  .catch(err => {console.log(err.message); return res.redirect('/pipelines');});
+  .then(() => req.db.get('readings').update({'pipelines': data.pipeline}, {$pull: {pipelines: data.pipeline}}, {multi: true}))
+  .then(() => res.json({}))
+  .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 router.post('/pipeline_ctl', function(req, res) {
   var data = req.body.data;
+  var ack = parseInt('0');
   if (data.cmd == 'active') {
     if (typeof data.delay == 'undefined') {
       req.db.get('pipelines').update({name: data.name},{$set: {status: 'active'}});
     } else {
       // we don't want this command going out right away so we have to schedule it
       try {
-        var delay = parseInt(data.delay);
-        req.log_db.get('commands').insert({command: `pipelinectl_active ${data.name}`, name: `pl_${data.name}`,
-          acknowledged: parseInt('0'), logged: new Date(new Date() - (-1000 * delay))});
+        req.log_db.get('commands').insert(
+          {command: `pipelinectl_active ${data.name}`,
+            name: `pl_${data.name}`,
+            acknowledged: ack,
+            logged: new Date(new Date() - (-1000 * parseInt(data.delay)))});
       } catch(error) {
         console.log(error.message);
         console.log(data.delay);
@@ -68,17 +69,53 @@ router.post('/pipeline_ctl', function(req, res) {
     req.db.get('pipelines').update({name: data.name},{$set: {status: 'silent'}});
   } else if (data.cmd == 'restart') {
     if (data.name.includes('alarm')) // all alarm pls handled by one monitor
-      req.log_db.get('commands').insert({command: `pipelinectl_restart ${data.name}`, name: 'pl_alarm', acknowledged: parseInt('0'), logged: new Date()});
+      req.log_db.get('commands').insert({
+        command: `pipelinectl_restart ${data.name}`,
+        name: 'pl_alarm',
+        acknowledged: ack,
+        logged: new Date()});
     else // two-step process to restart a control pl
-      req.log_db.get('commands').insert([{command: `stop`, name: `pl_${data.name}`, acknowledged: parseInt('0'), logged: new Date()}, {command: `start pl_${data.name}`, name: 'hypervisor', acknowledged: parseInt('0'), logged: new Date(new Date() - (-5000))}]); // js why must your dates be bullshit
+      req.log_db.get('commands').insert([
+        {
+          command: `stop`,
+          name: `pl_${data.name}`,
+          acknowledged: ack,
+          logged: new Date()
+        },
+        {
+          command: `start pl_${data.name}`,
+          name: 'hypervisor',
+          acknowledged: ack,
+          logged: new Date(new Date() - (-10000)) // js why must your dates be bullshit
+        }]);
   } else if (data.cmd == 'stop') {
-    var command = data.name.includes('alarm') ? `pipelinectl_stop ${data.name}` : 'stop';
-    var target = data.name.includes('alarm') ? 'pl_alarm' : data.name;
-    req.log_db.get('commands').insert({command: command, name: target, acknowledged: parseInt('0'), logged: new Date()});
+    var command, target;
+    if (data.name.includes('alarm') {
+      command = `pipelinectl_stop ${data.name}`;
+      target = 'pl_alarm';
+    } else {
+      command = 'stop';
+      target = `pl_${data.name}`;
+    }
+    req.log_db.get('commands').insert({
+      command: command,
+      name: target,
+      acknowledged: ack,
+      logged: new Date()});
   } else if (data.cmd == 'start') {
-    var target = data.name.includes('alarm') ? 'pl_alarm' : 'hypervisor';
-    var cmd = data.name.includes('alarm') ? `'pipelinectl_start ${data.name}` : `start pl_${data.name}`;
-    req.log_db.get('commands').insert({command: cmd, name: target, acknowledged: parseInt('0'), logged: new Date()});
+    var command, target;
+    if (data.name.includes('alarm') {
+      command = `pipelinectl_start ${data.name}`;
+      target = 'pl_alarm';
+    } else {
+      command = `start pl_${data.name}`;
+      target = 'hypervisor';
+    }
+    req.log_db.get('commands').insert({
+      command: command,
+      name: target,
+      acknowledged: ack,
+      logged: new Date()});
   }
   return res.sendStatus(304);
 });
