@@ -126,6 +126,11 @@ html
             div.main_container
               strong Sensor detail: &nbsp;
               span#detail_sensor_name
+              strong &nbsp; Status: &nbsp;
+              span#detail_sensor_status
+              br
+              button.btn.btn-info#sensor_stop_btn(onclick="StopSensor()") Stop
+              button.btn.btn-info#sensor_stop_btn(onclick="StartSensor()") Start
               span.btn.top-right(onclick="$('#sensorbox').css('display','none')") &times;
               br
               form#update_sensor_form
@@ -135,16 +140,18 @@ html
                   span &nbsp; &nbsp; &nbsp;
                   label(for="sensor_port") Port &nbsp
                   input(type="number" id="sensor_port" name="sensor_port" min="1025" max="65535" step="1")
+                  label(for="host") Host &nbsp
+                  input(type="text" id="sensor_host" name="sensor_host")
                 fieldset#sensor_serial
-                  label(for="sensor_tty") TTY 
+                  label(for="sensor_tty") TTY &nbsp;
                   input(type="text" id="sensor_tty" name="sensor_tty")
                   span &nbsp; &nbsp; &nbsp;
-                  label(for="sensor_baud") Baud 
+                  label(for="sensor_baud") Baud &nbsp;
                   select(id="sensor_baud" name="sensor_baud")
                     option(value="9600") 9600
                     option(value="19200") 19,200
                   span &nbsp; &nbsp; &nbsp;
-                  label(for="sensor_serial_id") SerialID 
+                  label(for="sensor_serial_id") SerialID &nbsp;
                   input(type="text" id="sensor_serial_id" name="sensor_serial_id")
                 button.btn.btn-info(onclick="UpdateSensor()") Update
                 br
@@ -154,6 +161,7 @@ html
                 ul#sensor_commands_list
                 label(for="sensor_commands") Send a command:
                 input(type="text" id="sensor_commands" name="sensor_commands")
+                button.btn.btn-info(onclick="SensorCommand()") Send
                 br
                 button.btn.btn-info(onclick="$('#sensorbox').css('display','none')") Close
 

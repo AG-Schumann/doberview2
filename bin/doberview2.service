@@ -1,0 +1,15 @@
+[Unit]
+Description=Doberview2 server
+Requires=After=mongod influxdbv2
+
+[Service]
+ExecStart=/usr/bin/node /global/software/doberview2/app.js
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifer=doberview2
+Environment=/global/etc/env_vars
+
+[Install]
+WantedBy=multi-user.target

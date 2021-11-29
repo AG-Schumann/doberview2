@@ -9,6 +9,9 @@ var indexRouter = require('./routes/index');
 var sensorRouter = require('./routes/sensors');
 var pipelineRouter = require('./routes/pipeline');
 
+const hostname = process.env.DOBERVIEW_HOST;
+const port = process.env.DOBERVIEW_PORT;
+
 var app = express();
 
 // uri has format mongodb://{user}:{pass}@{host}:{port}
@@ -61,5 +64,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.listen(port, hostname, () => {console.log(`Server running on ${hostname}:${port}`});
 
 module.exports = app;

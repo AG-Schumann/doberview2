@@ -72,12 +72,28 @@ function SensorDropdown(sensor) {
     if (Object.keys(data).length == 0)
       return;
     $("#detail_sensor_name").html(data.name);
+    $("#sensor_host").val(data.host).attr('disabled', true);
+    if (doc.status == 'online') {
+      $("#sensor_status").html("online");
+      $("#sensor_start_btn").attr("disabled", true);
+      $("#sensor_stop_btn").attr("disabled", false);
+    } else if (doc.status == 'offline') {
+      $("#sensor_status").html('offline');
+      $("#sensor_stop_btn").attr("disabled", true);
+      $("#sensor_start_btn").attr("disabled", false);
+    } else {
+      $("#sensor_status").html(doc.status);
+      $("#sensor_stop_btn").attr("disabled", true);
+      $("#sensor_start_btn").attr("disabled", true);
+    }
+
     if (typeof data.address != 'undefined') {
       if (typeof data.address.ip != 'undefined') {
         $("#sensor_ip").val(data.address.ip);
         $("#sensor_port").val(data.address.port);
         $("#sensor_eth").attr('hidden', false);
         $("#sensor_serial").attr('hidden', true);
+        $("#sensor_host").attr('disabled', false);
       } else if (typeof data.address.tty != 'undefined') {
         $("#sensor_tty").val(data.address.tty);
         $("#sensor_baud option").filter(function() {return this.value == data.address.baud;}).prop('selected', true);
@@ -92,7 +108,7 @@ function SensorDropdown(sensor) {
     $("#sensor_readings").empty();
     Object.keys(data.readings).forEach(rd => $("#sensor_readings").append(`<li><button class="small-button" onclick="ReadingDropdown('${rd}')">${rd}</button></li>`));
     if (typeof data.commands != 'undefined')
-      $("#sensor_command_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd}</li>`,"") || "<li>None</li>");
+      $("#sensor_command_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
     else
       $("#sensor_command_list").html("<li>None</li>");
     $("#sensorbox").css("display", "block");
@@ -165,5 +181,45 @@ function UpdateSensor() {
     });
   }
   $("#sensorbox").css('display', 'none');
+}
+
+function StopSensor() {
+  var sensor = $("#detail_sensor_name").html();
+  if (sensor) {
+    $.ajax({
+      type: 'POST',
+      url: '/hypervisor/command',
+      data: {target: 'sensor', command: `stop`},
+      success: (data) => alert(data.err || "STOP sent"),
+      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
+    });
+  }
+}
+
+function StartSensor() {
+  var sensor = $("#detail_sensor_name").html();
+  if (sensor) {
+    $.ajax({
+      type: 'POST',
+      url: '/hypervisor/command',
+      data: {target: 'hypervisor', command: `start ${sensor}`},
+      success: (data) => alert(data.err || "START sent"),
+      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
+    });
+  }
+}
+
+function SensorCommand() {
+  var sensor = $("#detail_sensor_name").html();
+  var command = $("#sensor_commands").val();
+  if (sensor && command) {
+    $.ajax({
+      type: 'POST',
+      url: '/hypervisor/command',
+      data: {target: sensor, command: command},
+      success: (data) => alert(data.err || "START sent"),
+      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
+    });
+  }
 }
 
