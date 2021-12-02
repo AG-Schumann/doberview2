@@ -3,8 +3,8 @@ var url = require('url');
 var axios = require('axios').default;
 var router = express.Router();
 
-const influx_url = `http://localhost:8086/query`;
-const reading_lut = {T: 'temperature', 'n2lm': 'level', F: 'flow', M: 'weight', P: 'pressure'};
+const influx_url = process.env.DOBERVIEW_INFLUX_URI;
+const reading_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', S: 'status', V: 'voltage'};
 
 router.get('/', function(req, res) {
   res.render('full_system');
@@ -121,21 +121,20 @@ router.get('/get_last_point', function(req, res) {
   if (typeof reading == 'undefined' || typeof topic == 'undefined')
     return res.json({});
 
-  var get_url = new URL(influx_url);
-  var params = new URLSearchParams({
-    u: process.env.INFLUX_USERNAME,
-    p: process.env.INFLUX_PASSWORD,
+  var get_url = new url.URL(influx_url);
+  var params = new url.URLSearchParams({
     db: process.env.DOBERVIEW_EXPERIMENT,
-    q: `SELECT last(${reading}) FROM ${topic};`
+    org: process.env.DOBERVIEW_INFLUX_ORG,
+    q: `SELECT last(value) FROM ${topic} WHERE reading='${reading}';`
   });
   get_url.search=params.toString();
   axios({url: get_url.toString(),
     method: 'get',
-    headers: {'Accept': 'application/csv'}
+    headers: {'Accept': 'application/csv', 'Authorization': `Token ${INFLUX_TOKEN}`}
   }).then(resp => {
     var blob = resp.data.split('\n')[1].split(',');
     return res.json({'value': parseFloat(blob[3]), 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
-    }).catch(err => {console.log(err); return res.json([]);});
+  }).catch(err => {console.log(err); return res.json([]);});
 });
 
 router.get('/get_data', function(req, res) {
@@ -147,19 +146,18 @@ router.get('/get_data', function(req, res) {
   if (typeof reading == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
 
-  var get_url = new URL(influx_url);
-  var params = new URLSearchParams({
-    u: process.env.INFLUX_USERNAME,
-    p: process.env.INFLUX_PASSWORD,
+  var get_url = new url.URL(influx_url);
+  var params = new url.URLSearchParams({
     db: process.env.DOBERVIEW_EXPERIMENT,
-    q: `SELECT mean(${reading}) FROM ${topic} WHERE time > now()-${history} GROUP BY time(${binning}) fill(none);`
+    org: process.env.DOBERVIEW_INFLUX_ORG,
+    q: `SELECT mean(value) FROM ${topic} WHERE reading='${reading}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`
   });
   get_url.search=params.toString();
   axios({url: get_url.toString(),
     method: 'get',
-    headers: {'Accept': 'application/csv'}
-  }).then( blob => {
-    var data = blob.data.split('\n').slice(1);
+    headers: {'Accept': 'application/csv', 'Authorization': `Token ${INFLUX_TOKEN}`}
+  }).then( resp => {
+    var data = resp.data.split('\n').slice(1);
     return res.json(data.map(row => {var x = row.split(','); return [parseFloat(x[2]/1e6), parseFloat(x[3])];}));
   }).catch(err => {console.log(err); return res.json([]);});
 });

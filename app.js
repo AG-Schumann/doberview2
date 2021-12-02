@@ -16,14 +16,16 @@ var app = express();
 
 // uri has format mongodb://{user}:{pass}@{host}:{port}
 var experiment = process.env.DOBERVIEW_EXPERIMENT;
+var authdb = process.env.DOBERVIEW_AUTH_DB || 'admin';
+var uri_base = process.env.DOBERVIEW_MONGO_URI;
 // TODO figure out some way of changing experiments dynamically
-var uri = `${process.env.DOBERVIEW_MONGO_URI}/${experiment}_settings`;
-console.log(uri);
-var db = monk(uri, {authSource: 'admin'});
-uri = `${process.env.DOBERVIEW_MONGO_URI}/${experiment}_logging`;
-var log_db = monk(uri, {authSource: 'admin'});
-uri = `${process.env.DOBERVIEW_MONGO_URI}/common`;
-var common_db = monk(uri, {authSource: 'admin'});
+var uri = `${uri_base}/${experiment}_settings`;
+console.log(`Database URI: ${uri}`);
+var db = monk(uri, {authSource: authdb});
+uri = `${uri_base}/${experiment}_logging`;
+var log_db = monk(uri, {authSource: authdb});
+uri = `${uri_base}/common`;
+var common_db = monk(uri, {authSource: authdb});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
