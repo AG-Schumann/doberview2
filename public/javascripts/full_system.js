@@ -1,4 +1,7 @@
 var readings = [];
+var SIG_FIGS=3;
+var LOG_THRESHOLD=3;
+console.log('Change the number formatting by with the SIG_FIGS and LOG_THRESHOLD variables')
 
 function PopulateReadings() {
   $.getJSON("/sensors/reading_list", (data) => {
@@ -28,9 +31,9 @@ function UpdateOnce() {
   readings.forEach(r => {
     $.getJSON(`/sensors/reading_detail?reading=${r}`, (data) => {
       if (data.status === 'online') {
-        //$(`#${r}_status`).html(`Online (${data.runmode})`);
         $.getJSON(`/sensors/get_last_point?reading=${r}`, (val) => {
-          $(`#${r}_status`).html(`${val.value} (${val.time_ago}s ago)`);
+          var disp = Math.abs(Math.log10(Math.abs(val.value))) < LOG_THRESHOLD ? val.value.toFixed(SIG_FIGS) : val.value.toExponential(SIG_FIGS);
+          $(`#${r}_status`).html(`${disp} (${val.time_ago}s ago)`);
         });
       }
       else {
@@ -38,4 +41,5 @@ function UpdateOnce() {
       }
     });
   });
+
 }

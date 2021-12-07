@@ -37,7 +37,7 @@ router.post('/add_pipeline', function(req, res) {
 });
 
 router.post('/delete_pipeline', function(req, res) {
-  var data = req.body.data;
+  var data = req.body;
   if (typeof data.pipeline == 'undefined')
     return res.sendStatus(403);
   req.db.get('pipelines').remove({name: data.pipeline})
@@ -90,7 +90,7 @@ router.post('/pipeline_ctl', function(req, res) {
         }]);
   } else if (data.cmd == 'stop') {
     var command, target;
-    if (data.name.includes('alarm') {
+    if (data.name.includes('alarm')) {
       command = `pipelinectl_stop ${data.name}`;
       target = 'pl_alarm';
     } else {
@@ -104,7 +104,7 @@ router.post('/pipeline_ctl', function(req, res) {
       logged: new Date()});
   } else if (data.cmd == 'start') {
     var command, target;
-    if (data.name.includes('alarm') {
+    if (data.name.includes('alarm')) {
       command = `pipelinectl_start ${data.name}`;
       target = 'pl_alarm';
     } else {

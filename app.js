@@ -65,6 +65,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(port, hostname, () => {console.log(`Server running on ${hostname}:${port}`});
+app.listen(port, hostname, () => {console.log(`Server running on ${hostname}:${port}`);});
 
 module.exports = app;
