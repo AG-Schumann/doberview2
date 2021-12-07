@@ -3,8 +3,8 @@ var url = require('url');
 var axios = require('axios').default;
 var router = express.Router();
 
-const influx_url = 'http://192.168.131.2:8096/query';
-const reading_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power'};
+const reading_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage'};
+const influx_url = process.env.DOBERVIEW_INFLUX_URI;
 
 router.get('/', function(req, res) {
   res.render('full_system');
@@ -123,9 +123,9 @@ router.get('/get_last_point', function(req, res) {
 
   var get_url = new url.URL(influx_url);
   var params = new url.URLSearchParams({
-    org: process.env.DOBERVIEW_EXPERIMENT,
     db: process.env.DOBERVIEW_EXPERIMENT,
-    q: `SELECT last(value) FROM ${topic} WHERE reading='${reading}';`,
+    org: process.env.DOBERVIEW_INFLUX_ORG,
+    q: `SELECT last(value) FROM ${topic} WHERE reading='${reading}';`
   });
   get_url.search=params.toString();
   axios({url: get_url.toString(),
@@ -134,7 +134,7 @@ router.get('/get_last_point', function(req, res) {
   }).then(resp => {
     var blob = resp.data.split('\n')[1].split(',');
     return res.json({'value': parseFloat(blob[3]), 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
-    }).catch(err => {console.log(err); return res.json([]);});
+  }).catch(err => {console.log(err); return res.json([]);});
 });
 
 router.get('/get_data', function(req, res) {
@@ -149,8 +149,8 @@ router.get('/get_data', function(req, res) {
   var get_url = new url.URL(influx_url);
   var params = new url.URLSearchParams({
     db: process.env.DOBERVIEW_EXPERIMENT,
-    org: process.env.DOBERVIEW_EXPERIMENT,
-    q: `SELECT mean(${reading}) FROM ${topic} WHERE time > now()-${history} GROUP BY time(${binning}) fill(none);`
+    org: process.env.DOBERVIEW_INFLUX_ORG,
+    q: `SELECT mean(value) FROM ${topic} WHERE reading='${reading}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`
   });
   get_url.search=params.toString();
   axios({url: get_url.toString(),
