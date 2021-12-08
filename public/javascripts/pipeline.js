@@ -14,7 +14,7 @@ function PopulatePipelines() {
   var silent = 'fas fa-bell-slash';
   var active = 'fas fa-bell';
   var restart = "fas fa-angle-double-left";
-  var durations = [[60, '1 minute'], [600, '10 minutes'], [3600, '1 hour'], [84600, '1 day'], [0, 'Indefinitely']];
+  var durations = [[600, '10 minutes'], [1800, '30 minutes'], [3600, '1 hour'], [84600, '1 day'], [0, 'Forever']];
   $.getJSON("/pipeline/get_pipelines", data => {
     $("#active_pipelines").empty();
     $("#silent_pipelines").empty();
@@ -126,6 +126,8 @@ function DeletePipeline(name=null, cb=null) {
       return;
     }
     if (cb) cb();
+    PopulateDropdown();
+    PopulatePipelines();
   });
 }
 

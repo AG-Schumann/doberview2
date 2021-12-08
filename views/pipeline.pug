@@ -14,7 +14,7 @@ block content
   div.main-container(style="width:100%")
     h2 Pipeline control
     div
-      h4 Active pipelines &nbsp;
+      h3 Active pipelines &nbsp;
         i.fas.fa-bell
         table.table.table-hover.table-striped
           thead
@@ -29,7 +29,8 @@ block content
           tbody#active_pipelines
             tr
               td(colspan=7) Loading!
-      h4 Silent pipelines &nbsp;
+      br
+      h3 Silent pipelines &nbsp;
         i.fas.fa-bell-slash
         table.table.table-hover.table-striped
           thead
@@ -44,7 +45,8 @@ block content
           tbody#silent_pipelines
             tr
               td(colspan=7) Loading!
-      h4 Inactive pipelines &nbsp;
+      br
+      h3 Inactive pipelines &nbsp;
         i.fas.fa-hand-paper
         table.table.table-hover.table-striped
           thead
@@ -59,7 +61,7 @@ block content
       p Comments on pipelines:
         ul
           li Cycles: the internal buffers take a few cycles to fill, so there will always be "errors" shortly after pipeline startup. As long as the error number is small and the cycle number isn't, it's fine
-          li Timing: It takes of order 10ms to get a value from Influx. If the cycle rate is lower than this, something's not working.
+          li Timing: It takes of order 10ms to get a value from Influx. If the cycle rate is faster than this, something's not working.
           li Timing: Pipelines only run as fast as the slowest reading they depend on. If you want a faster pipeline, speed up the readings.
     div#pipeline_vis
 

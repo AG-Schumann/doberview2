@@ -124,7 +124,7 @@ router.get('/get_last_point', function(req, res) {
   var get_url = new url.URL(influx_url);
   var params = new url.URLSearchParams({
     db: process.env.DOBERVIEW_EXPERIMENT,
-    org: process.env.DOBERVIEW_INFLUX_ORG,
+    org: process.env.DOBERVIEW_ORG,
     q: `SELECT last(value) FROM ${topic} WHERE reading='${reading}';`
   });
   get_url.search=params.toString();
@@ -149,7 +149,7 @@ router.get('/get_data', function(req, res) {
   var get_url = new url.URL(influx_url);
   var params = new url.URLSearchParams({
     db: process.env.DOBERVIEW_EXPERIMENT,
-    org: process.env.DOBERVIEW_INFLUX_ORG,
+    org: process.env.DOBERVIEW_ORG,
     q: `SELECT mean(value) FROM ${topic} WHERE reading='${reading}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`
   });
   get_url.search=params.toString();

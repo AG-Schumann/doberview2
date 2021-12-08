@@ -18,9 +18,10 @@ var app = express();
 var experiment = process.env.DOBERVIEW_EXPERIMENT;
 var authdb = process.env.DOBERVIEW_AUTH_DB || 'admin';
 var uri_base = process.env.DOBERVIEW_MONGO_URI;
+
 // TODO figure out some way of changing experiments dynamically
 var uri = `${uri_base}/${experiment}_settings`;
-console.log(`Database URI: ${uri}`);
+//console.log(`Database URI: ${uri}`);
 var db = monk(uri, {authSource: authdb});
 uri = `${uri_base}/${experiment}_logging`;
 var log_db = monk(uri, {authSource: authdb});
@@ -31,11 +32,13 @@ var common_db = monk(uri, {authSource: authdb});
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('dev'));
+app.use(logger('common'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+console.log(`New connection at ${new Date()}`);
 
 // make all our stuff visible to the router
 app.use((req, res, next) => {
@@ -47,7 +50,7 @@ app.use((req, res, next) => {
   return next();
 });
 
-app.use('/', indexRouter);
+app.use('/', sensorRouter);
 app.use('/sensors', sensorRouter);
 app.use('/pipeline', pipelineRouter);
 
