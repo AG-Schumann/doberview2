@@ -6,6 +6,21 @@ var router = express.Router();
 const reading_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage'};
 const influx_url = process.env.DOBERVIEW_INFLUX_URI;
 
+function axios_params(var query) {
+  var get_url = new url.URL(influx_url);
+  var params = new url.URLSearchParams({
+    db: process.env.DOBERVIEW_EXPERIMENT,
+    org: process.env.DOBERVIEW_ORG,
+    q: query
+  });
+  get_url.search=params.toString();
+  return {
+    url: get_url.toString(),
+    method: 'get',
+    headers: {'Accept': 'application/csv', 'Authorization': `Token ${process.env.INFLUX_TOKEN}`},
+  };
+}
+
 router.get('/', function(req, res) {
   res.render('full_system');
 });
@@ -121,17 +136,8 @@ router.get('/get_last_point', function(req, res) {
   if (typeof reading == 'undefined' || typeof topic == 'undefined')
     return res.json({});
 
-  var get_url = new url.URL(influx_url);
-  var params = new url.URLSearchParams({
-    db: process.env.DOBERVIEW_EXPERIMENT,
-    org: process.env.DOBERVIEW_ORG,
-    q: `SELECT last(value) FROM ${topic} WHERE reading='${reading}';`
-  });
-  get_url.search=params.toString();
-  axios({url: get_url.toString(),
-    method: 'get',
-    headers: {'Accept': 'application/csv', 'Authorization': `Token ${process.env.INFLUX_TOKEN}`}
-  }).then(resp => {
+  axios(axios_params(`SELECT last(value) FROM ${topic} WHERE reading='${reading}';`)).
+  then(resp => {
     var blob = resp.data.split('\n')[1].split(',');
     return res.json({'value': parseFloat(blob[3]), 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
   }).catch(err => {console.log(err); return res.json([]);});
@@ -146,17 +152,8 @@ router.get('/get_data', function(req, res) {
   if (typeof reading == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
 
-  var get_url = new url.URL(influx_url);
-  var params = new url.URLSearchParams({
-    db: process.env.DOBERVIEW_EXPERIMENT,
-    org: process.env.DOBERVIEW_ORG,
-    q: `SELECT mean(value) FROM ${topic} WHERE reading='${reading}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`
-  });
-  get_url.search=params.toString();
-  axios({url: get_url.toString(),
-    method: 'get',
-    headers: {'Accept': 'application/csv', 'Authorization': `Token ${process.env.INFLUX_TOKEN}`}
-  }).then( blob => {
+  axios(axios_params(`SELECT mean(value) FROM ${topic} WHERE reading='${reading}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`))
+  .then( blob => {
     var data = blob.data.split('\n').slice(1);
     return res.json(data.map(row => {var x = row.split(','); return [parseFloat(x[2]/1e6), parseFloat(x[3])];}));
   }).catch(err => {console.log(err); return res.json([]);});

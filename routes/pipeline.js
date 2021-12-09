@@ -9,8 +9,8 @@ router.get('/', function(req, res) {
 
 router.get('/get_pipelines', function(req, res) {
   var now = new Date();
-  req.db.get('pipelines').find({}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, period: 1}})
-  .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.hearbeat)/1000, cycle: doc.cycles, error: doc.error, period: doc.period}))))
+  req.db.get('pipelines').find({}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, period: 1, rate: 1}})
+  .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.hearbeat)/1000, cycle: doc.cycles, error: doc.error, period: doc.period, rate: doc.rate}))))
   .catch(err => {console.log(err.message); return res.json([]);});
 });
 
@@ -31,8 +31,9 @@ router.post('/add_pipeline', function(req, res) {
   doc['rate'] = -1;
   doc['depends_on'] = doc.pipeline.filter(n => (typeof n.upstream == 'undefined' || n.upstream.length == 0)).map(n => n.input_var);
   req.db.get('pipelines').insert(doc)
-  .then(() => req.db.get('readings').update({name: {$in: doc['depends_on']}}, {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
-  .then(() => res.json({}))
+  .then(() => req.db.get('readings').update({name: {$in: doc['depends_on']}},
+      {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
+  .then(() => res.json({msg: 'Success'}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
@@ -41,8 +42,9 @@ router.post('/delete_pipeline', function(req, res) {
   if (typeof data.pipeline == 'undefined')
     return res.sendStatus(403);
   req.db.get('pipelines').remove({name: data.pipeline})
-  .then(() => req.db.get('readings').update({'pipelines': data.pipeline}, {$pull: {pipelines: data.pipeline}}, {multi: true}))
-  .then(() => res.json({}))
+  .then(() => req.db.get('readings').update({'pipelines': data.pipeline},
+      {$pull: {pipelines: data.pipeline}}, {multi: true}))
+  .then(() => res.json({msg: 'Success'}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
@@ -51,7 +53,7 @@ router.post('/pipeline_ctl', function(req, res) {
   var ack = parseInt('0');
   if (data.cmd == 'active') {
     if (typeof data.delay == 'undefined') {
-      req.db.get('pipelines').update({name: data.name},{$set: {status: 'active'}});
+      req.db.get('pipelines').update({name: data.name}, {$set: {status: 'active'}});
     } else {
       // we don't want this command going out right away so we have to schedule it
       try {
@@ -66,7 +68,7 @@ router.post('/pipeline_ctl', function(req, res) {
       }
     }
   } else if (data.cmd == 'silent') {
-    req.db.get('pipelines').update({name: data.name},{$set: {status: 'silent'}});
+    req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}});
   } else if (data.cmd == 'restart') {
     if (data.name.includes('alarm')) // all alarm pls handled by one monitor
       req.log_db.get('commands').insert({

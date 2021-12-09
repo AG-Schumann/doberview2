@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  div.main-container
+    each host in hosts
+      div.container(id=`div_${host}`)
+        div.row
+          h3 #host
+          span Load:&nbsp;
+          span(id=`load_${host}`)
+          br
+          span Temperature:&nbsp;
+          span(id=`temp_${host}`)
+          br
+          span Top CPU:&nbsp;
+          span(id=`cpu_${host}`)
+        div.row
+          div(style="width:100%;height:100%" id=`chart_${host}`)
+  script.
+    $(document).ready(function() {
+      SetHosts();
+    });
