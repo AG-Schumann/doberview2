@@ -21,12 +21,14 @@ function ReadingDropdown(reading) {
       $("#alarm_mid").val((data.alarm_thresholds[1]+data.alarm_thresholds[0])/2);
       $("#alarm_range").val((data.alarm_thresholds[1]-data.alarm_thresholds[0])/2);
       $("#alarm_recurrence").val(data.alarm_recurrence);
+      $("#alarm_baselevel").val(data.alarm_level);
     } else {
       $("#alarm_low").val(null);
       $("#alarm_high").val(null);
       $("#alarm_mid").val(null);
       $("#alarm_range").val(null);
       $("#alarm_recurrence").val(null);
+      $("#alarm_baselevel").val(null);
     }
 
     $("#pipeline_list").empty();
@@ -67,22 +69,20 @@ function MakeAlarm(name) {
 
 function SensorDropdown(sensor) {
   $.getJSON(`/sensors/sensor_detail?sensor=${sensor}`, (data) => {
-    console.log(data);
+    //console.log(data);
     $("#readingbox").css("display", "none");
     if (Object.keys(data).length == 0)
       return;
     $("#detail_sensor_name").html(data.name);
     $("#sensor_host").val(data.host).attr('disabled', true);
+    $("#sensor_status").html(data.status);
     if (doc.status == 'online') {
-      $("#sensor_status").html("online");
       $("#sensor_start_btn").attr("disabled", true);
       $("#sensor_stop_btn").attr("disabled", false);
     } else if (doc.status == 'offline') {
-      $("#sensor_status").html('offline');
       $("#sensor_stop_btn").attr("disabled", true);
       $("#sensor_start_btn").attr("disabled", false);
     } else {
-      $("#sensor_status").html(doc.status);
       $("#sensor_stop_btn").attr("disabled", true);
       $("#sensor_start_btn").attr("disabled", true);
     }
@@ -127,6 +127,13 @@ function DrawReadingHistory(reading) {
   var hist_i = $("#reading_history").val();
 
   $.getJSON(`/sensors/get_data?reading=${reading}&history=${history[hist_i]}&binning=${binning[bin_i]}`, data => {
+    var t_min = data[0][0], t_max = data[data.length-1][0];
+    var alarm_low = $("#alarm_low").val(), alarm_high = $("#alarm_high").val();
+    var series = [{type: 'line', data: data.filter(row => (row[0] && row[1])), animation: {duration: 250}, color: '#1111ff'}];
+    if (alarm_low && alarm_high) {
+      series.push({type: 'line', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111'});
+      series.push({type: 'line', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111'});
+    }
     Highcharts.chart('reading_chart', {
       chart: {
         zoomtype: 'xy',
@@ -134,7 +141,7 @@ function DrawReadingHistory(reading) {
       },
       title: {text: null},
       credits: {enabled: false},
-      series: [{type: 'line', data: data.filter(row => (row[0] && row[1])), animation: {duration: 250}}],
+      series: series,
       xAxis: {type: 'datetime'},
       yAxis: {title: {text: null}},
       legend: {enabled: false},
