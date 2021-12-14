@@ -6,7 +6,7 @@ var router = express.Router();
 const reading_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage'};
 const influx_url = process.env.DOBERVIEW_INFLUX_URI;
 
-function axios_params(var query) {
+function axios_params(query) {
   var get_url = new url.URL(influx_url);
   var params = new url.URLSearchParams({
     db: process.env.DOBERVIEW_EXPERIMENT,
