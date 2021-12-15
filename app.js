@@ -10,6 +10,7 @@ var sensorRouter = require('./routes/sensors');
 var pipelineRouter = require('./routes/pipeline');
 var hostRouter = require('./routes/hosts');
 var alarmRouter = require('./routes/alarms');
+var grafanaRouter = require('./routes/grafana');
 
 const hostname = process.env.DOBERVIEW_HOST;
 const port = process.env.DOBERVIEW_PORT;
@@ -57,6 +58,7 @@ app.use('/sensors', sensorRouter);
 app.use('/pipeline', pipelineRouter);
 app.use('/alarms', alarmRouter);
 app.use('/hosts', hostRouter);
+app.use('/grafana', grafanaRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,0 +1,15 @@
+extends layout
+block extrahead
+  script(src="javascripts/host_scripts.js" type="text/javascript")
+  script(src="javascripts/highcharts.js" type="text/javascript")
+  link(rel="stylesheet" href="stylesheets/hosts.css")
+  link(rel="stylesheet" href="stylesheets/highcharts.css")
+
+block content
+  div.main-container(style="height:960px")
+    iframe(src=`${grafana_url}` title="Grafana" style="width:100%;height:100%")
+
+
+  script.
+    $(document).ready(function() {
+    });

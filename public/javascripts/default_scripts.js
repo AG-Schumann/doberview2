@@ -2,10 +2,10 @@ const binning = ['1s', '10s', '1m', '10m', '1h'];
 const history = ['10m', '1h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
 
 function ReadingDropdown(reading) {
-  $("#alarm_low").change(() => {var low = $("#alarm_low").val(); var high = $("#alarm_high").val(); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}});
-  $("#alarm_high").change(() => {var low = $("#alarm_low").val(); var high = $("#alarm_high").val(); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}});
-  $("#alarm_mid").change(() => {var mid = $("#alarm_mid").val(); var range = $("#alarm_range").val(); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
-  $("#alarm_range").change(() => {var mid = $("#alarm_mid").val(); var range = $("#alarm_range").val(); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
+  $("#alarm_low").change(() => {var low = parseInt($("#alarm_low").val()); var high = parseInt($("#alarm_high").val()); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}});
+  $("#alarm_high").change(() => {var low = parseInt($("#alarm_low").val()); var high = parseInt($("#alarm_high").val()); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}});
+  $("#alarm_mid").change(() => {var mid = parseInt($("#alarm_mid").val()); var range = parseInt($("#alarm_range").val()); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
+  $("#alarm_range").change(() => {var mid = parseInt($("#alarm_mid").val()); var range = parseInt($("#alarm_range").val()); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
   $.getJSON(`/sensors/reading_detail?reading=${reading}`, (data) => {
     $("#sensorbox").css("display", "none");
     if (Object.keys(data).length == 0)
@@ -69,22 +69,18 @@ function MakeAlarm(name) {
 
 function SensorDropdown(sensor) {
   $.getJSON(`/sensors/sensor_detail?sensor=${sensor}`, (data) => {
-    //console.log(data);
     $("#readingbox").css("display", "none");
     if (Object.keys(data).length == 0)
       return;
     $("#detail_sensor_name").html(data.name);
     $("#sensor_host").val(data.host).attr('disabled', true);
-    $("#sensor_status").html(data.status);
-    if (doc.status == 'online') {
-      $("#sensor_start_btn").attr("disabled", true);
-      $("#sensor_stop_btn").attr("disabled", false);
-    } else if (doc.status == 'offline') {
-      $("#sensor_stop_btn").attr("disabled", true);
-      $("#sensor_start_btn").attr("disabled", false);
+    $("#detail_sensor_status").html(data.status);
+    if (data.status == 'online') {
+      $("#sensor_ctrl_btn").text("Stop").click(() => ControlSensor("stop"));
+    } else if (data.status == 'offline') {
+      $("#sensor_ctrl_btn").text("Start").click(() => ControlSensor("start"));
     } else {
-      $("#sensor_stop_btn").attr("disabled", true);
-      $("#sensor_start_btn").attr("disabled", true);
+      $("#sensor_ctrl_btn").text("?").click(() => {});
     }
 
     if (typeof data.address != 'undefined') {
@@ -108,9 +104,9 @@ function SensorDropdown(sensor) {
     $("#sensor_readings").empty();
     Object.keys(data.readings).forEach(rd => $("#sensor_readings").append(`<li><button class="small-button" onclick="ReadingDropdown('${rd}')">${rd}</button></li>`));
     if (typeof data.commands != 'undefined')
-      $("#sensor_command_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
+      $("#sensor_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
     else
-      $("#sensor_command_list").html("<li>None</li>");
+      $("#sensor_commands_list").html("<li>None</li>");
     $("#sensorbox").css("display", "block");
   });
 }
@@ -127,12 +123,12 @@ function DrawReadingHistory(reading) {
   var hist_i = $("#reading_history").val();
 
   $.getJSON(`/sensors/get_data?reading=${reading}&history=${history[hist_i]}&binning=${binning[bin_i]}`, data => {
-    var t_min = data[0][0], t_max = data[data.length-1][0];
-    var alarm_low = $("#alarm_low").val(), alarm_high = $("#alarm_high").val();
+    var t_min = data[0][0], t_max = data[data.length-2][0];
+    var alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
     var series = [{type: 'line', data: data.filter(row => (row[0] && row[1])), animation: {duration: 250}, color: '#1111ff'}];
-    if (alarm_low && alarm_high) {
-      series.push({type: 'line', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111'});
-      series.push({type: 'line', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111'});
+    if (alarm_low && alarm_high && $("#plot_alarms").is(":checked")) {
+      series.push({type: 'line', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', dashStyle: 'Dash'});
+      series.push({type: 'line', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', dashStyle: 'Dash'});
     }
     Highcharts.chart('reading_chart', {
       chart: {
@@ -190,28 +186,15 @@ function UpdateSensor() {
   $("#sensorbox").css('display', 'none');
 }
 
-function StopSensor() {
+function ControlSensor(action) {
   var sensor = $("#detail_sensor_name").html();
-  if (sensor) {
+  if (sensor && action) {
     $.ajax({
       type: 'POST',
       url: '/hypervisor/command',
-      data: {target: 'sensor', command: `stop`},
-      success: (data) => alert(data.err || "STOP sent"),
-      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
-    });
-  }
-}
-
-function StartSensor() {
-  var sensor = $("#detail_sensor_name").html();
-  if (sensor) {
-    $.ajax({
-      type: 'POST',
-      url: '/hypervisor/command',
-      data: {target: 'hypervisor', command: `start ${sensor}`},
-      success: (data) => alert(data.err || "START sent"),
-      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
+      data: {target: command == 'stop' ? sensor : 'hypervisor', command: action},
+      success: (data) => alert(data.err || `${action} sent`),
+      err: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
     });
   }
 }
@@ -224,7 +207,7 @@ function SensorCommand() {
       type: 'POST',
       url: '/hypervisor/command',
       data: {target: sensor, command: command},
-      success: (data) => alert(data.err || "START sent"),
+      success: (data) => alert(data.err || "Command sent"),
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
     });
   }
