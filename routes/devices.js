@@ -3,7 +3,7 @@ var url = require('url');
 var axios = require('axios').default;
 var router = express.Router();
 
-const reading_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage'};
+const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage'};
 const influx_url = process.env.DOBERVIEW_INFLUX_URI;
 
 function axios_params(query) {
@@ -25,6 +25,37 @@ router.get('/', function(req, res) {
   res.render('full_system');
 });
 
+router.get('/device_list', function(req, res) {
+  req.db.get('devices').distinct('name')
+  .then(docs => res.json(docs))
+  .catch(err => {console.log(err.message); res.json([]);});
+});
+
+router.get('/device_detail', function(req, res) {
+  var q = url.parse(req.url, true).query;
+  var device = q.device;
+  if (typeof device == 'undefined')
+    return res.json({});
+  req.db.get('devices').findOne({name: device})
+  .then(doc => res.json(doc))
+  .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
+router.get('/sensors_grouped', function(req, res) {
+  var q = url.parse(req.url, true).query;
+  var group_by = q.group_by;
+  if (typeof group_by == 'undefined')
+    return res.json([]);
+  req.db.get('sensors').aggregate([
+    {$group: {
+      _id: '$' + group_by,
+      sensors: {$push: {name: '$name', desc: '$description'}}
+    }},
+    {$sort: {_id: 1}}
+  ]).then(docs => res.json(docs))
+  .catch(err => {console.log(err.message); return res.json([]);});
+});
+
 router.get('/sensor_list', function(req, res) {
   req.db.get('sensors').distinct('name')
   .then(docs => res.json(docs))
@@ -41,43 +72,12 @@ router.get('/sensor_detail', function(req, res) {
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
-router.get('/readings_grouped', function(req, res) {
-  var q = url.parse(req.url, true).query;
-  var group_by = q.group_by;
-  if (typeof group_by == 'undefined')
-    return res.json([]);
-  req.db.get('readings').aggregate([
-    {$group: {
-      _id: '$' + group_by,
-      readings: {$push: {name: '$name', desc: '$description'}}
-    }},
-    {$sort: {_id: 1}}
-  ]).then(docs => res.json(docs))
-  .catch(err => {console.log(err.message); return res.json([]);});
-});
-
-router.get('/reading_list', function(req, res) {
-  req.db.get('readings').distinct('name')
-  .then(docs => res.json(docs))
-  .catch(err => {console.log(err.message); res.json([]);});
-});
-
-router.get('/reading_detail', function(req, res) {
-  var q = url.parse(req.url, true).query;
-  var reading = q.reading;
-  if (typeof reading == 'undefined')
-    return res.json({});
-  req.db.get('readings').findOne({name: reading})
-  .then(doc => res.json(doc))
-  .catch(err => {console.log(err.message); return res.json({err: err.message});});
-});
-
-router.post('/update_sensor_address', function(req, res) {
+router.post('/update_device_address', function(req, res) {
   var updates = {};
   var data = req.body.data;
-  var sensor = data.sensor;
-  if (typeof sensor == 'undefined')
-    return res.json({err: 'No sensor defined'});
+  var device = data.device;
+  if (typeof device == 'undefined')
+    return res.json({err: 'No device defined'});
   if (typeof data.tty != 'undefined')
     updates['address.tty'] = data.tty;
   if (typeof data.ip != 'undefined')
@@ -97,20 +97,20 @@ router.post('/update_sensor_address', function(req, res) {
   if (typeof data.serial_id != 'undefined')
     updates['address.serialID'] = data.serial_id;
   if (Object.keys(updates).length != 0) {
-    req.db.get('sensors').update({sensor: sensor}, {$set: updates})
+    req.db.get('devices').update({device: device}, {$set: updates})
       .then(() => res.json({msg: 'Success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else
     return res.json({});
 });
 
-router.post('/update_reading', function(req, res) {
+router.post('/update_sensor', function(req, res) {
   var updates = {};
   var data = req.body.data;
-  var sensor = data.sensor;
-  if (typeof reading == 'undefined')
+  var device = data.device;
+  if (typeof sensor == 'undefined')
     return res.json({err: 'Invalid or missing parameters'});
-  var query = {name: reading};
+  var query = {name: sensor};
   if (typeof data.readout_interval != 'undefined') {
     try{
       updates['readout_interval'] = parseFloat(data.readout_interval);
@@ -124,20 +124,20 @@ router.post('/update_reading', function(req, res) {
     updates['alarm'] = [data.alarm[0], data.alarm[1]];
     updates['alarm_recurrence'] = data.alarm_recurrence;
   }
-  req.db.get('readings').update({sensor: sensor, name: reading}, {$set: updates})
+  req.db.get('sensors').update({device: device, name: sensor}, {$set: updates})
     .then(() => res.json({msg: 'Success'}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 router.get('/get_last_point', function(req, res) {
   var q = url.parse(req.url, true).query;
-  var reading = q.reading;
-  var topic = reading_lut[reading.split('_')[0]];
-  if (typeof reading == 'undefined' || typeof topic == 'undefined')
+  var sensor = q.sensor;
+  var topic = topic_lut[sensor.split('_')[0]];
+  if (typeof sensor == 'undefined' || typeof topic == 'undefined')
     return res.json({});
 
-  axios(axios_params(`SELECT last(value) FROM ${topic} WHERE reading='${reading}';`)).
-  then(resp => {
+  axios(axios_params(`SELECT last(value) FROM ${topic} WHERE reading='${sensor}';`))
+  .then(resp => {
     var blob = resp.data.split('\n')[1].split(',');
     return res.json({'value': parseFloat(blob[3]), 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
   }).catch(err => {console.log(err); return res.json([]);});
@@ -145,14 +145,14 @@ router.get('/get_last_point', function(req, res) {
 
 router.get('/get_data', function(req, res) {
   var q = url.parse(req.url, true).query;
-  var reading = q.reading;
+  var sensor = q.sensor;
   var binning = q.binning;
   var history = q.history;
-  var topic = reading_lut[reading.split('_')[0]];
-  if (typeof reading == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
+  var topic = topic_lut[sensor.split('_')[0]];
+  if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
 
-  axios(axios_params(`SELECT mean(value) FROM ${topic} WHERE reading='${reading}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`))
+  axios(axios_params(`SELECT mean(value) FROM ${topic} WHERE reading='${sensor}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`))
   .then( blob => {
     var data = blob.data.split('\n').slice(1);
     return res.json(data.map(row => {var x = row.split(','); return [parseFloat(x[2]/1e6), parseFloat(x[3])];}));

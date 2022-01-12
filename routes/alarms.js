@@ -29,10 +29,10 @@ router.get('/acknowledge', function(req, res) {
 
 router.get('/test', function(req, res) {
   var now = new Date();
-  var base = '2021-12-13T';
+  var base = '2021-12-20T';
   if (Date.parse(base+'09:30:00+01:00') < now && now < Date.parse(base+'10:30:00+01:00')) {
     req.logging_db.get('alarm_history').insert({'msg': 'Test alarm', acknowledged: parseInt('0'), level: parseInt('2')})
-    .then(() => res.send('Success'))
+    .then(() => res.send('Ring ring ring...'))
     .catch(err => {console.log(err.message); return res.send(err.message);});
   } else {
     return res.send('Wrong time');
