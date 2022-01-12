@@ -23,10 +23,8 @@ function PopulatePipelines() {
       var n = doc.name;
       if (doc.status == 'active') {
         var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
-        row += `<td>${doc.rate.toPrecision(3)}</td><td>${doc.cycle}>/td><td>${doc.error}</td>`;
-        row += `<td class="dropdown"><i onclick="$('#${n}_drop').css('display', 'block')" class="${silent}">`;
-        row += `<div id="${n}_drop" class="dropbtn-content">`
-        row += durations.reduce((tot, row) => tot + `<button onclick=PipelineControl('silent','${n}',${row[0]}) class="btn btn-info dropbtn">${row[1]}</button>`, '') + '</div></td>';
+        row += `<td>${doc.rate.toPrecision(3)}</td><td>${doc.cycle}</td><td>${doc.error}</td>`;
+        row += `<td><button onclick="$('#silence_dropdown').css('display', 'inline-block')"><i class="${silent}"></button>`;
         row += `<td><i onclick="PipelineControl('stop','${n}')" class="${stop}"></td>`;
         row += `<td><i onclick="PipelineControl('restart','${n}')" class="${restart}"></td></tr>`;
         $("#active_pipelines").append(row);
@@ -146,7 +144,7 @@ function StartPipeline(name, status) {
   });
 }
 
-function SilencePipeline() {
+function SilencePipeline(delay) {
   var name = $("#pl_name").html();
   var delay = $("#silence_duration").val();
   $.post("/pipeline/pipeline_ctl", {cmd: 'silent', name: name}, (data, status) => {
