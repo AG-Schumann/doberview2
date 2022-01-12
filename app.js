@@ -6,11 +6,12 @@ var logger = require('morgan');
 var monk = require('monk');
 
 var indexRouter = require('./routes/index');
-var sensorRouter = require('./routes/sensors');
+var deviceRouter = require('./routes/devices');
 var pipelineRouter = require('./routes/pipeline');
 var hostRouter = require('./routes/hosts');
 var alarmRouter = require('./routes/alarms');
 var grafanaRouter = require('./routes/grafana');
+var logRouter = require('./routes/logs');
 
 const hostname = process.env.DOBERVIEW_HOST;
 const port = process.env.DOBERVIEW_PORT;
@@ -53,12 +54,13 @@ app.use((req, res, next) => {
   return next();
 });
 
-app.use('/', sensorRouter);
-app.use('/sensors', sensorRouter);
+app.use('/', deviceRouter);
+app.use('/devices', deviceRouter);
 app.use('/pipeline', pipelineRouter);
 app.use('/alarms', alarmRouter);
 app.use('/hosts', hostRouter);
 app.use('/grafana', grafanaRouter);
+app.use('/logs', logRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

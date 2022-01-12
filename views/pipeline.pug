@@ -62,7 +62,7 @@ block content
         ul
           li Cycles: the internal buffers take a few cycles to fill, so there will always be "errors" shortly after pipeline startup. As long as the error number is small and the cycle number isn't, it's fine
           li Timing: It takes of order 10ms to get a value from Influx. If the cycle rate is faster than this, something's not working.
-          li Timing: Pipelines only run as fast as the slowest reading they depend on. If you want a faster pipeline, speed up the readings.
+          li Timing: Pipelines only run as fast as the slowest sensor they depend on. If you want a faster pipeline, speed up the sensors.
     div#pipeline_vis
 
   div.main-container
@@ -95,6 +95,6 @@ block content
       if (!event.target.matches('.dropbtn')) {
         var elems = document.getElementsByClassName("dropdown-content");
         for (var i = 0; i < elems.length; i++)
-          elems[e].style.display='none';
+          elems[i].style.display='none';
       }
     }
