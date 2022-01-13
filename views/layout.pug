@@ -66,10 +66,12 @@ html
               span.btn.top-right(onclick="$('#sensorbox').css('display', 'none')") &times;
               br
               label(for="sensor_desc") Description &nbsp;
-              input(type="text" id="sensor_desc" name="sensor_desc")
+              input(type="text" id="sensor_desc" name="sensor_desc" size=30)
               br
               label(for="sensor_status") Active &nbsp;
               input(type="checkbox" id="sensor_status" name="sensor_status")
+              span &nbsp;&nbsp; Units: &nbsp;
+              span#sensor_units
               br
               label(for="readout_interval") Readout interval &nbsp;
               input(type="number" id="readout_interval" name="readout_interval" max="300" size='4')

@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
 
 router.get('/get_pipelines', function(req, res) {
   var now = new Date();
-  req.db.get('pipelines').find({}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, period: 1, rate: 1}})
+  req.db.get('pipelines').find({}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, period: 1, rate: 1, error: 1}})
   .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.hearbeat)/1000, cycle: doc.cycles, error: doc.error, period: doc.period, rate: doc.rate}))))
   .catch(err => {console.log(err.message); return res.json([]);});
 });
@@ -48,8 +48,68 @@ router.post('/delete_pipeline', function(req, res) {
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
+router.post('/pipeline_silence', function(req, res) {
+  // we do the time processing here because we only trust the system clock
+  // on the host server.
+  var data = req.body;
+  var duration = data.duration;
+  var until = 0;
+  var now = new Date();
+  if (duration == 'forever') {
+    req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
+    .then(() => res.json({}))
+    .catch(err => {console.log(err.message); return res.json({err: err.message});});
+  } else if (duration == 'monday') {
+    var today = now.getDay();
+    if ((1 <= today) || (today <= 4)) {
+      // it's between Monday and Thursday
+      return res.json({err: 'Not available Monday-Thursday'});
+    }
+    until = new Date();
+    until.setDate(until.getDate() + (8-today));
+    until.setHours(9);
+    until.setMinutes(0);
+  } else if (duration == 'morning') {
+    if ((7 <= today.getHours()) || (today.getHours() <= 17)) {
+      // it's in the working day
+      return res.json({err: 'Not available from 0700 to 1700'});
+    }
+    until = new Date();
+    if (today.getHours() > 17) { // it's evening
+      until.setDate(today.getDate()+1);
+    }
+    until.setHours(9);
+    until.setMinutes(30);
+  } else if (duration == 'evening') {
+    if ((today.getHours() < 8) || (today.getHours() > 17)) {
+      // not working hours
+      return res.json({err: 'Only available during working hours'});
+    }
+    until = new Date();
+    until.setHours(18);
+    until.setMinutes(0);
+  } else {
+    try{
+      duration = parseInt(duration);
+    }catch(err){
+      console.log(duration);
+      console.log(err.message);
+      return res.json({err: "Invalid duration"});
+    }
+    until = new Date(today - (-duration * 60 * 1000));
+  }
+  req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
+  .then(() => req.log_db.get('commands').insert({
+    command: `pipelinectl_active ${data.name}`,
+    name: data.name.includes('alarm') ? 'pl_alarm' : data.name,
+    ack: parseInt('0'),
+    logged: until,
+  })).then(() => res.json({}))
+  .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
 router.post('/pipeline_ctl', function(req, res) {
-  var data = req.body.data;
+  var data = req.body;
   var ack = parseInt('0');
   if (data.cmd == 'active') {
     if (typeof data.delay == 'undefined') {
@@ -59,7 +119,7 @@ router.post('/pipeline_ctl', function(req, res) {
       try {
         req.log_db.get('commands').insert(
           {command: `pipelinectl_active ${data.name}`,
-            name: `pl_${data.name}`,
+            name: data.name.includes('alarm') ? 'pl_alarm' : data.name,
             acknowledged: ack,
             logged: new Date(new Date() - (-1000 * parseInt(data.delay)))});
       } catch(error) {
@@ -80,15 +140,15 @@ router.post('/pipeline_ctl', function(req, res) {
       req.log_db.get('commands').insert([
         {
           command: `stop`,
-          name: `pl_${data.name}`,
+          name: `${data.name}`,
           acknowledged: ack,
           logged: new Date()
         },
         {
-          command: `start pl_${data.name}`,
+          command: `start ${data.name}`,
           name: 'hypervisor',
           acknowledged: ack,
-          logged: new Date(new Date() - (-10000)) // js why must your dates be bullshit
+          logged: new Date(new Date() - (-5000)) // js why must your dates be bullshit
         }]);
   } else if (data.cmd == 'stop') {
     var command, target;
@@ -97,7 +157,7 @@ router.post('/pipeline_ctl', function(req, res) {
       target = 'pl_alarm';
     } else {
       command = 'stop';
-      target = `pl_${data.name}`;
+      target = `${data.name}`;
     }
     req.log_db.get('commands').insert({
       command: command,
@@ -110,7 +170,7 @@ router.post('/pipeline_ctl', function(req, res) {
       command = `pipelinectl_start ${data.name}`;
       target = 'pl_alarm';
     } else {
-      command = `start pl_${data.name}`;
+      command = `start ${data.name}`;
       target = 'hypervisor';
     }
     req.log_db.get('commands').insert({

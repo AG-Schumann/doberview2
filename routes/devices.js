@@ -46,10 +46,10 @@ router.get('/sensors_grouped', function(req, res) {
   var group_by = q.group_by;
   if (typeof group_by == 'undefined')
     return res.json([]);
-  req.db.get('sensors').aggregate([
+  req.db.get('readings').aggregate([
     {$group: {
       _id: '$' + group_by,
-      sensors: {$push: {name: '$name', desc: '$description'}}
+      sensors: {$push: {name: '$name', desc: '$description', units: '$units'}}
     }},
     {$sort: {_id: 1}}
   ]).then(docs => res.json(docs))
@@ -57,7 +57,7 @@ router.get('/sensors_grouped', function(req, res) {
 });
 
 router.get('/sensor_list', function(req, res) {
-  req.db.get('sensors').distinct('name')
+  req.db.get('readings').distinct('name')
   .then(docs => res.json(docs))
   .catch(err => {console.log(err.message); res.json([]);});
 });
@@ -67,7 +67,7 @@ router.get('/sensor_detail', function(req, res) {
   var sensor = q.sensor;
   if (typeof sensor == 'undefined')
     return res.json({});
-  req.db.get('sensors').findOne({name: sensor})
+  req.db.get('readings').findOne({name: sensor})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -107,9 +107,12 @@ router.post('/update_device_address', function(req, res) {
 router.post('/update_sensor', function(req, res) {
   var updates = {};
   var data = req.body.data;
-  var device = data.device;
-  if (typeof sensor == 'undefined')
+  var sensor = data.sensor;
+  if (typeof sensor == 'undefined') {
+    console.log(req.body);
     return res.json({err: 'Invalid or missing parameters'});
+  }
+
   var query = {name: sensor};
   if (typeof data.readout_interval != 'undefined') {
     try{
@@ -124,7 +127,9 @@ router.post('/update_sensor', function(req, res) {
     updates['alarm'] = [data.alarm[0], data.alarm[1]];
     updates['alarm_recurrence'] = data.alarm_recurrence;
   }
-  req.db.get('sensors').update({device: device, name: sensor}, {$set: updates})
+  if (typeof data.description != 'undefined' && data.description != "")
+    updates['description'] = data.description;
+  req.db.get('readings').update({name: sensor}, {$set: updates})
     .then(() => res.json({msg: 'Success'}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -138,6 +143,7 @@ router.get('/get_last_point', function(req, res) {
 
   axios(axios_params(`SELECT last(value) FROM ${topic} WHERE reading='${sensor}';`))
   .then(resp => {
+    
     var blob = resp.data.split('\n')[1].split(',');
     return res.json({'value': parseFloat(blob[3]), 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
   }).catch(err => {console.log(err); return res.json([]);});

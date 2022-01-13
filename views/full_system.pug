@@ -11,17 +11,17 @@ block content
   div.main-container
 
     span
-      strong Group readings by: &nbsp;
-    select#reading_grouping(onchange="GetGroupedReadings()")
+      strong Group sensors by: &nbsp;
+    select#sensor_grouping(onchange="GetGroupedSensors()")
       option(value="subsystem") Subsystem
-      option(value="sensor") Sensor
+      option(value="device") Readout Device
       option(value="topic" selected) Topic
-    div.reading-div
-      table.table.table-striped.table-hover#reading_table
+    div.sensor-div
+      table.table.table-striped.table-hover#sensor_table
 
   script.
     $(document).ready(function () {
-      GetGroupedReadings();
-      PopulateReadings();
+      GetGroupedSensors();
+      PopulateSensors();
       setInterval(UpdateOnce, 5000);
     });

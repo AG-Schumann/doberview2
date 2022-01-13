@@ -14,7 +14,6 @@ function PopulatePipelines() {
   var silent = 'fas fa-bell-slash';
   var active = 'fas fa-bell';
   var restart = "fas fa-angle-double-left";
-  var durations = [[600, '10 minutes'], [1800, '30 minutes'], [3600, '1 hour'], [84600, '1 day'], [0, 'Forever']];
   $.getJSON("/pipeline/get_pipelines", data => {
     $("#active_pipelines").empty();
     $("#silent_pipelines").empty();
@@ -23,22 +22,22 @@ function PopulatePipelines() {
       var n = doc.name;
       if (doc.status == 'active') {
         var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
-        row += `<td>${doc.rate.toPrecision(3)}</td><td>${doc.cycle}</td><td>${doc.error}</td>`;
-        row += `<td><button onclick="$('#silence_dropdown').css('display', 'inline-block')"><i class="${silent}"></button>`;
-        row += `<td><i onclick="PipelineControl('stop','${n}')" class="${stop}"></td>`;
-        row += `<td><i onclick="PipelineControl('restart','${n}')" class="${restart}"></td></tr>`;
+        row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
+        row += `<td><button onclick="$('#silence_dropdown').css('display','inline-block')"><i class="${silent}"></button>`;
+        row += `<td><i class="${stop}" onclick="PipelineControl('stop','${n}')"></td>`;
+        row += `<td><i class="${restart}" onclick="PipelineControl('restart','${n}')"></td></tr>`;
         $("#active_pipelines").append(row);
       } else if (doc.status == 'silent') {
         var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
         row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
-        row += `<td><i onclick="PipelineControl('active','${n}') class="${active}"></td>`;
-        row += `<td><i onclick="PipelineControl('stop','${n}') class="${stop}"></td>`;
-        row += `<td><i onclick="PipelineControl('restart','${n}')" class="${restart}"</td></tr>`;
+        row += `<td><i class="${active}" onclick="PipelineControl('active','${n}')"></td>`;
+        row += `<td><i class="${stop}" onclick="PipelineControl('stop','${n}')"></td>`;
+        row += `<td><i class="${restart}" onclick="PipelineControl('restart','${n}')"></td></tr>`;
         $("#silent_pipelines").append(row);
       } else if (doc.status == 'inactive') {
         var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
-        row += `<td><i onclick="StartPipeline('${n}', 'silent')" class="${silent}"></td>`;
-        row += `<td><i class="${active}" onclick="StartPipeline('${n}', 'active')"></td></tr>`;
+        row += `<td><i class="${silent}" onclick="StartPipeline('${n}','silent')"></td>`;
+        row += `<td><i class="${active}" onclick="StartPipeline('${n}','active')"></td></tr>`;
         $("#inactive_pipelines").append(row);
       } else
         console.log(doc);
@@ -104,8 +103,8 @@ function AddNewPipeline() {
     return;
   }
   try{
-    if (doc.pipeline.filter(n => n.input_var == 'INSERT READING NAME HERE').length > 0) {
-      alert('You didn\'t specify reading names');
+    if (doc.pipeline.filter(n => n.input_var == 'INSERT SENSOR NAME HERE').length > 0) {
+      alert('You didn\'t specify sensor names');
       return;
     }
   }catch(err){alert(err); return;}
@@ -144,14 +143,11 @@ function StartPipeline(name, status) {
   });
 }
 
-function SilencePipeline(delay) {
+function SilencePipeline(duration) {
   var name = $("#pl_name").html();
-  var delay = $("#silence_duration").val();
-  $.post("/pipeline/pipeline_ctl", {cmd: 'silent', name: name}, (data, status) => {
-    if (duration != 0)
-      $.post("/pipeline/pipeline_ctl", {cmd: 'active', name: name, delay: delay}, (data, status) => {
-
-      });
+  $.post("/pipeline/pipeline_ctl", {cmd: 'silent', name: name, duration: duration}, (data, status) => {
+    if (typeof data.err != 'undefined')
+      alert(data.err);
   });
 }
 

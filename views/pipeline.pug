@@ -106,8 +106,11 @@ block content
       PopulatePipelines();
       document.jsoneditor = new JSONEditor(document.getElementById('json_text',
       {"modes":  ['tree', 'view', 'form', 'code', 'text']}));
-      if ($("#load_me").html() != "")
+      if ($("#load_me").html() != "") {
         Fetch($("#load_me").html());
+        $("#load_me").remove();
+      }
+      setInterval(UpdateLoop, 5000);
     });
     window.onclick = function(event) {
       if (!event.target.matches('.dropbtn')) {

@@ -1,39 +1,40 @@
-var readings = [];
+var sensors = [];
+var units = {};
 var SIG_FIGS=3;
 var LOG_THRESHOLD=3;
 console.log('Change the number formatting by with the SIG_FIGS and LOG_THRESHOLD variables')
 
-function PopulateReadings() {
-  $.getJSON("/sensors/reading_list", (data) => {
-    readings = data;
+function PopulateSensors() {
+  $.getJSON("/devices/sensor_list", (data) => {
+    sensors = data;
     //setInterval(UpdateLoop, 5000);
-    $("#reading_history").attr('max', history.length);
-    $("#reading_binning").attr('max', binning.length);
+    $("#sensor_history").attr('max', history.length);
+    $("#sensor_binning").attr('max', binning.length);
     RangeSliders();
     UpdateOnce();
   });
 }
 
-
-function GetGroupedReadings() {
-  var group_by = $("#reading_grouping").val();
-  $.getJSON(`/sensors/readings_grouped?group_by=${group_by}`, (data) => {
-    $("#reading_table").empty();
+function GetGroupedSensors() {
+  var group_by = $("#sensor_grouping").val();
+  $.getJSON(`/devices/sensors_grouped?group_by=${group_by}`, (data) => {
+    $("#sensor_table").empty();
     data.forEach(group => {
-      var click = group_by == 'sensor' ? `onclick='SensorDropdown("${group._id}")'` : "";
+      var click = group_by == 'device' ? `onclick='DeviceDropdown("${group._id}")'` : "";
       var head = `<tr ${click}><th colspan=2><strong>${group._id}</strong></th></tr>`;
-      $("#reading_table").append(head + group['readings'].reduce((tot, rd) => tot + `<tr onclick="ReadingDropdown('${rd.name}')"><td>${rd.desc} (${rd.name})</td><td id="${rd.name}_status">Loading!</td></tr>`, ""));
+      group['sensors'].forEach(doc => units[doc.name] = doc.units);
+      $("#sensor_table").append(head + group['sensors'].reduce((tot, rd) => tot + `<tr onclick="SensorDropdown('${rd.name}')"><td>${rd.desc} (${rd.name})</td><td id="${rd.name}_status">Loading!</td></tr>`, ""));
     }); // data.forEach
   }); // getJSON
 }
 
 function UpdateOnce() {
-  readings.forEach(r => {
-    $.getJSON(`/sensors/reading_detail?reading=${r}`, (data) => {
+  sensors.forEach(r => {
+    $.getJSON(`/devices/sensor_detail?sensor=${r}`, (data) => {
       if (data.status === 'online') {
-        $.getJSON(`/sensors/get_last_point?reading=${r}`, (val) => {
+        $.getJSON(`/devices/get_last_point?sensor=${r}`, (val) => {
           var disp = Math.abs(Math.log10(Math.abs(val.value))) < LOG_THRESHOLD ? val.value.toFixed(SIG_FIGS) : val.value.toExponential(SIG_FIGS);
-          $(`#${r}_status`).html(`${disp} (${val.time_ago}s ago)`);
+          $(`#${r}_status`).html(`${disp} ${units[r]} (${val.time_ago}s ago)`);
         });
       }
       else {

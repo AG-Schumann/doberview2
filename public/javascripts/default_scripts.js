@@ -14,6 +14,7 @@ function SensorDropdown(sensor) {
     $("#sensor_desc").val(data.description).attr('size', data.description.length + 3);
     $("#sensor_status").prop('checked', data.status === 'online');
     $("#readout_interval").val(data.readout_interval);
+    $("#sensor_units").html(data.units);
 
     if (typeof data.alarm_thresholds != 'undefined' && data.alarm_thresholds.length == 2) {
       $("#alarm_low").val(data.alarm_thresholds[0]);
@@ -102,7 +103,7 @@ function DeviceDropdown(device) {
       $("#device_serial").attr('hidden', true);
     }
     $("#device_sensors").empty();
-    Object.keys(data.sensors).forEach(rd => $("#device_sensors").append(`<li><button class="small-button" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
+    Object.keys(data.readings).forEach(rd => $("#device_sensors").append(`<li><button class="small-button" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
     if (typeof data.commands != 'undefined')
       $("#device_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
     else
@@ -159,7 +160,7 @@ function UpdateSensor() {
   }
   $.ajax({
     type: 'POST',
-    url: '/sensors/update_sensor',
+    url: '/devices/update_sensor',
     data: {data: data},
     success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
