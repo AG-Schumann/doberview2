@@ -20,7 +20,7 @@ block content
           thead
             tr
               th Name
-              th Cycle rate
+              th Process time
               th Latest cycle
               th Last error
               th Silence
@@ -36,7 +36,7 @@ block content
           thead
             tr
               th Name
-              th Cycle rate
+              th Process time
               th Latest cycle
               th Last error
               th Activate
@@ -52,16 +52,15 @@ block content
           thead
             tr
               th Name
-              th Start silent
-              th Start active
+              th Start
           tbody#inactive_pipelines
             tr
-              td(colspan=3) Loading!
+              td(colspan=2) Loading!
       br
       p Comments on pipelines:
         ul
           li Cycles: the internal buffers take a few cycles to fill, so there will always be "errors" shortly after pipeline startup. As long as the error number is small and the cycle number isn't, it's fine
-          li Timing: It takes of order 10ms to get a value from Influx. If the cycle rate is faster than this, something's not working.
+          li Timing: It takes of order 10ms to get a value from Influx. If the process time (given in ms) is faster than this, something's not working, and there'll probably be new entries in the logs.
           li Timing: Pipelines only run as fast as the slowest sensor they depend on. If you want a faster pipeline, speed up the sensors.
     div#pipeline_vis
 
@@ -75,13 +74,13 @@ block content
           li
             button.btn.btn-info(onclick="SilencePipeline(120)") 2 hours
           li
-            button.btn.btn-info(onclick="SilencePipeline('evening')") This evening
+            button.btn.btn-info(onclick="SilencePipeline('evening')") 1800 today
           li
-            button.btn.btn-info(onclick="SilencePipeline('morning')") Tomorrow morning
+            button.btn.btn-info(onclick="SilencePipeline('morning')") 930 tomorrow
           li
-            button.btn.btn-info(onclick="SilencePipeline('monday')") Monday
+            button.btn.btn-info(onclick="SilencePipeline('monday')") Monday morning
           li
-            button.btn.btn-danger(onclick="SilencePipeline('forever')") Forever
+            button.btn.btn-danger(onclick="SilencePipeline('forever')") The end of time
 
   div.main-container
     h2 Pipeline configuration
@@ -93,10 +92,11 @@ block content
     br
     div#json_text(style="width:100%;height:75%;resize:both")
     br
-    button.btn.btn-info(onclick="Visualize()") Visualize
-    button.btn.btn-default(onclick="AddNewPipeline()") Add new
-    button.btn.btn-default(onclick="DeletePipeline(null, AddNewPipeline)") Update
-    button.btn.btn-warning(onclick="DeletePipeline()") Delete
+    button.btn.btn-warning(onclick="Visualize()") Visualize
+    button.btn.btn-info(onclick="AddNewPipeline()") Add new
+    button.btn.btn-info(onclick="DeletePipeline(AddNewPipeline)") Update
+    span &nbsp;&nbsp;
+    button.btn.btn-danger(onclick="DeletePipeline()") Delete (careful)
     br
     span#load_me(hidden disabled) #{load}
 

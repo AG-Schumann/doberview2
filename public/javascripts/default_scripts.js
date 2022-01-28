@@ -104,6 +104,7 @@ function DeviceDropdown(device) {
     }
     $("#device_sensors").empty();
     Object.keys(data.readings).forEach(rd => $("#device_sensors").append(`<li><button class="small-button" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
+    $("#device_listener").html(`${data.dispatch_port}`);
     if (typeof data.commands != 'undefined')
       $("#device_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
     else
@@ -124,6 +125,10 @@ function DrawSensorHistory(sensor) {
   var hist_i = $("#sensor_history").val();
 
   $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[hist_i]}&binning=${binning[bin_i]}`, data => {
+    if (data.length == 0) {
+      console.log('No data?');
+      return;
+    }
     var t_min = data[0][0], t_max = data[data.length-2][0];
     var alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
     var series = [{type: 'line', data: data.filter(row => (row[0] && row[1])), animation: {duration: 250}, color: '#1111ff'}];
@@ -193,7 +198,7 @@ function ControlDevice(action) {
     $.ajax({
       type: 'POST',
       url: '/hypervisor/command',
-      data: {target: command == 'stop' ? device : 'hypervisor', command: action},
+      data: {target: action == 'stop' ? device : 'hypervisor', command: action},
       success: (data) => alert(data.err || `${action} sent`),
       err: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
     });

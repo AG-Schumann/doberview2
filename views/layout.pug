@@ -59,7 +59,7 @@ html
         div.sensorbox.modalbox#sensorbox(style="display:none")
           div.row.modal_content.container
             div.col-md-8
-              strong sensor detail: &nbsp;
+              strong Sensor detail: &nbsp;
               span#detail_sensor_name
               span &nbsp; &nbsp; &nbsp; Device: &nbsp;
                 button.small-button#sensor_device_name
@@ -158,6 +158,9 @@ html
               br
               span This device's sensors:
               ul#device_sensors
+              br
+              span Listens on port &nbsp;
+              span#device_listener
               span Accepted commands:
               ul#device_commands_list
               label(for="device_commands") Send a command:

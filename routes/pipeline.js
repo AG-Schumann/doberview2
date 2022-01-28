@@ -1,5 +1,6 @@
 var express = require('express');
 var url = require('url');
+var net = require('net');
 var router = express.Router();
 
 router.get('/', function(req, res) {
@@ -26,8 +27,8 @@ router.get('/get_pipeline', function(req, res) {
 router.post('/add_pipeline', function(req, res) {
   var doc = req.body.doc;
   doc['status'] = 'inactive';
-  doc['cycles'] = parseInt('0');
-  doc['error'] = parseInt('0');
+  doc['cycles'] = 0;
+  doc['error'] = 0;
   doc['rate'] = -1;
   doc['depends_on'] = doc.pipeline.filter(n => (typeof n.upstream == 'undefined' || n.upstream.length == 0)).map(n => n.input_var);
   req.db.get('pipelines').insert(doc)
@@ -53,7 +54,7 @@ router.post('/pipeline_silence', function(req, res) {
   // on the host server.
   var data = req.body;
   var duration = data.duration;
-  var until = 0;
+  var until;
   var now = new Date();
   if (duration == 'forever') {
     req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
@@ -98,13 +99,10 @@ router.post('/pipeline_silence', function(req, res) {
     }
     until = new Date(today - (-duration * 60 * 1000));
   }
+  var delay = until - today;
   req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
-  .then(() => req.log_db.get('commands').insert({
-    command: `pipelinectl_active ${data.name}`,
-    name: data.name.includes('alarm') ? 'pl_alarm' : data.name,
-    ack: parseInt('0'),
-    logged: until,
-  })).then(() => res.json({}))
+  .then(() => {
+    SendCommand(data.name.includes('alarm') ? 'pl_alarm' : data.name, `pipelinectl_active ${data.name}`, delay);})
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
@@ -112,74 +110,48 @@ router.post('/pipeline_ctl', function(req, res) {
   var data = req.body;
   var ack = parseInt('0');
   if (data.cmd == 'active') {
-    if (typeof data.delay == 'undefined') {
-      req.db.get('pipelines').update({name: data.name}, {$set: {status: 'active'}});
-    } else {
-      // we don't want this command going out right away so we have to schedule it
-      try {
-        req.log_db.get('commands').insert(
-          {command: `pipelinectl_active ${data.name}`,
-            name: data.name.includes('alarm') ? 'pl_alarm' : data.name,
-            acknowledged: ack,
-            logged: new Date(new Date() - (-1000 * parseInt(data.delay)))});
-      } catch(error) {
-        console.log(error.message);
-        console.log(data.delay);
-      }
-    }
+    req.db.get('pipelines').update({name: data.name}, {$set: {status: 'active'}});
   } else if (data.cmd == 'silent') {
+    // this should be handled by the endpoint above but we'll leave it here
     req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}});
   } else if (data.cmd == 'restart') {
     if (data.name.includes('alarm')) // all alarm pls handled by one monitor
-      req.log_db.get('commands').insert({
-        command: `pipelinectl_restart ${data.name}`,
-        name: 'pl_alarm',
-        acknowledged: ack,
-        logged: new Date()});
-    else // two-step process to restart a control pl
-      req.log_db.get('commands').insert([
-        {
-          command: `stop`,
-          name: `${data.name}`,
-          acknowledged: ack,
-          logged: new Date()
-        },
-        {
-          command: `start ${data.name}`,
-          name: 'hypervisor',
-          acknowledged: ack,
-          logged: new Date(new Date() - (-5000)) // js why must your dates be bullshit
-        }]);
+      SendCommand(req, 'pl_alarm', `pipelinectl_restart ${data.name}`);
+    else {// two-step process to restart a control pl
+      SendCommand(req, data.name, 'stop');
+      SendCommand(req, 'hypervisor', `start ${data.name}`, 5000);
+    }
   } else if (data.cmd == 'stop') {
     var command, target;
     if (data.name.includes('alarm')) {
-      command = `pipelinectl_stop ${data.name}`;
-      target = 'pl_alarm';
+      SendCommand(req, 'pl_alarm', `pipelinectl_stop ${data.name}`);
     } else {
-      command = 'stop';
-      target = `${data.name}`;
+      SendCommand(req, data.name, 'stop');
     }
-    req.log_db.get('commands').insert({
-      command: command,
-      name: target,
-      acknowledged: ack,
-      logged: new Date()});
   } else if (data.cmd == 'start') {
     var command, target;
     if (data.name.includes('alarm')) {
-      command = `pipelinectl_start ${data.name}`;
-      target = 'pl_alarm';
+      SendCommand(req, 'pl_alarm', `pipelinectl_start ${data.name}`);
     } else {
-      command = `start ${data.name}`;
-      target = 'hypervisor';
+      SendCommand(req, 'hypervisor', `start ${data.name}`);
     }
-    req.log_db.get('commands').insert({
-      command: command,
-      name: target,
-      acknowledged: ack,
-      logged: new Date()});
   }
   return res.sendStatus(304);
 });
+
+function SendCommand(req, to, command, delay=0) {
+  var logged = new Date().getTime() + delay;
+  req.db.get('experiment_config').findOne({name: 'hypervisor'})
+  .then((doc) => {
+    const client = net.createConnection(doc.dispatch_port, doc.host, () => {
+      client.write({
+        to: to,
+        command: command,
+        time: logged,
+      }.toString(), () => client.destroy());
+    });
+  })
+  .catch(err => {console.log(err.message); return {err: err.message};});
+}
 
 module.exports = router;

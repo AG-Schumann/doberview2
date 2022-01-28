@@ -36,8 +36,7 @@ function PopulatePipelines() {
         $("#silent_pipelines").append(row);
       } else if (doc.status == 'inactive') {
         var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
-        row += `<td><i class="${silent}" onclick="StartPipeline('${n}','silent')"></td>`;
-        row += `<td><i class="${active}" onclick="StartPipeline('${n}','active')"></td></tr>`;
+        row += `<td><i class="fas fa-play" onclick="StartPipeline('${n}')"></td>`;
         $("#inactive_pipelines").append(row);
       } else
         console.log(doc);
@@ -89,7 +88,7 @@ function Visualize(doc) {
 }
 
 function SilenceDropdown(name) {
-  $('#pl_name').html(name);
+  $('#silence_me').html(name);
   $(`#${name}_drop`).style('display', 'block');
 }
 
@@ -108,15 +107,19 @@ function AddNewPipeline() {
       return;
     }
   }catch(err){alert(err); return;}
-
+  if (typeof doc._id != 'undefined')
+    delete doc._id;
   $.post("/pipeline/add_pipeline", {doc: doc}, (data, status) => {
     if (typeof data.err != 'undefined')
       alert(data.err);
   });
 }
 
-function DeletePipeline(name=null, cb=null) {
-  name = name || $("#pipeline_select").val();
+function DeletePipeline(cb=null) {
+  var name;
+  try {
+    name = JSON.parse(JSON.stringify(document.jsoneditor.get())).name;
+  }catch(err){alert(err); return;}
   $.post(`/pipeline/delete_pipeline`, {pipeline: name}, (data, status) => {
     if (typeof data.err != 'undefined') {
       alert(data.err);
@@ -128,34 +131,27 @@ function DeletePipeline(name=null, cb=null) {
   });
 }
 
-function StartPipeline(name, status) {
-  $.post('/pipeline/pipeline_ctl', {name: name, cmd: status}, (data, status) => {
+function StartPipeline(name) {
+  $.post('/pipeline/pipeline_ctl', {name: name, cmd: 'start'}, (data, status) => {
     if (typeof data.err != 'undefined') {
       alert(data.err);
       return;
     }
-    $.post('/pipeline/pipeline_ctl', {name: name, cmd: 'start'}, (data, status) => {
-      if (typeof data.err != 'undefined') {
-        alert(data.err);
-        return;
-      }
-    });
   });
 }
 
 function SilencePipeline(duration) {
-  var name = $("#pl_name").html();
-  $.post("/pipeline/pipeline_ctl", {cmd: 'silent', name: name, duration: duration}, (data, status) => {
+  var name = $("#silence_me").html();
+  $.post("/pipeline/pipeline_silence", {name: name, duration: duration}, (data, status) => {
     if (typeof data.err != 'undefined')
       alert(data.err);
   });
 }
 
-function PipelineControl(action, pipeline, delay=null) {
+function PipelineControl(action, pipeline) {
   cmd = {cmd: action, name: pipeline};
-  if (delay != null && delay != 0) cmd.delay = delay;
   $.post("/pipeline/pipeline_ctl", cmd, (data, status) => {
-    console.log(data);
-    console.log(status);
+    if (typeof data.err != 'undefined')
+      alert(data.err);
   });
 }

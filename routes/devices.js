@@ -9,7 +9,7 @@ const influx_url = process.env.DOBERVIEW_INFLUX_URI;
 function axios_params(query) {
   var get_url = new url.URL(influx_url);
   var params = new url.URLSearchParams({
-    db: process.env.DOBERVIEW_EXPERIMENT,
+    db: process.env.DOBERVIEW_INFLUX_DATABASE,
     org: process.env.DOBERVIEW_ORG,
     q: query
   });
@@ -46,7 +46,7 @@ router.get('/sensors_grouped', function(req, res) {
   var group_by = q.group_by;
   if (typeof group_by == 'undefined')
     return res.json([]);
-  req.db.get('readings').aggregate([
+  req.db.get('sensors').aggregate([
     {$group: {
       _id: '$' + group_by,
       sensors: {$push: {name: '$name', desc: '$description', units: '$units'}}
@@ -57,7 +57,7 @@ router.get('/sensors_grouped', function(req, res) {
 });
 
 router.get('/sensor_list', function(req, res) {
-  req.db.get('readings').distinct('name')
+  req.db.get('sensors').distinct('name')
   .then(docs => res.json(docs))
   .catch(err => {console.log(err.message); res.json([]);});
 });
@@ -67,7 +67,7 @@ router.get('/sensor_detail', function(req, res) {
   var sensor = q.sensor;
   if (typeof sensor == 'undefined')
     return res.json({});
-  req.db.get('readings').findOne({name: sensor})
+  req.db.get('sensors').findOne({name: sensor})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -129,7 +129,7 @@ router.post('/update_sensor', function(req, res) {
   }
   if (typeof data.description != 'undefined' && data.description != "")
     updates['description'] = data.description;
-  req.db.get('readings').update({name: sensor}, {$set: updates})
+  req.db.get('sensors').update({name: sensor}, {$set: updates})
     .then(() => res.json({msg: 'Success'}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -141,9 +141,8 @@ router.get('/get_last_point', function(req, res) {
   if (typeof sensor == 'undefined' || typeof topic == 'undefined')
     return res.json({});
 
-  axios(axios_params(`SELECT last(value) FROM ${topic} WHERE reading='${sensor}';`))
+  axios(axios_params(`SELECT last(value) FROM ${topic} WHERE sensor='${sensor}';`))
   .then(resp => {
-    
     var blob = resp.data.split('\n')[1].split(',');
     return res.json({'value': parseFloat(blob[3]), 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
   }).catch(err => {console.log(err); return res.json([]);});
@@ -158,7 +157,7 @@ router.get('/get_data', function(req, res) {
   if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
 
-  axios(axios_params(`SELECT mean(value) FROM ${topic} WHERE reading='${sensor}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`))
+  axios(axios_params(`SELECT mean(value) FROM ${topic} WHERE sensor='${sensor}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`))
   .then( blob => {
     var data = blob.data.split('\n').slice(1);
     return res.json(data.map(row => {var x = row.split(','); return [parseFloat(x[2]/1e6), parseFloat(x[3])];}));
