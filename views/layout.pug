@@ -127,10 +127,10 @@ html
             div.main_container
               strong Device detail: &nbsp;
               span#detail_device_name
-              strong &nbsp; Status: &nbsp;
-              span#detail_device_status
-              br
+              strong &nbsp;
               button.btn.btn-info#device_ctrl_btn(onclick="CtrlDevice()") ?
+              span &nbsp;
+              button.btn.btn-info#device_manage_btn(onclick="ManageDevice()") ?
               span.btn.top-right(onclick="$('#devicebox').css('display','none')") &times;
               br
               form#update_device_form
@@ -161,10 +161,15 @@ html
               br
               span Listens on port &nbsp;
               span#device_listener
+              br
               span Accepted commands:
               ul#device_commands_list
-              label(for="device_commands") Send a command:
-              input(type="text" id="device_commands" name="device_commands")
+              span Send a command:
+              br
+              label(for="device_command_to") To:
+              input(type="text" id="device_command_to" name="device_command_to")
+              label(for="device_command") Command:
+              input(type="text" id="device_command" name="device_command")
               button.btn.btn-info(onclick="DeviceCommand()") Send
               br
               button.btn.btn-info(onclick="$('#devicebox').css('display','none')") Close

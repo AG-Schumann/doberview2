@@ -12,31 +12,27 @@ var hostRouter = require('./routes/hosts');
 var alarmRouter = require('./routes/alarms');
 var grafanaRouter = require('./routes/grafana');
 var logRouter = require('./routes/logs');
+var hvRouter = require('./routes/hypervisor');
 
 const hostname = process.env.DOBERVIEW_HOST;
 const port = process.env.DOBERVIEW_PORT;
 
 var app = express();
+app.disable('x-powered-by');
 
 // uri has format mongodb://{user}:{pass}@{host}:{port}
 var experiment = process.env.DOBERVIEW_EXPERIMENT;
 var authdb = process.env.DOBERVIEW_AUTH_DB || 'admin';
 var uri_base = process.env.DOBERVIEW_MONGO_URI;
 
-// TODO figure out some way of changing experiments dynamically
-var uri = `${uri_base}/${experiment}_settings`;
-//console.log(`Database URI: ${uri}`);
+var uri = `${uri_base}/${experiment}`;
 var db = monk(uri, {authSource: authdb});
-uri = `${uri_base}/${experiment}_logging`;
-var log_db = monk(uri, {authSource: authdb});
-uri = `${uri_base}/common`;
-var common_db = monk(uri, {authSource: authdb});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('common'));
+app.use(logger('[:date[iso]] :remote-addr :method :url :status :res[content-length] - :response-time ms'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(cookieParser());
@@ -48,8 +44,6 @@ console.log(`New connection at ${new Date()}`);
 app.use((req, res, next) => {
   //if (!req.isAuthenticated()) return res.redirect('/login');
   req.db = db;
-  req.log_db = log_db;
-  req.common_db = common_db;
 
   return next();
 });
@@ -61,6 +55,7 @@ app.use('/alarms', alarmRouter);
 app.use('/hosts', hostRouter);
 app.use('/grafana', grafanaRouter);
 app.use('/logs', logRouter);
+app.use('/hypervisor', hvRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

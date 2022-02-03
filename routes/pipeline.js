@@ -1,7 +1,8 @@
 var express = require('express');
 var url = require('url');
-var net = require('net');
 var router = express.Router();
+var common = require('./common')
+//import {SendCommand} from 'common';
 
 router.get('/', function(req, res) {
   var q = url.parse(req.url, true).query;
@@ -27,12 +28,12 @@ router.get('/get_pipeline', function(req, res) {
 router.post('/add_pipeline', function(req, res) {
   var doc = req.body.doc;
   doc['status'] = 'inactive';
-  doc['cycles'] = 0;
-  doc['error'] = 0;
+  doc['cycles'] = parseInt('0');
+  doc['error'] = parseInt('0');
   doc['rate'] = -1;
   doc['depends_on'] = doc.pipeline.filter(n => (typeof n.upstream == 'undefined' || n.upstream.length == 0)).map(n => n.input_var);
   req.db.get('pipelines').insert(doc)
-  .then(() => req.db.get('readings').update({name: {$in: doc['depends_on']}},
+  .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
       {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
   .then(() => res.json({msg: 'Success'}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -43,7 +44,7 @@ router.post('/delete_pipeline', function(req, res) {
   if (typeof data.pipeline == 'undefined')
     return res.sendStatus(403);
   req.db.get('pipelines').remove({name: data.pipeline})
-  .then(() => req.db.get('readings').update({'pipelines': data.pipeline},
+  .then(() => req.db.get('sensors').update({'pipelines': data.pipeline},
       {$pull: {pipelines: data.pipeline}}, {multi: true}))
   .then(() => res.json({msg: 'Success'}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -102,7 +103,7 @@ router.post('/pipeline_silence', function(req, res) {
   var delay = until - today;
   req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
   .then(() => {
-    SendCommand(data.name.includes('alarm') ? 'pl_alarm' : data.name, `pipelinectl_active ${data.name}`, delay);})
+    common.SendCommand(data.name.includes('alarm') ? 'pl_alarm' : data.name, `pipelinectl_active ${data.name}`, delay);})
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
@@ -116,42 +117,27 @@ router.post('/pipeline_ctl', function(req, res) {
     req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}});
   } else if (data.cmd == 'restart') {
     if (data.name.includes('alarm')) // all alarm pls handled by one monitor
-      SendCommand(req, 'pl_alarm', `pipelinectl_restart ${data.name}`);
+      common.SendCommand(req, 'pl_alarm', `pipelinectl_restart ${data.name}`);
     else {// two-step process to restart a control pl
-      SendCommand(req, data.name, 'stop');
-      SendCommand(req, 'hypervisor', `start ${data.name}`, 5000);
+      common.SendCommand(req, data.name, 'stop');
+      common.SendCommand(req, 'hypervisor', `start ${data.name}`, 5000);
     }
   } else if (data.cmd == 'stop') {
     var command, target;
     if (data.name.includes('alarm')) {
-      SendCommand(req, 'pl_alarm', `pipelinectl_stop ${data.name}`);
+      common.SendCommand(req, 'pl_alarm', `pipelinectl_stop ${data.name}`);
     } else {
-      SendCommand(req, data.name, 'stop');
+      common.SendCommand(req, data.name, 'stop');
     }
   } else if (data.cmd == 'start') {
     var command, target;
     if (data.name.includes('alarm')) {
-      SendCommand(req, 'pl_alarm', `pipelinectl_start ${data.name}`);
+      common.SendCommand(req, 'pl_alarm', `pipelinectl_start ${data.name}`);
     } else {
-      SendCommand(req, 'hypervisor', `start ${data.name}`);
+      common.SendCommand(req, 'hypervisor', `start ${data.name}`);
     }
   }
-  return res.sendStatus(304);
+  return res.status(304).json({});
 });
-
-function SendCommand(req, to, command, delay=0) {
-  var logged = new Date().getTime() + delay;
-  req.db.get('experiment_config').findOne({name: 'hypervisor'})
-  .then((doc) => {
-    const client = net.createConnection(doc.dispatch_port, doc.host, () => {
-      client.write({
-        to: to,
-        command: command,
-        time: logged,
-      }.toString(), () => client.destroy());
-    });
-  })
-  .catch(err => {console.log(err.message); return {err: err.message};});
-}
 
 module.exports = router;

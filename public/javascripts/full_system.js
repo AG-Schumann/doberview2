@@ -5,10 +5,10 @@ var LOG_THRESHOLD=3;
 console.log('Change the number formatting by with the SIG_FIGS and LOG_THRESHOLD variables')
 
 function PopulateSensors() {
+  $("#sensor_history").attr('max', history.length);
+  $("#sensor_binning").attr('max', binning.length);
   $.getJSON("/devices/sensor_list", (data) => {
     sensors = data;
-    $("#sensor_history").attr('max', history.length);
-    $("#sensor_binning").attr('max', binning.length);
     RangeSliders();
     UpdateOnce();
   });

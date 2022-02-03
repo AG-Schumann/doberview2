@@ -46,8 +46,9 @@ function SensorDropdown(sensor) {
 
 function MakeAlarm(name) {
   var template = {
-    name: `pl_alarm_${name}`,
+    name: `alarm_${name}`,
     node_config: {},
+    status: 'inactive',
     pipeline: [
       {
         name: 'source',
@@ -75,14 +76,18 @@ function DeviceDropdown(device) {
       return;
     $("#detail_device_name").html(data.name);
     $("#device_host").val(data.host).attr('disabled', true);
-    $("#detail_device_status").html(data.status);
-    if (data.status == 'online') {
-      $("#device_ctrl_btn").text("Stop").click(() => ControlDevice("stop"));
-    } else if (data.status == 'offline') {
-      $("#device_ctrl_btn").text("Start").click(() => ControlDevice("start"));
-    } else {
-      $("#device_ctrl_btn").text("?").click(() => {});
-    }
+    $.getJSON(`/hypervisor/device_status?device=${device}`, (doc) => {
+      if (doc.active == true) {
+        $("#device_ctrl_btn").text("Stop").click(() => ControlDevice("stop"));
+        if (doc.managed == true) {
+          $("#device_manage_btn").text("Unmanage").click(() => ManageDevice('unmanage'));
+        } else {
+          $("#device_manage_btn").text("Manage").click(() => ManageDevice('manage'));
+        }
+      } else {
+        $("#device_ctrl_btn").text("Start").click(() => ControlDevice("start"));
+      }
+    });
 
     if (typeof data.address != 'undefined') {
       if (typeof data.address.ip != 'undefined') {
@@ -103,12 +108,13 @@ function DeviceDropdown(device) {
       $("#device_serial").attr('hidden', true);
     }
     $("#device_sensors").empty();
-    Object.keys(data.readings).forEach(rd => $("#device_sensors").append(`<li><button class="small-button" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
+    Object.keys(data.sensors).forEach(rd => $("#device_sensors").append(`<li><button class="small-button" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
     $("#device_listener").html(`${data.dispatch_port}`);
     if (typeof data.commands != 'undefined')
       $("#device_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
     else
       $("#device_commands_list").html("<li>None</li>");
+    $("#device_command_to").val(data.name);
     $("#devicebox").css("display", "block");
   });
 }
@@ -205,14 +211,27 @@ function ControlDevice(action) {
   }
 }
 
-function DeviceCommand() {
+function ManageDevice(action) {
   var device = $("#detail_device_name").html();
-  var command = $("#device_commands").val();
-  if (device && command) {
+  if (device && action) {
     $.ajax({
       type: 'POST',
       url: '/hypervisor/command',
-      data: {target: device, command: command},
+      data: {target: 'hypervisor', command: `${action} ${device}`},
+      success: (data) => alert(data.err || `Management change confirmed`),
+      err: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
+    });
+  }
+}
+
+function DeviceCommand() {
+  var to = $("#device_command_to").val();
+  var command = $("#device_command").val();
+  if (to && command) {
+    $.ajax({
+      type: 'POST',
+      url: '/hypervisor/command',
+      data: {target: to, command: command},
       success: (data) => alert(data.err || "Command sent"),
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
     });

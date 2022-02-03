@@ -126,8 +126,7 @@ function DeletePipeline(cb=null) {
       return;
     }
     if (cb) cb();
-    PopulateDropdown();
-    PopulatePipelines();
+    location.reload();
   });
 }
 

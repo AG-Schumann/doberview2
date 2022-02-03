@@ -20,7 +20,7 @@ router.get('/get_logs', function(req, res) {
   if (typeof q.name != 'undefined' && q.name != "") {
     match['name'] = {name: q.name};
   }
-  req.log_db.get('logs').aggregate([
+  req.db.get('logs').aggregate([
     {$match: match},
     {$sort: {_id: -1}},
     {$limit: limit},
