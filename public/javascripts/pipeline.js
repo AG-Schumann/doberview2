@@ -23,7 +23,7 @@ function PopulatePipelines() {
       if (doc.status == 'active') {
         var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
         row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
-        row += `<td><button onclick="$('#silence_dropdown').css('display','inline-block')"><i class="${silent}"></button>`;
+        row += `<td><button onclick="SilenceDropdown('${n}')"><i class="${silent}"></button>`;
         row += `<td><i class="${stop}" onclick="PipelineControl('stop','${n}')"></td>`;
         row += `<td><i class="${restart}" onclick="PipelineControl('restart','${n}')"></td></tr>`;
         $("#active_pipelines").append(row);
@@ -89,7 +89,7 @@ function Visualize(doc) {
 
 function SilenceDropdown(name) {
   $('#silence_me').html(name);
-  $(`#${name}_drop`).style('display', 'block');
+  $('#silence_dropdown').css('display', 'block');
 }
 
 function AddNewPipeline() {
@@ -115,13 +115,30 @@ function AddNewPipeline() {
   });
 }
 
+function FillTemplate() {
+  var doc = {
+    name: 'INSERT NAME HERE',
+    pipeline: [
+      {
+        name: 'source',
+        type: 'InfluxSourceNode',
+        input_var: 'INSERT SENSOR NAME HERE'
+      }
+    ],
+    node_config: {
+      'source': {},
+    },
+  };
+  document.jsoneditor.set(doc);
+}
+
 function DeletePipeline(cb=null) {
   var name;
   try {
     name = JSON.parse(JSON.stringify(document.jsoneditor.get())).name;
   }catch(err){alert(err); return;}
   $.post(`/pipeline/delete_pipeline`, {pipeline: name}, (data, status) => {
-    if (typeof data.err != 'undefined') {
+    if (typeof data != 'undefined' && typeof data.err != 'undefined') {
       alert(data.err);
       return;
     }
@@ -132,7 +149,7 @@ function DeletePipeline(cb=null) {
 
 function StartPipeline(name) {
   $.post('/pipeline/pipeline_ctl', {name: name, cmd: 'start'}, (data, status) => {
-    if (typeof data.err != 'undefined') {
+    if (typeof data != 'undefined' && typeof data.err != 'undefined') {
       alert(data.err);
       return;
     }
@@ -142,15 +159,19 @@ function StartPipeline(name) {
 function SilencePipeline(duration) {
   var name = $("#silence_me").html();
   $.post("/pipeline/pipeline_silence", {name: name, duration: duration}, (data, status) => {
-    if (typeof data.err != 'undefined')
+    if (typeof data != 'undefined' && typeof data.err != 'undefined')
       alert(data.err);
+    PopulatePipelines();
   });
+  $("#silence_dropdown").css('display', 'none');
 }
 
 function PipelineControl(action, pipeline) {
   cmd = {cmd: action, name: pipeline};
   $.post("/pipeline/pipeline_ctl", cmd, (data, status) => {
-    if (typeof data.err != 'undefined')
+    if (typeof data != 'undefined' && typeof data.err != 'undefined')
       alert(data.err);
+    PopulatePipelines();
   });
 }
+

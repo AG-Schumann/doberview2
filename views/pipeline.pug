@@ -81,6 +81,8 @@ block content
             button.btn.btn-info(onclick="SilencePipeline('monday')") Monday morning
           li
             button.btn.btn-danger(onclick="SilencePipeline('forever')") The end of time
+          li
+            button.btn.btn-info(onclick='$("#silence_dropdown").css("display", "none")') Cancel
 
   div.main-container
     h2 Pipeline configuration
@@ -92,6 +94,7 @@ block content
     br
     div#json_text(style="width:100%;height:75%;resize:both")
     br
+    button.btn.btn-warning(onclick="FillTemplate()") Fill template
     button.btn.btn-warning(onclick="Visualize()") Visualize
     button.btn.btn-info(onclick="AddNewPipeline()") Add new
     button.btn.btn-info(onclick="DeletePipeline(AddNewPipeline)") Update
@@ -113,9 +116,7 @@ block content
       setInterval(UpdateLoop, 5000);
     });
     window.onclick = function(event) {
-      if (!event.target.matches('.dropbtn')) {
-        var elems = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < elems.length; i++)
-          elems[i].style.display='none';
-      }
+      var elems = document.getElementsByClassName("modalbox");
+      for (var i = 0; i < elems.length; i++)
+        if (event.target == elems[i]) elems[i].style.display = 'none';
     }

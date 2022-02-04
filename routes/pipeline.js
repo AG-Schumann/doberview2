@@ -32,6 +32,8 @@ router.post('/add_pipeline', function(req, res) {
   doc['error'] = parseInt('0');
   doc['rate'] = -1;
   doc['depends_on'] = doc.pipeline.filter(n => (typeof n.upstream == 'undefined' || n.upstream.length == 0)).map(n => n.input_var);
+  if (typeof doc.node_config == 'undefined')
+    doc['node_config'] = {};
   req.db.get('pipelines').insert(doc)
   .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
       {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
@@ -55,35 +57,35 @@ router.post('/pipeline_silence', function(req, res) {
   // on the host server.
   var data = req.body;
   var duration = data.duration;
-  var until;
+  var until = null;
   var now = new Date();
   if (duration == 'forever') {
     req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
     .then(() => res.json({}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else if (duration == 'monday') {
-    var today = now.getDay();
-    if ((1 <= today) || (today <= 4)) {
+    var now = now.getDay();
+    if ((1 <= now) || (now <= 4)) {
       // it's between Monday and Thursday
       return res.json({err: 'Not available Monday-Thursday'});
     }
     until = new Date();
-    until.setDate(until.getDate() + (8-today));
+    until.setDate(until.getDate() + (8-now));
     until.setHours(9);
     until.setMinutes(0);
   } else if (duration == 'morning') {
-    if ((7 <= today.getHours()) || (today.getHours() <= 17)) {
+    if ((7 <= now.getHours()) || (now.getHours() <= 17)) {
       // it's in the working day
       return res.json({err: 'Not available from 0700 to 1700'});
     }
     until = new Date();
-    if (today.getHours() > 17) { // it's evening
-      until.setDate(today.getDate()+1);
+    if (now.getHours() > 17) { // it's evening
+      until.setDate(now.getDate()+1);
     }
     until.setHours(9);
     until.setMinutes(30);
   } else if (duration == 'evening') {
-    if ((today.getHours() < 8) || (today.getHours() > 17)) {
+    if ((now.getHours() < 8) || (now.getHours() > 17)) {
       // not working hours
       return res.json({err: 'Only available during working hours'});
     }
@@ -98,12 +100,12 @@ router.post('/pipeline_silence', function(req, res) {
       console.log(err.message);
       return res.json({err: "Invalid duration"});
     }
-    until = new Date(today - (-duration * 60 * 1000));
+    until = new Date(now.getTime() + duration * 60 * 1000);
   }
-  var delay = until - today;
+  var delay = until - now;
   req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
   .then(() => {
-    common.SendCommand(data.name.includes('alarm') ? 'pl_alarm' : data.name, `pipelinectl_active ${data.name}`, delay);})
+    common.SendCommand(req, data.name.includes('alarm') ? 'pl_alarm' : data.name, `pipelinectl_active ${data.name}`, delay);})
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
