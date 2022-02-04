@@ -64,17 +64,17 @@ router.post('/pipeline_silence', function(req, res) {
     .then(() => res.json({}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else if (duration == 'monday') {
-    var now = now.getDay();
-    if ((1 <= now) || (now <= 4)) {
+    var day = now.getDay();
+    if ((1 <= day) && (day <= 4)) {
       // it's between Monday and Thursday
       return res.json({err: 'Not available Monday-Thursday'});
     }
     until = new Date();
-    until.setDate(until.getDate() + (8-now));
+    until.setDate(until.getDate() + (8-day));
     until.setHours(9);
     until.setMinutes(0);
   } else if (duration == 'morning') {
-    if ((7 <= now.getHours()) || (now.getHours() <= 17)) {
+    if ((7 <= now.getHours()) && (now.getHours() <= 17)) {
       // it's in the working day
       return res.json({err: 'Not available from 0700 to 1700'});
     }
@@ -85,7 +85,7 @@ router.post('/pipeline_silence', function(req, res) {
     until.setHours(9);
     until.setMinutes(30);
   } else if (duration == 'evening') {
-    if ((now.getHours() < 8) || (now.getHours() > 17)) {
+    if ((now.getHours() < 8) || (17 < now.getHours())) {
       // not working hours
       return res.json({err: 'Only available during working hours'});
     }
