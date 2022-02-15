@@ -1,4 +1,5 @@
 var readings = [];
+const role = ['Primary', 'Secondary', 'Alarm duty'];
 
 function PopulateReadings() {
   $.getJSON("/sensors/reading_list", (data) => {
@@ -35,6 +36,22 @@ function GetHosts() {
       }
     });
     $("#host_table").append('</tbody>');
+  });
+}
+
+function PopulateShifters(shift_div){
+  var shifter_template = '<div class="row" style="margin-top:10px;"><div style="background-color:#e5e5e5;color:#555;margin-left:5px;margin-right:5px;width:100%;"><strong style="padding-left:10px">{{shift_type}}</strong></div><div class="col-12">{{shifter_name}}</div><div class="col-12"><i class="fa fa-envelope"></i>&nbsp;{{shifter_email}}</div><div class="col-12"><i class="fa fa-phone"></i>&nbsp;{{shifter_phone}}</div></div>';
+  var blank_shifts = {"shifter_name": "Nobody",
+    "shifter_email": "d.trump@whitehouse.gov",
+    "shifter_phone": "867-5309",
+  };
+
+  $.getJSON("/shifts/get_current_shifters", function(data){
+    var html = data.shifterdocs.reduce((total, entry) => {
+      return total + Mustache.render(shifter_template, entry.shifter != 'none' ? entry : blank_shifts);
+    }, "");
+    if(html != "")
+      $('#'+shift_div).html(html);
   });
 }
 

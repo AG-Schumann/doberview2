@@ -1,0 +1,45 @@
+extends layout
+
+block extrahead
+    link(rel='stylesheet' href='stylesheets/fullcalendar.min.css' )
+    script(src='javascripts/fullcalendar.min.js' type='text/javascript')
+    script(src='javascripts/shift_calendar.js', type='text/javascript')
+block content
+    section.bg-light.p-3
+        div#calendar
+
+    #shiftbox.modal.fade(tabindex='-1' aria-labelledby='shiftboxLabel' aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5#shiftboxLabel.modal-title
+                        span Shift from &nbsp
+                        span#shift_start
+                        br
+                        span to &nbsp
+                        span#shift_end
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    .form#shift_form
+                        .form-group
+                            label(for='primary_select') Primary
+                            select#primary_select.form-select.contact_select.w-auto
+                        br
+                        span#contact_list
+                        .form-group
+                            label(for='secondary_select') Secondary
+                            select#secondary_select.form-select.contact_select.w-auto
+                        br
+                        .form-group
+                            label(for='alarm_duty_select') Alarm duty
+                            select#alarm_duty_select.form-select.contact_select.w-auto
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+                    button.btn.btn-primary(type='button') Save changes
+
+
+    script.
+        $(document).ready(function() {
+            DrawCalendar();
+            GetContactDropdown();
+            });

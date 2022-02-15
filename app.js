@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var sensorRouter = require('./routes/sensors');
 var pipelineRouter = require('./routes/pipeline');
 var hostRouter = require('./routes/hosts');
+var shiftRouter = require('./routes/shifts');
 
 
 var app = express();
@@ -48,6 +49,7 @@ app.use('/', indexRouter);
 app.use('/sensors', sensorRouter);
 app.use('/pipeline', pipelineRouter);
 app.use('/hosts', hostRouter);
+app.use('/shifts', shiftRouter);
 
 
 // catch 404 and forward to error handler

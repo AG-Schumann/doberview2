@@ -14,7 +14,7 @@ block content
         .col-lg-8
           .card
             .card-body
-              .d-flex.justify-content-between
+              .d-flex.align-items-center.justify-content-between
                 div
                   span
                     strong Group by: &nbsp;
@@ -25,11 +25,8 @@ block content
                     label.btn.btn-outline-primary(for='btnradio2') Subsystem
                     input#btnradio3.btn-check(type='radio' name='btnradio'  value='topic' autocomplete='off' onclick='UpdateOnce()')
                     label.btn.btn-outline-primary(for='btnradio3') Quantity
-                div.form-check.form-switch
-                  label.h5.form-check-label(for='show_unmonitored')
-                    strong show unmonitored
-
-                    input#show_unmonitored.form-check-input(type='checkbox')
+                button.btn.btn-outline-secondary(type='button')
+                    i.fas.fa-eye-slash &nbsp Hide unmonitored
             .card-text
               table.table.table-striped.table-hover#reading_table
         .col-lg-4
@@ -43,46 +40,18 @@ block content
               .card-body
                 .h3.card-title Shifters
               .card-text
-                ul.list-group.list-group-flush
-                  li.list-group-item
-                    h4 Primary
-                    i.fa.fa-user
-                    | &nbsp John Doe
-                    br
-                    i.fa.fa-envelope
-                    | &nbsp john.doe@googlemail.com
-                    br
-                    i.fa.fa-phone
-                    | &nbsp 012312345678
-                  li.list-group-item
-                    h4 Secondary
-                    i.fa.fa-user
-                    | &nbsp Jane Doe
-                    br
-                    i.fa.fa-envelope
-                    | &nbsp jane.doe@mail.com
-                    br
-                    i.fa.fa-phone
-                    | &nbsp 012312345678
-                  li.list-group-item
-                    h4 Alarm Duty
-                    i.fa.fa-user
-                    | &nbsp Elroy Freakinglongname
-                    br
-                    i.fa.fa-envelope
-                    | &nbsp; elroy.freakinglongname@longmail.com
-                    br
-                    i.fa.fa-phone
-                    | &nbsp 012312345678
+                ul.list-group.list-group-flush#current_shifters_list
   script.
 
     $(document).ready(function () {
 
       GetGroupedReadings('sensor');
       PopulateReadings();
+      PopulateShifters('#current_shifters_list');
       GetHosts();
       setInterval(UpdateOnce, 5000);
       setInterval(GetHosts, 5000);
+      setInterval(PopulateShifters, 10000);
 
     });
 

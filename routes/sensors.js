@@ -17,8 +17,20 @@ router.get('/sensor_detail', function(req, res) {
   if (typeof sensor == 'undefined')
     return res.json({});
   req.db.get('sensors').findOne({name: sensor})
-  .then(doc => res.json(doc))
-  .catch(err => {console.log(err.message); return res.json({err: err.message});});
+      .then(doc => res.json(doc))
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
+router.get('/list', function (req, res) {
+  req.db.get('sensors').distinct('name')
+      .then(doc => res.json(doc))
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
+router.get('/monitored_list', function (req, res) {
+  req.common_db.get('hosts').distinct('default')
+      .then(doc => res.json(doc))
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 router.get('/monitoring', function(req, res) {

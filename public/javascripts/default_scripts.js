@@ -1,6 +1,7 @@
 const binning = {'10m': '1s', '1h': '6s', '1d': '2m', '1w': '15m'};
 const default_interval = '10m'
 
+
 function ReadingDropdown(reading) {
   $.getJSON(`/sensors/reading_detail?reading=${reading}`, (data) => {
     $("#sensorbox").css("display", "none");
@@ -60,19 +61,30 @@ function GetMonitoringHost(sensor) {
   $.getJSON(`/sensors/monitoring?sensor=${sensor}`, (data) => {
     if(data == null) {
       $(`#${sensor}_monitoring_host`).text("unmonitored");
+    } else {
+      $(`#${sensor}_monitoring_host`).text("monitored by " + data.hostname);
     }
-    $(`#${sensor}_monitoring_host`).text("monitored by " + data.hostname);
+  });
+}
 
+function GetUnmonitoredSensors() {
+  $.getJSON(`/sensors/list`, (all) => {
+    $.getJSON(`/sensors/monitored_list`, (monitored) => {
+      var unmonitored = all.filter(x => !monitored.includes(x));
+      console.log(unmonitored);
+      $('#unmonitored_sensors_list').html(unmonitored.reduce((tot, un) => tot + `<li class="list-group-item"><div class="d-flex align-items-center justify-content-between"><span>${un}</span><button class="btn btn-success"> Start </button></div></li>`, ""));
+    });
   });
 }
 
 function HostDropdown(host) {
   $.getJSON(`/hosts/host_detail?host=${host}`, (data) => {
-    $("#host_heartbeat_timer").val(data.heartbeat_timer);
-    $("#host_sysmon_timer").val(data.sysmon_timer);
-    $("#host_default_list").html(data.default.reduce((tot, def) => tot + `<li>${def} <button class="btn btn-success" onclick="StopSensor('${host}', '${def}')"></button></li>`,"") || "<li>None</li>");
+    $("#detail_host_name").html(host);
+    $("#host_default_list").html(data.default.reduce((tot, def) => tot + `<li class="list-group-item"><div class="d-flex align-items-center justify-content-between"><span>${def}</span><button class="btn btn-danger"> Stop </button></div></li>`,""));
   });
+  GetUnmonitoredSensors();
 }
+
 
 function DrawReadingHistory(reading, interval) {
   if (reading === 'None') {

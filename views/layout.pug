@@ -2,10 +2,9 @@ doctype html
 html
   head
     title=DOBERview
-    link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous')
-    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM' crossorigin='anonymous')
+    link(href="stylesheets/bootstrap.min.css" rel="stylesheet")
+    script(src="javascripts/bootstrap.min.js" type="text/javascript")
     script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" type="text/javascript")
-    script(src='https://kit.fontawesome.com/73df3ddf45.js' crossorigin='anonymous')
     script(src="javascripts/default_scripts.js" type="text/javascript")
     script(src="https://kit.fontawesome.com/abb8282784.js" crossorigin="anonymous" type="text/javascript")
 
@@ -23,22 +22,31 @@ html
           div.collapse.navbar-collapse(id="#navmenu")
             ul.navbar-nav
               li.nav-item
+                span.badge.rounded-pill.bg-danger(style='float:right;margin-bottom:-15px;margin-right:-8px;font-size:10px') soon
                 a.nav-link(href='/subsystem') Systems
               li.nav-item
                 a.nav-link(href='/pipeline') Pipeline
               li.nav-item
-                a.nav-link(href='/contacts') Shifters
+                a.nav-link(href='/shifts') Shifts
               li.nav-item
                 a.nav-link(href='/grafana') Grafana
               li.nav-item
+                span.badge.rounded-pill.bg-danger(style='float:right;margin-bottom:-15px;margin-right:-14px;font-size:10px') soon
                 a.nav-link(href='/daq') DAQ
             ul.navbar-nav.ms-auto
               li.nav-item
-                select.form-select.bg-warning
-                  option(value='pancake' selected='') PANCAKE
-                  option(value='xebra') XeBRA
-                  option(value='gemse') GeMSE
-    div#content(style="padding-left:5px;padding-right:5px;padding-top:0px;padding-bottom:0px")
+                .dropdown
+                  button#select-experiment.btn.btn-warning.dropdown-toggle(type='button' data-bs-toggle='dropdown' aria-expanded='false')
+                    | PANCAKE
+                  ul.dropdown-menu(aria-labelledby='dropdownMenu2')
+                    li
+                      button.dropdown-item(type='button') PANCAKE
+                    li
+                      button.dropdown-item(type='button') XeBRA
+                    li
+                      button.dropdown-item(type='button') GeMSE
+
+    div#content
       #readingbox.modal.fade(tabindex='-1' aria-labelledby='readingboxLabel' aria-hidden='true')
         .modal-dialog.modal-xl
           .modal-content
@@ -131,7 +139,7 @@ html
                 button.btn.btn-primary(type='button') Save changes
 
       #hostbox.modal.fade
-        .modal-dialog
+        .modal-dialog.modal-lg
           .modal-content
             .modal-header
               h5#hostboxLabel.modal-title
@@ -139,19 +147,11 @@ html
               button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
             .modal-body.row
               .col-md-6
-                ul.list-group
-                  li.list-group-item An item
-                  li.list-group-item A second item
-                  li.list-group-item A third item
-                  li.list-group-item A fourth item
-                  li.list-group-item And a fifth one
+                h5 Monitored
+                ul.list-group#host_default_list
               .col-md-6
-                ul.list-group
-                  li.list-group-item An item
-                  li.list-group-item A second item
-                  li.list-group-item A third item
-                  li.list-group-item A fourth item
-                  li.list-group-item And a fifth one
+                h5 Unmonitored PANCAKE sensors
+                ul.list-group#unmonitored_sensors_list
 
       block content
 
