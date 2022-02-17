@@ -1,4 +1,4 @@
-const binning = ['1s', '10s', '1m', '10m', '1h'];
+const binning = ['1s', '6s', '36s', '1m', '2m', '4m', '6m', '14m', '24m', '48m'];
 const history = ['10m', '1h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
 
 function SensorDropdown(sensor) {
@@ -7,7 +7,7 @@ function SensorDropdown(sensor) {
   $("#alarm_mid").change(() => {var mid = parseInt($("#alarm_mid").val()); var range = parseInt($("#alarm_range").val()); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
   $("#alarm_range").change(() => {var mid = parseInt($("#alarm_mid").val()); var range = parseInt($("#alarm_range").val()); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
   $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, (data) => {
-    $("#devicebox").css("display", "none");
+    $("#devicebox").modal('hide');
     if (Object.keys(data).length == 0)
       return;
     $("#detail_sensor_name").html(data.name);
@@ -34,12 +34,11 @@ function SensorDropdown(sensor) {
 
     $("#pipeline_list").empty();
     if (typeof data.pipelines != 'undefined' && data.pipelines.length > 0)
-      data.pipelines.forEach(name => $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="small-button">${name}</button></a></li>`));
+      data.pipelines.forEach(name => $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="btn btn-primary btn-sm">${name}</button></a></li>`));
     else
-      $("#pipeline_list").append(`<li><button class="btn btn-info" onclick=MakeAlarm("${data.name}")>Make new alarm</button></li>`);
+      $("#pipeline_list").append(`<li><button class="btn btn-primary btn-sm" onclick=MakeAlarm("${data.name}")>Make new alarm</button></li>`);
     $("#sensor_device_name").text(data.device).attr('onclick', `DeviceDropdown("${data.device}")`);
-    $("#sensorbox").css("display", "block");
-
+    $('#sensorbox').modal('show');
   });
   DrawSensorHistory(sensor);
 }
@@ -71,7 +70,7 @@ function MakeAlarm(name) {
 
 function DeviceDropdown(device) {
   $.getJSON(`/devices/device_detail?device=${device}`, (data) => {
-    $("#sensorbox").css("display", "none");
+    $("#sensorbox").modal('hide');
     if (Object.keys(data).length == 0)
       return;
     $("#detail_device_name").html(data.name);
@@ -93,59 +92,52 @@ function DeviceDropdown(device) {
       if (typeof data.address.ip != 'undefined') {
         $("#device_ip").val(data.address.ip);
         $("#device_port").val(data.address.port);
-        $("#device_eth").attr('hidden', false);
-        $("#device_serial").attr('hidden', true);
+        $(".device_eth").attr('hidden', false);
+        $(".device_serial").attr('hidden', true);
         $("#device_host").attr('disabled', false);
       } else if (typeof data.address.tty != 'undefined') {
         $("#device_tty").val(data.address.tty);
         $("#device_baud option").filter(function() {return this.value == data.address.baud;}).prop('selected', true);
         $("#device_serial_id").val(data.address.serialID || null);
-        $("#device_eth").attr('hidden', true);
-        $("#device_serial").attr('hidden', false);
+        $(".device_eth").attr('hidden', true);
+        $(".device_serial").attr('hidden', false);
       }
     } else {
-      $("#device_eth").attr('hidden', true);
-      $("#device_serial").attr('hidden', true);
+      $(".device_eth").attr('hidden', true);
+      $(".device_serial").attr('hidden', true);
     }
     $("#device_sensors").empty();
-    Object.keys(data.sensors).forEach(rd => $("#device_sensors").append(`<li><button class="small-button" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
+    (data.sensors).forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
     $("#device_listener").html(`${data.dispatch_port}`);
     if (typeof data.commands != 'undefined')
       $("#device_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
     else
       $("#device_commands_list").html("<li>None</li>");
     $("#device_command_to").val(data.name);
-    $("#devicebox").css("display", "block");
+    $("#devicebox").modal('show');
   });
-}
-
-function RangeSliders() {
-  $("#sensor_binning_label").html(binning[$("#sensor_binning").val()]);
-  $("#sensor_history_label").html(history[$("#sensor_history").val()]);
 }
 
 function DrawSensorHistory(sensor) {
 
   sensor = sensor || $("#detail_sensor_name").html();
-  var bin_i = $("#sensor_binning").val();
-  var hist_i = $("#sensor_history").val();
-
-  $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[hist_i]}&binning=${binning[bin_i]}`, data => {
+  var interval = $("#selectinterval :selected").val();
+  $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
     if (data.length == 0) {
       console.log('No data?');
       return;
     }
     var t_min = data[0][0], t_max = data[data.length-2][0];
     var alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
-    var series = [{type: 'line', data: data.filter(row => (row[0] && row[1])), animation: {duration: 250}, color: '#1111ff'}];
+    var series = [{type: 'line', data: data.filter(row => (row[0] && row[1])), animation: {duration: 250}, color: '#0d6efd'}];
     if (alarm_low && alarm_high && $("#plot_alarms").is(":checked")) {
-      series.push({type: 'line', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', dashStyle: 'Dash'});
-      series.push({type: 'line', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', dashStyle: 'Dash'});
+      series.push({type: 'area', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', threshold: -Infinity});
+      series.push({type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
     }
     Highcharts.chart('sensor_chart', {
       chart: {
         zoomtype: 'xy',
-        height: 'auto',
+        height: '300px',
       },
       title: {text: null},
       credits: {enabled: false},
@@ -166,8 +158,10 @@ function UpdateSensor() {
     status: $("#sensor_status").is(":checked") ? "online" : 'offline',
   };
   if ($("#alarm_low").val() && $("#alarm_high").val()) {
-    data.alarm = [$("#alarm_low").val(), $("#alarm_high").val()];
+    console.log(data);
+    data.alarm_thresholds = [$("#alarm_low").val(), $("#alarm_high").val()];
     data.alarm_recurrence = $("#alarm_recurrence").val();
+    data.alarm_level = $("#alarm_baselevel").val();
   }
   $.ajax({
     type: 'POST',
@@ -176,7 +170,7 @@ function UpdateSensor() {
     success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
-  $("#sensorbox").css("display", "none");
+  $("#sensorbox").modal('hide');
 }
 
 function UpdateDevice() {
@@ -224,9 +218,31 @@ function ManageDevice(action) {
   }
 }
 
-function DeviceCommand() {
-  var to = $("#device_command_to").val();
-  var command = $("#device_command").val();
+function CommandDropdown() {
+  $.getJSON("/devices/device_list", (data) => {
+    data.forEach(sensor => $("#command_to").append(`<option value="sensor">${sensor}</option>`));
+  });
+
+  $('#commandbox').modal('show');
+}
+
+function GetAcceptedCommands(device) {
+  console.log(device);
+  $.getJSON(`/devices/device_detail?device=${device}`, (data) => {
+    console.log(data);
+    if (typeof data.commands != 'undefined')
+      $("#accepted_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
+    else
+      $("#accepted_commands_list").html("<li>None</li>");
+    });
+}
+
+
+function DeviceCommand(to, command) {
+  var to = to || $("#detail_device_name").html();
+  var command = command || $("#device_command").val();
+  console.log(to);
+  console.log(command);
   if (to && command) {
     $.ajax({
       type: 'POST',
@@ -237,4 +253,6 @@ function DeviceCommand() {
     });
   }
 }
+
+
 

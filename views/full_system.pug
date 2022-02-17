@@ -9,13 +9,16 @@ block extrahead
 
 block content
   div.main-container
-
     span
       strong Group sensors by: &nbsp;
-    select#sensor_grouping(onchange="GetGroupedSensors()")
-      option(value="subsystem") Subsystem
-      option(value="device") Readout Device
-      option(value="topic" selected) Topic
+    #sensor_grouping.btn-group.py-3(role='group')
+      input#groupSubsystem.btn-check(type="radio" name="btnradio" value="subsystem" autocomplete="off" onclick="GetGroupedSensors()" checked="")
+      label.btn.btn-outline-primary(for="groupSubsystem") Subsystem
+      input#groupSensor.btn-check(type="radio" name="btnradio" value="device" autocomplete="off" onclick="GetGroupedSensors()")
+      label.btn.btn-outline-primary(for="groupSensor") Device
+      input#groupTopic.btn-check(type="radio" name="btnradio" value="topic" autocomplete="off" onclick="GetGroupedSensors()")
+      label.btn.btn-outline-primary(for="groupTopic") Topic
+
     div.sensor-div
       table.table.table-striped.table-hover#sensor_table
 
