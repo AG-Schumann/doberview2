@@ -1,11 +1,8 @@
 extends layout
 
 block extrahead
-  script(src="javascripts/full_system.js", type="text/javascript")
-  script(src="javascripts/highcharts.js", type="text/javascript")
   link(href="stylesheets/full_system.css", rel="stylesheet")
-  link(href="stylesheets/highcharts.css", rel="stylesheet")
-
+  script(src="javascripts/full_system.js", type="text/javascript")
 
 block content
   div.main-container
@@ -13,9 +10,9 @@ block content
     span
       strong Group sensors by: &nbsp;
     select#sensor_grouping(onchange="GetGroupedSensors()")
-      option(value="subsystem") Subsystem
+      option(value="subsystem" selected) Subsystem
       option(value="device") Readout Device
-      option(value="topic" selected) Topic
+      option(value="topic") Topic
     div.sensor-div
       table.table.table-striped.table-hover#sensor_table
 

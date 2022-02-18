@@ -1,0 +1,426 @@
+<svg
+    viewBox="0 0 940 220"
+    xmlns="http://www.w3.org/2000/svg"
+>
+    <metadata>
+        <sensors>S_FC_01 T_IC_03 T_IC_04 T_IC_06 T_IC_01 T_IC_08 T_IC_07 T_IC_13 T_IC_10 T_IC_11 T_IC_12 T_IC_05 T_IC_02</sensors>
+        <setpoints></setpoints>
+        <valves>S_FC_01</valves>
+        <links></links>
+    </metadata>
+    
+    <style>
+        rect{
+            stroke: black;
+            stroke-width: 2pt;
+            fill: None
+        }
+        
+        polygon, polyline, line{
+            stroke: black;
+            stroke-width: 1pt;
+            fill: None
+        }
+        line.on{
+            stroke-width: 1pt;
+            stroke: green;
+        }
+        line.off{
+            stroke-width: .25pt;
+            stroke: red;
+        }
+
+        polygon.on{
+            fill: green;
+        }
+        polygon.off{
+            fill: red;
+        }
+
+        
+        .mat_copper{
+            fill: chocolate;
+        }
+        text{
+            text-anchor: middle;
+            alignment-baseline: middle;
+        }
+        .txt_ontop{
+            alignment-baseline: baseline;
+        }
+        .txt_below{
+            alignment-baseline: hanging;
+        }
+    </style>
+
+
+    <g>
+        <!-- arrow in -->
+        <polyline points="443.3333333333333,70  453.3333333333333,80  463.3333333333333,70"/>
+        
+        <!-- arrow out -->
+        <polyline points="476.6666666666667,80  486.6666666666667,70  496.6666666666667,80 "/>
+        
+        <!-- valve -->
+        <polygon
+            id="valve_S_FC_01"
+            points="443.3333333333333,100.0 463.3333333333333,120.0 463.3333333333333,100.0 443.3333333333333,120.0"
+        />"
+        
+        <!-- pipes -->
+        
+        
+        
+        
+        
+        
+        <!-- line in above valve -->
+        <line
+            x1="453.3333333333333"
+            x2="453.3333333333333"
+            y1="110.0"
+            y2="70"
+        />
+        
+        <!-- line in  below valve -->
+        <line
+            id="valve_S_FC_01"
+            x1="453.3333333333333"
+            x2="453.3333333333333"
+            y1="175"
+            y2="110.0"
+        />
+        
+        
+        <!-- line out --> 
+        <line
+            id="valve_S_FC_01"
+            x1="486.6666666666667"
+            x2="486.6666666666667"
+            y1="210"
+            y2="70"
+        />
+        
+        
+        <!-- vertical pipes -->
+        <line
+            id="valve_S_FC_01"
+            x1="45.0"
+            x2="845.0"
+            y1="175"
+            y2="175"
+        />
+        
+        <line
+            id="valve_S_FC_01"
+            x1="95.0"
+            x2="895.0"
+            y1="210"
+            y2="210"
+        />
+        
+    </g>
+
+
+    <!-- Pad 6 -->
+    <g> 
+        <rect
+            class="mat_copper"
+            x="20"
+            y="70"
+            height="80"
+            width="100"
+        />
+         <text
+            x="70.0"
+            y="72.00"
+            class="txt_below"
+        >
+            Pad 6
+        </text>
+        <text
+            id="value_T_IC_03"
+            x="70.0"
+            y="110.0"
+        >
+            T_PAD_Pad 6
+        </text>
+        <text
+            id="value_T_IC_04"
+            class="txt_below"
+            x="70.0"
+            y="45.0"
+        >
+            T_WALL_Pad 6
+        </text>
+        <line
+            id="valve_S_FC_01"
+            x1="45.0"
+            x2="45.0"
+            y1="150"
+            y2="175"
+            
+        />
+        
+        <line
+            id="valve_S_FC_01"
+            x1="95.0"
+            x2="95.0"
+            y1="150"
+            y2="210"
+        />
+    
+    </g>
+    
+    <!-- Pad 4 -->
+    <g> 
+        <rect
+            class="mat_copper"
+            x="170"
+            y="70"
+            height="80"
+            width="100"
+        />
+         <text
+            x="220.0"
+            y="72.00"
+            class="txt_below"
+        >
+            Pad 4
+        </text>
+        <text
+            id="value_T_IC_06"
+            x="220.0"
+            y="110.0"
+        >
+            T_PAD_Pad 4
+        </text>
+        <text
+            id="value_T_IC_01"
+            class="txt_below"
+            x="220.0"
+            y="45.0"
+        >
+            T_WALL_Pad 4
+        </text>
+        <line
+            id="valve_S_FC_01"
+            x1="195.0"
+            x2="195.0"
+            y1="150"
+            y2="175"
+            
+        />
+        
+        <line
+            id="valve_S_FC_01"
+            x1="245.0"
+            x2="245.0"
+            y1="150"
+            y2="210"
+        />
+    
+    </g>
+    
+    <!-- Pad 2 -->
+    <g> 
+        <rect
+            class="mat_copper"
+            x="320"
+            y="70"
+            height="80"
+            width="100"
+        />
+         <text
+            x="370.0"
+            y="72.00"
+            class="txt_below"
+        >
+            Pad 2
+        </text>
+        <text
+            id="value_T_IC_08"
+            x="370.0"
+            y="110.0"
+        >
+            T_PAD_Pad 2
+        </text>
+        <text
+            id="value_T_IC_07"
+            class="txt_below"
+            x="370.0"
+            y="45.0"
+        >
+            T_WALL_Pad 2
+        </text>
+        <line
+            id="valve_S_FC_01"
+            x1="345.0"
+            x2="345.0"
+            y1="150"
+            y2="175"
+            
+        />
+        
+        <line
+            id="valve_S_FC_01"
+            x1="395.0"
+            x2="395.0"
+            y1="150"
+            y2="210"
+        />
+    
+    </g>
+    
+    <!-- Pad 1 -->
+    <g> 
+        <rect
+            class="mat_copper"
+            x="520"
+            y="70"
+            height="80"
+            width="100"
+        />
+         <text
+            x="570.0"
+            y="72.00"
+            class="txt_below"
+        >
+            Pad 1
+        </text>
+        <text
+            id="value_T_IC_13"
+            x="570.0"
+            y="110.0"
+        >
+            T_PAD_Pad 1
+        </text>
+        <text
+            id="value_T_IC_10"
+            class="txt_below"
+            x="570.0"
+            y="45.0"
+        >
+            T_WALL_Pad 1
+        </text>
+        <line
+            id="valve_S_FC_01"
+            x1="545.0"
+            x2="545.0"
+            y1="150"
+            y2="175"
+            
+        />
+        
+        <line
+            id="valve_S_FC_01"
+            x1="595.0"
+            x2="595.0"
+            y1="150"
+            y2="210"
+        />
+    
+    </g>
+    
+    <!-- Pad 3 -->
+    <g> 
+        <rect
+            class="mat_copper"
+            x="670"
+            y="70"
+            height="80"
+            width="100"
+        />
+         <text
+            x="720.0"
+            y="72.00"
+            class="txt_below"
+        >
+            Pad 3
+        </text>
+        <text
+            id="value_T_IC_11"
+            x="720.0"
+            y="110.0"
+        >
+            T_PAD_Pad 3
+        </text>
+        <text
+            id="value_T_IC_12"
+            class="txt_below"
+            x="720.0"
+            y="45.0"
+        >
+            T_WALL_Pad 3
+        </text>
+        <line
+            id="valve_S_FC_01"
+            x1="695.0"
+            x2="695.0"
+            y1="150"
+            y2="175"
+            
+        />
+        
+        <line
+            id="valve_S_FC_01"
+            x1="745.0"
+            x2="745.0"
+            y1="150"
+            y2="210"
+        />
+    
+    </g>
+    
+    <!-- Pad 5 -->
+    <g> 
+        <rect
+            class="mat_copper"
+            x="820"
+            y="70"
+            height="80"
+            width="100"
+        />
+         <text
+            x="870.0"
+            y="72.00"
+            class="txt_below"
+        >
+            Pad 5
+        </text>
+        <text
+            id="value_T_IC_05"
+            x="870.0"
+            y="110.0"
+        >
+            T_PAD_Pad 5
+        </text>
+        <text
+            id="value_T_IC_02"
+            class="txt_below"
+            x="870.0"
+            y="45.0"
+        >
+            T_WALL_Pad 5
+        </text>
+        <line
+            id="valve_S_FC_01"
+            x1="845.0"
+            x2="845.0"
+            y1="150"
+            y2="175"
+            
+        />
+        
+        <line
+            id="valve_S_FC_01"
+            x1="895.0"
+            x2="895.0"
+            y1="150"
+            y2="210"
+        />
+    
+    </g>
+        
+    
+</svg>
