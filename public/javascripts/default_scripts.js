@@ -1,5 +1,6 @@
 const binning = ['1s', '6s', '36s', '1m', '2m', '4m', '6m', '14m', '24m', '48m'];
 const history = ['10m', '1h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
+var control_map = {};
 
 function SensorDropdown(sensor) {
   $("#alarm_low").change(() => {var low = parseInt($("#alarm_low").val()); var high = parseInt($("#alarm_high").val()); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}});
@@ -38,6 +39,28 @@ function SensorDropdown(sensor) {
     else
       $("#pipeline_list").append(`<li><button class="btn btn-primary btn-sm" onclick=MakeAlarm("${data.name}")>Make new alarm</button></li>`);
     $("#sensor_device_name").text(data.device).attr('onclick', `DeviceDropdown("${data.device}")`);
+    if (typeof data.control_quantity != 'undefined') {
+      control_map[data.name] = [data.device, data.control_quantity];
+      $("#sensor_control").prop('hidden', false);
+      if (data.topic == 'state') {
+        // this is a valve
+        $("#sensor_valve").prop('hidden', false);
+        $("#sensor_setpoint").prop('hidden', true);
+        $.getJSON(`/devices/get_last_point?sensor=${data.name}`, doc => {
+          $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
+          $("#current_valve_state").html(doc.value);
+        });
+      } else {
+        // this is a setpoint
+        $("#sensor_valve").prop('hidden', true);
+        $("#sensor_setpoint").prop('hidden', false);
+        $.getJSON(`/devices/get_last_point?sensor=${data.name}`, doc => {
+          $("#sensor_setpoint_control").val(doc.value);
+        });
+      }
+    } else {
+      $("#sensor_control").prop('hidden', true);
+    }
     $('#sensorbox').modal('show');
   });
   DrawSensorHistory(sensor);
@@ -205,8 +228,6 @@ function SendToHypervisor(target, command, msg_if_success=null) {
 function ControlDevice(action) {
   var device = $("#detail_device_name").html();
   if (device && action) {
-    console.log(device);
-    console.log(action);
     SendToHypervisor(action == 'stop' ? device : 'hypervisor', action, `${action} sent`);
   }
 }
@@ -220,6 +241,8 @@ function ManageDevice(action) {
 
 function CommandDropdown() {
   $.getJSON("/devices/device_list", (data) => {
+    $("#command_to").empty();
+    $("#command_to").append('<option value="hypervisor">hypervisor</option>');
     data.forEach(sensor => $("#command_to").append(`<option value="sensor">${sensor}</option>`));
   });
 
@@ -241,30 +264,26 @@ function GetAcceptedCommands(device) {
 function DeviceCommand(to, command) {
   var to = to || $("#detail_device_name").html();
   var command = command || $("#device_command").val();
-  console.log(to);
-  console.log(command);
   if (to && command) {
     SendToHypervisor(to, command, 'Command sent');
   }
 }
 
 function ToggleValve() {
-  var sensor = $("#detail_sensor_name").html();
   var device = $("#sensor_device_name").html();
   var target = $("#control_target").html();
-  var state = $("#valve_btn").html() == "Closed";
+  var state = $("#current_valve_state").html() == 0;
   if (sensor && target && device && confirm(`Confirm valve toggle`)) {
-    SendToHypervisor(sensor, `set ${target} ${state}`, 'Confirmed');
+    SendToHypervisor(device, `set ${target} ${state}`, 'Confirmed');
   }
 }
 
 function ChangeSetpoint() {
-  var sensor = $("#detail_sensor_name").html();
   var device = $("#sensor_device_name").html();
   var target = $("#control_target").html();
   var value = $("#value_setpoint").val();
   if (sensor && target && device) {
-    SendToHypervisor(sensor, `set ${target} ${value}`, 'Confirmed');
+    SendToHypervisor(device, `set ${target} ${value}`, 'Confirmed');
   }
 }
 

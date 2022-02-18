@@ -41,7 +41,7 @@ html
               a(href="/devices")
                 i.fas.fa-eye
                 span Overview
-              a(href="/subsystem")
+              a(href="/systems")
                 i.fas.fa-object-group
                 span Systems
               a(href='/pipeline')
@@ -108,11 +108,11 @@ html
                         td
                           input.form-control(type="number" id="alarm_low" name="alarm_low" size='8')
                         td
+                          input.form-control(type="number" id="alarm_high" name="alarm_high" size='8')
+                        td
                           input.form-control(type="number" id="alarm_mid" name="alarm_mid" size='8')
                         td
                           input.form-control(type="number" id="alarm_range" name="alarm_range" size='8')
-                        td
-                          input.form-control(type="number" id="alarm_high" name="alarm_high" size='8')
                       tr
                         th Recurrence
                         th Base level
@@ -121,6 +121,23 @@ html
                           input.form-control(type="number" id="alarm_recurrence" name="alarm_recurrence" min="1" step="1" size='8')
                         td
                           input.form-control(type="number" id="alarm_baselevel" name="alarm_baselevel" min="0" step="1" max="3" size='8')
+                  #sensor_control.d-flex.flex-row
+                    h5 Control
+                    span#control_target(hidden)
+                    hr
+                    table
+                      tbody
+                        tr#sensor_valve
+                          td
+                            button.btn.btn-info#sensor_valve_btn(onclick="ToggleValve()") Toggle
+                          td
+                            span#current_valve_state(hidden)
+                        tr#sensor_setpoint
+                          td
+                            input.form-control(type="number" id="sensor_setpoint_control" name="sensor_setpoint_control" size='8')
+                          td
+                            button.btn.btn-info#sensor_setpoint_btn(onclick="ChangeSetpoint()") Set
+
                 .col-lg-6
                   h5 Pipleines involving this sensor
                   hr
@@ -132,13 +149,13 @@ html
                     .mr-auto.p-2
                       .form-check.form-switch
                         label(for="plot_alarms") Show alarms &nbsp;
-                        input.form-check-input#plot_alarms(type="checkbox" onchange="DrawSensorHistory()" checked="checked")
+                        input.form-check-input#plot_alarms(type="checkbox" onchange="DrawSensorHistory()")
                     .p-2(style="margin-left:auto")
                       select.form-select#selectinterval(onchange="DrawSensorHistory()")
-                        option(value="0" selected="selected") 10m
+                        option(value="0") 10m
                         option(value="1") 1h
                         option(value="2") 6h
-                        option(value="3") 12h
+                        option(value="3" selected) 12h
                         option(value="4") 24h
                         option(value="5") 48h
                         option(value="6") 72h
@@ -163,8 +180,8 @@ html
                 button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
               .modal-body.row
                 .col-lg-6
-                  button.btn.btn-danger.me-3.mb-2#device_ctrl_btn(onclick="CtrlDevice()") ?
-                  button.btn.btn-warning.mb-2#device_manage_btn(onclick="ManageDevice()") ?
+                  button.btn.btn-danger.me-3.mb-2#device_ctrl_btn ?
+                  button.btn.btn-warning.mb-2#device_manage_btn ?
                   form#update_device_form
                     h5 General info
                     hr
@@ -236,6 +253,6 @@ html
       $(document).ready(()=>{
       });
       $("#sensorbox").on('hide.bs.modal', function () {
-        $("#selectinterval").val(0);
-        $("#plot_alarms").prop('checked', true);
+        $("#selectinterval").val(3);
+        $("#plot_alarms").prop('checked', false);
       });
