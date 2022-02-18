@@ -13,6 +13,8 @@ var alarmRouter = require('./routes/alarms');
 var grafanaRouter = require('./routes/grafana');
 var logRouter = require('./routes/logs');
 var hvRouter = require('./routes/hypervisor');
+var shiftRouter = require('./routes/shifts');
+var systemsRouter = require('./routes/systems');
 
 const hostname = process.env.DOBERVIEW_HOST;
 const port = process.env.DOBERVIEW_PORT;
@@ -56,6 +58,8 @@ app.use('/hosts', hostRouter);
 app.use('/grafana', grafanaRouter);
 app.use('/logs', logRouter);
 app.use('/hypervisor', hvRouter);
+app.use('/shifts', shiftRouter);
+app.use('/systems', systemsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

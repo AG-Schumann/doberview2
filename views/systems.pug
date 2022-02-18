@@ -1,0 +1,29 @@
+extends layout
+
+block extrahead
+  script(src="/javascripts/systems.js" type="text/javascript")
+  //link(rel='stylesheet' href="/stylesheets/systems.css")
+
+block content
+  div.modal#ctrl_dropdown
+    div.modal-dialog(role="document")
+      div.modal-header
+        h5.modal-title
+        button.close(type="button" data-dismiss="modal" aria-label="Close")
+          span(area-hidden="true") &times;
+      div.modal-body
+        span(hidden id="") Confirm set valve to
+        span(hidden id="") placeholder
+        label(for="ctrl_input" hidden) Enter new value:
+        input(type="number" name="ctrl_input" id="ctrl_input" hidden)
+      div.modal-footer
+        button.btn.btn-primary(onclick="ControlInput()") Submit
+        button.btn.btn-secondary(data-dismiss='modal') Close
+  div.main-container(style="width:90%")
+    object(id='svg_frame' type='image/svg+xml' data=`/images/${experiment}/thermosiphon.svg`)
+
+  script.
+    $(document).ready(function() {
+      LoadSVG();
+      setInterval(UpdateOnce, 5000);
+    });

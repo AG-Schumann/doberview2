@@ -25,11 +25,14 @@ function GetGroupedSensors() {
   }); // getJSON
 }
 
+function SigFigs(val) {
+  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toFixed(SIG_FIGS) : val.toExponential(SIG_FIGS);
+}
+
 function UpdateOnce() {
   sensors.forEach(r => {
     $.getJSON(`/devices/get_last_point?sensor=${r}`, (val) => {
-      var disp = Math.abs(Math.log10(Math.abs(val.value))) < LOG_THRESHOLD ? val.value.toFixed(SIG_FIGS) : val.value.toExponential(SIG_FIGS);
-      $(`#${r}_status`).html(`${disp} ${units[r]} (${val.time_ago}s ago)`);
+      $(`#${r}_status`).html(`${SigFigs(val.value)} ${units[r]} (${val.time_ago}s ago)`);
     });
   });
 }

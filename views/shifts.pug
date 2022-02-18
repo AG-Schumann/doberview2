@@ -1,0 +1,67 @@
+extends layout
+
+block extrahead
+  script(src="javascripts/shifts.js" type="text/javascript")
+
+block content
+  div.modal#contact_detail(tabindex="-1" role="dialog")
+    div.modal-dialog(role="document")
+      div.modal-content(style="margin:10")
+        form#shift_form()
+          label(for="first_name") First name:&nbsp;
+          input#first_name(type="text" size="24" name="first_name")
+          br
+          label(for="last_name") Last name:&nbsp;
+          input#last_name(type="text" size="24" name="last_name")
+          br
+          label(for="sms") SMS:&nbsp;
+          input#sms(type='text' size="20" name="sms")
+          br
+          label(for="email") Email:&nbsp;
+          input#email(type='email' size="48" name='email')
+          br
+          label(for='expert') Expert?&nbsp;
+          input#expert(type="checkbox" name="expert")
+          br
+        div.modal-footer
+          button.btn.btn-info(onclick="SubmitContact()") Submit
+          span &nbsp;
+          button.btn.btn-secondary(data-dismiss="modal") Close
+          button.btn#show_btn(style="display:none" data-toggle="modal" data-target="#contact_detail" hidden)
+  div.modal#delete_contact(tabindex="-1" role="dialog")
+    div.modal-dialog(role="document")
+      div.modal-content
+        form#delete_form
+          h4 Delete a shifter
+          label(for="delete_name") Name:&nbsp;
+          input#delete_name(type='text' name='delete_name' size='24')
+          button.btn.btn-danger(onclick='DeleteShifter()') Submit
+          span &nbsp;
+          button.btn.btn-secondary(data-dismiss="modal") Close
+
+  div.main-container(style="width:100%")
+    h3 Shifts and contact management
+
+    table.table.table-hover.table-striped(style="width:50%")
+      thead
+        tr
+          th Name
+          th On shift?
+      tbody#shift_table
+
+    button.btn.btn-warning(onclick="SubmitShifts()") Set shifters
+    span &nbsp;
+    button.btn.btn-info(data-toggle="modal" data-target="#contact_detail") New contact
+    span &nbsp;
+    button.btn.btn-danger(data-toggle="modal" data-target="#delete_contact") Delete shifter
+
+
+  script.
+    $(document).ready(function() {
+      PopulateTable();
+    });
+    window.onclick = function(event) {
+      var elems = document.getElementsByClassName("modal");
+      for (var i = 0; i < elems.length; i++)
+        if (event.target == elems[i]) elems[i].style.display = 'none';
+    }

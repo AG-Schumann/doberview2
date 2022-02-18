@@ -84,7 +84,7 @@ function DeviceDropdown(device) {
           $("#device_manage_btn").text("Manage").click(() => ManageDevice('manage'));
         }
       } else {
-        $("#device_ctrl_btn").text("Start").click(() => ControlDevice("start"));
+        $("#device_ctrl_btn").text("Start").click(() => ControlDevice(`start`));
       }
     });
 
@@ -192,29 +192,29 @@ function UpdateDevice() {
   $("#devicebox").css('display', 'none');
 }
 
+function SendToHypervisor(target, command, msg_if_success=null) {
+  $.ajax({
+    type: 'POST',
+    url: 'hypervisor/command',
+    data: {target: target, command: command},
+    success: (data) => alert(data.err || msg_if_success || "Ok"),
+    err: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
+  });
+}
+
 function ControlDevice(action) {
   var device = $("#detail_device_name").html();
   if (device && action) {
-    $.ajax({
-      type: 'POST',
-      url: '/hypervisor/command',
-      data: {target: action == 'stop' ? device : 'hypervisor', command: action},
-      success: (data) => alert(data.err || `${action} sent`),
-      err: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
-    });
+    console.log(device);
+    console.log(action);
+    SendToHypervisor(action == 'stop' ? device : 'hypervisor', action, `${action} sent`);
   }
 }
 
 function ManageDevice(action) {
   var device = $("#detail_device_name").html();
   if (device && action) {
-    $.ajax({
-      type: 'POST',
-      url: '/hypervisor/command',
-      data: {target: 'hypervisor', command: `${action} ${device}`},
-      success: (data) => alert(data.err || `Management change confirmed`),
-      err: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
-    });
+    SendToHypervisor('hypervisor', `${action} ${device}`, 'Management change confirmed');
   }
 }
 
@@ -244,13 +244,27 @@ function DeviceCommand(to, command) {
   console.log(to);
   console.log(command);
   if (to && command) {
-    $.ajax({
-      type: 'POST',
-      url: '/hypervisor/command',
-      data: {target: to, command: command},
-      success: (data) => alert(data.err || "Command sent"),
-      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
-    });
+    SendToHypervisor(to, command, 'Command sent');
+  }
+}
+
+function ToggleValve() {
+  var sensor = $("#detail_sensor_name").html();
+  var device = $("#sensor_device_name").html();
+  var target = $("#control_target").html();
+  var state = $("#valve_btn").html() == "Closed";
+  if (sensor && target && device && confirm(`Confirm valve toggle`)) {
+    SendToHypervisor(sensor, `set ${target} ${state}`, 'Confirmed');
+  }
+}
+
+function ChangeSetpoint() {
+  var sensor = $("#detail_sensor_name").html();
+  var device = $("#sensor_device_name").html();
+  var target = $("#control_target").html();
+  var value = $("#value_setpoint").val();
+  if (sensor && target && device) {
+    SendToHypervisor(sensor, `set ${target} ${value}`, 'Confirmed');
   }
 }
 

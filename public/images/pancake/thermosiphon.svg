@@ -1,0 +1,238 @@
+<svg
+    viewBox="0 0 700 475"
+    xmlns="http://www.w3.org/2000/svg"
+>
+    <metadata>
+        <sensors>T_TS_01 T_TS_02 P_TS_01 P_TS_02 T_TS_03 M_TS_01</sensors>
+        <setpoints>T_TS_03</setpoints>
+        <valves></valves>
+        <links></links>
+    </metadata>
+    <style>
+        line, polygon, polyline, circle, rect{
+            stroke: black;
+            stroke-width: 1pt;
+            fill: None
+        }
+        .mat_copper{
+            fill: chocolate;
+        }
+        .mat_scale{
+            fill: blue;
+        }
+        
+        text{
+            text-anchor: end;
+            alignment-baseline: middle;
+        }
+        .txt_right{
+            text-anchor: start;
+        }
+        
+        .txt_ontop{
+            alignment-baseline: baseline;
+        }
+        .txt_below{
+            alignment-baseline: hanging;
+        }
+        
+        
+        polyline.on, line.on{
+            stroke: green;
+        }
+        polyline.off, line.off{
+            stroke-width: .25pt;
+            stroke: red;
+        }
+
+        polygon.on{
+            fill: green;
+        }
+        polygon.off{
+            fill: red;
+        }
+
+        
+        
+            <style>
+        
+        
+    </style>
+        
+        
+    </style>
+
+    <!-- Geometry -->
+    <!-- TS-LN2-Tank -->
+    
+    <rect
+        width="60"
+        height="180"
+        x="160"
+        y="20"
+    />
+    
+    <!-- Long pipe (all three small volumes) -->
+    <rect 
+        width="20"
+        height="160"
+        x="180"
+        y="200"
+    />
+    
+    <!-- Copper blocks -->
+    <rect 
+        class="mat_copper"
+        width="60"
+        height="20"
+        x="160"
+        y="250"
+    />
+
+    <rect 
+        class="mat_copper"
+        width="60"
+        height="20"
+        x="160"
+        y="320"
+    />
+    
+    <rect 
+        class="mat_scale"
+        width="120"
+        height="20"
+        x="380"
+        y="360"
+    />
+    
+    <circle 
+        cx="410"
+        cy="350"
+        r="10"
+    />
+    <circle 
+        cx="470"
+        cy="350"
+        r="10"
+    />
+    <rect 
+        width="80"
+        height="60"
+        x="400"
+        y="280"
+        rx="20"
+    />
+    
+    
+    
+    <!-- text labels -->
+    
+    <text
+        id = "value_L_TS_01"
+        x = "140"
+        y = "100"
+    >
+        Levelmeter ?
+    </text>
+    
+    <text
+        id = "value_T_TS_02"
+        x = "140"
+        y = "260"
+    >
+        T_TS_TOP
+    </text>
+    
+    
+    <text
+        id = "value_T_TS_01"
+        class="txt_ontop"
+        x = "140"
+        y = "328"
+    >
+        T_TS_BOT
+    </text>
+    
+    
+    <text
+        id = "value_T_TS_03"
+        class="txt_below"
+        x = "140"
+        y = "332"
+    >
+        SET_T_TS_BOT
+    </text>
+    
+    <text
+        id = "value_W_TS_01"
+        class="txt_right"
+        x = "240"
+        y = "330"
+    >
+        P_TS_BOT
+    </text>
+    
+    <text
+        id = "value_P_TS_01"
+        x = "140"
+        y = "295"
+    >
+        p_TS_01
+    </text>
+    
+    <text
+        id = "value_P_TS_02"
+        x = "140"
+        y = "360"
+    >
+        P_TS_02
+    </text>
+
+    <text
+        id = "value_M_TS_01"
+        class="txt_right"
+        x="350"
+        y="260"
+    >
+        M_TS_01
+    </text>
+
+
+    <!--
+    Valve to TS
+    
+    x0 = 440
+    y0 = 190
+    -->
+    
+    <polygon
+        id="valve_V_FC_02"
+        points="430,200.0 450,180 450,200 430,180"
+    />"
+
+    <!-- line dewar to TS -->
+    
+    <polyline
+        id="valve_V_FC_02"
+        points="440,190
+            440,10
+            190,10
+            190, 30 
+            "
+    />"
+
+
+
+    
+    <!-- line dewar to valve -->
+    <line
+            x1="440"
+            x2="440"
+            y1="280"
+            y2="190"
+    />
+
+
+   
+
+</svg>

@@ -4,10 +4,9 @@ var axios = require('axios').default;
 var router = express.Router();
 
 const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage'};
-const influx_url = process.env.DOBERVIEW_INFLUX_URI;
 
 function axios_params(query) {
-  var get_url = new url.URL(influx_url);
+  var get_url = new url.URL(process.env.DOBERVIEW_INFLUX_URI);
   var params = new url.URLSearchParams({
     db: process.env.DOBERVIEW_INFLUX_DATABASE,
     org: process.env.DOBERVIEW_ORG,
@@ -47,6 +46,7 @@ router.get('/sensors_grouped', function(req, res) {
   if (typeof group_by == 'undefined')
     return res.json([]);
   req.db.get('sensors').aggregate([
+    {$sort: {'name': 1}},
     {$group: {
       _id: '$' + group_by,
       sensors: {$push: {name: '$name', desc: '$description', units: '$units'}}
@@ -108,6 +108,7 @@ router.post('/update_sensor', function(req, res) {
   var updates = {};
   var data = req.body.data;
   var sensor = data.sensor;
+  var ret = {msg: 'Success'};
   if (typeof sensor == 'undefined') {
     console.log(req.body);
     return res.json({err: 'Invalid or missing parameters'});
@@ -118,19 +119,25 @@ router.post('/update_sensor', function(req, res) {
     try{
       updates['readout_interval'] = parseFloat(data.readout_interval);
     }catch(err) {
+      ret['err'] = 'Invalid readout interval';
       console.log(err.message);
     }
   }
   if (typeof data.status != 'undefined' && (data.status == "online" || data.status == "offline"))
     updates['status'] = data.status;
   if (typeof data.alarm != 'undefined' && data.alarm.length == 2) {
-    updates['alarm'] = [data.alarm[0], data.alarm[1]];
-    updates['alarm_recurrence'] = data.alarm_recurrence;
+    try{
+      updates['alarm_thresholds'] = [parseFloat(data.alarm[0]), parseFloat(data.alarm[1])];
+      updates['alarm_recurrence'] = parseInt(data.alarm_recurrence);
+    }catch(err) {
+      ret['err'] = 'Invalid alarm parameters';
+      console.log(err.message);
+    }
   }
   if (typeof data.description != 'undefined' && data.description != "")
     updates['description'] = data.description;
   req.db.get('sensors').update({name: sensor}, {$set: updates})
-    .then(() => res.json({msg: 'Success'}))
+    .then(() => res.json(ret))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
@@ -145,7 +152,7 @@ router.get('/get_last_point', function(req, res) {
   .then(resp => {
     var blob = resp.data.split('\n')[1].split(',');
     return res.json({'value': parseFloat(blob[3]), 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
-  }).catch(err => {console.log(err); return res.json([]);});
+  }).catch(err => {console.log(err); return res.json({});});
 });
 
 router.get('/get_data', function(req, res) {
