@@ -104,9 +104,31 @@ router.post('/update_device_address', function(req, res) {
     return res.json({});
 });
 
+router.post('/update_alarm', function(req, res) {
+  var data = req.body;
+  var updates = {};
+  if (typeof data.sensor == 'undefined') {
+    console.log(req.body);
+    return res.json({err: 'Invalid or missing parameters'});
+  }
+  if (typeof data.alarm != 'undefined' && data.alarm.length == 2) {
+    try{
+      updates['alarm_thresholds'] = [parseFloat(data.alarm[0]), parseFloat(data.alarm[1])];
+      updates['alarm_recurrence'] = parseInt(data.alarm_recurrence);
+      updates['alarm_level'] = parseInt(data.alarm_level);
+    }catch(err) {
+      console.log(err.message);
+      return res.json({err: 'Invalid alarm parameters'});
+    }
+  }
+  req.db.get('sensors').update({name: data.sensor}, {$set: updates})
+    .then(() => res.json(ret))
+    .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
 router.post('/update_sensor', function(req, res) {
   var updates = {};
-  var data = req.body.data;
+  var data = req.body;
   var sensor = data.sensor;
   var ret = {msg: 'Success'};
   if (typeof sensor == 'undefined') {
@@ -125,15 +147,6 @@ router.post('/update_sensor', function(req, res) {
   }
   if (typeof data.status != 'undefined' && (data.status == "online" || data.status == "offline"))
     updates['status'] = data.status;
-  if (typeof data.alarm != 'undefined' && data.alarm.length == 2) {
-    try{
-      updates['alarm_thresholds'] = [parseFloat(data.alarm[0]), parseFloat(data.alarm[1])];
-      updates['alarm_recurrence'] = parseInt(data.alarm_recurrence);
-    }catch(err) {
-      ret['err'] = 'Invalid alarm parameters';
-      console.log(err.message);
-    }
-  }
   if (typeof data.description != 'undefined' && data.description != "")
     updates['description'] = data.description;
   req.db.get('sensors').update({name: sensor}, {$set: updates})

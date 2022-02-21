@@ -1,6 +1,5 @@
 var sensors = [];
 var valves = [];
-var setpoints = [];
 var units = {};
 
 function SigFigs(val) {
@@ -13,11 +12,8 @@ function Setup(){
   var doc = document.getElementById('svg_frame').getSVGDocument();
   var metadata = doc.all[1];
   sensors = metadata.children[0].innerHTML.split(' ');
-  setpoints = metadata.children[1].innerHTML.split(' ');
-  valves = metadata.children[2].innerHTML.split(' ');
-  links = metadata.children[3].innerHTML.split(' ');
-  if (setpoints.length == 1 && setpoints[0] === '')
-    setpoints = [];
+  valves = metadata.children[1].innerHTML.split(' ');
+  links = metadata.children[2].innerHTML.split(' ');
   if (valves.length == 1 && valves[0] === '')
     valves = [];
   sensors.forEach(s => $.getJSON(`/devices/sensor_detail?sensor=${s}`, data => {

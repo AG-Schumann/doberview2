@@ -11,11 +11,13 @@ html
     link(rel="stylesheet" href="/stylesheets/bootstrap.css")
     link(rel='stylesheet' href='/stylesheets/default_style.css')
     link(href="stylesheets/highcharts.css", rel="stylesheet")
+    link(rel='stylesheet' href='/stylesheets/bootstrap2-toggle.min.css')
     script(src="javascripts/jquery-3.6.0.min.js" type="text/javascript")
     script(src='javascripts/bootstrap.min.js' type='text/javascript')
     script(src="javascripts/default_scripts.js" type="text/javascript")
     script(src="javascripts/bootstrap.js" type="text/javascript")
     script(src="javascripts/bootstrap.bundle.js" type="text/javascript")
+    script(src='javascripts/bootstrap2-toggle.min.js' type='text/javascript')
     script(src="https://kit.fontawesome.com/abb8282784.js" crossorigin="anonymous" type="text/javascript")
     script(src="javascripts/highcharts.js", type="text/javascript")
 
@@ -50,7 +52,7 @@ html
               a(href='/hosts')
                 i.fas.fa-server
                 span Hosts
-              a(href='/contacts')
+              a(href='/shifts')
                 i.fas.fa-users
                 span Shifters
               a(href='/grafana')
@@ -67,18 +69,20 @@ html
           .modal-dialog.modal-xl
             .modal-content
               .modal-header
-                h5.modal-title
-                  .form-check.form-switch
-                    input#sensor_status.form-check-input(type="checkbox")
-                    label.form-check-label(for="sensor_status")
-                      span#detail_sensor_name
+                h5.modal-title#detail_sensor_name
                 button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
               .modal-body.row
                 .col-lg-6
-                  h5 General info
                   hr
+                  h5 General info
+                  br
                   table
                     tbody
+                      tr
+                        th.py-3 Status
+                        td
+                          .checkbox
+                            input#sensor_status(type="checkbox" data-toggle='toggle' data-onstyle='success' data-offstyle='warning' data-on='Online' data-off='Offline')
                       tr
                         th.py-3 Device
                         td
@@ -95,15 +99,20 @@ html
                       tr
                         th.py-3 Units:
                         td#sensor_units
-                  h5 Alarms
+                      tr
+                        th.py-3
+                          button.btn.btn-info(onclick="UpdateSensor()") Update
+                .col-lg-6
                   hr
+                  h5 Alarms
+                  br
                   table
                     tbody
                       tr
                         th Low
+                        th High
                         th Setpoint
                         th Half-range
-                        th High
                       tr
                         td
                           input.form-control(type="number" id="alarm_low" name="alarm_low" size='8')
@@ -121,35 +130,40 @@ html
                           input.form-control(type="number" id="alarm_recurrence" name="alarm_recurrence" min="1" step="1" size='8')
                         td
                           input.form-control(type="number" id="alarm_baselevel" name="alarm_baselevel" min="0" step="1" max="3" size='8')
-                  #sensor_control.d-flex.flex-row
-                    h5 Control
-                    span#control_target(hidden)
-                    hr
-                    table
-                      tbody
-                        tr#sensor_valve
-                          td
-                            button.btn.btn-info#sensor_valve_btn(onclick="ToggleValve()") Toggle
-                          td
-                            span#current_valve_state(hidden)
-                        tr#sensor_setpoint
-                          td
-                            input.form-control(type="number" id="sensor_setpoint_control" name="sensor_setpoint_control" size='8')
-                          td
-                            button.btn.btn-info#sensor_setpoint_btn(onclick="ChangeSetpoint()") Set
-
-                .col-lg-6
-                  h5 Pipleines involving this sensor
+                        td(colspan=2)
+                          button.btn.btn-info#change_alarms(onclick="UpdateAlarms()") Update alarm
+                .col-lg-6#sensor_control
                   hr
+                  h5 Control
+                  span#control_target(hidden)
+                  br
+                  table
+                    tbody
+                      tr#sensor_valve
+                        td
+                          button.btn.btn-info#sensor_valve_btn(onclick="ToggleValve()") Toggle
+                        td
+                          span#current_valve_state(hidden)
+                      tr#sensor_setpoint
+                        td
+                          input.form-control(type="number" id="sensor_setpoint_control" name="sensor_setpoint_control" size='8')
+                        td
+                          button.btn.btn-info#sensor_setpoint_btn(onclick="ChangeSetpoint()") Set
+                .col-lg-6
+                  hr
+                  h5 Pipelines involving this sensor
+                  br
                   ul#pipeline_list
 
-                  h5 Recent history
+                .col-lg-6
                   hr
+                  h5 Recent history
+                  br
                   .d-flex.flex-row
                     .mr-auto.p-2
-                      .form-check.form-switch
+                      .checkbox
                         label(for="plot_alarms") Show alarms &nbsp;
-                        input.form-check-input#plot_alarms(type="checkbox" onchange="DrawSensorHistory()")
+                        input#plot_alarms(type="checkbox" data-toggle='toggle' data-onstyle='danger' data-offstyle='primary' onchange="DrawSensorHistory()")
                     .p-2(style="margin-left:auto")
                       select.form-select#selectinterval(onchange="DrawSensorHistory()")
                         option(value="0") 10m
@@ -169,7 +183,6 @@ html
                   .container.sensor_chart#sensor_chart
               .modal-footer
                 button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
-                button.btn.btn-primary(type="button" onclick="UpdateSensor()") Save changes
 
         #devicebox.modal.fade
           .modal-dialog.modal-lg

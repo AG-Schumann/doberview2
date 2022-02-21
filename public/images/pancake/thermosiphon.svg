@@ -4,7 +4,6 @@
 >
     <metadata>
         <sensors>T_TS_01 T_TS_02 P_TS_01 P_TS_02 T_TS_03 M_TS_01</sensors>
-        <setpoints>T_TS_03</setpoints>
         <valves></valves>
         <links></links>
     </metadata>
