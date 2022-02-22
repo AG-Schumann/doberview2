@@ -16,6 +16,7 @@ function SensorDropdown(sensor) {
     $("#sensor_status").bootstrapToggle(data.status === 'online' ? 'on' : 'off');
     $("#readout_interval").val(data.readout_interval);
     $("#sensor_units").html(data.units);
+    $("#readout_command").html(data.readout_command);
 
     if (typeof data.alarm_thresholds != 'undefined' && data.alarm_thresholds.length == 2) {
       $("#alarm_low").val(data.alarm_thresholds[0]);
@@ -38,6 +39,7 @@ function SensorDropdown(sensor) {
     if (typeof data.pipelines != 'undefined' && data.pipelines.length > 0) {
       data.pipelines.forEach(name => {
         $.getJSON(`/pipeline/status?name=${name}`, doc => {
+          if (doc == null) return;
           var cls;
           if (doc.status == 'inactive') {
             cls = 'btn-danger';
@@ -272,16 +274,15 @@ function CommandDropdown() {
     $("#command_to").append('<option value="hypervisor">hypervisor</option>');
     data.forEach(sensor => $("#command_to").append(`<option value="sensor">${sensor}</option>`));
   });
+  $("#accepted_commands_list").empty();
 
   $('#commandbox').modal('show');
 }
 
 function GetAcceptedCommands(device) {
-  console.log(device);
   $.getJSON(`/devices/device_detail?device=${device}`, (data) => {
-    console.log(data);
     if (typeof data.commands != 'undefined')
-      $("#accepted_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
+      $("#accepted_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li style='font-family:monospace'>${cmd.pattern}</li>`,"") || "<li>None</li>");
     else
       $("#accepted_commands_list").html("<li>None</li>");
     });

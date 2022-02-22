@@ -13,7 +13,6 @@ function PopulateSensors() {
 
 function GetGroupedSensors() {
   var group_by = $('#sensor_grouping input:radio:checked').val();
-  console.log(group_by);
   $.getJSON(`/devices/sensors_grouped?group_by=${group_by}`, (data) => {
     $("#sensor_table").empty();
     data.forEach(group => {
