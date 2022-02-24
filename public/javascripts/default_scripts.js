@@ -232,7 +232,12 @@ function UpdateSensor() {
       description: $("#sensor_desc").val(),
       status: $("#sensor_status").is(":checked") ? "online" : 'offline',
     },
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
+    success: (data) => {
+      if (typeof data.err != 'undefined')
+        alert(data.err)
+      toast = new bootstrap.Toast($("#changesensor_success"), {delay: 1500});
+      toast.show();
+    },
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
   //$("#sensorbox").modal('hide');

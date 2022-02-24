@@ -26,244 +26,239 @@ html
     block extrahead
 
   body
-    div.overlay
-    div.wrapper
-      div#sidebar_wrapper
-        nav#sidebar.colored
-          img#exp_logo(src="/images/pancake.png" alt="Pancake" width="50" style="margin-top:10px")
-          //div.experimentIconDiv(style="margin-top:0px;background:#0e0e75;height:30px;padding-top:5px;padding-left:3px;padding-bottom:5px")
-            //i.fas.fa-hamburger
-            //span.CTAs(style="float:left;color:white") Experiment
-              select.cselect#experiment_select
-                option(value="pancake" selected) Pancake
-                option(value="xebra") Xebra
-                option(value="gemse") GeMSE
-          ul.list-unstyled.components
-            li#loberview(class="colored")
-              a(href="/devices")
-                i.fas.fa-eye
-                span Overview
-              a(href="/systems")
-                i.fas.fa-object-group
-                span Systems
-              a(href='/pipeline')
-                i.fas.fa-code-branch
-                span Pipeline
-              a(href='/hosts')
-                i.fas.fa-server
-                span Hosts
-              a(href='/shifts')
-                i.fas.fa-users
-                span Shifters
-              a(href='/grafana')
-                i.fas.fa-chart-line
-                span Grafana
-              a(href='/logs')
-                i.fas.fa-book
-                span Logs
-              a(onclick="CommandDropdown()")
-                i.fas.fa-terminal
-                span Command
-      #content(style="padding-left:5px;padding-right:5px;padding-top:0px;padding-bottom:0px")
-        #sensorbox.modal.fade(tabindex="-1" aria-labelledby="sensorboxLabel" aria-hidden="true")
-          .modal-dialog.modal-xl
-            .modal-content
-              .modal-header
-                h5.modal-title#detail_sensor_name
-                button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
-              .modal-body.row
-                .col-lg-6
-                  hr
-                  h5 General info
-                  br
-                  table
-                    tbody
-                      tr
-                        th.py-3 Status
-                        td
-                          .checkbox
-                            input#sensor_status(type="checkbox" data-toggle='toggle' data-onstyle='success' data-offstyle='warning' data-on='Online' data-off='Offline')
-                      tr
-                        th.py-3 Device
-                        td
-                          button.btn.btn-primary.btn-sm#sensor_device_name
-                      tr
-                        th.py-3 Description
-                        td
-                          input.form-control(type="text" id="sensor_desc" name="sensor_desc" size='4')
-                      tr
-                        th.py-3 Readout interval &nbsp
-                        td
-                          input(type="number" id="readout_interval" name="readout_interval" max="300" size='4')
-                          span &nbsp s
-                      tr
-                        th.py-3 Units:
-                        td#sensor_units
-                      tr
-                        th.py-3 Readout command:
-                        td#readout_command(style='font-family:"Courier New",monospace')
-                      tr
-                        th.py-3
-                          button.btn.btn-info(onclick="UpdateSensor()") Update
-                .col-lg-6
-                  hr
-                  h5 Alarms
-                  br
-                  table
-                    tbody
-                      tr
-                        th Low
-                        th High
-                        th Setpoint
-                        th Half-range
-                      tr
-                        td
-                          input.form-control(type="number" id="alarm_low" name="alarm_low" size='8')
-                        td
-                          input.form-control(type="number" id="alarm_high" name="alarm_high" size='8')
-                        td
-                          input.form-control(type="number" id="alarm_mid" name="alarm_mid" size='8')
-                        td
-                          input.form-control(type="number" id="alarm_range" name="alarm_range" size='8')
-                      tr
-                        th Recurrence
-                        th Base level
-                      tr
-                        td
-                          input.form-control(type="number" id="alarm_recurrence" name="alarm_recurrence" min="1" step="1" size='8')
-                        td
-                          input.form-control(type="number" id="alarm_baselevel" name="alarm_baselevel" min="0" step="1" max="3" size='8')
-                        td(colspan=2)
-                          button.btn.btn-info#change_alarms(onclick="UpdateAlarms()") Update alarm
-                .col-lg-6#sensor_control
-                  hr
-                  h5 Control
-                  span#control_target(hidden)
-                  br
-                  table
-                    tbody
-                      tr#sensor_valve
-                        td
-                          button.btn.btn-info#sensor_valve_btn(onclick="ToggleValve()") Toggle
-                        td
-                          span#current_valve_state(hidden)
-                      tr#sensor_setpoint
-                        td
-                          input.form-control(type="number" id="sensor_setpoint_control" name="sensor_setpoint_control" size='8')
-                        td
-                          button.btn.btn-info#sensor_setpoint_btn(onclick="ChangeSetpoint()") Set
-                .col-lg-6
-                  hr
-                  h5 Pipelines involving this sensor
-                  br
-                  ul#pipeline_list
-
-                .col-lg-6
-                  hr
-                  h5 Recent history
-                  br
-                  .d-flex.flex-row
-                    .mr-auto.p-2
+    #changesensor_success.toast.bg-success.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
+      .toast-body General info updated successfully
+    #sidebar_wrapper
+      nav#sidebar.colored
+        img#exp_logo(src="/images/pancake.png" alt="Pancake" width="50" style="margin-top:10px")
+        //div.experimentIconDiv(style="margin-top:0px;background:#0e0e75;height:30px;padding-top:5px;padding-left:3px;padding-bottom:5px")
+          //i.fas.fa-hamburger
+          //span.CTAs(style="float:left;color:white") Experiment
+            select.cselect#experiment_select
+              option(value="pancake" selected) Pancake
+              option(value="xebra") Xebra
+              option(value="gemse") GeMSE
+        ul.list-unstyled.components
+          li#loberview(class="colored")
+            a(href="/devices")
+              i.fas.fa-eye
+              span Overview
+            a(href="/systems")
+              i.fas.fa-object-group
+              span Systems
+            a(href='/pipeline')
+              i.fas.fa-code-branch
+              span Pipeline
+            a(href='/hosts')
+              i.fas.fa-server
+              span Hosts
+            a(href='/shifts')
+              i.fas.fa-users
+              span Shifters
+            a(href='/grafana')
+              i.fas.fa-chart-line
+              span Grafana
+            a(href='/logs')
+              i.fas.fa-book
+              span Logs
+            a(onclick="CommandDropdown()")
+              i.fas.fa-terminal
+              span Command
+    #sensorbox.modal.fade
+      .modal-dialog.modal-xl
+        .modal-content
+          .modal-header
+            h5.modal-title#detail_sensor_name
+            button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+          .modal-body.row
+            .col-lg-6
+              h5 General info
+              br
+              table
+                tbody
+                  tr
+                    th.py-2 Status
+                    td
                       .checkbox
-                        label(for="plot_alarms") Show alarms &nbsp;
-                        input#plot_alarms(type="checkbox" data-toggle='toggle' data-onstyle='danger' data-offstyle='primary' onchange="DrawSensorHistory()")
-                    .p-2(style="margin-left:auto")
-                      select.form-select#selectinterval(onchange="DrawSensorHistory()")
-                        option(value="0") 10m
-                        option(value="1") 1h
-                        option(value="2") 6h
-                        option(value="3" selected) 12h
-                        option(value="4") 24h
-                        option(value="5") 48h
-                        option(value="6") 72h
-                        option(value="7") 1w
-                        option(value="8") 2w
-                        option(value="9") 4w
-                    .p-2
-                      button.btn.btn-outline-secondary.mx-1#refresh_btn(onclick='DrawSensorHistory()')
-                        i.fa.fa-sync-alt
+                        input#sensor_status(type="checkbox" data-toggle='toggle' data-onstyle='success' data-offstyle='warning' data-on='Online' data-off='Offline')
+                  tr
+                    th.py-2 Device
+                    td
+                      button.btn.btn-primary.btn-sm#sensor_device_name
+                  tr
+                    th.py-2 Description
+                    td
+                      input.form-control(type="text" id="sensor_desc" name="sensor_desc" size='4')
+                  tr
+                    th.py-2 Readout interval &nbsp
+                    td
+                      input(type="number" id="readout_interval" name="readout_interval" max="300" size='4')
+                      span &nbsp s
+                  tr
+                    th.py-2 Units
+                    td#sensor_units
+                  tr
+                    th.py-2 Readout command &nbsp
+                    td#readout_command(style='font-family:"Courier New",monospace')
+                  tr
+                    th.py-2
+                      button.btn.btn-info(onclick="UpdateSensor()") Update
+              hr
+              h5 Alarms
+              br
+              table
+                tbody
+                  tr
+                    th Low
+                    th High
+                    th Setpoint
+                    th Half-range
+                  tr
+                    td
+                      input.form-control(type="number" id="alarm_low" name="alarm_low" size='8')
+                    td
+                      input.form-control(type="number" id="alarm_high" name="alarm_high" size='8')
+                    td
+                      input.form-control(type="number" id="alarm_mid" name="alarm_mid" size='8')
+                    td
+                      input.form-control(type="number" id="alarm_range" name="alarm_range" size='8')
+                  tr
+                    th Recurrence
+                    th Base level
+                  tr
+                    td
+                      input.form-control(type="number" id="alarm_recurrence" name="alarm_recurrence" min="1" step="1" size='8')
+                    td
+                      input.form-control(type="number" id="alarm_baselevel" name="alarm_baselevel" min="0" step="1" max="3" size='8')
+                    td(colspan=2)
+                      button.btn.btn-info#change_alarms(onclick="UpdateAlarms()") Update alarm
+              hr
+            .col-lg-6
+              div#sensor_control
+                h5 Control
+                span#control_target(hidden)
+                br
+                table
+                  tbody
+                    tr#sensor_valve
+                      td
+                        button.btn.btn-info#sensor_valve_btn(onclick="ToggleValve()") Toggle
+                      td
+                        span#current_valve_state(hidden)
+                    tr#sensor_setpoint
+                      td
+                        input.form-control(type="number" id="sensor_setpoint_control" name="sensor_setpoint_control" size='8')
+                      td
+                        button.btn.btn-info#sensor_setpoint_btn(onclick="ChangeSetpoint()") Set
+                hr
+              h5 Pipelines involving this sensor
+              br
+              ul#pipeline_list
+              hr
+              h5 Recent history
+              br
+              .d-flex.flex-row
+                .mr-auto.p-2
+                  .checkbox
+                    label(for="plot_alarms") Show alarms &nbsp;
+                    input#plot_alarms(type="checkbox" data-toggle='toggle' data-onstyle='danger' data-offstyle='primary' onchange="DrawSensorHistory()")
+                .p-2(style="margin-left:auto")
+                  select.form-select#selectinterval(onchange="DrawSensorHistory()")
+                    option(value="0") 10m
+                    option(value="1") 1h
+                    option(value="2") 6h
+                    option(value="3" selected) 12h
+                    option(value="4") 24h
+                    option(value="5") 48h
+                    option(value="6") 72h
+                    option(value="7") 1w
+                    option(value="8") 2w
+                    option(value="9") 4w
+                .p-2
+                  button.btn.btn-outline-secondary.mx-1#refresh_btn(onclick='DrawSensorHistory()')
+                    i.fa.fa-sync-alt
 
-                  .container.sensor_chart#sensor_chart
-              .modal-footer
-                button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
+              .container.sensor_chart#sensor_chart
+          .modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
 
-        #devicebox.modal.fade
-          .modal-dialog.modal-lg
-            .modal-content
-              .modal-header
-                h5#deviceboxLabel.modal-title
-                  span#detail_device_name
-                button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-              .modal-body.row
-                .col-lg-6
-                  button.btn.btn-danger.me-3.mb-2#device_ctrl_btn ?
-                  button.btn.btn-warning.mb-2#device_manage_btn ?
-                  form#update_device_form
-                    h5 General info
-                    hr
-                    table
-                      tbody
-                        tr
-                          th.py-3 Host &nbsp
-                          td
-                            input(type="text" id="device_host" name="device_host")
-                        tr(class="device_eth")
-                          th.py-3 IP
-                          td
-                            input(type="text" id="device_ip" name="device_ip" pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
-                        tr(class="device_eth")
-                          th.py-3 Port
-                          td
-                            input(type="number" id="device_port" name="device_port" min="1025" max="65535" step="1")
-                        tr(class="device_serial")
-                          th.py-3 TTY
-                          td
-                            input(type="text" id="device_tty" name="device_tty")
-                        tr(class="device_serial")
-                          th.py-3 Baud
-                          td
-                            select(id="device_baud" name="device_baud")
-                              option(value="9600") 9600
-                              option(value="19200") 19,200
-                        tr(class="device_serial")
-                          th.py-3 SerialID &nbsp
-                          td
-                            input(type="text" id="device_serial_id" name="device_serial_id")
-                    span Listens on port &nbsp;
-                    span#device_listener
-                .col-lg-6
-                  h5 This device's sensors:
-                  hr
-                  ul#device_sensors
-                  h5  Commands:
-                  hr
-                  span Accepted commands:
-                  ul#device_commands_list
-                  .input-group.mb-3
-                    input.form-control(type='text' placeholder="Command")
-                    button.btn.btn-primary(type='button' onclick="DeviceCommand()") Send
-              .modal-footer
-                button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
-                button.btn.btn-primary(type='button') Save changes
+    #devicebox.modal.fade
+      .modal-dialog.modal-lg
+        .modal-content
+          .modal-header
+            h5#deviceboxLabel.modal-title
+              span#detail_device_name
+            button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+          .modal-body.row
+            .col-lg-6
+              button.btn.btn-danger.me-3.mb-2#device_ctrl_btn ?
+              button.btn.btn-warning.mb-2#device_manage_btn ?
+              form#update_device_form
+                h5 General info
+                hr
+                table
+                  tbody
+                    tr
+                      th.py-3 Host &nbsp
+                      td
+                        input(type="text" id="device_host" name="device_host")
+                    tr(class="device_eth")
+                      th.py-3 IP
+                      td
+                        input(type="text" id="device_ip" name="device_ip" pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
+                    tr(class="device_eth")
+                      th.py-3 Port
+                      td
+                        input(type="number" id="device_port" name="device_port" min="1025" max="65535" step="1")
+                    tr(class="device_serial")
+                      th.py-3 TTY
+                      td
+                        input(type="text" id="device_tty" name="device_tty")
+                    tr(class="device_serial")
+                      th.py-3 Baud
+                      td
+                        select(id="device_baud" name="device_baud")
+                          option(value="9600") 9600
+                          option(value="19200") 19,200
+                    tr(class="device_serial")
+                      th.py-3 SerialID &nbsp
+                      td
+                        input(type="text" id="device_serial_id" name="device_serial_id")
+                span Listens on port &nbsp;
+                span#device_listener
+            .col-lg-6
+              h5 This device's sensors:
+              hr
+              ul#device_sensors
+              h5  Commands:
+              hr
+              span Accepted commands:
+              ul#device_commands_list
+              .input-group.mb-3
+                input.form-control(type='text' placeholder="Command")
+                button.btn.btn-primary(type='button' onclick="DeviceCommand()") Send
+          .modal-footer
+            button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+            button.btn.btn-primary(type='button') Save changes
 
-        #commandbox.modal.fade(tabindex="-1")
-          .modal-dialog.modal-lg
-            .modal-content
-              .modal-header
-                h5.modal-title Send command:
-                button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
-              .modal-body.row
-                .col-md-4
-                  select.form-select#command_to(onchange="GetAcceptedCommands($('#command_to option:selected').text())")
-                    option(value="" disabled selected hidden) Select device
-                .col-md-8
-                  .input-group.mb-3
-                    input.form-control#command(type='text' placeholder="Command")
-                    button.btn.btn-primary(type='button' onclick="DeviceCommand($('#command_to').val(), $('#command').val())") Send
-                span Accepted commands:
-                  ul#accepted_commands_list
+    #commandbox.modal.fade(tabindex="-1")
+      .modal-dialog.modal-lg
+        .modal-content
+          .modal-header
+            h5.modal-title Send command:
+            button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+          .modal-body.row
+            .col-md-4
+              select.form-select#command_to(onchange="GetAcceptedCommands($('#command_to option:selected').text())")
+                option(value="" disabled selected hidden) Select device
+            .col-md-8
+              .input-group.mb-3
+                input.form-control#command(type='text' placeholder="Command")
+                button.btn.btn-primary(type='button' onclick="DeviceCommand($('#command_to').val(), $('#command').val())") Send
+            span Accepted commands:
+              ul#accepted_commands_list
 
-      block content
+    block content
 
     script.
       $(document).ready(()=>{
