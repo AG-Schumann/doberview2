@@ -34,8 +34,10 @@ function SensorDropdown(sensor) {
     }
 
     $("#pipeline_list").empty();
+      $("#pipeline_labels").empty();
     if (typeof data.pipelines != 'undefined' && data.pipelines.length > 0)
-      data.pipelines.forEach(name => $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="btn btn-primary btn-sm">${name}</button></a></li>`));
+      data.pipelines.forEach(name => $.getJSON(`/pipeline/get_pipeline?name=${name}`, doc => {
+          $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="btn btn-primary btn-sm">${name} (${doc['status']})</button></a></li>`)}));
     else
       $("#pipeline_list").append(`<li><button class="btn btn-primary btn-sm" onclick=MakeAlarm("${data.name}")>Make new alarm</button></li>`);
     $("#sensor_device_name").text(data.device).attr('onclick', `DeviceDropdown("${data.device}")`);
@@ -66,7 +68,7 @@ function SensorDropdown(sensor) {
   DrawSensorHistory(sensor);
 }
 
-function MakeAlarm(name) {
+async function MakeAlarm(name) {
   var template = {
     name: `alarm_${name}`,
     node_config: {},
@@ -130,7 +132,11 @@ function DeviceDropdown(device) {
       $(".device_serial").attr('hidden', true);
     }
     $("#device_sensors").empty();
-    (data.sensors).forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
+    var sensor_list = data.sensors;
+    if (data.multi) {
+        sensor_list = data.multi;
+    }
+    sensor_list.forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
     $("#device_listener").html(`${data.dispatch_port}`);
     if (typeof data.commands != 'undefined')
       $("#device_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
@@ -145,6 +151,15 @@ function DrawSensorHistory(sensor) {
 
   sensor = sensor || $("#detail_sensor_name").html();
   var interval = $("#selectinterval :selected").val();
+  $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, doc => {
+    if(doc.pipelines.includes(`alarm_${sensor}`)) {
+      $.getJSON(`/pipeline/get_pipeline?name=alarm_${sensor}`, doc => {
+        if(doc.status == "active")
+          $("#plot_alarms").prop("checked", true);
+      });
+    }
+  });
+
   $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
     if (data.length == 0) {
       console.log('No data?');
@@ -181,7 +196,6 @@ function UpdateSensor() {
     status: $("#sensor_status").is(":checked") ? "online" : 'offline',
   };
   if ($("#alarm_low").val() && $("#alarm_high").val()) {
-    console.log(data);
     data.alarm_thresholds = [$("#alarm_low").val(), $("#alarm_high").val()];
     data.alarm_recurrence = $("#alarm_recurrence").val();
     data.alarm_level = $("#alarm_baselevel").val();
@@ -250,9 +264,7 @@ function CommandDropdown() {
 }
 
 function GetAcceptedCommands(device) {
-  console.log(device);
   $.getJSON(`/devices/device_detail?device=${device}`, (data) => {
-    console.log(data);
     if (typeof data.commands != 'undefined')
       $("#accepted_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
     else

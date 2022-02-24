@@ -13,7 +13,6 @@ function PopulateSensors() {
 
 function GetGroupedSensors() {
   var group_by = $('#sensor_grouping input:radio:checked').val();
-  console.log(group_by);
   $.getJSON(`/devices/sensors_grouped?group_by=${group_by}`, (data) => {
     $("#sensor_table").empty();
     data.forEach(group => {
@@ -31,8 +30,33 @@ function SigFigs(val) {
 
 function UpdateOnce() {
   sensors.forEach(r => {
-    $.getJSON(`/devices/get_last_point?sensor=${r}`, (val) => {
-      $(`#${r}_status`).html(`${SigFigs(val.value)} ${units[r]} (${val.time_ago}s ago)`);
+    $.getJSON(`/devices/sensor_detail?sensor=${r}`, data => {
+      if(data['status'] == 'offline')
+        $(`#${r}_status`).html('OFFLINE');
+      else {
+        $.getJSON(`/devices/get_last_point?sensor=${r}`, (val) => {
+          $(`#${r}_status`).html(`${SigFigs(val.value)} ${units[r]} (${val.time_ago}s ago)`);
+        });
+      }
     });
   });
 }
+
+function FilterSensors() {
+
+  var filter = $("#searchSensorInput").val().toUpperCase();
+  console.log(filter);
+  var tr = $("#sensor_table").find("tr");
+  console.log(tr);
+  for (var i = 0; i < tr.length; i++) {
+    var sensor_name = tr[i].getElementsByTagName("td")[0];
+    if (sensor_name) {
+      var txtValue = sensor_name.textContent || sensor_name.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1)
+        tr[i].style.display = "";
+      else
+        tr[i].style.display = "none";
+    }
+  }
+}
+

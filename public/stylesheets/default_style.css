@@ -24,7 +24,14 @@
   background-color: #333333;
   color: #ffffff;
   height: 100%;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 #sidebar ul li a {
@@ -72,5 +79,6 @@ ul.CTAs li a {
 
 .main-container {
   padding-left: 65px;
+  padding-right: 15px;
   width: 100%;
 }

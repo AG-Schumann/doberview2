@@ -1,15 +1,9 @@
-function PopulateDropdown() {
-  $.getJSON("/pipeline/get_pipelines", data => {
-    $("#pipeline_select").empty();
-    data.forEach(doc => $("#pipeline_select").append(`<option value='${doc.name}'>${doc.name}</option>`));
-  });
-}
-
 function UpdateLoop() {
   PopulatePipelines();
 }
 
 function PopulatePipelines() {
+  var filter = $("#searchPipelineInput").val().toUpperCase();
   var stop = 'fas fa-hand-paper';
   var silent = 'fas fa-bell-slash';
   var active = 'fas fa-bell';
@@ -20,39 +14,29 @@ function PopulatePipelines() {
     $("#inactive_pipelines").empty();
     data.forEach(doc => {
       var n = doc.name;
-      if (doc.status == 'active') {
-        var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
-        row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
-        row += `<td><button onclick="SilenceDropdown('${n}')"><i class="${silent}"></button>`;
-        row += `<td><i class="${stop}" onclick="PipelineControl('stop','${n}')"></td>`;
-        row += `<td><i class="${restart}" onclick="PipelineControl('restart','${n}')"></td></tr>`;
-        $("#active_pipelines").append(row);
-      } else if (doc.status == 'silent') {
-        var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
-        row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
-        row += `<td><i class="${active}" onclick="PipelineControl('active','${n}')"></td>`;
-        row += `<td><i class="${stop}" onclick="PipelineControl('stop','${n}')"></td>`;
-        row += `<td><i class="${restart}" onclick="PipelineControl('restart','${n}')"></td></tr>`;
-        $("#silent_pipelines").append(row);
-      } else if (doc.status == 'inactive') {
-        var row = `<tr><td onclick="Fetch('${n}')">${n}</td>`;
-        row += `<td><i class="fas fa-play" onclick="StartPipeline('${n}')"></td>`;
-        $("#inactive_pipelines").append(row);
-      } else
-        console.log(doc);
+      if (n.toUpperCase().indexOf(filter) > -1) {
+        if (doc.status == 'active') {
+          var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
+          row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
+          row += `<td><i class="${silent}" data-toggle="tooltip" title="Silence", onclick="SilenceDropdown('${n}')"></i>`;
+          row += `<i class="${stop}" data-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
+          row += `<i class="${restart}" data-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
+          $("#active_pipelines").append(row);
+        } else if (doc.status == 'silent') {
+          var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
+          row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
+          row += `<td><i class="${active}" data-toggle="tooltip" title="Activate" onclick="PipelineControl('active','${n}')"></i>`;
+          row += `<i class="${stop}" data-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
+          row += `<i class="${restart}" data-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
+          $("#silent_pipelines").append(row);
+        } else if (doc.status == 'inactive') {
+          var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
+          row += `<td><i class="fas fa-play" onclick="StartPipeline('${n}')"></td>`;
+          $("#inactive_pipelines").append(row);
+        } else
+          console.log(doc);
+      }
     }); // data.forEach
-  }); // getJSON
-}
-
-function Fetch(pipeline) {
-  $.getJSON(`/pipeline/get_pipeline?name=${pipeline}`, doc => {
-    if (typeof doc.err != 'undefined') {
-      alert(doc.err);
-      return;
-    }
-    Visualize(doc);
-    document.jsoneditor.set(doc);
-    $("#pipeline_select option").filter(function() {return this.value === doc.name;}).prop('selected', 'true');
   }); // getJSON
 }
 
@@ -63,7 +47,7 @@ function Visualize(doc) {
     }catch(err){alert(err); return;}
   }
   var data = [];
-  doc.pipeline.forEach(item => {(item.upstream || []).forEach(us => 
+  doc.pipeline.forEach(item => {(item.upstream || []).forEach(us =>
     data.push({from: us, to: item.name, id: us, name: us}));});
   var nodes = doc.pipeline.map(item => ({id: item.name, name: item.name, title: item.type}));
   Highcharts.chart('pipeline_vis', {
@@ -89,13 +73,13 @@ function Visualize(doc) {
 
 function SilenceDropdown(name) {
   $('#silence_me').html(name);
-  $('#silence_dropdown').css('display', 'block');
+  $('#silence_dropdown').modal('show');
 }
 
 function AddNewPipeline() {
   var doc;
   try{
-    doc = JSON.parse(JSON.stringify(document.jsoneditor.get()));
+    doc = JSON.parse(JSON.stringify(document.newjsoneditor.get()));
   }catch(err){alert(err); return;};
   if (doc.name == 'INSERT NAME HERE') {
     alert('You didn\'t add a name');
@@ -129,7 +113,7 @@ function FillTemplate() {
       'source': {},
     },
   };
-  document.jsoneditor.set(doc);
+  document.newjsoneditor.set(doc);
 }
 
 function DeletePipeline(cb=null) {
@@ -175,3 +159,15 @@ function PipelineControl(action, pipeline) {
   });
 }
 
+function NewPipelineDropdown() {
+  FillTemplate();
+  $('#newpipelinebox').modal('show');
+}
+
+function PipelineDropdown(pipeline) {
+  $.getJSON(`/pipeline/get_pipeline?name=${pipeline}`, doc => {
+    Visualize(doc);
+    document.jsoneditor.set(doc);
+  });
+  $('#pipelinebox').modal('show');
+}
