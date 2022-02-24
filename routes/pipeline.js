@@ -25,6 +25,15 @@ router.get('/get_pipeline', function(req, res) {
   .catch(err => {console.log(err.message); return res.json({});});
 });
 
+router.get('/status', function(req, res) {
+  var q = url.parse(req.url, true).query;
+  if (typeof q.name == 'undefined')
+    return res.json({});
+  req.db.get('pipelines').findOne({name: q.name}, {projection: {status: 1}})
+  .then(doc => res.json(doc))
+  .catch(err => {console.log(err.message); return res.json({});});
+});
+
 router.post('/add_pipeline', function(req, res) {
   var doc = req.body.doc;
   doc['status'] = 'inactive';

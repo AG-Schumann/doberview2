@@ -4,7 +4,6 @@
 >
     <metadata>
         <sensors>S_FC_01 T_IC_03 T_IC_04 T_IC_06 T_IC_01 T_IC_08 T_IC_07 T_IC_13 T_IC_10 T_IC_11 T_IC_12 T_IC_05 T_IC_02</sensors>
-        <setpoints></setpoints>
         <valves>S_FC_01</valves>
         <links></links>
     </metadata>

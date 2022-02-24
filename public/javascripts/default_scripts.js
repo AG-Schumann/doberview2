@@ -13,9 +13,10 @@ function SensorDropdown(sensor) {
       return;
     $("#detail_sensor_name").html(data.name);
     $("#sensor_desc").val(data.description).attr('size', data.description.length + 3);
-    $("#sensor_status").prop('checked', data.status === 'online');
+    $("#sensor_status").bootstrapToggle(data.status === 'online' ? 'on' : 'off');
     $("#readout_interval").val(data.readout_interval);
     $("#sensor_units").html(data.units);
+    $("#readout_command").html(data.readout_command);
 
     if (typeof data.alarm_thresholds != 'undefined' && data.alarm_thresholds.length == 2) {
       $("#alarm_low").val(data.alarm_thresholds[0]);
@@ -31,19 +32,34 @@ function SensorDropdown(sensor) {
       $("#alarm_range").val(null);
       $("#alarm_recurrence").val(null);
       $("#alarm_baselevel").val(null);
+      $("#plot_alarms").bootstrapToggle('off')
     }
 
     $("#pipeline_list").empty();
-      $("#pipeline_labels").empty();
-    if (typeof data.pipelines != 'undefined' && data.pipelines.length > 0)
-      data.pipelines.forEach(name => $.getJSON(`/pipeline/get_pipeline?name=${name}`, doc => {
-          $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="btn btn-primary btn-sm">${name} (${doc['status']})</button></a></li>`)}));
-    else
+    if (typeof data.pipelines != 'undefined' && data.pipelines.length > 0) {
+      data.pipelines.forEach(name => {
+        $.getJSON(`/pipeline/status?name=${name}`, doc => {
+          if (doc == null) return;
+          var cls;
+          if (doc.status == 'inactive') {
+            cls = 'btn-danger';
+          } else if (doc.status == 'silent') {
+            cls = 'btn-warning';
+          } else {
+            cls = 'btn-success';
+          }
+          $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="btn ${cls} btn-sm">${name}</button></a></li>`);
+          if (name == `alarm_${name}`) {
+            $("#plot_alarms").bootstrapToggle(doc.status=='inactive' ? 'off' : 'on')
+          }
+        }); // get json
+      }); // for each
+    } else
       $("#pipeline_list").append(`<li><button class="btn btn-primary btn-sm" onclick=MakeAlarm("${data.name}")>Make new alarm</button></li>`);
     $("#sensor_device_name").text(data.device).attr('onclick', `DeviceDropdown("${data.device}")`);
     if (typeof data.control_quantity != 'undefined') {
       control_map[data.name] = [data.device, data.control_quantity];
-      $("#sensor_control").prop('hidden', false);
+      $("#sensor_control").css('display', 'inline');
       if (data.topic == 'state') {
         // this is a valve
         $("#sensor_valve").prop('hidden', false);
@@ -61,7 +77,7 @@ function SensorDropdown(sensor) {
         });
       }
     } else {
-      $("#sensor_control").prop('hidden', true);
+      $("#sensor_control").css('display', 'none');
     }
     $('#sensorbox').modal('show');
   });
@@ -109,7 +125,7 @@ function DeviceDropdown(device) {
           $("#device_manage_btn").text("Manage").click(() => ManageDevice('manage'));
         }
       } else {
-        $("#device_ctrl_btn").text("Start").click(() => ControlDevice(`start`));
+        $("#device_ctrl_btn").text("Start").click(() => ControlDevice(`start ${device}`));
       }
     });
 
@@ -188,26 +204,38 @@ function DrawSensorHistory(sensor) {
   });
 }
 
-function UpdateSensor() {
-  var data = {
-    sensor: $("#detail_sensor_name").html(),
-    readout_interval: $("#readout_interval").val(),
-    description: $("#sensor_desc").val(),
-    status: $("#sensor_status").is(":checked") ? "online" : 'offline',
-  };
+function UpdateAlarms() {
   if ($("#alarm_low").val() && $("#alarm_high").val()) {
-    data.alarm_thresholds = [$("#alarm_low").val(), $("#alarm_high").val()];
-    data.alarm_recurrence = $("#alarm_recurrence").val();
-    data.alarm_level = $("#alarm_baselevel").val();
+    $.ajax({
+      type: 'POST',
+      url: '/devices/update_alarm',
+      data: {
+        sensor: $("#detail_sensor_name").html(),
+        thresholds: [$("#alarm_low").val(), $("#alarm_high").val()],
+        recurrence: $("#alarm_recurrence").val(),
+        alarm_level: $("#alarm_baselevel").val()
+      },
+      success: (data) => {alert(data.err || 'Success');},
+      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
+    });
   }
+  //$("#sensorbox").modal('hide');
+}
+
+function UpdateSensor() {
   $.ajax({
     type: 'POST',
     url: '/devices/update_sensor',
-    data: {data: data},
+    data: {
+      sensor: $("#detail_sensor_name").html(),
+      readout_interval: $("#readout_interval").val(),
+      description: $("#sensor_desc").val(),
+      status: $("#sensor_status").is(":checked") ? "online" : 'offline',
+    },
     success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
-  $("#sensorbox").modal('hide');
+  //$("#sensorbox").modal('hide');
 }
 
 function UpdateDevice() {
@@ -259,6 +287,7 @@ function CommandDropdown() {
     $("#command_to").append('<option value="hypervisor">hypervisor</option>');
     data.forEach(sensor => $("#command_to").append(`<option value="sensor">${sensor}</option>`));
   });
+  $("#accepted_commands_list").empty();
 
   $('#commandbox').modal('show');
 }
@@ -266,7 +295,7 @@ function CommandDropdown() {
 function GetAcceptedCommands(device) {
   $.getJSON(`/devices/device_detail?device=${device}`, (data) => {
     if (typeof data.commands != 'undefined')
-      $("#accepted_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
+      $("#accepted_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li style='font-family:monospace'>${cmd.pattern}</li>`,"") || "<li>None</li>");
     else
       $("#accepted_commands_list").html("<li>None</li>");
     });
@@ -282,8 +311,9 @@ function DeviceCommand(to, command) {
 }
 
 function ToggleValve() {
-  var device = $("#sensor_device_name").html();
-  var target = $("#control_target").html();
+  var sensor = $("#detail_sensor_name").html();
+  var device = control_map[sensor][0];
+  var target = control_map[sensor][1];
   var state = $("#current_valve_state").html() == 0;
   if (sensor && target && device && confirm(`Confirm valve toggle`)) {
     SendToHypervisor(device, `set ${target} ${state}`, 'Confirmed');
@@ -291,13 +321,12 @@ function ToggleValve() {
 }
 
 function ChangeSetpoint() {
-  var device = $("#sensor_device_name").html();
-  var target = $("#control_target").html();
-  var value = $("#value_setpoint").val();
-  if (sensor && target && device) {
+  var sensor = $("#detail_sensor_name").html();
+  var device = control_map[sensor][0];
+  var target = control_map[sensor][1];
+  var value = $("#sensor_setpoint_control").val();
+  if (sensor && target && device && confirm('Confirm setpoint change')) {
     SendToHypervisor(device, `set ${target} ${value}`, 'Confirmed');
   }
 }
-
-
 
