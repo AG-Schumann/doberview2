@@ -3,7 +3,7 @@ var url = require('url');
 var axios = require('axios').default;
 var router = express.Router();
 
-const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage'};
+const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage', D: 'time', X: 'other', I: 'current', C: 'capacity'};
 
 function axios_params(query) {
   var get_url = new url.URL(process.env.DOBERVIEW_INFLUX_URI);
@@ -22,6 +22,56 @@ function axios_params(query) {
 
 router.get('/', function(req, res) {
   res.render('full_system');
+});
+
+router.get('/params', function(req, res) {
+  var ret = {};
+  req.db.get('experiment_config').findOne({name: 'doberview_config'})
+  .then(doc => {
+    ret['subsystems'] = doc.subsystems.map(ss => ss[0]);
+    ret['topics'] = doc.topics;
+    return res.json(ret);
+  }).catch(err => {console.log(err.message); return res.json({});});
+});
+
+router.post('/new_sensor', function(req, res) {
+  var doc = req.body;
+  doc.status = 'online';
+  var topic = doc.topic;
+  if (!Object.values(topic_lut).includes(topic))
+    return res.json({err: `Invalid topic: ${topic} ${Object.values(topic_lut).join(',')}`});
+  var topic_abb = Object.entries(topic_lut).filter(kv => kv[1] == topic)[0][0];
+  if (typeof doc.value_xform != 'undefined') {
+    try{
+      var xform = doc.value_xform.split(',').map(parseFloat);
+    }catch(error){
+      console.log(error.message);
+      return res.json({err: error.message});
+    }
+    if (xform.length < 2) {
+      console.log('Invalid value xform');
+      return res.json({err: error.message});
+    }
+  }
+  doc.readout_interval = parseFloat(doc.readout_interval);
+  var subsystem = doc.subsystem;
+  var num = '01';
+  var name;
+  req.db.get('sensors').aggregate([
+    {$match: {subsystem: subsystem, topic: topic}},
+    {$addFields: {number: {$toInt: {$arrayElemAt: [{$split: ['$name', '_']}, 2]}}}},
+    {$group: {_id: null, number: {$max: '$number'}}}
+  ]).then(docs => {
+    if (docs.length != 0)
+      num = ('00' + (docs[0].number+1)).slice(-2);
+    return req.db.get('experiment_config').findOne({name: 'doberview_config'});
+  }).then(sdoc => {
+    var ss = sdoc.subsystems.filter(row => row[0] == subsystem)[0][1];
+    doc.name = `${topic_abb}_${ss}_${num}`;
+    return req.db.get('sensors').insert(doc);
+  }).then(() => req.db.get('devices').update({name: doc.device}, {$addToSet: {sensors: doc.name}}))
+    .then(() => res.json({name: doc.name}))
+  .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 router.get('/device_list', function(req, res) {
@@ -134,6 +184,20 @@ router.post('/update_sensor', function(req, res) {
   if (typeof sensor == 'undefined') {
     console.log(req.body);
     return res.json({err: 'Invalid or missing parameters'});
+  }
+  if (typeof data.value_xform != 'undefined') {
+    try{
+      var xform = data.value_xform.split(',').map(parseFloat);
+    }catch(error){
+      console.log(error.message);
+      console.log(data.value_xform);
+      return res.json({err: 'Invalid value transform'});
+    }
+    if (xform.length < 2) {
+      console.log('Invalid value xform ' + data.value_xform);
+      return res.json({err: 'Invalid value transform'});
+    }
+
   }
 
   var query = {name: sensor};

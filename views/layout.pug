@@ -12,14 +12,14 @@ html
     link(rel='stylesheet' href='/stylesheets/default_style.css')
     link(href="stylesheets/highcharts.css", rel="stylesheet")
     link(rel='stylesheet' href='/stylesheets/bootstrap2-toggle.min.css')
-    script(src="javascripts/jquery-3.6.0.min.js" type="text/javascript")
-    script(src='javascripts/bootstrap.min.js' type='text/javascript')
-    script(src="javascripts/default_scripts.js" type="text/javascript")
-    script(src="javascripts/bootstrap.js" type="text/javascript")
-    script(src="javascripts/bootstrap.bundle.js" type="text/javascript")
-    script(src='javascripts/bootstrap2-toggle.min.js' type='text/javascript')
+    script(src="/javascripts/jquery-3.6.0.min.js" type="text/javascript")
+    script(src='/javascripts/bootstrap.min.js' type='text/javascript')
+    script(src="/javascripts/default_scripts.js" type="text/javascript")
+    script(src="/javascripts/bootstrap.js" type="text/javascript")
+    script(src="/javascripts/bootstrap.bundle.js" type="text/javascript")
+    script(src='/javascripts/bootstrap2-toggle.min.js' type='text/javascript')
     script(src="https://kit.fontawesome.com/abb8282784.js" crossorigin="anonymous" type="text/javascript")
-    script(src="javascripts/highcharts.js", type="text/javascript")
+    script(src="/javascripts/highcharts.js", type="text/javascript")
 
     meta(name="application-name" content="pagetitle")
 
@@ -31,13 +31,6 @@ html
       div#sidebar_wrapper
         nav#sidebar.colored
           img#exp_logo(src="/images/pancake.png" alt="Pancake" width="50" style="margin-top:10px")
-          //div.experimentIconDiv(style="margin-top:0px;background:#0e0e75;height:30px;padding-top:5px;padding-left:3px;padding-bottom:5px")
-            //i.fas.fa-hamburger
-            //span.CTAs(style="float:left;color:white") Experiment
-              select.cselect#experiment_select
-                option(value="pancake" selected) Pancake
-                option(value="xebra") Xebra
-                option(value="gemse") GeMSE
           ul.list-unstyled.components
             li#loberview(class="colored")
               a(href="/devices")
@@ -102,6 +95,10 @@ html
                       tr
                         th.py-3 Readout command:
                         td#readout_command(style='font-family:"Courier New",monospace')
+                      tr
+                        th.py-3 Transform:
+                        td
+                          input(type="text" id="value_xform" name="value_xform" placeholder="0,1")
                       tr
                         th.py-3
                           button.btn.btn-info(onclick="UpdateSensor()") Update
@@ -246,6 +243,51 @@ html
                 button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
                 button.btn.btn-primary(type='button') Save changes
 
+        #newsensor.modal.fade(tabindex="-1")
+          .modal-dialog.modal-lg
+            .modal-content
+              .modal-header
+                h5.modal-title Add new sensor
+                button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+              .modal-body.row
+                table
+                  tbody
+                    tr
+                      th.py-3 Subsystem
+                      td
+                        select.form-control(id="new_subsystem" name="new_subsystem")
+                    tr
+                      th.py-3 Topic
+                      td
+                        select.form-control(id="new_topic" name="new_topic")
+                    tr
+                      th.py-3 Device
+                      td
+                        select.form-control(id="new_device" name="new_device")
+                    tr
+                      th.py-3 Description
+                      td
+                        input.form-control(type="text" id="new_description" name="new_description")
+                    tr
+                      th.py-3 Readout interval
+                      td
+                        input.form-control(type="number" id="new_readout_interval" name="new_readout_interval")
+                    tr
+                      th.py-3 Units
+                      td
+                        input.form-control(type="text" id="new_units" name="new_units")
+                    tr
+                      th.py-3 Readout command
+                      td
+                        input.form-control(type="text" id="new_readout_command" name="new_readout_command")
+                    tr
+                      th.py-3 Transform
+                      td
+                        input.form-control(type="text" id="new_value_xform" name="new_value_xform" placeholder="0,1")
+              .modal-footer
+                button.btn.btn-success#validate_btn(type="button" onclick="ValidateNewSensor()") Validate
+                button.btn.btn-warning#newsensor_btn(onclick="SubmitNewSensor()") Submit
+
         #commandbox.modal.fade(tabindex="-1")
           .modal-dialog.modal-lg
             .modal-content
@@ -262,6 +304,7 @@ html
                     button.btn.btn-primary(type='button' onclick="DeviceCommand($('#command_to').val(), $('#command').val())") Send
                 span Accepted commands:
                   ul#accepted_commands_list
+
 
       block content
 
