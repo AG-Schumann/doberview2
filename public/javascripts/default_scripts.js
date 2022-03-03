@@ -8,7 +8,7 @@ function SensorDropdown(sensor) {
   $("#alarm_mid").change(() => {var mid = parseInt($("#alarm_mid").val()); var range = parseInt($("#alarm_range").val()); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
   $("#alarm_range").change(() => {var mid = parseInt($("#alarm_mid").val()); var range = parseInt($("#alarm_range").val()); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
   $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, (data) => {
-    $("#devicebox").modal('hide');
+    $(".modal").modal('hide');
     if (Object.keys(data).length == 0)
       return;
     $("#detail_sensor_name").html(data.name);
@@ -17,6 +17,10 @@ function SensorDropdown(sensor) {
     $("#readout_interval").val(data.readout_interval);
     $("#sensor_units").html(data.units);
     $("#readout_command").html(data.readout_command);
+    if (typeof data.value_xform != 'undefined')
+      $("#value_xform").val(data.value_xform.join(','));
+    else
+      $("#value_xform").val("");
 
     if (typeof data.alarm_thresholds != 'undefined' && data.alarm_thresholds.length == 2) {
       $("#alarm_low").val(data.alarm_thresholds[0]);
@@ -111,7 +115,7 @@ async function MakeAlarm(name) {
 
 function DeviceDropdown(device) {
   $.getJSON(`/devices/device_detail?device=${device}`, (data) => {
-    $("#sensorbox").modal('hide');
+    $(".modal").modal('hide');
     if (Object.keys(data).length == 0)
       return;
     $("#detail_device_name").html(data.name);
@@ -119,6 +123,7 @@ function DeviceDropdown(device) {
     $.getJSON(`/hypervisor/device_status?device=${device}`, (doc) => {
       if (doc.active == true) {
         $("#device_ctrl_btn").text("Stop").click(() => ControlDevice("stop"));
+        $("#device_manage_btn").prop('disabled', false);
         if (doc.managed == true) {
           $("#device_manage_btn").text("Unmanage").click(() => ManageDevice('unmanage'));
         } else {
@@ -126,6 +131,7 @@ function DeviceDropdown(device) {
         }
       } else {
         $("#device_ctrl_btn").text("Start").click(() => ControlDevice(`start ${device}`));
+        $("#device_manage_btn").text("").click(() => {}).prop('disabled', true);
       }
     });
 
@@ -149,10 +155,11 @@ function DeviceDropdown(device) {
     }
     $("#device_sensors").empty();
     var sensor_list = data.sensors;
-    if (data.multi) {
+    if (data.multi)
         sensor_list = data.multi;
-    }
     sensor_list.forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
+    (data.sensors).forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
+    $("#device_sensors").append('<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="PopulateNewSensor()">Add new!</button></li>');
     $("#device_listener").html(`${data.dispatch_port}`);
     if (typeof data.commands != 'undefined')
       $("#device_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
@@ -223,24 +230,22 @@ function UpdateAlarms() {
 }
 
 function UpdateSensor() {
+  var data = {
+    sensor: $("#detail_sensor_name").html(),
+    readout_interval: $("#readout_interval").val(),
+    description: $("#sensor_desc").val(),
+    status: $("#sensor_status").is(":checked") ? "online" : 'offline',
+  };
+  if ($("#value_xform").val() != "") {
+    data.value_xform = $("#value_xform").split(',').map(parseFloat);
+  }
   $.ajax({
     type: 'POST',
     url: '/devices/update_sensor',
-    data: {
-      sensor: $("#detail_sensor_name").html(),
-      readout_interval: $("#readout_interval").val(),
-      description: $("#sensor_desc").val(),
-      status: $("#sensor_status").is(":checked") ? "online" : 'offline',
-    },
-    success: (data) => {
-      if (typeof data.err != 'undefined')
-        alert(data.err)
-      toast = new bootstrap.Toast($("#changesensor_success"), {delay: 1500});
-      toast.show();
-    },
+    data: data,
+    success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
-  //$("#sensorbox").modal('hide');
 }
 
 function UpdateDevice() {
@@ -259,7 +264,89 @@ function UpdateDevice() {
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
     });
   }
-  $("#devicebox").css('display', 'none');
+  $("#devicebox").modal('hide');
+}
+
+function PopulateNewSensor() {
+  $.getJSON('/devices/params', doc => {
+    $("#new_subsystem").empty();
+    doc.subsystems.forEach(ss => {var s = ss.split('_'); s[0] = s[0][0].toUpperCase() + s[0].slice(1); $("#new_subsystem").append(`<option value="${ss}">${s.join(' ')}</option>`)});
+    $("#new_topic").empty();
+    doc.topics.forEach(topic => $("#new_topic").append(`<option value="${topic}">${topic}</option>`));
+  });
+  $.getJSON('/devices/device_list', devs => {
+    $("#new_device").empty();
+    devs.forEach(dev => $("#new_device").append(`<option value="${dev}">${dev}</option>`));
+  });
+  $(".modal").modal('hide');
+  $("#newsensor").modal('show');
+}
+
+function ValidateNewSensor(echo_ret=true) {
+  if ($("#new_description").val().length < 5) {
+    alert('Please enter a useful description');
+    return false;
+  }
+  if ($("#new_readout_interval").val() < 0.1) {
+    alert('Please enter a sensible readout interval');
+    return false;
+  }
+  if ($("#new_topic").val() != 'state' && $("#new_units").val() == "") {
+    alert('Please enter sensible units');
+    return false;
+  }
+  if ($("#new_readout_command").val() == "") {
+    alert('Please enter a valid readout command');
+    return false;
+  }
+  if ($("#new_value_xform").val() != "") {
+    try {
+      var a = $("#new_value_xform").val().split(',').map(parseFloat);
+    } catch(error) {
+      console.log(error.message);
+      alert('Invalid value transform');
+      return false;
+    }
+    if (a.length < 2)
+      alert('Invalid value transform');
+      return false;
+  }
+  if (echo_ret)
+    alert('Looks good');
+  return true;
+}
+
+function SubmitNewSensor() {
+  if (ValidateNewSensor(false)) {
+    var data =  {
+        subsystem: $("#new_subsystem").val(),
+        topic: $("#new_topic").val(),
+        device: $("#new_device").val(),
+        description: $("#new_description").val(),
+        readout_interval: $("#new_readout_interval").val(),
+        units: $("#new_units").val(),
+        readout_command: $("#new_readout_command").val(),
+    };
+    console.log($("#new_device").val());
+    if ($("#new_value_xform").val())
+        data.value_xform = $("#new_value_xform").val().split(',').map(parseFloat);
+    $.ajax({
+      url: '/devices/new_sensor',
+      type: 'POST',
+      data: data,
+      success: (data) => {
+        if (typeof data.err != 'undefined') {
+          alert(data.err);
+          return;
+        }
+        if (confirm(`New sensor name: ${data.name}. Start now?`)) {
+          SendToHypervisor($("#new_device").val(), 'reload sensors');
+        }
+      },
+      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
+    });
+    ['subsystem', 'topic', 'device', 'description', 'readout_interval', 'units', 'readout_command', 'value_xform'].forEach(v => $(`#new_${v}`).val(""));
+  }
 }
 
 function SendToHypervisor(target, command, msg_if_success=null) {
@@ -290,7 +377,7 @@ function CommandDropdown() {
   $.getJSON("/devices/device_list", (data) => {
     $("#command_to").empty();
     $("#command_to").append('<option value="hypervisor">hypervisor</option>');
-    data.forEach(sensor => $("#command_to").append(`<option value="sensor">${sensor}</option>`));
+    data.forEach(sensor => $("#command_to").append(`<option value="${sensor}">${sensor}</option>`));
   });
   $("#accepted_commands_list").empty();
 
@@ -313,6 +400,7 @@ function DeviceCommand(to, command) {
   if (to && command) {
     SendToHypervisor(to, command, 'Command sent');
   }
+  $("#device_command").val("");
 }
 
 function ToggleValve() {
