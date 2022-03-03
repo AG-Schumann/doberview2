@@ -88,7 +88,7 @@ function SensorDropdown(sensor) {
   DrawSensorHistory(sensor);
 }
 
-function MakeAlarm(name) {
+async function MakeAlarm(name) {
   var template = {
     name: `alarm_${name}`,
     node_config: {},
@@ -154,6 +154,10 @@ function DeviceDropdown(device) {
       $(".device_serial").attr('hidden', true);
     }
     $("#device_sensors").empty();
+    var sensor_list = data.sensors;
+    if (data.multi)
+        sensor_list = data.multi;
+    sensor_list.forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
     (data.sensors).forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
     $("#device_sensors").append('<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="PopulateNewSensor()">Add new!</button></li>');
     $("#device_listener").html(`${data.dispatch_port}`);
@@ -170,6 +174,15 @@ function DrawSensorHistory(sensor) {
 
   sensor = sensor || $("#detail_sensor_name").html();
   var interval = $("#selectinterval :selected").val();
+  $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, doc => {
+    if(doc.pipelines.includes(`alarm_${sensor}`)) {
+      $.getJSON(`/pipeline/get_pipeline?name=alarm_${sensor}`, doc => {
+        if(doc.status == "active")
+          $("#plot_alarms").prop("checked", true);
+      });
+    }
+  });
+
   $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
     if (data.length == 0) {
       console.log('No data?');
@@ -233,7 +246,6 @@ function UpdateSensor() {
     success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
-  //$("#sensorbox").modal('hide');
 }
 
 function UpdateDevice() {

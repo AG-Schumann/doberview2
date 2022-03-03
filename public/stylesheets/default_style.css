@@ -24,7 +24,14 @@
   background-color: #333333;
   color: #ffffff;
   height: 100%;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 #sidebar ul li a {
@@ -71,6 +78,18 @@ ul.CTAs li a {
 }
 
 .main-container {
-  padding-left: 65px;
+  padding-left: 80px;
+  padding-right: 15px;
   width: 100%;
 }
+.toast{
+  z-index: 9000 !important;
+  position: absolute;
+  align-items: center;
+  color: white;
+  border-style: none;
+  top: 0;
+  left: 50%;
+  text-align: center;
+}
+

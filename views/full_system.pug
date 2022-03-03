@@ -1,23 +1,28 @@
 extends layout
 
 block extrahead
-  link(href="stylesheets/full_system.css", rel="stylesheet")
   script(src="javascripts/full_system.js", type="text/javascript")
 
 block content
   div.main-container
-    span
-      strong Group sensors by: &nbsp;
-    #sensor_grouping.btn-group.py-3(role='group')
-      input#groupSubsystem.btn-check(type="radio" name="btnradio" value="subsystem" autocomplete="off" onclick="GetGroupedSensors()" checked="")
-      label.btn.btn-outline-primary(for="groupSubsystem") Subsystem
-      input#groupSensor.btn-check(type="radio" name="btnradio" value="device" autocomplete="off" onclick="GetGroupedSensors()")
-      label.btn.btn-outline-primary(for="groupSensor") Device
-      input#groupTopic.btn-check(type="radio" name="btnradio" value="topic" autocomplete="off" onclick="GetGroupedSensors()")
-      label.btn.btn-outline-primary(for="groupTopic") Topic
-
-    div.sensor-div
-      table.table.table-striped.table-hover#sensor_table
+    .d-flex.flex-row
+      .mr-auto.p-2
+        strong Group sensors by: &nbsp;
+          #sensor_grouping.btn-group.py-3(role='group')
+            input#groupSubsystem.btn-check(type="radio" name="btnradio" value="subsystem" autocomplete="off" onclick="GetGroupedSensors()" checked="")
+            label.btn.btn-outline-primary(for="groupSubsystem") Subsystem
+            input#groupSensor.btn-check(type="radio" name="btnradio" value="device" autocomplete="off" onclick="GetGroupedSensors()")
+            label.btn.btn-outline-primary(for="groupSensor") Device
+            input#groupTopic.btn-check(type="radio" name="btnradio" value="topic" autocomplete="off" onclick="GetGroupedSensors()")
+            label.btn.btn-outline-primary(for="groupTopic") Topic
+      .p-2(style="margin-left:auto")
+        .input-group.mb-3
+          span.input-group-text.my-3
+            i.fas.fa-solid.fa-magnifying-glass
+          input.form-control.my-3#searchSensorInput(type="text" onkeyup="FilterSensors()" placeholder="Search sensor")
+          button.btn.bg-transparent.my-3(type='button' style='margin-left: -40px; z-index: 100;' onclick='$("#searchSensorInput").val(""); FilterSensors();')
+            i.fa.fa-times
+    table.table.table-hover.table-striped#sensor_table
 
   script.
     $(document).ready(function () {

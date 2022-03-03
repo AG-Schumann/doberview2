@@ -8,24 +8,27 @@ html
     link(rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32")
     link(rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16")
     link(rel="icon" type="image/png" href="/images/favicon-128.png" sizes="128x128")
+
     link(rel="stylesheet" href="/stylesheets/bootstrap.css")
-    link(rel='stylesheet' href='/stylesheets/default_style.css')
-    link(href="stylesheets/highcharts.css", rel="stylesheet")
-    link(rel='stylesheet' href='/stylesheets/bootstrap2-toggle.min.css')
-    script(src="/javascripts/jquery-3.6.0.min.js" type="text/javascript")
-    script(src='/javascripts/bootstrap.min.js' type='text/javascript')
-    script(src="/javascripts/default_scripts.js" type="text/javascript")
-    script(src="/javascripts/bootstrap.js" type="text/javascript")
-    script(src="/javascripts/bootstrap.bundle.js" type="text/javascript")
-    script(src='/javascripts/bootstrap2-toggle.min.js' type='text/javascript')
-    script(src="https://kit.fontawesome.com/abb8282784.js" crossorigin="anonymous" type="text/javascript")
-    script(src="/javascripts/highcharts.js", type="text/javascript")
+    link(rel="stylesheet" href="/stylesheets/bootstrap2-toggle.min.css")
+    link(rel="stylesheet" href='/stylesheets/default_style.css')
+    link(rel="stylesheet" href="stylesheets/highcharts.css")
+
+    script(src="javascripts/jquery-3.6.0.min.js" type="text/javascript")
+    script(src="javascripts/default_scripts.js" type="text/javascript")
+    script(src="javascripts/bootstrap.js" type="text/javascript")
+    script(src="javascripts/bootstrap2-toggle.min.js" type="text/javascript")
+    script(src="https://kit.fontawesome.com/fd56c7481d.js" crossorigin="anonymous" type="text/javascript")
+    script(src="javascripts/highcharts.js", type="text/javascript")
+
 
     meta(name="application-name" content="pagetitle")
 
     block extrahead
 
   body
+    #changesensor_success.toast.bg-success.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
+      .toast-body General info updated successfully
     div.overlay
     div.wrapper
       div#sidebar_wrapper
@@ -77,32 +80,31 @@ html
                           .checkbox
                             input#sensor_status(type="checkbox" data-toggle='toggle' data-onstyle='success' data-offstyle='warning' data-on='Online' data-off='Offline')
                       tr
-                        th.py-3 Device
+                        th.py-2 Device
                         td
                           button.btn.btn-primary.btn-sm#sensor_device_name
                       tr
-                        th.py-3 Description
+                        th.py-2 Description
                         td
                           input.form-control(type="text" id="sensor_desc" name="sensor_desc" size='4')
                       tr
-                        th.py-3 Readout interval &nbsp
+                        th.py-2 Readout interval &nbsp
                         td
                           input(type="number" id="readout_interval" name="readout_interval" max="300" size='4')
                           span &nbsp s
                       tr
-                        th.py-3 Units:
+                        th.py-2 Units
                         td#sensor_units
                       tr
-                        th.py-3 Readout command:
+                        th.py-2 Readout command &nbsp
                         td#readout_command(style='font-family:"Courier New",monospace')
                       tr
                         th.py-3 Transform:
                         td
                           input(type="text" id="value_xform" name="value_xform" placeholder="0,1")
                       tr
-                        th.py-3
+                        th.py-2
                           button.btn.btn-info(onclick="UpdateSensor()") Update
-                .col-lg-6
                   hr
                   h5 Alarms
                   br
@@ -132,30 +134,28 @@ html
                           input.form-control(type="number" id="alarm_baselevel" name="alarm_baselevel" min="0" step="1" max="3" size='8')
                         td(colspan=2)
                           button.btn.btn-info#change_alarms(onclick="UpdateAlarms()") Update alarm
-                .col-lg-6#sensor_control
                   hr
-                  h5 Control
-                  span#control_target(hidden)
-                  br
-                  table
-                    tbody
-                      tr#sensor_valve
-                        td
-                          button.btn.btn-info#sensor_valve_btn(onclick="ToggleValve()") Toggle
-                        td
-                          span#current_valve_state(hidden)
-                      tr#sensor_setpoint
-                        td
-                          input.form-control(type="number" id="sensor_setpoint_control" name="sensor_setpoint_control" size='8')
-                        td
-                          button.btn.btn-info#sensor_setpoint_btn(onclick="ChangeSetpoint()") Set
                 .col-lg-6
-                  hr
+                  div#sensor_control
+                    h5 Control
+                    span#control_target(hidden)
+                    br
+                    table
+                      tbody
+                        tr#sensor_valve
+                          td
+                            button.btn.btn-info#sensor_valve_btn(onclick="ToggleValve()") Toggle
+                          td
+                            span#current_valve_state(hidden)
+                        tr#sensor_setpoint
+                          td
+                            input.form-control(type="number" id="sensor_setpoint_control" name="sensor_setpoint_control" size='8')
+                          td
+                            button.btn.btn-info#sensor_setpoint_btn(onclick="ChangeSetpoint()") Set
+                    hr
                   h5 Pipelines involving this sensor
                   br
                   ul#pipeline_list
-
-                .col-lg-6
                   hr
                   h5 Recent history
                   br
