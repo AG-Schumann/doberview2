@@ -156,23 +156,25 @@ router.post('/update_device_address', function(req, res) {
 
 router.post('/update_alarm', function(req, res) {
   var data = req.body;
+  console.log(typeof data.thresholds);
   var updates = {};
   if (typeof data.sensor == 'undefined') {
     console.log(req.body);
     return res.json({err: 'Invalid or missing parameters'});
   }
-  if (typeof data.alarm != 'undefined' && data.alarm.length == 2) {
+  if (typeof data.thresholds != 'undefined' && data.thresholds.length == 2) {
     try{
-      updates['alarm_thresholds'] = [parseFloat(data.alarm[0]), parseFloat(data.alarm[1])];
-      updates['alarm_recurrence'] = parseInt(data.alarm_recurrence);
-      updates['alarm_level'] = parseInt(data.alarm_level);
+      updates['alarm_thresholds'] = [parseFloat(data.thresholds[0]), parseFloat(data.thresholds[1])];
+      updates['alarm_recurrence'] = parseInt(data.recurrence);
+      updates['alarm_level'] = parseInt(data.level);
     }catch(err) {
       console.log(err.message);
       return res.json({err: 'Invalid alarm parameters'});
     }
   }
+  console.log(updates);
   req.db.get('sensors').update({name: data.sensor}, {$set: updates})
-    .then(() => res.json(ret))
+    .then(() => res.json({}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
@@ -197,10 +199,7 @@ router.post('/update_sensor', function(req, res) {
       console.log('Invalid value xform ' + data.value_xform);
       return res.json({err: 'Invalid value transform'});
     }
-
   }
-
-  var query = {name: sensor};
   if (typeof data.readout_interval != 'undefined') {
     try{
       updates['readout_interval'] = parseFloat(data.readout_interval);
@@ -213,6 +212,7 @@ router.post('/update_sensor', function(req, res) {
     updates['status'] = data.status;
   if (typeof data.description != 'undefined' && data.description != "")
     updates['description'] = data.description;
+  console.log(updates);
   req.db.get('sensors').update({name: sensor}, {$set: updates})
     .then(() => res.json(ret))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});

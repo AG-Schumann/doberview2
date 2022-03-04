@@ -27,8 +27,8 @@ html
     block extrahead
 
   body
-    #changesensor_success.toast.bg-success.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
-      .toast-body General info updated successfully
+    //#changesensor_success.toast.bg-success.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
+    //  .toast-body General info updated successfully
     div.overlay
     div.wrapper
       div#sidebar_wrapper
@@ -69,13 +69,12 @@ html
                 button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
               .modal-body.row
                 .col-lg-6
-                  hr
                   h5 General info
                   br
                   table
                     tbody
                       tr
-                        th.py-3 Status
+                        th.py-2 Status
                         td
                           .checkbox
                             input#sensor_status(type="checkbox" data-toggle='toggle' data-onstyle='success' data-offstyle='warning' data-on='Online' data-off='Offline')
@@ -86,11 +85,11 @@ html
                       tr
                         th.py-2 Description
                         td
-                          input.form-control(type="text" id="sensor_desc" name="sensor_desc" size='4')
+                          input.form-control-sm(type="text" id="sensor_desc" name="sensor_desc" size='4')
                       tr
                         th.py-2 Readout interval &nbsp
                         td
-                          input(type="number" id="readout_interval" name="readout_interval" max="300" size='4')
+                          input.form-control-sm(type="number" id="readout_interval" name="readout_interval" max="300" size='4')
                           span &nbsp s
                       tr
                         th.py-2 Units
@@ -99,9 +98,9 @@ html
                         th.py-2 Readout command &nbsp
                         td#readout_command(style='font-family:"Courier New",monospace')
                       tr
-                        th.py-3 Transform:
+                        th.py-2 Transform:
                         td
-                          input(type="text" id="value_xform" name="value_xform" placeholder="0,1")
+                          input.form-control-sm(type="text" id="value_xform" name="value_xform" placeholder="0,1")
                       tr
                         th.py-2
                           button.btn.btn-info(onclick="UpdateSensor()") Update
@@ -117,24 +116,24 @@ html
                         th Half-range
                       tr
                         td
-                          input.form-control(type="number" id="alarm_low" name="alarm_low" size='8')
+                          input.form-control-sm(type="number" id="alarm_low" name="alarm_low" size='8')
                         td
-                          input.form-control(type="number" id="alarm_high" name="alarm_high" size='8')
+                          input.form-control-sm(type="number" id="alarm_high" name="alarm_high" size='8')
                         td
-                          input.form-control(type="number" id="alarm_mid" name="alarm_mid" size='8')
+                          input.form-control-sm(type="number" id="alarm_mid" name="alarm_mid" size='8')
                         td
-                          input.form-control(type="number" id="alarm_range" name="alarm_range" size='8')
+                          input.form-control-sm(type="number" id="alarm_range" name="alarm_range" size='8')
                       tr
                         th Recurrence
                         th Base level
                       tr
                         td
-                          input.form-control(type="number" id="alarm_recurrence" name="alarm_recurrence" min="1" step="1" size='8')
+                          input.form-control-sm(type="number" id="alarm_recurrence" name="alarm_recurrence" min="1" step="1" size='8')
                         td
-                          input.form-control(type="number" id="alarm_baselevel" name="alarm_baselevel" min="0" step="1" max="3" size='8')
-                        td(colspan=2)
+                          input.form-control-sm(type="number" id="alarm_baselevel" name="alarm_baselevel" min="0" step="1" max="3" size='8')
+                      tr
+                        th.py-2(colspan=2)
                           button.btn.btn-info#change_alarms(onclick="UpdateAlarms()") Update alarm
-                  hr
                 .col-lg-6
                   div#sensor_control
                     h5 Control
@@ -196,8 +195,8 @@ html
                   button.btn.btn-danger.me-3.mb-2#device_ctrl_btn ?
                   button.btn.btn-warning.mb-2#device_manage_btn ?
                   form#update_device_form
-                    h5 General info
                     hr
+                    h5 General info
                     table
                       tbody
                         tr
@@ -228,17 +227,19 @@ html
                             input(type="text" id="device_serial_id" name="device_serial_id")
                     span Listens on port &nbsp;
                     span#device_listener
-                .col-lg-6
-                  h5 This device's sensors:
                   hr
-                  ul#device_sensors
-                  h5  Commands:
-                  hr
+                  h5  Commands
+                  br
                   span Accepted commands:
                   ul#device_commands_list
                   .input-group.mb-3
                     input.form-control(type='text' placeholder="Command")
                     button.btn.btn-primary(type='button' onclick="DeviceCommand()") Send
+                .col-lg-6
+                  h5 This device's sensors:
+                  br
+                  ul#device_sensors
+
               .modal-footer
                 button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
                 button.btn.btn-primary(type='button') Save changes

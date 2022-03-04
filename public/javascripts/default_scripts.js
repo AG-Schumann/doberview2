@@ -52,7 +52,7 @@ function SensorDropdown(sensor) {
           } else {
             cls = 'btn-success';
           }
-          $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="btn ${cls} btn-sm">${name}</button></a></li>`);
+          $("#pipeline_list").append(`<li><button class="btn ${cls} btn-sm" onclick="location.href='/pipeline'">${name}</button></li>`);
           if (name == `alarm_${name}`) {
             $("#plot_alarms").bootstrapToggle(doc.status=='inactive' ? 'off' : 'on')
           }
@@ -83,9 +83,9 @@ function SensorDropdown(sensor) {
     } else {
       $("#sensor_control").css('display', 'none');
     }
+    DrawSensorHistory(sensor);
     $('#sensorbox').modal('show');
   });
-  DrawSensorHistory(sensor);
 }
 
 async function MakeAlarm(name) {
@@ -131,7 +131,7 @@ function DeviceDropdown(device) {
         }
       } else {
         $("#device_ctrl_btn").text("Start").click(() => ControlDevice(`start ${device}`));
-        $("#device_manage_btn").text("").click(() => {}).prop('disabled', true);
+        $("#device_manage_btn").text("Manage").click(() => {}).prop('disabled', true);
       }
     });
 
@@ -158,7 +158,6 @@ function DeviceDropdown(device) {
     if (data.multi)
         sensor_list = data.multi;
     sensor_list.forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
-    (data.sensors).forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
     $("#device_sensors").append('<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="PopulateNewSensor()">Add new!</button></li>');
     $("#device_listener").html(`${data.dispatch_port}`);
     if (typeof data.commands != 'undefined')
@@ -171,8 +170,8 @@ function DeviceDropdown(device) {
 }
 
 function DrawSensorHistory(sensor) {
-
   sensor = sensor || $("#detail_sensor_name").html();
+  var unit = $("#sensor_units").html();
   var interval = $("#selectinterval :selected").val();
   $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, doc => {
     if(doc.pipelines.includes(`alarm_${sensor}`)) {
@@ -184,16 +183,15 @@ function DrawSensorHistory(sensor) {
   });
 
   $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
-    if (data.length == 0) {
-      console.log('No data?');
-      return;
-    }
-    var t_min = data[0][0], t_max = data[data.length-2][0];
+    if (data.length == 0)
+      var t_min = 0, t_max = 0;
+    else
+      var t_min = data[0][0], t_max = data[data.length-2][0];
     var alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
-    var series = [{type: 'line', data: data.filter(row => (row[0] && row[1])), animation: {duration: 250}, color: '#0d6efd'}];
+    var series = [{name: $("#detail_sensor_name").html(), type: 'line', data: data.filter(row => (row[0] && row[1])), animation: {duration: 250}, color: '#0d6efd'}];
     if (alarm_low && alarm_high && $("#plot_alarms").is(":checked")) {
-      series.push({type: 'area', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', threshold: -Infinity});
-      series.push({type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
+      series.push({name: "lower threshold", type: 'area', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', threshold: -Infinity});
+      series.push({name: "upper threshold", type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
     }
     Highcharts.chart('sensor_chart', {
       chart: {
@@ -203,9 +201,18 @@ function DrawSensorHistory(sensor) {
       title: {text: null},
       credits: {enabled: false},
       series: series,
-      xAxis: {type: 'datetime'},
-      yAxis: {title: {text: null}},
+      xAxis: {type: 'datetime',
+              crosshair: true,
+              max: Date.now()},
+      yAxis: {title: {text: null},
+              crosshair: true,
+              labels: {format: '{value:.3f}'},
+              },
       legend: {enabled: false},
+      tooltip: {
+        valueDecimals: 3,
+        valueSuffix: unit
+      },
     });
     return;
   });
@@ -220,7 +227,7 @@ function UpdateAlarms() {
         sensor: $("#detail_sensor_name").html(),
         thresholds: [$("#alarm_low").val(), $("#alarm_high").val()],
         recurrence: $("#alarm_recurrence").val(),
-        alarm_level: $("#alarm_baselevel").val()
+        level: $("#alarm_baselevel").val()
       },
       success: (data) => {alert(data.err || 'Success');},
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
@@ -235,10 +242,8 @@ function UpdateSensor() {
     readout_interval: $("#readout_interval").val(),
     description: $("#sensor_desc").val(),
     status: $("#sensor_status").is(":checked") ? "online" : 'offline',
+    value_xform : $("#value_xform").val()
   };
-  if ($("#value_xform").val() != "") {
-    data.value_xform = $("#value_xform").split(',').map(parseFloat);
-  }
   $.ajax({
     type: 'POST',
     url: '/devices/update_sensor',
