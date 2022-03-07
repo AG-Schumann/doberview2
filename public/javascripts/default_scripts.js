@@ -296,7 +296,7 @@ function ValidateNewSensor(echo_ret=true) {
     alert('Please enter a sensible readout interval');
     return false;
   }
-  if ($("#new_topic").val() != 'state' && $("#new_units").val() == "") {
+  if ($("#new_topic").val() != 'status' && $("#new_units").val() == "") {
     alert('Please enter sensible units');
     return false;
   }
@@ -323,16 +323,16 @@ function ValidateNewSensor(echo_ret=true) {
 
 function SubmitNewSensor() {
   if (ValidateNewSensor(false)) {
+    var device = $("#new_device").val();
     var data =  {
         subsystem: $("#new_subsystem").val(),
         topic: $("#new_topic").val(),
-        device: $("#new_device").val(),
+        device: device,
         description: $("#new_description").val(),
         readout_interval: $("#new_readout_interval").val(),
         units: $("#new_units").val(),
         readout_command: $("#new_readout_command").val(),
     };
-    console.log($("#new_device").val());
     if ($("#new_value_xform").val())
         data.value_xform = $("#new_value_xform").val().split(',').map(parseFloat);
     $.ajax({
@@ -345,7 +345,7 @@ function SubmitNewSensor() {
           return;
         }
         if (confirm(`New sensor name: ${data.name}. Start now?`)) {
-          SendToHypervisor($("#new_device").val(), 'reload sensors');
+          SendToHypervisor(device, 'reload sensors');
         }
       },
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
@@ -355,11 +355,12 @@ function SubmitNewSensor() {
 }
 
 function SendToHypervisor(target, command, msg_if_success=null) {
+  var msg = msg_if_success == null ? "Ok" : msg_if_success;
   $.ajax({
     type: 'POST',
     url: 'hypervisor/command',
     data: {target: target, command: command},
-    success: (data) => alert(data.err || msg_if_success || "Ok"),
+    success: (data) => alert(typeof data.err == 'undefined' ? msg : data.err),
     err: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }

@@ -22,7 +22,7 @@ function axios_params(query) {
 
 router.get('/', function(req, res) {
   var q = url.parse(req.url, true).query;
-  res.render('hosts', {hosts: ['apollo', 'calliope'], grafana_sysmon_url: 'http://10.4.73.172:3000/d/WzsbkBwWk/system-mon?orgId=1&kiosk'});
+  res.render('hosts', {hosts: ['apollo', 'calliope', 'clio'], grafana_sysmon_url: 'http://10.4.73.172:3000/d/WzsbkBwWk/system-mon?orgId=1&kiosk'});
 });
 
 router.get('/params', function(req, res) {
