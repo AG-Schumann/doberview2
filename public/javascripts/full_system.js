@@ -25,7 +25,12 @@ function GetGroupedSensors() {
 }
 
 function SigFigs(val) {
-  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toFixed(SIG_FIGS) : val.toExponential(SIG_FIGS);
+  if (val.includes('.')) {
+    // value is float
+    val = parseFloat(val);
+    return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toFixed(SIG_FIGS) : val.toExponential(SIG_FIGS);
+  }
+  return val;
 }
 
 function UpdateOnce() {

@@ -228,7 +228,7 @@ router.get('/get_last_point', function(req, res) {
   axios(axios_params(`SELECT last(value) FROM ${topic} WHERE sensor='${sensor}';`))
   .then(resp => {
     var blob = resp.data.split('\n')[1].split(',');
-    return res.json({'value': parseFloat(blob[3]), 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
+    return res.json({'value': blob[3], 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
   }).catch(err => {console.log(err); return res.json({});});
 });
 

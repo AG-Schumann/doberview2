@@ -163,6 +163,9 @@ html
                       .checkbox
                         label(for="plot_alarms") Show alarms &nbsp;
                         input#plot_alarms(type="checkbox" data-toggle='toggle' data-onstyle='danger' data-offstyle='primary' onchange="DrawSensorHistory()")
+                      .checkbox
+                        label(for="plot_log") Log scale &nbsp;
+                        input#plot_log(type="checkbox" data-toggle='toggle' data-onstyle='primary' data-offstyle='default' onchange="DrawSensorHistory()")
                     .p-2(style="margin-left:auto")
                       select.form-select#selectinterval(onchange="DrawSensorHistory()")
                         option(value="0") 10m

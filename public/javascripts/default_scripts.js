@@ -1,6 +1,13 @@
 const binning = ['1s', '6s', '36s', '1m', '2m', '4m', '6m', '14m', '24m', '48m'];
 const history = ['10m', '1h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
+var SIG_FIGS=3;
+var LOG_THRESHOLD=3;
 var control_map = {};
+
+function SigFigsPlot(ctx) {
+  var value = typeof ctx.value == 'string' ? parseFloat(ctx.value) : ctx.value;
+  return Math.abs(Math.log10(Math.abs(value))) < LOG_THRESHOLD ? value.toFixed(SIG_FIGS) : value.toExponential(SIG_FIGS);
+}
 
 function SensorDropdown(sensor) {
   $("#alarm_low").change(() => {var low = parseInt($("#alarm_low").val()); var high = parseInt($("#alarm_high").val()); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}});
@@ -206,11 +213,13 @@ function DrawSensorHistory(sensor) {
               max: Date.now()},
       yAxis: {title: {text: null},
               crosshair: true,
-              labels: {format: '{value:.3f}'},
+              //labels: {//format: '{value:.3f}',
+              //        formatter: SigFigsPlot},
+              type: $("#plot_log").is(":checked") ? "logarithmic" : "linear",
               },
       legend: {enabled: false},
       tooltip: {
-        valueDecimals: 3,
+        //valueDecimals: 3,
         valueSuffix: unit
       },
     });
