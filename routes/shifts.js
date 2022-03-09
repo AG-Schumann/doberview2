@@ -51,6 +51,14 @@ router.post('/update_shifter', function(req, res) {
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
+router.post('/add_shifter', function(req, res) {
+  var shifter = req.body;
+  shifter.name = shifter.first_name + shifter.last_name[0];
+  req.db.get('contacts').insert(shifter)
+      .then(() => res.json({}))
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
 router.post('/delete_shifter', function(req, res) {
   var name = req.body.name;
   req.db.get('contacts').remove({name: name})

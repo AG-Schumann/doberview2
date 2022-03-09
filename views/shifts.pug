@@ -4,30 +4,76 @@ block extrahead
   script(src="javascripts/shifts.js" type="text/javascript")
 
 block content
-  div.modal#contact_detail(tabindex="-1" role="dialog")
-    div.modal-dialog(role="document")
-      div.modal-content(style="margin:10")
-        form#shift_form()
-          label(for="first_name") First name:&nbsp;
-          input#first_name(type="text" size="24" name="first_name")
-          br
-          label(for="last_name") Last name:&nbsp;
-          input#last_name(type="text" size="24" name="last_name")
-          br
-          label(for="sms") SMS:&nbsp;
-          input#sms(type='text' size="20" name="sms")
-          br
-          label(for="email") Email:&nbsp;
-          input#email(type='email' size="48" name='email')
-          br
-          label(for='expert') Expert?&nbsp;
-          input#expert(type="checkbox" name="expert")
-          br
-        div.modal-footer
-          button.btn.btn-info(onclick="SubmitContact()") Submit
-          span &nbsp;
-          button.btn.btn-secondary(data-dismiss="modal") Close
-          button.btn#show_btn(style="display:none" data-toggle="modal" data-target="#contact_detail" hidden)
+  #contact_detail.modal.fade
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5.modal-title
+            i.fas.fa-user
+            span &nbsp; Contact information
+          button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+        .modal-body.row
+          form#shift_form
+            table
+              tbody
+                tr
+                  th.py-3 First name&nbsp;
+                  td
+                    input#first_name(type="text" name="first_name")
+                tr
+                  th.py-3 Last name&nbsp;
+                  td
+                    input#last_name(type="text" name="last_name")
+                tr
+                  th.py-3 SMS
+                  td
+                    input#sms(type='text'  name="sms")
+                tr
+                  th.py-3 Email
+                  td
+                    input#email(type='email' size="35" name='email')
+                tr
+                  th.py-3 Expert?&nbsp;
+                  th
+                    input#expert(type="checkbox" name="expert")
+        .modal-footer
+          button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+          button.btn.btn-primary(type='button' onclick="SubmitContact()") Save changes
+  #new_contact.modal.fade
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5.modal-title
+            i.fas.fa-user
+            span &nbsp; Contact information
+          button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+        .modal-body.row
+          form#new_shift_form
+            table
+              tbody
+                tr
+                  th.py-3 First name&nbsp;
+                  td
+                    input#new_first_name(type="text" name="first_name")
+                tr
+                  th.py-3 Last name&nbsp;
+                  td
+                    input#new_last_name(type="text" name="last_name")
+                tr
+                  th.py-3 SMS
+                  td
+                    input#new_sms(type='text'  name="sms")
+                tr
+                  th.py-3 Email
+                  td
+                    input#new_email(type='email' size="35" name='email')
+                tr
+                  th.py-3 Expert?&nbsp;
+                  th
+                    input#new_expert(type="checkbox" name="expert")
+        .modal-footer
+          button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Cancel
+          button.btn.btn-primary(type='button' onclick="SubmitNewContact()") Add Contact
   div.modal#delete_contact(tabindex="-1" role="dialog")
     div.modal-dialog(role="document")
       div.modal-content
@@ -40,7 +86,12 @@ block content
           button.btn.btn-secondary(data-dismiss="modal") Close
 
   div.main-container(style="width:100%")
-    h3 Shifts and contact management
+    .d-flex.flex-row
+      .mr-auto.p-2
+        button.btn.btn-primary.my-3(onclick="NewContact()")
+          span
+            | Add new &nbsp
+            i.fas.fa-user
 
     table.table.table-hover.table-striped(style="width:50%")
       thead
@@ -50,9 +101,6 @@ block content
       tbody#shift_table
 
     button.btn.btn-warning(onclick="SubmitShifts()") Set shifters
-    span &nbsp;
-    button.btn.btn-info(data-toggle="modal" data-target="#contact_detail") New contact
-    span &nbsp;
     button.btn.btn-danger(data-toggle="modal" data-target="#delete_contact") Delete shifter
 
 
@@ -60,8 +108,3 @@ block content
     $(document).ready(function() {
       PopulateTable();
     });
-    window.onclick = function(event) {
-      var elems = document.getElementsByClassName("modal");
-      for (var i = 0; i < elems.length; i++)
-        if (event.target == elems[i]) elems[i].style.display = 'none';
-    }

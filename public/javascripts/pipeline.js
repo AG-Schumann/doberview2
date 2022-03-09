@@ -147,7 +147,7 @@ function SilencePipeline(duration) {
       alert(data.err);
     PopulatePipelines();
   });
-  $("#silence_dropdown").css('display', 'none');
+  $("#silence_dropdown").modal('hide');
 }
 
 function PipelineControl(action, pipeline) {
