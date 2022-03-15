@@ -8,7 +8,7 @@ router.get('/', function(req, res) {
 
 router.get('/get_contacts', function(req, res) {
   var now = new Date();
-  req.db.get('contacts').find({}, {projection: {name: 1, status: 1}})
+  req.db.get('contacts').find({}, {projection: {name: 1, on_shift: 1}})
   .then(docs => res.json(docs))
   .catch(err => {console.log(err.message); return res.json([]);});
 });
@@ -24,21 +24,12 @@ router.get('/contact_detail', function(req, res) {
 });
 
 router.post('/set_shifters', function(req, res) {
-  var shifts = req.body.shifts;
-  if (typeof shifts == 'undefined' || shifts.length == 0)
-    return res.json({err: "No input received"});
-  var onshift = shifts.filter(row => row[1] > 0).map(row => row[0]);
-  var now = new Date();
-  var forever = new Date();
-  forever.setFullYear(forever.getFullYear()+1);
-  var coll = req.db.get('shifts');
-  var key = `${now.getFullYear()}-${('0'+now.getMonth()).slice(-2)}-${('0'+now.getDate()).slice(-2)}`
-  coll.findOne({start: {$lt: now}, end: {$gt: now}})
-  .then(current_shift => {
-    // first we end the current shift
-    if (typeof current_shift != 'undefined' && current_shift != null)
-      return shifts.update({_id: last_shift._id}, {$set: {end: now}});
-  }).then(() => shifts.insert({start: now, end: forever, shifters: onshift, key: key}))
+  var shifters = req.body.shifters;
+  if (typeof shifters == 'undefined' || shifters.length == 0)
+    return res.json({err: 'No input received'});
+  var coll = req.db.get('contacts');
+  coll.update({name: {$in: shifters}}, {$set: {on_shift: true}}, {multi: true})
+  .then(() => coll.update({name: {$nin: shifters}}, {$set: {on_shift: false}}, {multi: true}))
   .then(() => res.json({}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });

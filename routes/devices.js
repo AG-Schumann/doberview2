@@ -54,6 +54,8 @@ router.post('/new_sensor', function(req, res) {
     }
   }
   doc.readout_interval = parseFloat(doc.readout_interval);
+  if (typeof doc.is_int != 'undefined')
+    doc.is_int = parseInt(doc.is_int);
   var subsystem = doc.subsystem;
   var num = '01';
   var name;
@@ -156,7 +158,6 @@ router.post('/update_device_address', function(req, res) {
 
 router.post('/update_alarm', function(req, res) {
   var data = req.body;
-  console.log(typeof data.thresholds);
   var updates = {};
   if (typeof data.sensor == 'undefined') {
     console.log(req.body);
@@ -164,7 +165,7 @@ router.post('/update_alarm', function(req, res) {
   }
   if (typeof data.thresholds != 'undefined' && data.thresholds.length == 2) {
     try{
-      updates['alarm_thresholds'] = [parseFloat(data.thresholds[0]), parseFloat(data.thresholds[1])];
+      updates['alarm_thresholds'] = data.thresholds.map(parseFloat);
       updates['alarm_recurrence'] = parseInt(data.recurrence);
       updates['alarm_level'] = parseInt(data.level);
     }catch(err) {
@@ -199,13 +200,14 @@ router.post('/update_sensor', function(req, res) {
       console.log('Invalid value xform ' + data.value_xform);
       return res.json({err: 'Invalid value transform'});
     }
+    updates['value_xform'] = xform;
   }
   if (typeof data.readout_interval != 'undefined') {
     try{
       updates['readout_interval'] = parseFloat(data.readout_interval);
     }catch(err) {
-      ret['err'] = 'Invalid readout interval';
       console.log(err.message);
+      return res.json({err: 'Invalid readout interval'});
     }
   }
   if (typeof data.status != 'undefined' && (data.status == "online" || data.status == "offline"))

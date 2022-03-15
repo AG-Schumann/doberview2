@@ -76,29 +76,6 @@ function SilenceDropdown(name) {
   $('#silence_dropdown').modal('show');
 }
 
-function AddNewPipeline() {
-  var doc;
-  try{
-    doc = JSON.parse(JSON.stringify(document.newjsoneditor.get()));
-  }catch(err){alert(err); return;};
-  if (doc.name == 'INSERT NAME HERE') {
-    alert('You didn\'t add a name');
-    return;
-  }
-  try{
-    if (doc.pipeline.filter(n => n.input_var == 'INSERT SENSOR NAME HERE').length > 0) {
-      alert('You didn\'t specify sensor names');
-      return;
-    }
-  }catch(err){alert(err); return;}
-  if (typeof doc._id != 'undefined')
-    delete doc._id;
-  $.post("/pipeline/add_pipeline", {doc: doc}, (data, status) => {
-    if (typeof data.err != 'undefined')
-      alert(data.err);
-  });
-}
-
 function FillTemplate() {
   var doc = {
     name: 'INSERT NAME HERE',
@@ -113,10 +90,35 @@ function FillTemplate() {
       'source': {},
     },
   };
-  document.newjsoneditor.set(doc);
+  document.jsoneditor.set(doc);
 }
 
-function DeletePipeline(cb=null) {
+function AddOrUpdatePipeline() {
+  var doc;
+  try{
+    doc = JSON.parse(JSON.stringify(document.jsoneditor.get()));
+  }catch(err){alert(err); return;};
+  if (doc.name == 'INSERT NAME HERE') {
+    alert('You didn\'t add a name');
+    return;
+  }
+  try{
+    if (doc.pipeline.filter(n => n.input_var == 'INSERT SENSOR NAME HERE').length > 0) {
+      alert('You didn\'t specify sensor names');
+      return;
+    }
+  }catch(err){alert(err); return;}
+  if (typeof doc._id != 'undefined')
+    delete doc._id;
+  $.post("/pipeline/add_pipeline", doc, (data, status) => {
+    if (typeof data.err != 'undefined')
+      alert(data.err);
+    else
+      $("#pipelinebox").modal('hide');
+  });
+}
+
+function DeletePipeline() {
   var name;
   try {
     name = JSON.parse(JSON.stringify(document.jsoneditor.get())).name;
@@ -124,10 +126,8 @@ function DeletePipeline(cb=null) {
   $.post(`/pipeline/delete_pipeline`, {pipeline: name}, (data, status) => {
     if (typeof data != 'undefined' && typeof data.err != 'undefined') {
       alert(data.err);
-      return;
-    }
-    if (cb) cb();
-    location.reload();
+    } else
+      $("#pipelinebox").modal('hide');
   });
 }
 
@@ -161,7 +161,7 @@ function PipelineControl(action, pipeline) {
 
 function NewPipelineDropdown() {
   FillTemplate();
-  $('#newpipelinebox').modal('show');
+  $('#pipelinebox').modal('show');
 }
 
 function PipelineDropdown(pipeline) {

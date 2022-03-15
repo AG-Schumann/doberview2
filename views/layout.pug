@@ -288,6 +288,14 @@ html
                       th.py-3 Transform
                       td
                         input.form-control(type="text" id="new_value_xform" name="new_value_xform" placeholder="0,1")
+                    tr
+                      th.py-3 Integer quantity?
+                      td
+                        input(type="checkbox" id="new_integer" name="new_integer")
+                    tr
+                      th.py-3 Control value
+                      td
+                        input(type="text" id="new_control" name="new_control")
               .modal-footer
                 button.btn.btn-success#validate_btn(type="button" onclick="ValidateNewSensor()") Validate
                 button.btn.btn-warning#newsensor_btn(onclick="SubmitNewSensor()") Submit

@@ -6,7 +6,8 @@ var common = require('./common')
 
 router.get('/', function(req, res) {
   var q = url.parse(req.url, true).query;
-  res.render('pipeline', { load: q.pipeline_id });
+  var load = q.pipeline_id || "";
+  res.render('pipeline', { load: load });
 });
 
 router.get('/get_pipelines', function(req, res) {
@@ -35,15 +36,18 @@ router.get('/status', function(req, res) {
 });
 
 router.post('/add_pipeline', function(req, res) {
-  var doc = req.body.doc;
+  var doc = req.body;
   doc['status'] = 'inactive';
   doc['cycles'] = parseInt('0');
   doc['error'] = parseInt('0');
   doc['rate'] = -1;
+  if (typeof doc.pipeline == 'undefined' || doc.pipeline.length == 0)
+    return res.json({err: 'Bad input'});
   doc['depends_on'] = doc.pipeline.filter(n => (typeof n.upstream == 'undefined' || n.upstream.length == 0)).map(n => n.input_var);
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
-  req.db.get('pipelines').insert(doc)
+  req.db.get('pipelines').update({name: doc.name}, {$set: doc}, {upsert: true})
+  .then(() => req.db.get('sensors').update({}, {$pull: {'pipelines': doc.name}}, {multi: true}))
   .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
       {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
   .then(() => res.json({msg: 'Success'}))

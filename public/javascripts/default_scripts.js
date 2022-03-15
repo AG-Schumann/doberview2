@@ -1,5 +1,5 @@
-const binning = ['1s', '6s', '36s', '1m', '2m', '4m', '6m', '14m', '24m', '48m'];
-const history = ['10m', '1h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
+const binning = ['1s', '6s', '10s', '36s', '1m', '2m', '4m', '6m', '14m', '24m', '48m'];
+const history = ['10m', '1h', '3h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
 var SIG_FIGS=3;
 var LOG_THRESHOLD=3;
 var control_map = {};
@@ -59,7 +59,7 @@ function SensorDropdown(sensor) {
           } else {
             cls = 'btn-success';
           }
-          $("#pipeline_list").append(`<li><button class="btn ${cls} btn-sm" onclick="location.href='/pipeline'">${name}</button></li>`);
+          $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="btn ${cls} btn-sm">${name}</button></a></li>`);
           if (name == `alarm_${name}`) {
             $("#plot_alarms").bootstrapToggle(doc.status=='inactive' ? 'off' : 'on')
           }
@@ -71,7 +71,7 @@ function SensorDropdown(sensor) {
     if (typeof data.control_quantity != 'undefined') {
       control_map[data.name] = [data.device, data.control_quantity];
       $("#sensor_control").css('display', 'inline');
-      if (data.topic == 'state') {
+      if (data.topic == 'status') {
         // this is a valve
         $("#sensor_valve").prop('hidden', false);
         $("#sensor_setpoint").prop('hidden', true);
@@ -95,7 +95,7 @@ function SensorDropdown(sensor) {
   });
 }
 
-async function MakeAlarm(name) {
+function MakeAlarm(name) {
   var template = {
     name: `alarm_${name}`,
     node_config: {},
@@ -114,9 +114,12 @@ async function MakeAlarm(name) {
       }
     ]
   };
-  $.post('/pipeline/add_pipeline', {doc: template}, (data, status) => {
-    if (typeof data.err != 'undefined')
-      alert(data.err);
+  $.ajax({
+    type: 'POST',
+    url: '/pipeline/add_pipeline',
+    data: template, 
+    success: data => { if (typeof data.err != 'undefined') alert(data.err); else alert('Ok');},
+    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }
 
@@ -228,21 +231,22 @@ function DrawSensorHistory(sensor) {
 }
 
 function UpdateAlarms() {
-  if ($("#alarm_low").val() && $("#alarm_high").val()) {
-    $.ajax({
-      type: 'POST',
-      url: '/devices/update_alarm',
-      data: {
-        sensor: $("#detail_sensor_name").html(),
-        thresholds: [$("#alarm_low").val(), $("#alarm_high").val()],
-        recurrence: $("#alarm_recurrence").val(),
-        level: $("#alarm_baselevel").val()
-      },
-      success: (data) => {alert(data.err || 'Success');},
-      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
-    });
+  if (!($("#alarm_low").val() && $("#alarm_high").val() && $("#alarm_recurrence").val() && $("#alarm_baselevel").val())) {
+    alert('Please enter sensible values');
+    return;
   }
-  //$("#sensorbox").modal('hide');
+  $.ajax({
+    type: 'POST',
+    url: '/devices/update_alarm',
+    data: {
+      sensor: $("#detail_sensor_name").html(),
+      thresholds: [$("#alarm_low").val(), $("#alarm_high").val()],
+      recurrence: $("#alarm_recurrence").val(),
+      level: $("#alarm_baselevel").val()
+    },
+    success: (data) => {alert(data.err || 'Success');},
+    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
+  });
 }
 
 function UpdateSensor() {
@@ -251,8 +255,21 @@ function UpdateSensor() {
     readout_interval: $("#readout_interval").val(),
     description: $("#sensor_desc").val(),
     status: $("#sensor_status").is(":checked") ? "online" : 'offline',
-    value_xform : $("#value_xform").val()
   };
+  if ($("#value_xform").val() != "") {
+    var xform;
+    try {
+      xform = $("#value_xform").val().split(',').map(parseFloat);
+    } catch(error) {
+      alert(error);
+      return;
+    }
+    if (xform.length < 2) {
+      alert('Invalid value transform');
+      return;
+    }
+    data.value_xform = $("#value_xform").val();
+  }
   $.ajax({
     type: 'POST',
     url: '/devices/update_sensor',
@@ -325,6 +342,11 @@ function ValidateNewSensor(echo_ret=true) {
       alert('Invalid value transform');
       return false;
   }
+  if ($("#new_integer").is(":checked") && $("#new_topic").val() != 'status') {
+    console.log('test');
+    alert($("#new_topic").val() + " doesn't come in integers");
+    return false;
+  }
   if (echo_ret)
     alert('Looks good');
   return true;
@@ -339,11 +361,14 @@ function SubmitNewSensor() {
         device: device,
         description: $("#new_description").val(),
         readout_interval: $("#new_readout_interval").val(),
-        units: $("#new_units").val(),
+        units: $("#new_units").val() || "",
         readout_command: $("#new_readout_command").val(),
+        pipelines: [],
     };
     if ($("#new_value_xform").val())
         data.value_xform = $("#new_value_xform").val().split(',').map(parseFloat);
+    if ($("#new_integer").is(":checked"))
+        data.is_int = 1;
     $.ajax({
       url: '/devices/new_sensor',
       type: 'POST',

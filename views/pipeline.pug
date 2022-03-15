@@ -74,6 +74,8 @@ block content
       tbody#inactive_pipelines
         tr
           td(colspan=2) Loading!
+    span#load_me(hidden)
+      #load
     #silence_dropdown.modal.fade
       .modal-dialog.modal-sm
         .modal-content
@@ -93,19 +95,6 @@ block content
               button.btn.btn-danger.my-1(onclick="SilencePipeline('forever')") The end of time
           .modal-footer
             button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Cancel
-  #newpipelinebox.modal.fade
-    .modal-dialog
-      .modal-content
-        .modal-header
-          h5.modal-title New pipeline
-          button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-        .modal-body.row
-          span See this wiki page for details: &nbsp;
-            a(href="https://wiki.uni-freiburg.de/app/doku.php?id=start:ultimate:slow_control:pipeline_config_ref") here
-          div#new_json_text
-        .modal-footer
-          button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
-          button.btn.btn-primary(type='button' onclick="DeletePipeline(AddNewPipeline)") Add pipeline
   #pipelinebox.modal.fade
     .modal-dialog.modal-lg
       .modal-content
@@ -116,23 +105,25 @@ block content
         .modal-body.row
           .col-lg-6
             span See this wiki page for details: &nbsp;
-              a(href="https://wiki.uni-freiburg.de/app/doku.php?id=start:ultimate:slow_control:pipeline_config_ref") here
+              a(href="https://github.com/AG-Schumann/Doberman/wiki/Pipelines") here
             div#json_text
           .col-lg-6
             div#pipeline_vis
         .modal-footer
           button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
-          button.btn.btn-primary(type='button' onclick="DeletePipeline(AddNewPipeline)") Save changes
+          button.btn.btn-primary(type='button' onclick="AddOrUpdatePipeline()") Save changes
 
 
   script.
     $(document).ready(function() {
-      PopulatePipelines();
       document.jsoneditor = new JSONEditor(document.getElementById('json_text',
       {"modes":  ['tree', 'view', 'form', 'code', 'text']}));
-      document.newjsoneditor = new JSONEditor(document.getElementById('new_json_text',
-              {"modes": ['tree', 'view', 'form', 'code', 'text']}));
+      PopulatePipelines();
       setInterval(UpdateLoop, 5000);
+      if ($("#load_me").html() != "") {
+        PipelineDropdown($("#load_me").html());
+      }
+      $("#load_me").remove();
     });
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()

@@ -4,40 +4,49 @@ block extrahead
   script(src="javascripts/shifts.js" type="text/javascript")
 
 block content
-  div.modal#contact_detail(tabindex="-1" role="dialog")
-    div.modal-dialog(role="document")
-      div.modal-content(style="margin:10")
-        form#shift_form()
-          label(for="first_name") First name:&nbsp;
-          input#first_name(type="text" size="24" name="first_name")
-          br
-          label(for="last_name") Last name:&nbsp;
-          input#last_name(type="text" size="24" name="last_name")
-          br
-          label(for="sms") SMS:&nbsp;
-          input#sms(type='text' size="20" name="sms")
-          br
-          label(for="email") Email:&nbsp;
-          input#email(type='email' size="48" name='email')
-          br
-          label(for='expert') Expert?&nbsp;
-          input#expert(type="checkbox" name="expert")
-          br
-        div.modal-footer
+  .modal.fade#contact_detail(tabindex="-1" aria-hidden="true" )
+    .modal-dialog.modal-lg
+      .modal-content(style="margin:10")
+        .modal-header
+          h5.modal-title Add or modify contact
+          button.btn-close(type="button" data-bs-dismiss='modal' aria-label='Close')
+        .modal-body.row
+          table
+            tbody
+              tr
+                th.py-3 First name
+                td
+                  input#first_name(type="text" size="24" name="first_name")
+              tr
+                th.py-3 Last name
+                td
+                  input#last_name(type="text" size="24" name="last_name")
+              tr
+                th.py-3 SMS
+                td
+                  input#sms(type='text' size="20" name="sms")
+              tr
+                th.py-3 Email
+                td
+                  input#email(type='email' size="48" name='email')
+              tr
+                th.py-3 Expert?
+                td
+                  input#expert(type="checkbox" name="expert")
+        .modal-footer
           button.btn.btn-info(onclick="SubmitContact()") Submit
-          span &nbsp;
-          button.btn.btn-secondary(data-dismiss="modal") Close
-          button.btn#show_btn(style="display:none" data-toggle="modal" data-target="#contact_detail" hidden)
-  div.modal#delete_contact(tabindex="-1" role="dialog")
-    div.modal-dialog(role="document")
-      div.modal-content
-        form#delete_form
-          h4 Delete a shifter
+
+  .modal.fade#delete_contact(tabindex="-1")
+    .modal-dialog.modal-m
+      .modal-content
+        .modal-header
+          h5.modal-title Delete a shifter
+          button.btn-close(type="button" data-bs-dismiss='modal' aria-label='Close')
+        .modal-body
           label(for="delete_name") Name:&nbsp;
           input#delete_name(type='text' name='delete_name' size='24')
+        .modal-footer
           button.btn.btn-danger(onclick='DeleteShifter()') Submit
-          span &nbsp;
-          button.btn.btn-secondary(data-dismiss="modal") Close
 
   div.main-container(style="width:100%")
     h3 Shifts and contact management
@@ -51,9 +60,9 @@ block content
 
     button.btn.btn-warning(onclick="SubmitShifts()") Set shifters
     span &nbsp;
-    button.btn.btn-info(data-toggle="modal" data-target="#contact_detail") New contact
+    button.btn.btn-info(onclick="ShowDetail(null)") New contact
     span &nbsp;
-    button.btn.btn-danger(data-toggle="modal" data-target="#delete_contact") Delete shifter
+    button.btn.btn-danger(onclick='$("#delete_contact").modal("show")') Delete shifter
 
 
   script.
