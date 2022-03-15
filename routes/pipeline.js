@@ -1,8 +1,7 @@
 var express = require('express');
 var url = require('url');
 var router = express.Router();
-var common = require('./common')
-//import {SendCommand} from 'common';
+var common = require('./common');
 
 router.get('/', function(req, res) {
   var q = url.parse(req.url, true).query;
@@ -37,7 +36,7 @@ router.get('/status', function(req, res) {
 
 router.post('/add_pipeline', function(req, res) {
   var doc = req.body;
-  doc['status'] = 'inactive';
+  doc['status'] = doc.status || 'inactive';
   doc['cycles'] = parseInt('0');
   doc['error'] = parseInt('0');
   doc['rate'] = -1;

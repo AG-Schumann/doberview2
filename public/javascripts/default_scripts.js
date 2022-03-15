@@ -1,3 +1,4 @@
+'use strict';
 const binning = ['1s', '6s', '10s', '36s', '1m', '2m', '4m', '6m', '14m', '24m', '48m'];
 const history = ['10m', '1h', '3h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
 var SIG_FIGS=3;
@@ -390,6 +391,7 @@ function SubmitNewSensor() {
 
 function SendToHypervisor(target, command, msg_if_success=null) {
   var msg = msg_if_success == null ? "Ok" : msg_if_success;
+  console.log(`Sending ${command} to ${target}`);
   $.ajax({
     type: 'POST',
     url: 'hypervisor/command',
@@ -447,7 +449,7 @@ function ToggleValve() {
   var sensor = $("#detail_sensor_name").html();
   var device = control_map[sensor][0];
   var target = control_map[sensor][1];
-  var state = $("#current_valve_state").html() == 0;
+  var state = $("#current_valve_state").html() == 0 ? 1 : 0;
   if (sensor && target && device && confirm(`Confirm valve toggle`)) {
     SendToHypervisor(device, `set ${target} ${state}`, 'Confirmed');
   }
