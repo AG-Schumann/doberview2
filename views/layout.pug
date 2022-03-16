@@ -112,17 +112,19 @@ html
                       tr
                         th Low
                         th High
+                      tr
+                        td
+                          input.form-control-sm(type="number" id="alarm_low" name="alarm_low" size='6')
+                        td
+                          input.form-control-sm(type="number" id="alarm_high" name="alarm_high" size='6')
+                      tr
                         th Setpoint
                         th Half-range
                       tr
                         td
-                          input.form-control-sm(type="number" id="alarm_low" name="alarm_low" size='8')
+                          input.form-control-sm(type="number" id="alarm_mid" name="alarm_mid" size='6')
                         td
-                          input.form-control-sm(type="number" id="alarm_high" name="alarm_high" size='8')
-                        td
-                          input.form-control-sm(type="number" id="alarm_mid" name="alarm_mid" size='8')
-                        td
-                          input.form-control-sm(type="number" id="alarm_range" name="alarm_range" size='8')
+                          input.form-control-sm(type="number" id="alarm_range" name="alarm_range" size='6')
                       tr
                         th Recurrence
                         th Base level
@@ -170,14 +172,15 @@ html
                       select.form-select#selectinterval(onchange="DrawSensorHistory()")
                         option(value="0") 10m
                         option(value="1") 1h
-                        option(value="2") 6h
-                        option(value="3" selected) 12h
-                        option(value="4") 24h
-                        option(value="5") 48h
-                        option(value="6") 72h
-                        option(value="7") 1w
-                        option(value="8") 2w
-                        option(value="9") 4w
+                        option(value="2") 3h
+                        option(value="3") 6h
+                        option(value="4" selected) 12h
+                        option(value="5") 24h
+                        option(value="6") 48h
+                        option(value="7") 72h
+                        option(value="8") 1w
+                        option(value="9") 2w
+                        option(value="10") 4w
                     .p-2
                       button.btn.btn-outline-secondary.mx-1#refresh_btn(onclick='DrawSensorHistory()')
                         i.fa.fa-sync-alt

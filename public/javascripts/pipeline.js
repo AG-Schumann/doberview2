@@ -91,6 +91,7 @@ function FillTemplate() {
     },
   };
   document.jsoneditor.set(doc);
+  Visualize(doc);
 }
 
 function AddOrUpdatePipeline() {

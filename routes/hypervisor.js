@@ -8,7 +8,8 @@ router.post('/command', function(req, res) {
   var data = req.body;
   if (typeof data.target == 'undefined' || data.target == '' || typeof data.command == 'undefined' || data.command == '')
     return res.json({err: 'Malformed command'});
-  var ret = common.SendCommand(req, data.target, data.command);
+  var delay = typeof data.delay == 'undefined' ? 0 : parseFloat(data.delay);
+  var ret = common.SendCommand(req, data.target, data.command, delay);
   if (typeof ret != 'undefined' && typeof ret.err != 'undefined')
     return res.json({err: ret.err});
   return res.json({});

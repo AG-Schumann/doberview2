@@ -43,12 +43,12 @@ router.post('/new_sensor', function(req, res) {
   var topic_abb = Object.entries(topic_lut).filter(kv => kv[1] == topic)[0][0];
   if (typeof doc.value_xform != 'undefined') {
     try{
-      var xform = doc.value_xform.split(',').map(parseFloat);
+      doc.value_xform = doc.value_xform.split(',').map(parseFloat);
     }catch(error){
       console.log(error.message);
       return res.json({err: error.message});
     }
-    if (xform.length < 2) {
+    if (doc.value_xform.length < 2) {
       console.log('Invalid value xform');
       return res.json({err: error.message});
     }

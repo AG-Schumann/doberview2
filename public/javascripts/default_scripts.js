@@ -339,9 +339,10 @@ function ValidateNewSensor(echo_ret=true) {
       alert('Invalid value transform');
       return false;
     }
-    if (a.length < 2)
+    if (a.length < 2) {
       alert('Invalid value transform');
       return false;
+    }
   }
   if ($("#new_integer").is(":checked") && $("#new_topic").val() != 'status') {
     console.log('test');
@@ -365,9 +366,9 @@ function SubmitNewSensor() {
         units: $("#new_units").val() || "",
         readout_command: $("#new_readout_command").val(),
         pipelines: [],
+        value_xform: $("new_value_xform").val(),
     };
-    if ($("#new_value_xform").val())
-        data.value_xform = $("#new_value_xform").val().split(',').map(parseFloat);
+    console.log(data);
     if ($("#new_integer").is(":checked"))
         data.is_int = 1;
     $.ajax({
@@ -380,7 +381,8 @@ function SubmitNewSensor() {
           return;
         }
         if (confirm(`New sensor name: ${data.name}. Start now?`)) {
-          SendToHypervisor(device, 'reload sensors');
+          SendToHypervisor(device, 'stop');
+          SendToHypervisor('hypervisor', `start ${device}`, null, 10000);
         }
       },
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
@@ -389,13 +391,13 @@ function SubmitNewSensor() {
   }
 }
 
-function SendToHypervisor(target, command, msg_if_success=null) {
+function SendToHypervisor(target, command, msg_if_success=null, delay=0) {
   var msg = msg_if_success == null ? "Ok" : msg_if_success;
   console.log(`Sending ${command} to ${target}`);
   $.ajax({
     type: 'POST',
     url: 'hypervisor/command',
-    data: {target: target, command: command},
+    data: {target: target, command: command, delay: delay},
     success: (data) => alert(typeof data.err == 'undefined' ? msg : data.err),
     err: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });

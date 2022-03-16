@@ -4,7 +4,6 @@ var axios = require('axios');
 
 
 // Doberview common functions, defined once here rather than in every file
-const influx_url = process.env.DOBERVIEW_INFLUX_URI;
 
 function SendCommand(req, to, command, delay=0) {
   var logged = new Date().getTime() + delay;
@@ -31,7 +30,7 @@ function ensureAuthenticated(req, res, next) {
 
 function axios_params(query, db=null) {
   var _db = db==null ? process.env.DOBERVIEW_INFLUX_DATABASE : db;
-  var get_url = new url.URL(influx_url);
+  var get_url = new url.URL(process.env.DOBERVIEW_INFLUX_URI);
   var params = new url.URLSearchParams({
     db: _db,
     org: process.env.DOBERVIEW_ORG,
