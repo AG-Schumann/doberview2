@@ -25,7 +25,7 @@ router.get('/contact_detail', function(req, res) {
 
 router.post('/set_shifters', function(req, res) {
   var shifters = req.body.shifters;
-  if (typeof shifters == 'undefined' || shifters.length == 0)
+  if (typeof shifters == 'undefined' || shifters.length === 0)
     return res.json({err: 'No input received'});
   var coll = req.db.get('contacts');
   coll.update({name: {$in: shifters}}, {$set: {on_shift: true}}, {multi: true})
@@ -37,6 +37,8 @@ router.post('/set_shifters', function(req, res) {
 router.post('/update_shifter', function(req, res) {
   var shifter = req.body;
   shifter.name = shifter.first_name + shifter.last_name[0];
+  shifter.expert = shifter.expert === "true";
+  shifter.on_shift = shifter.on_shift === "true";
   req.db.get('contacts').update({name: shifter.name}, {$set: shifter}, {upsert: true})
   .then(() => res.json({}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});

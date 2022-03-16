@@ -12,6 +12,7 @@ function SubmitContact() {
     first_name: $("#first_name").val(),
     last_name: $("#last_name").val(),
     sms: $("#sms").val(),
+    phone: $("#phone").val(),
     email: $("#email").val(),
     expert: $("#expert").is(":checked"),
     on_shift: false
@@ -26,7 +27,7 @@ function SubmitContact() {
 
 function ShowDetail(name) {
   if (name == null) {
-    ['first_name', 'last_name', 'sms', 'email'].forEach(att => $(`#${att}`).val(""));
+    ['first_name', 'last_name', 'sms', 'phone', 'email'].forEach(att => $(`#${att}`).val(""));
     $("#expert").attr('checked', false);
     $("#contact_detail").modal('show');
   } else {
@@ -35,7 +36,7 @@ function ShowDetail(name) {
         alert(data.err);
         return;
       }
-      ['first_name', 'last_name', 'sms', 'email'].forEach(att => $(`#${att}`).val(doc[att]));
+      ['first_name', 'last_name', 'sms', 'phone', 'email'].forEach(att => $(`#${att}`).val(doc[att]));
       $("#expert").attr('checked', doc.expert);
       $("#contact_detail").modal('show');
     });
@@ -43,25 +44,20 @@ function ShowDetail(name) {
 }
 
 function SubmitShifts() {
-  var shifters = $("#shift_table tr").map((i,tr) => 
-    ({
+  var shifters = $("#shift_table tr")
+      .map((i,tr) =>
+  ({
       name: tr.children[0].innerHTML,
       checked: tr.children[1].children[0].checked,
     }))
       .filter((i,row) => row.checked)
-      .map((i,row) => row.name); // jquery is bullshit
-  console.log(shifters);
-  $.ajax({
-    type: 'POST',
-    url:'/shifts/set_shifters',
-    data: {shifters: shifters},
-    success: (data) => {
-      if (typeof data.err != 'undefined')
-        alert(data.err);
-      else
-        location.reload();
-    },
-    error: (jqXHR, textStatus, errorCoe) => alert(`Error: ${textStatus}, ${errorCode}`)
+      .map((i,row) => row.name)
+      .toArray(); // jquery is bullshit
+  $.post('/shifts/set_shifters', {shifters: shifters}, (data, status) => {
+  if (typeof data.err != 'undefined')
+    alert(data.err);
+  else
+    location.reload();
   });
 }
 

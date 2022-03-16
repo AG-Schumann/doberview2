@@ -9,8 +9,6 @@ block extrahead
   script(src="javascripts/highcharts-more.js" type="text/javascript")
   script(src="javascripts/sankey.js" type="text/javascript")
   script(src="javascripts/organization.js" type="text/javascript")
-  //script(src="https://unpkg.com/@popperjs/core@2")
-  script(src="javascripts/popper.min.js" type="text/javascript")
 
 block content
   div.main-container
@@ -35,17 +33,18 @@ block content
       thead
         tr
           th Name
-          th Process time &nbsp
-            i.fas.fa-solid.fa-circle-question(data-toggle="tooltip" data-placement="bottom"
-              title="It takes of order 10ms to get a value from Influx. If the process time (given in ms) is" +
-              " faster than this, something's not working, and there'll probably be new entries in the logs. " +
-              " Pipelines only run as fast as the slowest sensor they depend on. If you want a faster pipeline," +
-              " speed up the sensors.")
+          th Process time [ms] &nbsp
+            i.fas.fa-solid.fa-circle-question(data-bs-toggle="tooltip" data-bs-html="true"
+              title="It takes of order 10ms to get a value from Influx.<br><br>" +
+              "If the process time is faster than this, something's not working, " +
+              "and there'll probably be new entries in the logs.<br><br>" +
+              "Pipelines only run as fast as the slowest sensor they depend on. " +
+              "If you want a faster pipeline, speed up the sensors.")
           th Latest cycle
           th Last error &nbsp
-            i.fas.fa-solid.fa-circle-question(data-toggle="tooltip" data-placement="bottom"
-              title="The internal buffers take a few cycles to fill, so there will always be \"errors\" shortly " +
-              "after pipeline startup. As long as the error number is small and the cycle number isn't, it's fine")
+            i.fas.fa-solid.fa-circle-question(data-bs-toggle="tooltip" data-bs-html="true"
+              title="The internal buffers take a few cycles to fill, so there can be \"errors\" shortly " +
+              "after pipeline startup.<br><br>As long as the error number is small and the cycle number isn't, it's fine")
           th Actions
       tbody#active_pipelines
         tr
@@ -75,8 +74,6 @@ block content
       tbody#inactive_pipelines
         tr
           td(colspan=2) Loading!
-    if load
-      span#load_me(hidden)= load
     #silence_dropdown.modal.fade
       .modal-dialog.modal-sm
         .modal-content
@@ -104,11 +101,11 @@ block content
             span#detail_pipeline_name
           button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
         .modal-body.row
-          .col-lg-6
+          .col-lg-8
             span See this wiki page for details: &nbsp;
               a(href="https://github.com/AG-Schumann/Doberman/wiki/Pipelines") here
             div#json_text
-          .col-lg-6
+          .col-lg-4
             div#pipeline_vis
         .modal-footer
           button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
@@ -117,16 +114,9 @@ block content
 
   script.
     $(document).ready(function() {
-      document.jsoneditor = new JSONEditor(document.getElementById('json_text',
-      {"modes":  ['tree', 'view', 'form', 'code', 'text']}));
+      document.jsoneditor = new JSONEditor(document.getElementById('json_text'),
+              {"modes": ['tree', 'view', 'form', 'code', 'text']});
       PopulatePipelines();
       setInterval(UpdateLoop, 5000);
-      if ($("#load_me").html()) {
-        PipelineDropdown($("#load_me").html());
-      }
-      $("#load_me").remove();
-      $('[data-toggle="tooltip"]').tooltip()
+      $('[data-bs-toggle="tooltip"]').tooltip();
     });
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
