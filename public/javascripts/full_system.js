@@ -15,17 +15,19 @@ function GetGroupedSensors() {
   var group_by = $('#sensor_grouping input:radio:checked').val();
   $.getJSON(`/devices/sensors_grouped?group_by=${group_by}`, (data) => {
     $("#sensor_table").empty();
+    $("#jump_to_list").empty();
     data.forEach(group => {
       var click = group_by == 'device' ? `onclick='DeviceDropdown("${group._id}")'` : "";
-      var head = `<thead><tr ${click}><th colspan=2><strong>${group._id}</strong></th></tr></thead><tbody>`;
+      var head = `<thead id=${group._id}><tr ${click}><th colspan=2> ${group._id}</th></tr></thead><tbody>`;
       group['sensors'].forEach(doc => units[doc.name] = doc.units);
+      $("#jump_to_list").append(`<li><a class="dropdown-item py-2" href="#${group._id}">${group._id}</a></li>`)
       $("#sensor_table").append(head + group['sensors'].reduce((tot, rd) => tot + `<tr><td onclick="SensorDropdown('${rd.name}')">${rd.desc} (${rd.name})</td><td id="${rd.name}_status">Loading!</td></tr>`, "") + '</tbody>');
     }); // data.forEach
   }); // getJSON
 }
 
 function SigFigs(val) {
-  if (val.includes('.')) {
+  if (val.includes('.') ) {
     // value is float
     val = parseFloat(val);
     return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toFixed(SIG_FIGS) : val.toExponential(SIG_FIGS);
@@ -40,7 +42,8 @@ function UpdateOnce() {
         $(`#${r}_status`).html('OFFLINE');
       else {
         $.getJSON(`/devices/get_last_point?sensor=${r}`, (val) => {
-          $(`#${r}_status`).html(`${SigFigs(val.value)} ${units[r]} (${val.time_ago}s ago)`);
+          if (val.value)
+            $(`#${r}_status`).html(`${SigFigs(val.value)} ${units[r]} (${val.time_ago}s ago)`);
         });
       }
     });

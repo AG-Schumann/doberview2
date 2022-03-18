@@ -107,9 +107,11 @@ block content
             div#json_text
           .col-lg-4
             div#pipeline_vis
-        .modal-footer
-          button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
-          button.btn.btn-primary(type='button' onclick="AddOrUpdatePipeline()") Save changes
+        .modal-footer.justify-content-between
+          button.btn.btn-danger(type='button' onclick="DeletePipeline()") Delete
+          .d-flex
+            button.btn.btn-secondary.me-2(type='button' data-bs-dismiss='modal') Close
+            button.btn.btn-primary(type='button' onclick="AddOrUpdatePipeline()") Save changes
 
 
   script.

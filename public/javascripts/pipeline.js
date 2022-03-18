@@ -101,12 +101,12 @@ function AddOrUpdatePipeline() {
     doc = JSON.parse(JSON.stringify(document.jsoneditor.get()));
   }catch(err){alert(err); return;};
   if (doc.name == 'INSERT NAME HERE') {
-    alert('You didn\'t add a name');
+    Notify('You didn\'t add a name', 'error');
     return;
   }
   try{
     if (doc.pipeline.filter(n => n.input_var == 'INSERT SENSOR NAME HERE').length > 0) {
-      alert('You didn\'t specify sensor names');
+      Notify('You didn\'t specify sensor names', 'error');
       return;
     }
   }catch(err){alert(err); return;}
@@ -125,12 +125,15 @@ function DeletePipeline() {
   try {
     name = JSON.parse(JSON.stringify(document.jsoneditor.get())).name;
   }catch(err){alert(err); return;}
-  $.post(`/pipeline/delete_pipeline`, {pipeline: name}, (data, status) => {
-    if (typeof data != 'undefined' && typeof data.err != 'undefined') {
-      alert(data.err);
-    } else
-      $("#pipelinebox").modal('hide');
-  });
+
+  if (confirm(`Are you sure that you want to delete this pipeline?`)) {
+    $.post(`/pipeline/delete_pipeline`, {pipeline: name}, (data, status) => {
+      if (typeof data != 'undefined' && typeof data.err != 'undefined') {
+        alert(data.err);
+      } else
+        $("#pipelinebox").modal('hide');
+    });
+  }
 }
 
 function StartPipeline(name) {

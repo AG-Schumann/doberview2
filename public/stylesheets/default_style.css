@@ -76,11 +76,18 @@ ul.CTAs li a {
 #sidebar .CTAs {
   display: block;
 }
-
+#navbar {
+  margin-left: 65px;
+}
 .main-container {
-  padding-left: 80px;
-  padding-right: 15px;
+  margin-left: 65px;
+  margin-top: 60px;
   width: 100%;
+  position: relative;
+
+}
+:target {
+  scroll-margin-top: 65px;
 }
 .toast{
   z-index: 9000 !important;

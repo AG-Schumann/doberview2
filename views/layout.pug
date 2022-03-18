@@ -27,8 +27,10 @@ html
     block extrahead
 
   body
-    //#changesensor_success.toast.bg-success.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
-    //  .toast-body General info updated successfully
+    #notify_success.toast.bg-success.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
+      .toast-body
+    #notify_error.toast.bg-danger.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
+      .toast-body
     div.overlay
     div.wrapper
       div#sidebar_wrapper
