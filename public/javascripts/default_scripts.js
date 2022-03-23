@@ -229,6 +229,7 @@ function DrawSensorHistory(sensor) {
               //        formatter: SigFigsPlot},
               type: $("#plot_log").is(":checked") ? "logarithmic" : "linear",
               },
+      time: {useUTC: true},
       legend: {enabled: false},
       tooltip: {
         //valueDecimals: 3,
