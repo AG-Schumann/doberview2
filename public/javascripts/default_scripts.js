@@ -229,6 +229,7 @@ function DrawSensorHistory(sensor) {
               //        formatter: SigFigsPlot},
               type: $("#plot_log").is(":checked") ? "logarithmic" : "linear",
               },
+      time: {useUTC: false},
       legend: {enabled: false},
       tooltip: {
         //valueDecimals: 3,
@@ -378,6 +379,8 @@ function SubmitNewSensor() {
     };
     if ($("#new_integer").is(":checked"))
         data.is_int = 1;
+    if ($("#new_control").val())
+      data.control_quantity = $("#new_control").val();
     $.ajax({
       url: '/devices/new_sensor',
       type: 'POST',
