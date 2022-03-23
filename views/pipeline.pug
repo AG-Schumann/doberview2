@@ -11,22 +11,22 @@ block extrahead
   script(src="javascripts/organization.js" type="text/javascript")
 
 block content
-  div.main-container
-    .d-flex.flex-row
-      .mr-auto.p-2
-        button.btn.btn-primary.my-3(onclick="NewPipelineDropdown()")
-          span
-            | Add new &nbsp
-            i.fas.fa-solid.fa-plus
-            i.fas.fa-code-branch
-
-      .p-2(style="margin-left:auto")
-        .input-group.mb-3
-          span.input-group-text.my-3
-            i.fas.fa-solid.fa-magnifying-glass
-          input.form-control.my-3#searchPipelineInput(type="text" onkeyup="PopulatePipelines()" placeholder="Search pipelines")
-          button.btn.bg-transparent.my-3(type='button' style='margin-left: -40px; z-index: 100;' onclick='$("#searchPipelineInput").val(""); PopulatePipelines();')
-            i.fa.fa-times
+  div.main-container.main-container-nav
+    #navbar.navbar.fixed-top.navbar-light.bg-light
+      .container-fluid
+        .d-flex
+          button.btn.btn-primary(onclick="NewPipelineDropdown()")
+            span
+              | Add new &nbsp
+              i.fas.fa-solid.fa-plus
+              i.fas.fa-code-branch
+        .d-flex
+          .input-group
+            span.input-group-text
+              i.fas.fa-solid.fa-magnifying-glass
+            input.form-control#searchPipelineInput(type="text" onkeyup="PopulatePipelines()" placeholder="Search pipelines")
+            button.btn.bg-transparent(type='button' style='margin-left: -40px; z-index: 100;' onclick='$("#searchPipelineInput").val(""); PopulatePipelines();')
+              i.fa.fa-times
     h3 Active pipelines &nbsp;
       i.fas.fa-bell
     table.table.table-striped.table-hover

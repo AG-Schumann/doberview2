@@ -18,7 +18,7 @@ router.get('/get_logs', function(req, res) {
     match['level'] = {$gte: parseInt(q.severity)};
   }
   if (typeof q.name != 'undefined' && q.name != "") {
-    match['name'] = {name: q.name};
+    match['name'] = q.name;
   }
   req.db.get('logs').aggregate([
     {$match: match},

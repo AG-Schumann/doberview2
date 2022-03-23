@@ -6,20 +6,22 @@ block extrahead
   script(type="text/javascript" src="javascripts/log_scripts.js")
 
 block content
-  div.main_container(style="width:95%;padding-left:65px")
-    span Minimum severity: &nbsp;
-    select#min_severity
-      option(value=20) Info
-      option(value=30 selected) Warning
-      option(value=40) Error
-      option(value=50) Critial
-    span &nbsp; &nbsp; Get this many: &nbsp;
-    input#get_num(type="number" min="30" max="3000" value="200")
-    span &nbsp; &nbsp Name: &nbsp;
-    input#get_name(type="text")
-    span &nbsp; &nbsp
-    button.btn.btn-info(onclick="GetLogs()") Fetch
-    div#log_table
+  div.main-container.main-container-nav
+    #navbar.navbar.fixed-top.navbar-light.bg-light
+      .container-fluid
+        .d-flex
+          .navbar-text  Minimum severity: &nbsp;
+          select#min_severity
+            option(value=30 selected) Warning
+            option(value=40) Error
+            option(value=50) Critial
+          .navbar-text &nbsp; &nbsp; Get this many: &nbsp;
+          input#get_num(type="number" min="30" max="3000" value="200")
+          .navbar-text &nbsp; &nbsp Name: &nbsp;
+          input#get_name(type="text")
+          span &nbsp; &nbsp
+          button.btn.btn-primary(onclick="GetLogs()") Fetch
+    div.me-3#log_table
 
   script.
     $(document).ready(function() {
