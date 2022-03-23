@@ -121,4 +121,7 @@ block content
       PopulatePipelines();
       setInterval(UpdateLoop, 5000);
       $('[data-bs-toggle="tooltip"]').tooltip();
+      if (new URLSearchParams(window.location.search).has('pipeline_id')) {
+        PipelineDropdown(new URLSearchParams(window.location.search).get('pipeline_id'));
+      };
     });
