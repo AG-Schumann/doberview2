@@ -81,10 +81,11 @@ ul.CTAs li a {
 }
 .main-container {
   margin-left: 65px;
-  margin-top: 60px;
   width: 100%;
   position: relative;
-
+}
+.main-container-nav {
+  margin-top: 60px;
 }
 :target {
   scroll-margin-top: 65px;

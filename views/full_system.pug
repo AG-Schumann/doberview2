@@ -4,9 +4,15 @@ block extrahead
   script(src="javascripts/full_system.js", type="text/javascript")
 
 block content
-  div.main-container
+  div.main-container.main-container-nav
     #navbar.navbar.fixed-top.navbar-light.bg-light
       .container-fluid
+        .d-flex
+          button.btn.btn-primary(onclick="PopulateNewSensor()")
+            span
+              | Add sensor &nbsp
+              i.fas.fa-solid.fa-plus
+              i.fas.fa-solid.fa-thermometer
         .d-flex
           .navbar-text &nbsp; Group by: &nbsp;
           #sensor_grouping.btn-group(role='group')
@@ -16,11 +22,6 @@ block content
             label.btn.btn-outline-primary(for="groupSensor") Device
             input#groupTopic.btn-check(type="radio" name="btnradio" value="topic" autocomplete="off" onclick="GetGroupedSensors()")
             label.btn.btn-outline-primary(for="groupTopic") Topic
-        button.btn.btn-primary(onclick="PopulateNewSensor()")
-          span
-            | Add sensor &nbsp
-            i.fas.fa-solid.fa-plus
-            i.fas.fa-solid.fa-thermometer
         .d-flex
           .nav-item.dropdown
             a.nav-link.dropdown-toggle(data-bs-toggle='dropdown' href='#' role='button' aria-expanded='false') Jump to

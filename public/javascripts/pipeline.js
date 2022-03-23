@@ -166,11 +166,13 @@ function PipelineControl(action, pipeline) {
 
 function NewPipelineDropdown() {
   FillTemplate();
+  $("#detail_pipeline_name").html('New pipeline');
   $('#pipelinebox').modal('show');
 }
 
 function PipelineDropdown(pipeline) {
   $.getJSON(`/pipeline/get_pipeline?name=${pipeline}`, doc => {
+    $("#detail_pipeline_name").html(doc.name);
     Visualize(doc);
     document.jsoneditor.set(doc);
   });
