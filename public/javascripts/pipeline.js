@@ -1,17 +1,15 @@
 function UpdateLoop() {
-  PopulatePipelines();
+  ['alarm', 'control', 'convert'].forEach(flavor => PopulatePipelines(flavor));
 }
 
-function PopulatePipelines() {
+function PopulatePipelines(flavor) {
   var filter = $("#searchPipelineInput").val().toUpperCase();
   var stop = 'fas fa-hand-paper';
   var silent = 'fas fa-bell-slash';
   var active = 'fas fa-bell';
   var restart = "fas fa-angle-double-left";
-  $.getJSON("/pipeline/get_pipelines", data => {
-    $("#active_pipelines").empty();
-    $("#silent_pipelines").empty();
-    $("#inactive_pipelines").empty();
+  $.getJSON(`/pipeline/get_pipelines?flavor=${flavor}`, data => {
+    $(`#${flavor}_tables .pipeline_table`).empty()
     data.forEach(doc => {
       var n = doc.name;
       if (n.toUpperCase().indexOf(filter) > -1) {
@@ -21,18 +19,18 @@ function PopulatePipelines() {
           row += `<td><i class="${silent}" data-bs-toggle="tooltip" title="Silence", onclick="SilenceDropdown('${n}')"></i>`;
           row += `<i class="${stop}" data-bs-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
           row += `<i class="${restart}" data-bs-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
-          $("#active_pipelines").append(row);
+          $(`#${flavor}_active`).append(row);
         } else if (doc.status == 'silent') {
           var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
           row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
           row += `<td><i class="${active}" data-bs-toggle="tooltip" title="Activate" onclick="PipelineControl('active','${n}')"></i>`;
           row += `<i class="${stop}" data-bs-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
           row += `<i class="${restart}" data-bs-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
-          $("#silent_pipelines").append(row);
+          $(`#${flavor}_silent`).append(row);
         } else if (doc.status == 'inactive') {
           var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
           row += `<td><i class="fas fa-play" onclick="StartPipeline('${n}')"></td>`;
-          $("#inactive_pipelines").append(row);
+          $(`#${flavor}_inactive`).append(row);
         } else
           console.log(doc)
       }
@@ -77,47 +75,186 @@ function SilenceDropdown(name) {
   $('#silence_dropdown').modal('show');
 }
 
-function FillTemplate() {
-  var doc = {
-    name: 'INSERT NAME HERE',
+function AlarmTemplate() {
+  return {
+    name: 'alarm_NAME',
     pipeline: [
       {
-        name: 'source',
+        name: 'source_NAME',
+        type: 'DeviceRespondingAlarm',
+        input_var: 'SENSOR'
+      },
+      {
+        name: 'alarm_NAME',
+        type: 'SimpleAlarmNode',
+        input_var: 'SENSOR',
+        upstream: ['source_NAME']
+      }
+    ],
+    node_config: {}
+  };
+}
+
+function ControlTemplate() {
+  return {
+    name: 'control_NAME',
+    pipeline: [
+      {
+        name: 'source_A',
         type: 'InfluxSourceNode',
-        input_var: 'INSERT SENSOR NAME HERE'
+        input_var: 'SENSOR_A'
+      },
+      {
+        name: 'source_B',
+        type: 'InfluxSourceNode',
+        input_var: 'SENSOR_B'
+      },
+      {
+        name: 'merge',
+        type: 'MergeNode',
+        input_var: ['SENSOR_A', 'SENSOR_B'],
+        upstream: ['source_A', 'source_B']
+      },
+      {
+        name: 'eval_low',
+        type: 'EvalNode',
+        input_var: ['SENSOR_A', 'SENSOR_B'],
+        upstream: ['merge'],
+        operation: 'OPERATION'
+        output_var: 'condition_a'
+      },
+      {
+        name: 'eval_high',
+        type: 'EvalNode',
+        input_var: ['SENSOR_A', 'SENSOR_B'],
+        upstream: ['eval_low'],
+        operation: 'OPERATION'
+        output_var: 'condition_b'
+      },
+      {
+        name: 'control',
+        type: 'GeneralDigitalControl',
+        upstream: ['eval_high'],
+        input_var: null
       }
     ],
     node_config: {
-      'source': {},
-    },
+      general: {
+        default_output: null,
+        output_a: 1,
+        output_b: 0
+      }
+    }
   };
+}
+
+function ConvertTemplate() {
+  return {
+    name: 'convert_NAME',
+    pipeline: [
+      {
+        name: 'source_NAME',
+        type: 'InfluxSourceNode',
+        input_var: 'SENSOR'
+      },
+      {
+        name: 'rate',
+        type: 'DerivativeNode',
+        input_var: 'SENSOR',
+        upstream: ['source_NAME'],
+        output_var: 'SENSOR_rate'
+      },
+      {
+        name: 'scale',
+        type: 'PolynomialNode',
+        input_var: 'SENSOR_rate',
+        output_var: 'SENSOR',
+        upstream: ['rate']
+      },
+      {
+        name: 'sink',
+        type: 'InfluxSinkNode',
+        input_var: 'SENSOR',
+        output_var: 'SENSOR',
+        upstream: ['scale']
+      }
+    ],
+    node_config: {
+      rate: {
+        length: 5
+      },
+      scale: {
+        transform: [0,1]
+      }
+    }
+  };
+}
+
+function ValidatePipeline(echo=true) {
+  try{
+    doc = JSON.parse(JSON.stringify(document.jsoneditor.get()));
+  }catch(err){
+    Notify(err, 'error');
+    return false;
+  }
+  if (!(doc.name.startsWith('alarm') || doc.name.startsWith('control') || doc.name.startsWith('convert'))) {
+    Notify('Please provide a conforming pipeline name', 'error');
+    return false;
+  }
+  var names = [];
+  var flavor = null;
+  for (var node of doc.pipeline) {
+    if (names.includes(node.name)) {
+      Notify('Please give nodes unique names', 'error');
+      return false;
+    }
+    if (node.name.includes('NAME')) {
+      Notify('Please give nodes meaningful names', 'error');
+      return false;
+    }
+    if (flavor == null) {
+      if (node.type.includes('Alarm')
+        flavor = 'alarm';
+      else if (node.type.includes('Control')
+        flavor = 'control';
+      else if (node.type == 'InfluxSinkNode')
+        flavor = 'convert';
+    }
+    names.push(node.name);
+  }
+  if (!doc.name.startsWith(flavor)) {
+    Notify('The name doesn\'t seem to match the pipeline\'s task', 'error');
+    return false;
+  }
+  if (echo)
+    Notify('Basic validation successful');
+  return true;
+}
+
+function FillTemplate(which) {
+  var doc = which == 'alarm': AlarmTemplate() : which == 'control' ? ControlTemplate() : ConvertTemplate();
   document.jsoneditor.set(doc);
   Visualize(doc);
 }
 
 function AddOrUpdatePipeline() {
-  var doc;
-  try{
-    doc = JSON.parse(JSON.stringify(document.jsoneditor.get()));
-  }catch(err){alert(err); return;};
-  if (doc.name == 'INSERT NAME HERE') {
-    Notify('You didn\'t add a name', 'error');
-    return;
+  if (ValidatePipeline(false)) {
+    var doc = JSON.parse(JSON.stringify(document.jsoneditor.get()));
+    if (typeof doc._id != 'undefined')
+      delete doc._id;
+    $.ajax({
+      type: 'POST',
+      url: "/pipeline/add_pipeline",
+      data: doc,
+      success: (data) => {
+        if (typeof data != 'undefined' && typeof data.err != 'undefined')
+          alert(data.err);
+        else
+          $("#pipelinebox").modal('hide');
+      },
+      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+    });
   }
-  try{
-    if (doc.pipeline.filter(n => n.input_var == 'INSERT SENSOR NAME HERE').length > 0) {
-      Notify('You didn\'t specify sensor names', 'error');
-      return;
-    }
-  }catch(err){alert(err); return;}
-  if (typeof doc._id != 'undefined')
-    delete doc._id;
-  $.post("/pipeline/add_pipeline", doc, (data, status) => {
-    if (typeof data.err != 'undefined')
-      alert(data.err);
-    else
-      $("#pipelinebox").modal('hide');
-  });
 }
 
 function DeletePipeline() {
@@ -127,46 +264,58 @@ function DeletePipeline() {
   }catch(err){alert(err); return;}
 
   if (confirm(`Are you sure that you want to delete this pipeline?`)) {
-    $.post(`/pipeline/delete_pipeline`, {pipeline: name}, (data, status) => {
-      if (typeof data != 'undefined' && typeof data.err != 'undefined') {
-        alert(data.err);
-      } else
-        $("#pipelinebox").modal('hide');
+    $.ajax({
+      type: 'POST',
+      url: '/pipeline/delete_pipeline',
+      data: {pipeline: name},
+      success: (data) => {
+        if (typeof data != 'undefined' && typeof data.err != 'undefined')
+          alert(data.err);
+        else
+          $("#pipelinebox").modal('hide');
+      },
+      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
     });
   }
 }
 
 function StartPipeline(name) {
-  $.post('/pipeline/pipeline_ctl', {name: name, cmd: 'start'}, (data, status) => {
-    if (typeof data != 'undefined' && typeof data.err != 'undefined') {
-      alert(data.err);
-      return;
-    }
-  });
+  PipelineControl('start', name);
 }
 
 function SilencePipeline(duration) {
   var name = $("#silence_me").html();
-  $.post("/pipeline/pipeline_silence", {name: name, duration: duration}, (data, status) => {
-    if (typeof data != 'undefined' && typeof data.err != 'undefined')
-      alert(data.err);
-    PopulatePipelines();
+  $.ajax({
+    type: 'POST',
+    url: "/pipeline/pipeline_silence",
+    data: {name: name, duration: duration},
+    success: (data) => {
+      if (typeof data != 'undefined' && typeof data.err != 'undefined')
+        alert(data.err);
+      else
+        $("#silence_dropdown").modal('hide');
+    },
+    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
   });
-  $("#silence_dropdown").css('display', 'none');
 }
 
 function PipelineControl(action, pipeline) {
-  cmd = {cmd: action, name: pipeline};
-  $.post("/pipeline/pipeline_ctl", cmd, (data, status) => {
-    if (typeof data != 'undefined' && typeof data.err != 'undefined')
-      alert(data.err);
-    PopulatePipelines();
+  $.ajax({
+    type: 'POST',
+    url: "/pipeline/pipeline_ctl",
+    data: {cmd: action, name: pipeline},
+    success: (data) => {
+      if (typeof data != 'undefined' && typeof data.err != 'undefined')
+        alert(data.err);
+      $('.modal').modal('hide');
+    },
+    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
   });
 }
 
-function NewPipelineDropdown() {
-  FillTemplate();
-  $("#detail_pipeline_name").html('New pipeline');
+function NewPipelineDropdown(flavor) {
+  FillTemplate(flavor);
+  $("#detail_pipeline_name").html(`New ${flavor} pipeline`);
   $('#pipelinebox').modal('show');
 }
 
@@ -178,3 +327,4 @@ function PipelineDropdown(pipeline) {
   });
   $('#pipelinebox').modal('show');
 }
+
