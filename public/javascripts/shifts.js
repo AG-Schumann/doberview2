@@ -1,9 +1,22 @@
 
+function PopulateOnShift() {
+  $.getJSON('/shifts/on_shift', (data) => {
+    $('#on_shift').empty();
+    data.forEach(doc => $("#on_shift").append(`<li><div class="card"><div class="card-body">
+        <h3 class="card-title" onclick=ShowDetail('${doc.name}')><i class=${doc.expert ? '"fas fa-user-graduate"':'"fas fa-user"'}></i>&nbsp; ${doc.first_name} ${doc.last_name}</h3>
+        <ul>
+            <li><span><i class="fa-solid fa-comment-sms"></i>&nbsp; ${doc.sms}</span></li>
+            <li><span><i class="fa-solid fa-phone"></i>&nbsp; ${doc.phone}</span></li>
+            <li><span><i class="fa-solid fa-envelope"></i>&nbsp; ${doc.email}</span></li>
+        </ul>
+    </div></div></li>`));
+  });
+}
 
 function PopulateTable() {
   $.getJSON('/shifts/get_contacts', (data) => {
     $('#shift_table').empty();
-    data.forEach(doc => $("#shift_table").append(`<tr><td onclick=ShowDetail('${doc.name}')>${doc.name}</td><td><input type="checkbox" ${doc.on_shift ?'checked':''}></td></tr>`));
+    data.forEach(doc => $("#shift_table").append(`<tr><td onclick=ShowDetail('${doc.name}')>${doc.name}</td><td><input type="checkbox" ${doc.on_shift ?'checked':''}></td><td><i class="fas fa-solid fa-trash" onclick="DeleteShifter('${doc.name}')"></i></td></tr>`));
   });
 }
 
@@ -61,14 +74,15 @@ function SubmitShifts() {
   });
 }
 
-function DeleteShifter() {
-  var name = $("#delete_name").val();
+function DeleteShifter(name) {
   if (name == '')
     return;
-  $.post('/shifts/delete_shifter', {name: name}, (data, status) => {
-    if (typeof data.err != 'undefined')
-      alert(data.err);
-    else
-      location.reload();
-  });
+  if (confirm(`Are you sure that you want to delete this contact?`)) {
+    $.post('/shifts/delete_shifter', {name: name}, (data, status) => {
+      if (typeof data.err != 'undefined')
+        alert(data.err);
+      else
+        location.reload();
+    });
+  }
 }

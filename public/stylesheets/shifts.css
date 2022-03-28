@@ -1,0 +1,29 @@
+#on_shift {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#on_shift li {
+    margin-bottom: 20px;
+}
+
+#on_shift .card .card-body ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#on_shift .card .card-body ul li {
+    margin-left: 45px;
+    margin-top: 5px;
+    margin-bottom: 0 !important;
+}
+
+#shift_table tr td i:hover {
+    color: var(--bs-danger);
+}
+
+.row {
+    margin: 10px;
+}

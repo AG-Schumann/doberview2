@@ -6,11 +6,16 @@ router.get('/', function(req, res) {
   res.render('shifts');
 });
 
+router.get('/on_shift', function (req, res) {
+  req.db.get('contacts').find({on_shift: true})
+      .then(docs => res.json(docs))
+      .catch(err => {console.log(err.message); return res.json([]);});
+});
+
 router.get('/get_contacts', function(req, res) {
-  var now = new Date();
   req.db.get('contacts').find({}, {projection: {name: 1, on_shift: 1}})
-  .then(docs => res.json(docs))
-  .catch(err => {console.log(err.message); return res.json([]);});
+      .then(docs => res.json(docs))
+      .catch(err => {console.log(err.message); return res.json([]);});
 });
 
 router.get('/contact_detail', function(req, res) {

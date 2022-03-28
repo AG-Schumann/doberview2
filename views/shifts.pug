@@ -1,10 +1,11 @@
 extends layout
 
 block extrahead
+  link(rel="stylesheet" href="/stylesheets/shifts.css")
   script(src="javascripts/shifts.js" type="text/javascript")
 
 block content
-  .modal.fade#contact_detail(tabindex="-1" aria-hidden="true" )
+  #contact_detail.modal.fade(tabindex="-1" aria-hidden="true" )
     .modal-dialog.modal-lg
       .modal-content(style="margin:10")
         .modal-header
@@ -40,38 +41,52 @@ block content
         .modal-footer
           button.btn.btn-info(onclick="SubmitContact()") Submit
 
-  .modal.fade#delete_contact(tabindex="-1")
-    .modal-dialog.modal-m
-      .modal-content
-        .modal-header
-          h5.modal-title Delete a shifter
-          button.btn-close(type="button" data-bs-dismiss='modal' aria-label='Close')
-        .modal-body
-          label(for="delete_name") Name:&nbsp;
-          input#delete_name(type='text' name='delete_name' size='24')
-        .modal-footer
-          button.btn.btn-danger(onclick='DeleteShifter()') Submit
 
-  div.main-container(style="width:100%")
-    h3 Shifts and contact management
+  div.main-container.main-container-nav
+    #navbar.navbar.fixed-top.navbar-light.bg-light
+      .container-fluid
+        .d-flex
+          button.btn.btn-primary(onclick="ShowDetail(null)")
+            span
+              | Add new &nbsp
+              i.fas.fa-solid.fa-plus
+              i.fas.fa-user
+        //.d-flex
+          .input-group.me-3
+            button.btn.btn-warning.dropdown-toggle(type='button' data-bs-toggle='dropdown' aria-expanded='false') Test larm
+            ul.dropdown-menu.dropdown-menu-end
+              li
+                a.dropdown-item(href='#') Level 0
+              li
+                a.dropdown-item(href='#') Level 1
+              li
+                a.dropdown-item(href='#') Level 2
+              li
+                hr.dropdown-divider
+              li
+                a.dropdown-item(href='#') Level 3
+    .row
+      .col-lg-6
+        h3 Current shifters
+        hr
+        ul#on_shift
+      .col-lg-6
+        h3 All contacts
+        hr
+        table.table.table-hover.table-striped(style="width:50%")
+          thead
+            tr
+              th Name
+              th On shift?
+          tbody#shift_table
 
-    table.table.table-hover.table-striped(style="width:50%")
-      thead
-        tr
-          th Name
-          th On shift?
-      tbody#shift_table
-
-    button.btn.btn-warning(onclick="SubmitShifts()") Set shifters
-    span &nbsp;
-    button.btn.btn-info(onclick="ShowDetail(null)") New contact
-    span &nbsp;
-    button.btn.btn-danger(onclick='$("#delete_contact").modal("show")') Delete shifter
-
+        button.btn.btn-warning(onclick="SubmitShifts()") Set shifters
+        span &nbsp;
 
   script.
     $(document).ready(function() {
       PopulateTable();
+      PopulateOnShift();
     });
     window.onclick = function(event) {
       var elems = document.getElementsByClassName("modal");
