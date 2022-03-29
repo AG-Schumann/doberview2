@@ -22,6 +22,7 @@ block content
                 | New #{flavor} pipeline &nbsp
                 i.fas.fa-solid.fa-plus
                 i.fas.fa-code-branch
+            span &nbsp;
         .d-flex
           .input-group
             span.input-group-text
@@ -31,9 +32,8 @@ block content
               i.fa.fa-times
     each flavor in flavors
       h2
-        button.btn.btn-primary(type="button" data-toggle='collapse' data-target=`#${flavor}_tables` aria-expanded='false' aria-controls=`${flavor}_tables`)
-          #{flavor.toUppercase()} PIPELINES
-      .collapse(id=`${flavor}_tables`)
+        button.btn.btn-primary(type="button" data-toggle='collapse' data-target=`#${flavor}_tables` aria-expanded='false' aria-controls=`${flavor}_tables`) #{flavor[0].toUpperCase()}#{flavor.slice(1)} pipelines
+      .collapse.show(id=`${flavor}_tables`)
         h3 Active pipelines
           i.fas.fa-bell
         table.table.table-striped.table-hover
@@ -47,8 +47,8 @@ block content
                   "and there'll probably be new entries in the logs.<br><br>" +
                   "Pipelines only run as fast as the slowest sensor they depend on. " +
                   "If you want a faster pipeline, speed up the sensors.")
-              th Latest cycle
-              th Last error &nbsp
+              th Seconds since last cycle
+              th Cycles since last error &nbsp
                 i.fas.fa-solid.fa-circle-question(data-bs-toggle="tooltip" data-bs-html="true"
                   title="The internal buffers take a few cycles to fill, so there can be \"errors\" shortly " +
                   "after pipeline startup.<br><br>As long as the error number is small and the cycle number isn't, it's fine")
@@ -63,9 +63,9 @@ block content
           thead
             tr
               th Name
-              th Process time
-              th Latest cycle
-              th Last error
+              th Process time [ms]
+              th Seconds since last cycle
+              th Cycles since last error
               th Actions
           tbody.pipeline_table(id=`${flavor}_silent`)
             tr
@@ -78,9 +78,11 @@ block content
             tr
               th Name
               th Start
-          tbody.pipeline_table(`${flavor}_inactive`)
+          tbody.pipeline_table(id=`${flavor}_inactive`)
             tr
               td(colspan=2) Loading!
+        hr
+        hr
     #silence_dropdown.modal.fade
       .modal-dialog.modal-sm
         .modal-content
@@ -125,8 +127,8 @@ block content
     $(document).ready(function() {
       document.jsoneditor = new JSONEditor(document.getElementById('json_text'),
               {"modes": ['tree', 'view', 'form', 'code', 'text']});
-      PopulatePipelines();
-      setInterval(UpdateLoop, 5000);
+      ['alarm', 'control', 'convert'].forEach(pl => PopulatePipelines(pl));
+      //setInterval(UpdateLoop, 5000);
       $('[data-bs-toggle="tooltip"]').tooltip();
       if (new URLSearchParams(window.location.search).has('pipeline_id')) {
         PipelineDropdown(new URLSearchParams(window.location.search).get('pipeline_id'));

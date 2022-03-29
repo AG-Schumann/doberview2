@@ -15,14 +15,14 @@ function PopulatePipelines(flavor) {
       if (n.toUpperCase().indexOf(filter) > -1) {
         if (doc.status == 'active') {
           var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
-          row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
+          row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.dt.toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
           row += `<td><i class="${silent}" data-bs-toggle="tooltip" title="Silence", onclick="SilenceDropdown('${n}')"></i>`;
           row += `<i class="${stop}" data-bs-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
           row += `<i class="${restart}" data-bs-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
           $(`#${flavor}_active`).append(row);
         } else if (doc.status == 'silent') {
           var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
-          row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
+          row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.dt.toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
           row += `<td><i class="${active}" data-bs-toggle="tooltip" title="Activate" onclick="PipelineControl('active','${n}')"></i>`;
           row += `<i class="${stop}" data-bs-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
           row += `<i class="${restart}" data-bs-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
@@ -120,7 +120,7 @@ function ControlTemplate() {
         type: 'EvalNode',
         input_var: ['SENSOR_A', 'SENSOR_B'],
         upstream: ['merge'],
-        operation: 'OPERATION'
+        operation: 'OPERATION',
         output_var: 'condition_a'
       },
       {
@@ -128,7 +128,7 @@ function ControlTemplate() {
         type: 'EvalNode',
         input_var: ['SENSOR_A', 'SENSOR_B'],
         upstream: ['eval_low'],
-        operation: 'OPERATION'
+        operation: 'OPERATION',
         output_var: 'condition_b'
       },
       {
@@ -213,9 +213,9 @@ function ValidatePipeline(echo=true) {
       return false;
     }
     if (flavor == null) {
-      if (node.type.includes('Alarm')
+      if (node.type.includes('Alarm'))
         flavor = 'alarm';
-      else if (node.type.includes('Control')
+      else if (node.type.includes('Control'))
         flavor = 'control';
       else if (node.type == 'InfluxSinkNode')
         flavor = 'convert';
@@ -232,7 +232,7 @@ function ValidatePipeline(echo=true) {
 }
 
 function FillTemplate(which) {
-  var doc = which == 'alarm': AlarmTemplate() : which == 'control' ? ControlTemplate() : ConvertTemplate();
+  var doc = which == 'alarm' ? AlarmTemplate() : which == 'control' ? ControlTemplate() : ConvertTemplate();
   document.jsoneditor.set(doc);
   Visualize(doc);
 }
