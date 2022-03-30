@@ -1,4 +1,11 @@
 
+function PopulateNavbar() {
+  var content = '<li><div class="d-flex"> <button class="btn btn-primary" onclick="ShowDetail(null)">' +
+      '<span>Add new &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-user"></i></span>' +
+      '</button></div></li>';
+  $('#navbar_content').html(content);
+}
+
 function PopulateOnShift() {
   $.getJSON('/shifts/on_shift', (data) => {
     $('#on_shift').empty();

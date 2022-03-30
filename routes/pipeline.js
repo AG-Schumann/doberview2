@@ -3,10 +3,13 @@ var url = require('url');
 var router = express.Router();
 var common = require('./common');
 
+
 router.get('/', function(req, res) {
   var q = url.parse(req.url, true).query;
   var load = q.pipeline_id || "";
-  res.render('pipeline', { load: load });
+  var config = common.GetRenderConfig(req);
+  config.load = load;
+  res.render('pipeline', config);
 });
 
 router.get('/get_pipelines', function(req, res) {
@@ -34,7 +37,7 @@ router.get('/status', function(req, res) {
   .catch(err => {console.log(err.message); return res.json({});});
 });
 
-router.post('/add_pipeline', function(req, res) {
+router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   var doc = req.body;
   doc['status'] = doc.status || 'inactive';
   doc['cycles'] = parseInt('0');
@@ -49,22 +52,22 @@ router.post('/add_pipeline', function(req, res) {
   .then(() => req.db.get('sensors').update({}, {$pull: {'pipelines': doc.name}}, {multi: true}))
   .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
       {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
-  .then(() => res.json({msg: 'Success'}))
+  .then(() => res.json({notify_msg: 'Pipeline added', notify_status: 'success'}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
-router.post('/delete_pipeline', function(req, res) {
+router.post('/delete_pipeline', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   if (typeof data.pipeline == 'undefined')
     return res.sendStatus(403);
   req.db.get('pipelines').remove({name: data.pipeline})
   .then(() => req.db.get('sensors').update({'pipelines': data.pipeline},
       {$pull: {pipelines: data.pipeline}}, {multi: true}))
-  .then(() => res.json({msg: 'Success'}))
+  .then(() => res.json({notify_msg: 'Pipeline deleted', notify_status: 'success'}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
-router.post('/pipeline_silence', function(req, res) {
+router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) {
   // we do the time processing here because we only trust the system clock
   // on the host server.
   var data = req.body;
@@ -118,10 +121,11 @@ router.post('/pipeline_silence', function(req, res) {
   req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
   .then(() => {
     common.SendCommand(req, data.name.includes('alarm') ? 'pl_alarm' : data.name, `pipelinectl_active ${data.name}`, delay);})
-  .catch(err => {console.log(err.message); return res.json({err: err.message});});
+      .then(() => res.json({notify_msg: 'Pipeline silenced', notify_status: 'success'}))
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
-router.post('/pipeline_ctl', function(req, res) {
+router.post('/pipeline_ctl', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   var ack = parseInt('0');
   if (data.cmd == 'active') {
@@ -151,7 +155,7 @@ router.post('/pipeline_ctl', function(req, res) {
       common.SendCommand(req, 'hypervisor', `start ${data.name}`);
     }
   }
-  return res.status(304).json({});
+  return res.status(304).json({notify_msg: 'Command sent to pipeline', notify_status: 'success'});
 });
 
 module.exports = router;

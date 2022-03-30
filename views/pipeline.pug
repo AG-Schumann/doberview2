@@ -11,22 +11,7 @@ block extrahead
   script(src="javascripts/organization.js" type="text/javascript")
 
 block content
-  div.main-container.main-container-nav
-    #navbar.navbar.fixed-top.navbar-light.bg-light
-      .container-fluid
-        .d-flex
-          button.btn.btn-primary(onclick="NewPipelineDropdown()")
-            span
-              | Add new &nbsp
-              i.fas.fa-solid.fa-plus
-              i.fas.fa-code-branch
-        .d-flex
-          .input-group
-            span.input-group-text
-              i.fas.fa-solid.fa-magnifying-glass
-            input.form-control#searchPipelineInput(type="text" onkeyup="PopulatePipelines()" placeholder="Search pipelines")
-            button.btn.bg-transparent(type='button' style='margin-left: -40px; z-index: 100;' onclick='$("#searchPipelineInput").val(""); PopulatePipelines();')
-              i.fa.fa-times
+  div.main-container
     h3 Active pipelines &nbsp;
       i.fas.fa-bell
     table.table.table-striped.table-hover
@@ -116,12 +101,14 @@ block content
 
   script.
     $(document).ready(function() {
+      PopulateNavbar();
       document.jsoneditor = new JSONEditor(document.getElementById('json_text'),
               {"modes": ['tree', 'view', 'form', 'code', 'text']});
       PopulatePipelines();
       setInterval(UpdateLoop, 5000);
       $('[data-bs-toggle="tooltip"]').tooltip();
-      if (new URLSearchParams(window.location.search).has('pipeline_id')) {
-        PipelineDropdown(new URLSearchParams(window.location.search).get('pipeline_id'));
+      var query_search = new URLSearchParams(window.location.search);
+      if (query_search.has('pipeline_id')) {
+        PipelineDropdown(query_search.get('pipeline_id'));
       };
     });

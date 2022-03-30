@@ -4,6 +4,29 @@ var SIG_FIGS=3;
 var LOG_THRESHOLD=3;
 console.log('Change the number formatting by with the SIG_FIGS and LOG_THRESHOLD variables')
 
+function PopulateNavbar() {
+  var content = '<li class="nav-item"> <button class="btn btn-primary" onclick="PopulateNewSensor()">' +
+      '<span>Add sensor &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-solid fa-thermometer"></i></span>' +
+      '</button></li>' +
+      '<li class="nav-item"><div class="d-flex"><div class="navbar-text">&nbsp; Group by: &nbsp;</div>' +
+      '<div class="btn-group" id="sensor_grouping" role="group"> ' +
+      '<input class="btn-check" id="groupSubsystem" type="radio" name="btnradio" value="subsystem" onclick="GetGroupedSensors()" checked=""> ' +
+      '<label class="btn btn-outline-primary" for="groupSubsystem">Subsystem</label> ' +
+      '<input class="btn-check" id="groupSensor" type="radio" name="btnradio" value="device" onclick="GetGroupedSensors()"> ' +
+      '<label class="btn btn-outline-primary" for="groupSensor">Device</label>' +
+      '<input class="btn-check" id="groupTopic" type="radio" name="btnradio" value="topic" onclick="GetGroupedSensors()"> ' +
+      '<label class="btn btn-outline-primary" for="groupTopic">Topic</label></div></div></li>' +
+      '<li class="nav-item">' +
+      '<div class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Jump to</a> ' +
+      '<ul class="dropdown-menu" id="jump_to_list"></ul></div></li>' +
+      '<li class="nav-item">' +
+      '<div class="input-group pe-3"><span class="input-group-text"><i class="fas fa-solid fa-magnifying-glass"></i>' +
+      '</span> <input class="form-control" id="searchSensorInput" type="text" onkeyup="FilterSensors()" placeholder="Search sensor"/> ' +
+      '<button class="btn bg-transparent" type="button" style="margin-left: -40px; z-index: 100;" onclick="$(`#searchSensorInput`).val(``); FilterSensors();">' +
+      '<i class="fa fa-times"></i></button></div></li>';
+  $('#navbar_content').prepend(content);
+}
+
 function PopulateSensors() {
   $.getJSON("/devices/sensor_list", (data) => {
     sensors = data;
@@ -67,4 +90,3 @@ function FilterSensors() {
     }
   }
 }
-

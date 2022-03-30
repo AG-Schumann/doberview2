@@ -42,29 +42,7 @@ block content
           button.btn.btn-info(onclick="SubmitContact()") Submit
 
 
-  div.main-container.main-container-nav
-    #navbar.navbar.fixed-top.navbar-light.bg-light
-      .container-fluid
-        .d-flex
-          button.btn.btn-primary(onclick="ShowDetail(null)")
-            span
-              | Add new &nbsp
-              i.fas.fa-solid.fa-plus
-              i.fas.fa-user
-        //.d-flex
-          .input-group.me-3
-            button.btn.btn-warning.dropdown-toggle(type='button' data-bs-toggle='dropdown' aria-expanded='false') Test larm
-            ul.dropdown-menu.dropdown-menu-end
-              li
-                a.dropdown-item(href='#') Level 0
-              li
-                a.dropdown-item(href='#') Level 1
-              li
-                a.dropdown-item(href='#') Level 2
-              li
-                hr.dropdown-divider
-              li
-                a.dropdown-item(href='#') Level 3
+  div.main-container
     .row
       .col-lg-6
         h3 Current shifters
@@ -85,6 +63,7 @@ block content
 
   script.
     $(document).ready(function() {
+      PopulateNavbar();
       PopulateTable();
       PopulateOnShift();
     });

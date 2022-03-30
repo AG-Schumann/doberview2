@@ -4,7 +4,7 @@ var router = express.Router();
 var net = require('net');
 var common = require('./common');
 
-router.post('/command', function(req, res) {
+router.post('/command', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   if (typeof data.target == 'undefined' || data.target == '' || typeof data.command == 'undefined' || data.command == '')
     return res.json({err: 'Malformed command'});
@@ -12,7 +12,7 @@ router.post('/command', function(req, res) {
   var ret = common.SendCommand(req, data.target, data.command, delay);
   if (typeof ret != 'undefined' && typeof ret.err != 'undefined')
     return res.json({err: ret.err});
-  return res.json({});
+  return res.json({notify_msg: 'Command sent', notify_status: 'success'});
 });
 
 router.get('/status', function(req, res) {

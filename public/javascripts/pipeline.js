@@ -1,3 +1,14 @@
+function PopulateNavbar() {
+  var content = '<li><div class="d-flex"> <button class="btn btn-primary" onclick="NewPipelineDropdown()">' +
+      '<span>Add new &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-code-branch"></i></span></button> ' +
+      '</div></li><li><div class="d-flex"><div class="input-group"><span class="input-group-text">' +
+      '<i class="fas fa-solid fa-magnifying-glass"></i></span>' +
+      '<input class="form-control" id="searchPipelineInput" type="text" onkeyup="PopulatePipelines()" placeholder="Search pipelines">' +
+      '<button class="btn bg-transparent" type="button" style="margin-left: -40px; z-index: 100;" onclick="$(`#searchPipelineInput`).val(``); PopulatePipelines();">' +
+      '<i class="fa fa-times"></i></button></div></div></li>';
+  $('#navbar_content').html(content);
+}
+
 function UpdateLoop() {
   PopulatePipelines();
 }
@@ -115,8 +126,10 @@ function AddOrUpdatePipeline() {
   $.post("/pipeline/add_pipeline", doc, (data, status) => {
     if (typeof data.err != 'undefined')
       alert(data.err);
-    else
+    else {
       $("#pipelinebox").modal('hide');
+      Notify(data.notify_msg, data.notify_status);
+    }
   });
 }
 
@@ -130,8 +143,10 @@ function DeletePipeline() {
     $.post(`/pipeline/delete_pipeline`, {pipeline: name}, (data, status) => {
       if (typeof data != 'undefined' && typeof data.err != 'undefined') {
         alert(data.err);
-      } else
+      } else {
         $("#pipelinebox").modal('hide');
+        Notify(data.notify_msg, data.notify_status);
+      }
     });
   }
 }
@@ -142,6 +157,7 @@ function StartPipeline(name) {
       alert(data.err);
       return;
     }
+    Notify(data.notify_msg, data.notify_status);
   });
 }
 
@@ -151,6 +167,7 @@ function SilencePipeline(duration) {
     if (typeof data != 'undefined' && typeof data.err != 'undefined')
       alert(data.err);
     PopulatePipelines();
+    Notify(data.notify_msg, data.notify_status);
   });
   $("#silence_dropdown").css('display', 'none');
 }
@@ -161,6 +178,7 @@ function PipelineControl(action, pipeline) {
     if (typeof data != 'undefined' && typeof data.err != 'undefined')
       alert(data.err);
     PopulatePipelines();
+    Notify(data.notify_msg, data.notify_status);
   });
 }
 

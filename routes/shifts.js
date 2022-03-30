@@ -1,9 +1,16 @@
 var express = require('express');
 var url = require('url');
 var router = express.Router();
+var common = require('./common');
 
-router.get('/', function(req, res) {
-  res.render('shifts');
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/?notify_msg=You must be logged in to do that&notify_status=error');
+}
+
+router.get('/', ensureAuthenticated, function(req, res) {
+  var config = common.GetRenderConfig(req);
+  res.render('shifts', config);
 });
 
 router.get('/on_shift', function (req, res) {
