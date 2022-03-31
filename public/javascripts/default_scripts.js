@@ -376,6 +376,7 @@ function SubmitNewSensor() {
         readout_command: $("#new_readout_command").val(),
         pipelines: [],
         value_xform: $("new_value_xform").val(),
+        subscribers: [],
     };
     if ($("#new_integer").is(":checked"))
         data.is_int = 1;
