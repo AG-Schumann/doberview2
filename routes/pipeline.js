@@ -19,8 +19,8 @@ router.get('/get_pipelines', function(req, res) {
   }
   var flavor = q.flavor;
   var now = new Date();
-  req.db.get('pipelines').find({name: {$regex: `^${flavor}_`}}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, period: 1, rate: 1, error: 1}})
-  .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.hearbeat)/1000, cycle: doc.cycles, error: doc.error, period: doc.period, rate: doc.rate}))))
+  req.db.get('pipelines').find({name: {$regex: `^${flavor}_`}}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, rate: 1, error: 1}})
+  .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.heartbeat)/1000, cycle: doc.cycles, error: doc.error, rate: doc.rate}))))
   .catch(err => {console.log(err.message); return res.json([]);});
 });
 
@@ -140,6 +140,7 @@ router.post('/pipeline_ctl', common.ensureAuthenticated, function(req, res) {
   else
     return res.json({err: 'Invalid command'});
   return res.json({notify_msg: 'Command sent to pipeline', notify_status: 'success'});
+
 });
 
 module.exports = router;

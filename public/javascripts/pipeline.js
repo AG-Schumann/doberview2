@@ -26,14 +26,14 @@ function PopulatePipelines(flavor) {
       if (n.toUpperCase().indexOf(filter) > -1) {
         if (doc.status == 'active') {
           var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
-          row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
+          row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.dt.toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
           row += `<td><i class="${silent}" data-bs-toggle="tooltip" title="Silence", onclick="SilenceDropdown('${n}')"></i>`;
           row += `<i class="${stop}" data-bs-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
           row += `<i class="${restart}" data-bs-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
           $(`#${flavor}_active`).append(row);
         } else if (doc.status == 'silent') {
           var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
-          row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.cycle}</td> <td>${doc.error}</td>`;
+          row += `<td>${doc.rate.toPrecision(3)}</td> <td>${doc.dt.toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
           row += `<td><i class="${active}" data-bs-toggle="tooltip" title="Activate" onclick="PipelineControl('active','${n}')"></i>`;
           row += `<i class="${stop}" data-bs-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
           row += `<i class="${restart}" data-bs-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
