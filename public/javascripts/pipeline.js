@@ -1,7 +1,12 @@
 function PopulateNavbar() {
-  var content = '<li><div class="d-flex"> <button class="btn btn-primary" onclick="NewPipelineDropdown()">' +
-      '<span>Add new &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-code-branch"></i></span></button> ' +
-      '</div></li><li><div class="d-flex"><div class="input-group"><span class="input-group-text">' +
+  var content = '<li><div class="d-flex"><div class="dropdown">' +
+      '<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">' +
+      '<span>Add new &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-code-branch"></i></span></button>' +
+      '<ul class="dropdown-menu">'
+  for(var flavor of ['alarm', 'control', 'convert']) {
+    content += '<li><a class="dropdown-item" onclick=NewPipelineDropdown("'+ flavor +'")> New '  + flavor + ' pipeline</a></li>'
+  }
+  content += '</ul></div></div></li><li><div class="d-flex"><div class="input-group"><span class="input-group-text">' +
       '<i class="fas fa-solid fa-magnifying-glass"></i></span>' +
       '<input class="form-control" id="searchPipelineInput" type="text" onkeyup="PopulatePipelines()" placeholder="Search pipelines">' +
       '<button class="btn bg-transparent" type="button" style="margin-left: -40px; z-index: 100;" onclick="$(`#searchPipelineInput`).val(``); PopulatePipelines();">' +
