@@ -13,8 +13,13 @@ router.get('/', function(req, res) {
 });
 
 router.get('/get_pipelines', function(req, res) {
+  var q = url.parse(req.url, true).query;
+  if (typeof q.flavor == 'undefined') {
+    return res.json([]);
+  }
+  var flavor = q.flavor;
   var now = new Date();
-  req.db.get('pipelines').find({}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, period: 1, rate: 1, error: 1}})
+  req.db.get('pipelines').find({name: {$regex: `^${flavor}_`}}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, period: 1, rate: 1, error: 1}})
   .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.hearbeat)/1000, cycle: doc.cycles, error: doc.error, period: doc.period, rate: doc.rate}))))
   .catch(err => {console.log(err.message); return res.json([]);});
 });
@@ -39,12 +44,15 @@ router.get('/status', function(req, res) {
 
 router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   var doc = req.body;
+  if (typeof doc.name == 'undefined' || 
+      !['alarm', 'control', 'convert'].includes(doc.name.split('_')[0]) ||
+      typeof doc.pipeline == 'undefined' || 
+      doc.pipeline.length == 0)
+    return res.json({err: 'Bad input'});
   doc['status'] = doc.status || 'inactive';
   doc['cycles'] = parseInt('0');
   doc['error'] = parseInt('0');
   doc['rate'] = -1;
-  if (typeof doc.pipeline == 'undefined' || doc.pipeline.length == 0)
-    return res.json({err: 'Bad input'});
   doc['depends_on'] = doc.pipeline.filter(n => (typeof n.upstream == 'undefined' || n.upstream.length == 0)).map(n => n.input_var);
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
@@ -59,7 +67,7 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
 router.post('/delete_pipeline', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   if (typeof data.pipeline == 'undefined')
-    return res.sendStatus(403);
+    return res.json({err: 'Bad input'})
   req.db.get('pipelines').remove({name: data.pipeline})
   .then(() => req.db.get('sensors').update({'pipelines': data.pipeline},
       {$pull: {pipelines: data.pipeline}}, {multi: true}))
@@ -74,6 +82,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
   var duration = data.duration;
   var until = null;
   var now = new Date();
+  var flavor = data.name.split('_')[0];
   if (duration == 'forever') {
     req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
     .then(() => res.json({}))
@@ -118,44 +127,19 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
     until = new Date(now.getTime() + duration * 60 * 1000);
   }
   var delay = until - now;
-  req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
-  .then(() => {
-    common.SendCommand(req, data.name.includes('alarm') ? 'pl_alarm' : data.name, `pipelinectl_active ${data.name}`, delay);})
-      .then(() => res.json({notify_msg: 'Pipeline silenced', notify_status: 'success'}))
-      .catch(err => {console.log(err.message); return res.json({err: err.message});});
+  common.SendCommand(req, `pl_${flavor}`, `pipelinectl_silent ${data.name}`);
+  common.SendCommand(req, `pl_${flavor}`, `pipelinectl_active ${data.name}`, delay);
+  return res.json({});
 });
 
 router.post('/pipeline_ctl', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
-  var ack = parseInt('0');
-  if (data.cmd == 'active') {
-    req.db.get('pipelines').update({name: data.name}, {$set: {status: 'active'}});
-  } else if (data.cmd == 'silent') {
-    // this should be handled by the endpoint above but we'll leave it here
-    req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}});
-  } else if (data.cmd == 'restart') {
-    if (data.name.includes('alarm')) // all alarm pls handled by one monitor
-      common.SendCommand(req, 'pl_alarm', `pipelinectl_restart ${data.name}`);
-    else {// two-step process to restart a control pl
-      common.SendCommand(req, data.name, 'stop');
-      common.SendCommand(req, 'hypervisor', `start ${data.name}`, 5000);
-    }
-  } else if (data.cmd == 'stop') {
-    var command, target;
-    if (data.name.includes('alarm')) {
-      common.SendCommand(req, 'pl_alarm', `pipelinectl_stop ${data.name}`);
-    } else {
-      common.SendCommand(req, data.name, 'stop');
-    }
-  } else if (data.cmd == 'start') {
-    var command, target;
-    if (data.name.includes('alarm')) {
-      common.SendCommand(req, 'pl_alarm', `pipelinectl_start ${data.name}`);
-    } else {
-      common.SendCommand(req, 'hypervisor', `start ${data.name}`);
-    }
-  }
-  return res.status(304).json({notify_msg: 'Command sent to pipeline', notify_status: 'success'});
+  var flavor = data.name.split('_')[0];
+  if (['stop','start','restart','active','silent'].includes(data.cmd))
+    common.SendCommand(req, `pl_${flavor}`, `pipelinectl_${data.cmd} ${data.name}`);
+  else
+    return res.json({err: 'Invalid command'});
+  return res.json({notify_msg: 'Command sent to pipeline', notify_status: 'success'});
 });
 
 module.exports = router;

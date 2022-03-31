@@ -11,54 +11,67 @@ block extrahead
   script(src="javascripts/organization.js" type="text/javascript")
 
 block content
-  div.main-container
-    h3 Active pipelines &nbsp;
-      i.fas.fa-bell
-    table.table.table-striped.table-hover
-      thead
-        tr
-          th Name
-          th Process time [ms] &nbsp
-            i.fas.fa-solid.fa-circle-question(data-bs-toggle="tooltip" data-bs-html="true"
-              title="It takes of order 10ms to get a value from Influx.<br><br>" +
-              "If the process time is faster than this, something's not working, " +
-              "and there'll probably be new entries in the logs.<br><br>" +
-              "Pipelines only run as fast as the slowest sensor they depend on. " +
-              "If you want a faster pipeline, speed up the sensors.")
-          th Latest cycle
-          th Last error &nbsp
-            i.fas.fa-solid.fa-circle-question(data-bs-toggle="tooltip" data-bs-html="true"
-              title="The internal buffers take a few cycles to fill, so there can be \"errors\" shortly " +
-              "after pipeline startup.<br><br>As long as the error number is small and the cycle number isn't, it's fine")
-          th Actions
-      tbody#active_pipelines
-        tr
-          td(colspan=7) Loading!
-    br
-    h3 Silent pipelines &nbsp;
-      i.fas.fa-bell-slash
-    table.table.table-hover.table-striped
-      thead
-        tr
-          th Name
-          th Process time
-          th Latest cycle
-          th Last error
-          th Actions
-      tbody#silent_pipelines
-        tr
-          td(colspan=7) Loading!
-    br
-    h3 Inactive pipelines &nbsp;
-      i.fas.fa-hand-paper
-    table.table.table-hover.table-striped
-      thead
-        tr
-          th Name
-          th Start
-      tbody#inactive_pipelines
-        tr
-          td(colspan=2) Loading!
+
+  - var flavors = ['alarm', 'control', 'convert'];
+  div.main-container.main-container-nav
+          //each flavor in flavors
+            button.btn.btn-primary(onclick=`NewPipelineDropdown("${flavor}")`)
+              span
+                | New #{flavor} pipeline &nbsp
+                i.fas.fa-solid.fa-plus
+                i.fas.fa-code-branch
+    each flavor in flavors
+      h2
+        button.btn.btn-primary(type="button" data-toggle='collapse' data-target=`#${flavor}_tables` aria-expanded='false' aria-controls=`${flavor}_tables`)
+          #{flavor.toUppercase()} PIPELINES
+      .collapse(id=`${flavor}_tables`)
+        h3 Active pipelines
+          i.fas.fa-bell
+        table.table.table-striped.table-hover
+          thead
+            tr
+              th Name
+              th Process time [ms] &nbsp
+                i.fas.fa-solid.fa-circle-question(data-bs-toggle="tooltip" data-bs-html="true"
+                  title="It takes of order 10ms to get a value from Influx.<br><br>" +
+                  "If the process time is faster than this, something's not working, " +
+                  "and there'll probably be new entries in the logs.<br><br>" +
+                  "Pipelines only run as fast as the slowest sensor they depend on. " +
+                  "If you want a faster pipeline, speed up the sensors.")
+              th Latest cycle
+              th Last error &nbsp
+                i.fas.fa-solid.fa-circle-question(data-bs-toggle="tooltip" data-bs-html="true"
+                  title="The internal buffers take a few cycles to fill, so there can be \"errors\" shortly " +
+                  "after pipeline startup.<br><br>As long as the error number is small and the cycle number isn't, it's fine")
+              th Actions
+          tbody.pipeline_table(id=`${flavor}_active`)
+            tr
+              td(colspan=7) Loading!
+        br
+        h3 Silent pipelines &nbsp;
+          i.fas.fa-bell-slash
+        table.table.table-hover.table-striped
+          thead
+            tr
+              th Name
+              th Process time
+              th Latest cycle
+              th Last error
+              th Actions
+          tbody.pipeline_table(id=`${flavor}_silent`)
+            tr
+              td(colspan=7) Loading!
+        br
+        h3 Inactive pipelines &nbsp;
+          i.fas.fa-hand-paper
+        table.table.table-hover.table-striped
+          thead
+            tr
+              th Name
+              th Start
+          tbody.pipeline_table(`${flavor}_inactive`)
+            tr
+              td(colspan=2) Loading!
     #silence_dropdown.modal.fade
       .modal-dialog.modal-sm
         .modal-content
