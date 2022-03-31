@@ -19,8 +19,8 @@ router.get('/github', checkUrl,
         // function will not be called.
     });
 
-router.get('/github/callback',
-    passport.authenticate('github', { failureRedirect: '/login' }),
+router.get('/github/callback',  
+  passport.authenticate('github', { failureRedirect: '/' }),
     function(req, res) {
         request('https://api.github.com/orgs/AG-Schumann/members', { json: true, headers: {'user-agent': 'node.js'} }, (err, res2, body) => {
             if (err) { return console.log(err); }

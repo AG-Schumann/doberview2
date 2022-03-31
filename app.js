@@ -55,7 +55,7 @@ app.use(passport.session());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('[:date[iso]] :remote-addr :method :url :status :res[content-length] - :response-time ms'));
+//app.use(logger('[:date[iso]] :remote-addr :method :url :status :res[content-length] - :response-time ms'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(cookieParser());
