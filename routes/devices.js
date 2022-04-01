@@ -2,26 +2,14 @@ var express = require('express');
 var url = require('url');
 var axios = require('axios').default;
 var router = express.Router();
+var common = require('./common');
 
 const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage', D: 'time', X: 'other', I: 'current', C: 'capacity'};
 
-function axios_params(query) {
-  var get_url = new url.URL(process.env.DOBERVIEW_INFLUX_URI);
-  var params = new url.URLSearchParams({
-    db: process.env.DOBERVIEW_INFLUX_DATABASE,
-    org: process.env.DOBERVIEW_ORG,
-    q: query
-  });
-  get_url.search=params.toString();
-  return {
-    url: get_url.toString(),
-    method: 'get',
-    headers: {'Accept': 'application/csv', 'Authorization': `Token ${process.env.INFLUX_TOKEN}`},
-  };
-}
 
 router.get('/', function(req, res) {
-  res.render('full_system');
+  var config = common.GetRenderConfig(req);
+  res.render('full_system', config);
 });
 
 router.get('/params', function(req, res) {
@@ -34,7 +22,7 @@ router.get('/params', function(req, res) {
   }).catch(err => {console.log(err.message); return res.json({});});
 });
 
-router.post('/new_sensor', function(req, res) {
+router.post('/new_sensor', common.ensureAuthenticated, function(req, res) {
   var doc = req.body;
   doc.status = 'online';
   var topic = doc.topic;
@@ -124,7 +112,7 @@ router.get('/sensor_detail', function(req, res) {
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
-router.post('/update_device_address', function(req, res) {
+router.post('/update_device_address', common.ensureAuthenticated, function(req, res) {
   var updates = {};
   var data = req.body.data;
   var device = data.device;
@@ -156,11 +144,11 @@ router.post('/update_device_address', function(req, res) {
     return res.json({});
 });
 
-router.post('/update_alarm', function(req, res) {
+router.post('/update_alarm', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   var updates = {};
+  var ret = {notify_msg: 'Alarm updated', notify_status: 'success'};
   if (typeof data.sensor == 'undefined') {
-    console.log(req.body);
     return res.json({err: 'Invalid or missing parameters'});
   }
   if (typeof data.thresholds != 'undefined' && data.thresholds.length == 2) {
@@ -169,21 +157,19 @@ router.post('/update_alarm', function(req, res) {
       updates['alarm_recurrence'] = parseInt(data.recurrence);
       updates['alarm_level'] = parseInt(data.level);
     }catch(err) {
-      console.log(err.message);
       return res.json({err: 'Invalid alarm parameters'});
     }
   }
-  console.log(updates);
   req.db.get('sensors').update({name: data.sensor}, {$set: updates})
-    .then(() => res.json({}))
+    .then(() => res.json({ret}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
-router.post('/update_sensor', function(req, res) {
+router.post('/update_sensor', common.ensureAuthenticated, function(req, res) {
   var updates = {};
   var data = req.body;
   var sensor = data.sensor;
-  var ret = {msg: 'Success'};
+  var ret = {notify_msg: 'Sensor updated', notify_status: 'success'};
   if (typeof sensor == 'undefined') {
     console.log(req.body);
     return res.json({err: 'Invalid or missing parameters'});
@@ -227,10 +213,16 @@ router.get('/get_last_point', function(req, res) {
   if (typeof sensor == 'undefined' || typeof topic == 'undefined')
     return res.json({});
 
-  axios(axios_params(`SELECT last(value) FROM ${topic} WHERE sensor='${sensor}';`))
+  axios(common.axios_params(`SELECT last(value) FROM ${topic} WHERE sensor='${sensor}';`))
   .then(resp => {
-    var blob = resp.data.split('\n')[1].split(',');
-    return res.json({'value': blob[3], 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
+
+    if (resp.data.split('\n').length > 1) {
+      var blob = resp.data.split('\n')[1].split(',');
+      return res.json({'value': blob[3], 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
+    }
+    else {
+      return res.json({'value': 'None', 'time_ago': 'drölf '})
+    }
   }).catch(err => {console.log(err); return res.json({});});
 });
 
@@ -243,7 +235,7 @@ router.get('/get_data', function(req, res) {
   if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
 
-  axios(axios_params(`SELECT mean(value) FROM ${topic} WHERE sensor='${sensor}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`))
+  axios(common.axios_params(`SELECT mean(value) FROM ${topic} WHERE sensor='${sensor}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`))
   .then( blob => {
     var data = blob.data.split('\n').slice(1);
     return res.json(data.map(row => {var x = row.split(','); return [parseFloat(x[2]/1e6), parseFloat(x[3])];}));

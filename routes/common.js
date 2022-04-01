@@ -25,8 +25,16 @@ function SendCommand(req, to, command, delay=0) {
 }
 
 function ensureAuthenticated(req, res, next) {
-  return req.isAuthenticated() ? next() : res.redirect('/login');
+  if (req.isAuthenticated()) { return next(); }
+  res.json({notify_msg: 'You must be logged in to do this', notify_status: 'error'});
 }
+
+function GetRenderConfig(req) {
+  var config = {};
+  if (req.user) config.username = req.user.displayName; else config.username = 'Login';
+  return config;
+}
+
 
 function axios_params(query, db=null) {
   var _db = db==null ? process.env.DOBERVIEW_INFLUX_DATABASE : db;
@@ -45,4 +53,4 @@ function axios_params(query, db=null) {
 }
 
 
-module.exports = {SendCommand, ensureAuthenticated, axios_params};
+module.exports = {SendCommand, ensureAuthenticated, axios_params, GetRenderConfig};

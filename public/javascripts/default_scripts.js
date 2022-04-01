@@ -5,6 +5,8 @@ var SIG_FIGS=3;
 var LOG_THRESHOLD=3;
 var control_map = {};
 
+
+
 function Notify(msg, type='success') {
   var elem = $("#notify_" + type)
   elem.children().html(msg);
@@ -121,12 +123,11 @@ function MakeAlarm(name) {
       }
     ]
   };
-  var msg = 'Created alarm pipeline for ' + name;
   $.ajax({
     type: 'POST',
     url: '/pipeline/add_pipeline',
     data: template,
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else {Notify(msg);}},
+    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else {Notify(data.notify_msg, data.notify_status);}},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
     complete:  function(data) {SensorDropdown(name);}
   });
@@ -253,9 +254,10 @@ function UpdateAlarms() {
       sensor: $("#detail_sensor_name").html(),
       thresholds: [$("#alarm_low").val(), $("#alarm_high").val()],
       recurrence: $("#alarm_recurrence").val(),
-      level: $("#alarm_baselevel").val()
+      level: $("#alarm_baselevel").val(),
     },
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(msg)},
+    success: (data) => {
+      if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }
@@ -286,7 +288,8 @@ function UpdateSensor() {
     type: 'POST',
     url: '/devices/update_sensor',
     data: data,
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(msg)},
+    success: (data) => {
+      if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }
@@ -304,7 +307,7 @@ function UpdateDevice() {
       type:'POST',
       url: '/devices/update_device_address',
       data: {data: data},
-      success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(msg)},
+      success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
     });
   }
@@ -409,7 +412,7 @@ function SendToHypervisor(target, command, msg_if_success=null, delay=0) {
     type: 'POST',
     url: 'hypervisor/command',
     data: {target: target, command: command, delay: delay},
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(msg)},
+    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }

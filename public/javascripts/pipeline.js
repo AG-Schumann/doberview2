@@ -1,3 +1,19 @@
+function PopulateNavbar() {
+  var content = '<li><div class="d-flex"><div class="dropdown">' +
+      '<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">' +
+      '<span>Add new &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-code-branch"></i></span></button>' +
+      '<ul class="dropdown-menu">'
+  for(var flavor of ['alarm', 'control', 'convert']) {
+    content += '<li><a class="dropdown-item" onclick=NewPipelineDropdown("'+ flavor +'")> New '  + flavor + ' pipeline</a></li>'
+  }
+  content += '</ul></div></div></li><li><div class="d-flex"><div class="input-group"><span class="input-group-text">' +
+      '<i class="fas fa-solid fa-magnifying-glass"></i></span>' +
+      '<input class="form-control" id="searchPipelineInput" type="text" onkeyup="PopulatePipelines()" placeholder="Search pipelines">' +
+      '<button class="btn bg-transparent" type="button" style="margin-left: -40px; z-index: 100;" onclick="$(`#searchPipelineInput`).val(``); PopulatePipelines();">' +
+      '<i class="fa fa-times"></i></button></div></div></li>';
+  $('#navbar_content').html(content);
+}
+
 function UpdateLoop() {
   ['alarm', 'control', 'convert'].forEach(flavor => PopulatePipelines(flavor));
 }
@@ -249,13 +265,16 @@ function AddOrUpdatePipeline() {
       success: (data) => {
         if (typeof data != 'undefined' && typeof data.err != 'undefined')
           alert(data.err);
-        else
+        else {
           $("#pipelinebox").modal('hide');
+          Notify(data.notify_msg, data.notify_status);
+        }
       },
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
     });
   }
 }
+
 
 function DeletePipeline() {
   var name;
@@ -273,6 +292,7 @@ function DeletePipeline() {
           alert(data.err);
         else
           $("#pipelinebox").modal('hide');
+          Notify(data.notify_msg, data.notify_status);
       },
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
     });
@@ -294,6 +314,8 @@ function SilencePipeline(duration) {
         alert(data.err);
       else
         $("#silence_dropdown").modal('hide');
+        PopulatePipelines();
+        Notify(data.notify_msg, data.notify_status);
     },
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
   });
@@ -308,6 +330,8 @@ function PipelineControl(action, pipeline) {
       if (typeof data != 'undefined' && typeof data.err != 'undefined')
         alert(data.err);
       $('.modal').modal('hide');
+      PopulatePipelines();
+      Notify(data.notify_msg, data.notify_status);
     },
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
   });

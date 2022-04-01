@@ -8,12 +8,6 @@
   top: 0;
   position: fixed;
 }
-
-.wrapper {
-  display: flex;
-  align-items: stretch;
-}
-
 #sidebar {
   margin: 0;
   padding: 0;
@@ -29,11 +23,9 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 #sidebar::-webkit-scrollbar {
   display: none;
 }
-
 #sidebar ul li a {
   padding: 10px 2px;
   text-align: center;
@@ -41,25 +33,21 @@
   text-decoration:none;
   height: 100%;
 }
-
 #sidebar ul li :hover {
   color: #ffffff;
 }
-
 #sidebar ul li a i {
   margin-right: 5px;
   display: block;
   font-size: 1.5em;
   margin-bottom: 3px;
 }
-
 #sidebar ul li a span {
   margin-left: 0;
   font-size: 0.8em;
   display: block;
   margin-bottom: 3px;
 }
-
 ul.CTAs {
   padding: 10px;
 }
@@ -79,13 +67,19 @@ ul.CTAs li a {
 #navbar {
   margin-left: 65px;
 }
+.navbar-nav,
+.mr-auto {
+  flex: 1;
+  margin: auto !important;
+  display: flex;
+  justify-content: space-between;
+}
 .main-container {
   margin-left: 65px;
-  width: 100%;
-  position: relative;
-}
-.main-container-nav {
   margin-top: 60px;
+  padding: 10px;
+  width: calc(100% - 65px);
+  position: relative;
 }
 :target {
   scroll-margin-top: 65px;

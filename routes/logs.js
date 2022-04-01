@@ -1,10 +1,12 @@
 var express = require('express');
 var url = require('url');
 var router = express.Router();
+var common = require('./common');
 
 router.get('/', function(req, res) {
   var q = url.parse(req.url, true).query;
-  res.render('logs', {});
+  var config = common.GetRenderConfig(req);
+  res.render('logs', config);
 });
 
 router.get('/get_logs', function(req, res) {
