@@ -254,9 +254,10 @@ function UpdateAlarms() {
       sensor: $("#detail_sensor_name").html(),
       thresholds: [$("#alarm_low").val(), $("#alarm_high").val()],
       recurrence: $("#alarm_recurrence").val(),
-      level: $("#alarm_baselevel").val()
+      level: $("#alarm_baselevel").val(),
     },
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
+    success: (data) => {
+      if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }

@@ -147,8 +147,8 @@ router.post('/update_device_address', common.ensureAuthenticated, function(req, 
 router.post('/update_alarm', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   var updates = {};
+  var ret = {notify_msg: 'Alarm updated', notify_status: 'success'};
   if (typeof data.sensor == 'undefined') {
-    console.log(req.body);
     return res.json({err: 'Invalid or missing parameters'});
   }
   if (typeof data.thresholds != 'undefined' && data.thresholds.length == 2) {
@@ -157,13 +157,11 @@ router.post('/update_alarm', common.ensureAuthenticated, function(req, res) {
       updates['alarm_recurrence'] = parseInt(data.recurrence);
       updates['alarm_level'] = parseInt(data.level);
     }catch(err) {
-      console.log(err.message);
       return res.json({err: 'Invalid alarm parameters'});
     }
   }
-  console.log(updates);
   req.db.get('sensors').update({name: data.sensor}, {$set: updates})
-    .then(() => res.json({}))
+    .then(() => res.json({ret}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
@@ -171,7 +169,7 @@ router.post('/update_sensor', common.ensureAuthenticated, function(req, res) {
   var updates = {};
   var data = req.body;
   var sensor = data.sensor;
-  var ret = {msg: 'Success'};
+  var ret = {notify_msg: 'Sensor updated', notify_status: 'success'};
   if (typeof sensor == 'undefined') {
     console.log(req.body);
     return res.json({err: 'Invalid or missing parameters'});
@@ -217,8 +215,14 @@ router.get('/get_last_point', function(req, res) {
 
   axios(common.axios_params(`SELECT last(value) FROM ${topic} WHERE sensor='${sensor}';`))
   .then(resp => {
-    var blob = resp.data.split('\n')[1].split(',');
-    return res.json({'value': blob[3], 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
+
+    if (resp.data.split('\n').length > 1) {
+      var blob = resp.data.split('\n')[1].split(',');
+      return res.json({'value': blob[3], 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
+    }
+    else {
+      return res.json({'value': 'None', 'time_ago': 'drölf '})
+    }
   }).catch(err => {console.log(err); return res.json({});});
 });
 
