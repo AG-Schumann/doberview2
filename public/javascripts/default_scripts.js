@@ -407,7 +407,6 @@ function SubmitNewSensor() {
 
 function SendToHypervisor(target, command, msg_if_success=null, delay=0) {
   var msg = msg_if_success == null ? command + " sent to Hypervisor" : msg_if_success;
-  console.log(`Sending ${command} to ${target}`);
   $.ajax({
     type: 'POST',
     url: 'hypervisor/command',
