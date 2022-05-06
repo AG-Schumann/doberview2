@@ -1,0 +1,1482 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg:svg
+   width="297mm"
+   height="210mm"
+   viewBox="0 0 297 210"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   sodipodi:docname="main.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="359.91735"
+     inkscape:cy="288.49957"
+     inkscape:window-width="1920"
+     inkscape:window-height="986"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g81684"
+     showguides="false" />
+  <svg:defs
+     id="defs2">
+    <svg:marker
+       style="overflow:visible;"
+       id="marker55454"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.2) rotate(180) translate(6,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55452" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible"
+       id="marker55444"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Sstart"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.2) translate(6,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55442" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible;"
+       id="Arrow1Send"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.2) rotate(180) translate(6,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55165" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible"
+       id="Arrow1Sstart"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Sstart"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.2) translate(6,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55162" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible;"
+       id="Arrow1Lend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.8) rotate(180) translate(12.5,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55153" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible"
+       id="Arrow1Lstart"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.8) translate(12.5,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55150" />
+    </svg:marker>
+    <svg:style
+       id="style74938"><![CDATA[
+.on {
+  fill:#008000;
+}
+
+
+.off {
+  fill:#808080;
+}
+
+.offgone.off {
+  opacity:0;
+}
+
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+ 
+.spinner.on {
+  animation: spin 4s infinite linear;
+  transform: translate(100px, 100px);
+}]]></svg:style>
+  </svg:defs>
+  <svg:g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <svg:rect
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect53543"
+       width="20.716557"
+       height="53.874279"
+       x="172.60091"
+       y="30.286587" />
+    <svg:rect
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect53591"
+       width="13.85915"
+       height="52.461411"
+       x="175.96353"
+       y="30.373575" />
+    <svg:g
+       id="g53370-6-8-4"
+       transform="translate(-34.276659,-17.130645)" />
+    <svg:g
+       id="g53370-6-8-4-9"
+       transform="translate(6.7954843,-51.051696)">
+      <svg:rect
+         style="fill:#afe9dd;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2-4-3-2"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3-2-3-8"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7-4-3-3"
+           style="font-size:3.175px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">F_GS_01 (slpm)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5-9-5-3"><svg:tspan
+           sodipodi:role="line"
+           id="value_F_GS_01"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">F_GS_01</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g53370-6-8-8"
+       transform="translate(-6.4201653,1.9531116)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2-4-2"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3-2-7"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7-4-54"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_HX_01 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5-9-2"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_HX_01"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_HX_01</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g53370-6-8-8-8"
+       transform="translate(-6.4201653,-14.106894)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2-4-2-8"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3-2-7-3"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7-4-54-7"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_HX_03 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5-9-2-7"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_HX_03"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_HX_03</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g53370-6-8-8-9"
+       transform="translate(-6.4201653,-30.166898)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2-4-2-81"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3-2-7-6"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7-4-54-77"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_HX_05 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5-9-2-2"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_HX_05"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_HX_05</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g53370-6-8-8-6"
+       transform="translate(-63.408291,1.9827321)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2-4-2-4"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3-2-7-7"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7-4-54-4"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_HX_02 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5-9-2-4"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_HX_02"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_HX_02</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g53370-6-8-8-8-4"
+       transform="translate(-63.408291,-14.077273)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2-4-2-8-1"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3-2-7-3-5"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7-4-54-7-6"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_HX_04 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5-9-2-7-8"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_HX_04"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_HX_04</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g53370-6-8-8-9-9"
+       transform="translate(-63.408291,-30.137277)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2-4-2-81-9"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3-2-7-6-2"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7-4-54-77-3"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_HX_06 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5-9-2-2-4"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_HX_06"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_HX_06</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g53370-6-8-8-9-9-6"
+       transform="translate(-123.74745,10.820301)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2-4-2-81-9-3"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3-2-7-6-2-7"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7-4-54-77-3-6"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_TS_01 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5-9-2-2-4-8"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_TS_01"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_TS_01</svg:tspan></svg:text>
+    </svg:g>
+    <svg:rect
+       style="fill:#aa0000;stroke:#000000;stroke-width:0.994479;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect10247-2-4-2-81-9-3-1"
+       width="37.191788"
+       height="18.766064"
+       x="35.260437"
+       y="62.572903" />
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="44.428169"
+       y="68.883156"
+       id="text13160-7-5-9-2-2-4-8-23"><svg:tspan
+         sodipodi:role="line"
+         id="value_T_TS_03"
+         style="font-size:6.35px;fill:#ffffff;stroke-width:0.264583"
+         x="44.428169"
+         y="68.883156">T_TS_03</svg:tspan></svg:text>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="44.58181"
+       y="78.25296"
+       id="text13160-7-5-9-2-2-4-8-23-8"><svg:tspan
+         sodipodi:role="line"
+         id="value_W_TS_01"
+         style="font-size:6.35px;fill:#ffffff;stroke-width:0.264583"
+         x="44.58181"
+         y="78.25296">W_TS_01</svg:tspan></svg:text>
+    <svg:g
+       id="g53370-6-8-8-9-9-6-4"
+       transform="translate(-123.74745,-22.382652)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2-4-2-81-9-3-7"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3-2-7-6-2-7-1"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7-4-54-77-3-6-5"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_TS_02 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5-9-2-2-4-8-2"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_TS_02"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_TS_02</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g53370-6-8-8-9-9-1"
+       transform="translate(-160.30551,117.55176)">
+      <svg:g
+         id="g79574"
+         transform="translate(-12.7,0.66145833)">
+        <svg:rect
+           style="fill:#87de87;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect10247-2-4-2-81-9-7"
+           width="28.955645"
+           height="13.955644"
+           x="203.94884"
+           y="51.658653" />
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:3.175px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711"
+           id="text13160-3-2-7-6-2-3"><svg:tspan
+             sodipodi:role="line"
+             id="tspan13158-7-4-54-77-3-3"
+             style="font-size:3.175px;stroke-width:0.264583"
+             x="204.33293"
+             y="55.129711">P_IV_01 (mbar)</svg:tspan></svg:text>
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484"
+           id="text13160-7-5-9-2-2-4-5"><svg:tspan
+             sodipodi:role="line"
+             id="value_P_IV_01"
+             style="font-size:6.35px;stroke-width:0.264583"
+             x="204.96988"
+             y="61.667484">P_IV_01</svg:tspan></svg:text>
+      </svg:g>
+      <svg:g
+         id="g79567"
+         transform="translate(-2.8653137,0.66145833)">
+        <svg:rect
+           style="fill:#87de87;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect10247-2-4-2-81-9-7-5"
+           width="28.955645"
+           height="13.955644"
+           x="194.11415"
+           y="-29.411875" />
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:3.175px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="194.49825"
+           y="-25.940817"
+           id="text13160-3-2-7-6-2-3-8"><svg:tspan
+             sodipodi:role="line"
+             id="tspan13158-7-4-54-77-3-3-8"
+             style="font-size:3.175px;stroke-width:0.264583"
+             x="194.49825"
+             y="-25.940817">P_IC_02 (mbar)</svg:tspan></svg:text>
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="195.13519"
+           y="-19.403048"
+           id="text13160-7-5-9-2-2-4-5-5"><svg:tspan
+             sodipodi:role="line"
+             id="value_P_IC_02"
+             style="font-size:6.35px;stroke-width:0.264583"
+             x="195.13519"
+             y="-19.403048">P_IC_02</svg:tspan></svg:text>
+        <svg:path
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 221.11457,32.863858 V 51.516983"
+           id="path81705" />
+        <svg:path
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 220.45311,3.0982335 V -15.4226"
+           id="path81707" />
+      </svg:g>
+    </svg:g>
+    <svg:g
+       id="g101665"
+       transform="translate(0,-3.7041668)">
+      <svg:rect
+         style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-8"
+         width="28.955645"
+         height="13.955644"
+         x="83.109535"
+         y="14.045815" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="83.493629"
+         y="17.516869"
+         id="text13160-8"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-3"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="83.493629"
+           y="17.516869">L_TS_01 (%)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="84.130577"
+         y="24.054642"
+         id="text13160-7-3"><svg:tspan
+           sodipodi:role="line"
+           id="value_L_TS_01"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="84.130577"
+           y="24.054642">L_TS_01</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g114304"
+       transform="translate(6.8791674,2.1166669)">
+      <svg:rect
+         style="fill:#afe9dd;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-8-9"
+         width="28.955645"
+         height="13.955644"
+         x="73.32222"
+         y="43.760811" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="73.706314"
+         y="47.231869"
+         id="text13160-8-4"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-3-9"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="73.706314"
+           y="47.231869">P_TS_01 (bar)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="74.343262"
+         y="53.769642"
+         id="text13160-7-3-5"><svg:tspan
+           sodipodi:role="line"
+           id="value_P_TS_01"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="74.343262"
+           y="53.769642">P_TS_01</svg:tspan></svg:text>
+    </svg:g>
+    <svg:rect
+       style="fill:#2c5aa0;stroke:none;stroke-width:1.017;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="n2levelbox"
+       width="10.281229"
+       height="27.926043"
+       x="117.88483"
+       y="13.995834" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 117.8848,41.951044 h 10.28123"
+       id="path42670" />
+    <svg:rect
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect35751"
+       width="3.7357922"
+       height="66.564804"
+       x="114.12086"
+       y="14.02402" />
+    <svg:rect
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect35751-0"
+       width="3.4579554"
+       height="66.824158"
+       x="128.04915"
+       y="14.361375" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 117.9213,61.518953 9.9157,0.187089"
+       id="path42874" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 109.34962,53.544964 h 8.94586"
+       id="path43031" />
+    <svg:path
+       id="rect1501-9"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 87.53203,104.62954 c -1e-6,-45.483474 178.55686,-45.890776 178.55686,0 v 39.2215 c 0,49.1419 -178.556861,48.55595 -178.55686,0 z"
+       sodipodi:nodetypes="ccccc" />
+    <svg:g
+       id="g9529"
+       transform="translate(28.310418,-5.4106267)">
+      <svg:path
+         id="rect1501"
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
+         d="m 222.76292,156.19625 h -71.19656 v 18.07628 h -5.56385 V 156.19625 H 74.237085 L 74.237084,110 c 0,-34.853057 148.525836,-35.389959 148.525836,0 z"
+         sodipodi:nodetypes="ccccccccc" />
+    </svg:g>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="118.02046"
+       y="96.286499"
+       id="text4457"><svg:tspan
+         sodipodi:role="line"
+         id="tspan4455"
+         style="stroke-width:0.264583"
+         x="118.02046"
+         y="96.286499" /></svg:text>
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 245.0069,93.300835 V 51.653898"
+       id="path10282" />
+    <svg:g
+       id="g53370"
+       transform="translate(34.532026,-14.16311)">
+      <svg:rect
+         style="fill:#afe9dd;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">P_IC_03 (bar)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7"><svg:tspan
+           sodipodi:role="line"
+           id="value_P_IC_03"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">P_IC_03</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g53370-9"
+       transform="translate(51.715139,7.8121022)">
+      <svg:rect
+         style="fill:#87de87;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-5"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.175px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-1"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-33"
+           style="font-size:3.175px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">P_TP_01 (mbar)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-8"><svg:tspan
+           sodipodi:role="line"
+           id="value_P_TP_01"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">P_TP_01</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g53370-6"
+       transform="translate(34.532026,-31.130196)">
+      <svg:rect
+         style="fill:#87de87;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.175px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7"
+           style="font-size:3.175px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">P_IC_01 (mbar)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5"><svg:tspan
+           sodipodi:role="line"
+           id="value_P_IC_01"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">P_IC_01</svg:tspan></svg:text>
+    </svg:g>
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker55454)"
+       d="M 180.60066,16.963624 V 125.94277"
+       id="path53970"
+       sodipodi:nodetypes="cc" />
+    <svg:g
+       id="g73576"
+       style="stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
+       transform="translate(17.197917,-0.52916667)">
+      <svg:path
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 21.960416,121.75542 H 85.195832"
+         id="path74107" />
+      <svg:path
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 22.168826,151.34167 H 71.635937"
+         id="path74107-8"
+         sodipodi:nodetypes="cc" />
+      <svg:g
+         id="g73582-9-9"
+         transform="translate(21.768758,30.464546)"
+         style="fill:#ffffff;fill-opacity:1;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none" />
+      <svg:path
+         d="m 25.545234,147.66944 v 6.93134 l 11.697057,-6.93134 v 6.93134 z"
+         id="valve_S_GS_04"
+         sodipodi:nodetypes="ccccc"
+         class="v findmeeasily"
+         style="stroke:#000000;stroke-opacity:1" />
+      <svg:path
+         style="fill:#ffffff;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 25.636886,118.24266 v 6.93134 l 11.697058,-6.93134 v 6.93134 z"
+         id="path74298-5-8"
+         sodipodi:nodetypes="ccccc"
+         class="findmeeasily" />
+      <svg:g
+         id="g73582"
+         transform="translate(-20.108287,1.0584663)"
+         class="on"
+         style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none">
+        <svg:ellipse
+           style="stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="path2753"
+           cx="32.470833"
+           cy="120.87712"
+           rx="10.003463"
+           ry="9.9274206" />
+        <svg:g
+           id="g73570"
+           style="stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none">
+          <svg:path
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="M 38.48353,112.71254 23.547268,116.4555"
+             id="path73484" />
+          <svg:path
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="M 38.489943,129.04195 23.543508,125.26447"
+             id="path73486" />
+        </svg:g>
+        <svg:g
+           id="g8603"
+           class="spinner on"
+           style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;transform-origin:11% 57.5%"
+           transform="translate(-0.58414995,-0.02281032)">
+          <svg:path
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 32.867708,116.71392 v 8.40052"
+             id="path8597"
+             sodipodi:nodetypes="cc" />
+          <svg:path
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 30.221874,117.3714 c 1.690629,-0.81401 3.613128,-0.80053 5.291667,0"
+             id="path8599"
+             sodipodi:nodetypes="cc" />
+          <svg:path
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 35.513098,124.45698 c -1.690629,0.81401 -3.613128,0.80053 -5.291667,0"
+             id="path8601"
+             sodipodi:nodetypes="cc" />
+        </svg:g>
+      </svg:g>
+      <svg:g
+         id="g79023"
+         transform="translate(-20.108287,30.464546)"
+         class="off"
+         style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none">
+        <svg:ellipse
+           style="stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="ellipse79007"
+           cx="32.470833"
+           cy="120.87712"
+           rx="10.003463"
+           ry="9.9274206" />
+        <svg:g
+           id="g79013"
+           style="stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none">
+          <svg:path
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="M 38.48353,112.71254 23.547268,116.4555"
+             id="path79009" />
+          <svg:path
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="M 38.489943,129.04195 23.543508,125.26447"
+             id="path79011" />
+        </svg:g>
+        <svg:g
+           id="g79021"
+           class="spinner on"
+           style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;transform-origin:11% 57.5%"
+           transform="translate(-0.58414995,-0.02281032)">
+          <svg:path
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 32.867708,116.71392 v 8.40052"
+             id="path79015"
+             sodipodi:nodetypes="cc" />
+          <svg:path
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 30.221874,117.3714 c 1.690629,-0.81401 3.613128,-0.80053 5.291667,0"
+             id="path79017"
+             sodipodi:nodetypes="cc" />
+          <svg:path
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 35.513098,124.45698 c -1.690629,0.81401 -3.613128,0.80053 -5.291667,0"
+             id="path79019"
+             sodipodi:nodetypes="cc" />
+        </svg:g>
+      </svg:g>
+      <svg:g
+         id="g80502">
+        <svg:ellipse
+           style="stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+           id="path2753-2-3"
+           cx="32.470833"
+           cy="120.87712"
+           rx="10.003463"
+           ry="9.9274206"
+           transform="translate(21.768757,30.464546)" />
+        <svg:g
+           id="g73570-2-5"
+           style="stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;fill:#ffffff;fill-opacity:1"
+           transform="translate(21.768757,30.464546)">
+          <svg:path
+             style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="M 38.48353,112.71254 23.547268,116.4555"
+             id="path73484-4-0" />
+          <svg:path
+             style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="M 38.489943,129.04195 23.543508,125.26447"
+             id="path73486-1-2" />
+        </svg:g>
+        <svg:ellipse
+           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.06871;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="path73703-8"
+           cx="54.239594"
+           cy="151.34166"
+           rx="2.9660001"
+           ry="2.9656444" />
+        <svg:circle
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:4, 4;stroke-dashoffset:3.2;transform-origin:18.27% 72.07%"
+           id="path79551"
+           cx="54.236446"
+           cy="151.34166"
+           r="5.2255206"
+           class="spinner off offgone" />
+      </svg:g>
+      <svg:g
+         id="g81684"
+         transform="translate(0,-29.40608)">
+        <svg:ellipse
+           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="ellipse81672"
+           cx="32.470833"
+           cy="120.87712"
+           rx="10.003463"
+           ry="9.9274206"
+           transform="translate(21.768757,30.464546)" />
+        <svg:g
+           id="g81678"
+           style="fill:#ffffff;fill-opacity:1;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
+           transform="translate(21.768757,30.464546)">
+          <svg:path
+             style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="M 38.48353,112.71254 23.547268,116.4555"
+             id="path81674" />
+          <svg:path
+             style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="M 38.489943,129.04195 23.543508,125.26447"
+             id="path81676" />
+        </svg:g>
+        <svg:ellipse
+           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.06871;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="ellipse81680"
+           cx="54.239594"
+           cy="151.34166"
+           rx="2.9660001"
+           ry="2.9656444" />
+        <svg:circle
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:4, 4;stroke-dashoffset:3.2;transform-origin:18.27% 72.07%"
+           id="circle81682"
+           cx="54.236446"
+           cy="151.34166"
+           r="5.2255206"
+           class="spinner off offgone" />
+      </svg:g>
+    </svg:g>
+    <svg:ellipse
+       style="fill:#ffffff;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path53742"
+       cx="183.2197"
+       cy="49.610596"
+       rx="5.051394"
+       ry="5.238483" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send)"
+       d="M 185.46497,91.73403 V 51.481484 h -4.0224 l 1.97188,-1.925683 -1.97188,-2.190268 h 4.0224 V 16.963624"
+       id="path54103"
+       sodipodi:nodetypes="ccccccc" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 259.42396,73.48802 V 90.156769"
+       id="path83259" />
+    <svg:rect
+       style="fill:#006680;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="activeregionbox"
+       width="9.952199"
+       height="19.754997"
+       x="117.88478"
+       y="41.951042" />
+    <svg:path
+       sodipodi:type="star"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:3.77953;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path97980"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="119.50105"
+       sodipodi:cy="79.195961"
+       sodipodi:r1="24.758837"
+       sodipodi:r2="12.379418"
+       sodipodi:arg1="1.5707963"
+       sodipodi:arg2="2.6179939"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="M 119.50105,103.9548 108.78016,85.38567 98.059271,66.816543 l 21.441779,0 21.44178,-10e-7 -10.72089,18.569128 z"
+       transform="matrix(0.10419588,0,0,0.15902293,168.14914,3.6074279)"
+       inkscape:transform-center-y="0.9843053" />
+    <svg:path
+       sodipodi:type="star"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:3.77953;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path97980-6"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="119.50105"
+       sodipodi:cy="79.195961"
+       sodipodi:r1="24.758837"
+       sodipodi:r2="12.379418"
+       sodipodi:arg1="1.5707963"
+       sodipodi:arg2="2.6179939"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       transform="matrix(-0.10419588,0,0,-0.15902293,197.91649,31.064502)"
+       inkscape:transform-center-y="-0.98430501"
+       d="M 119.50105,103.9548 108.78016,85.38567 98.059271,66.816543 l 21.441779,0 21.44178,-10e-7 -10.72089,18.569128 z" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 29.441063,10.544781 0,-4.194781 h 93.061027 v 7.9375"
+       id="path106341"
+       sodipodi:nodetypes="cccc" />
+    <svg:g
+       id="g114297"
+       transform="translate(-6.2858017,-22.076463)">
+      <svg:rect
+         style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="n2dewarfill"
+         width="45.767387"
+         height="35.180824"
+         x="12.921951"
+         y="38.966217" />
+      <svg:g
+         id="g156241">
+        <svg:rect
+           style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect10247-8-8"
+           width="28.955645"
+           height="13.955644"
+           x="21.50551"
+           y="55.199261" />
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="21.889605"
+           y="58.670315"
+           id="text13160-8-48"><svg:tspan
+             sodipodi:role="line"
+             id="tspan13158-3-0"
+             style="font-size:3.52778px;stroke-width:0.264583"
+             x="21.889605"
+             y="58.670315">M_TS_01 (%)</svg:tspan></svg:text>
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="22.526552"
+           y="65.208084"
+           id="text13160-7-3-3"><svg:tspan
+             sodipodi:role="line"
+             id="value_M_TS_01"
+             style="font-size:6.35px;stroke-width:0.264583"
+             x="22.526552"
+             y="65.208084">M_TS_01</svg:tspan></svg:text>
+      </svg:g>
+      <svg:path
+         id="rect98897"
+         style="fill:none;stroke:#000000;stroke-width:1.20914"
+         d="m 12.921951,38.966217 c 15.195129,-8.203536 31.515381,-8.453062 45.767388,0 V 74.147045 H 12.921951 Z"
+         sodipodi:nodetypes="ccccc" />
+    </svg:g>
+    <svg:path
+       d="m 60.826471,2.6197467 v 6.93134 l 11.697057,-6.93134 v 6.93134 z"
+       id="valve_S_TS_01"
+       sodipodi:nodetypes="ccccc"
+       class="v findmeeasily"
+       style="stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <svg:g
+       id="g124293"
+       transform="translate(14.648594,3.0146901)"
+       style="fill:#000000;stroke:#ffffff">
+      <svg:circle
+         style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0.852235;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path124079"
+         cx="25.269815"
+         cy="64.006599"
+         r="2.5738826" />
+      <svg:circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.625379;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path124079-0"
+         cx="25.269815"
+         cy="64.006599"
+         r="1" />
+    </svg:g>
+    <svg:g
+       id="g127217"
+       transform="translate(28.669097,3.3860941)"
+       style="fill:#ffffff;stroke:#ffffff;stroke-opacity:1">
+      <svg:path
+         style="fill:#ffffff;stroke:#ffffff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 8.1708889,75.023617 H 14.170889"
+         id="path124408" />
+      <svg:path
+         style="fill:none;stroke:#ffffff;stroke-width:0.469164px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M 8.7066558,74.068744 C 13.131205,71.960828 5.5346055,71.951285 9.7035046,69.987981"
+         id="path124752"
+         sodipodi:nodetypes="cc" />
+      <svg:path
+         style="fill:none;stroke:#ffffff;stroke-width:0.469164px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M 10.602851,74.068744 C 15.0274,71.960828 7.4307999,71.951285 11.5997,69.987981"
+         id="path127209"
+         sodipodi:nodetypes="cc" />
+      <svg:path
+         style="fill:none;stroke:#ffffff;stroke-width:0.469164px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 12.499046,74.068744 c 4.424549,-2.107916 -3.172051,-2.117459 0.996849,-4.080763"
+         id="path127211"
+         sodipodi:nodetypes="cc" />
+    </svg:g>
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 72.61507,70.908026 h 7.222114"
+       id="path132432" />
+    <svg:g
+       id="link_gassystem"
+       class="link"
+       transform="translate(-31.540786,-192.80297)">
+      <svg:g
+         id="g158619">
+        <svg:rect
+           style="fill:#ff5599;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect35972-4"
+           width="45.538071"
+           height="13.428596"
+           x="193.57204"
+           y="193.40993" />
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="197.88019"
+           y="201.83575"
+           id="text35980-9"><svg:tspan
+             sodipodi:role="line"
+             id="value_L_XS_04-0"
+             style="font-size:6.35px;stroke-width:0.264583"
+             x="197.88019"
+             y="201.83575">Gas system</svg:tspan></svg:text>
+      </svg:g>
+    </svg:g>
+    <svg:g
+       id="link_lab"
+       class="link"
+       transform="translate(54.937499,0.80900216)">
+      <svg:g
+         id="g158619-1">
+        <svg:rect
+           style="fill:#ff5599;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect35972-4-5"
+           width="45.538071"
+           height="13.428596"
+           x="193.57204"
+           y="193.40993" />
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="216.19844"
+           y="202.48842"
+           id="text35980-9-1"><svg:tspan
+             sodipodi:role="line"
+             id="value_L_XS_04-0-2"
+             style="font-size:6.35px;text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="216.19844"
+             y="202.48842">Lab</svg:tspan></svg:text>
+      </svg:g>
+    </svg:g>
+    <svg:g
+       id="g53370-6-8-8-3"
+       transform="translate(-41.005403,120.71022)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2-4-2-1"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3-2-7-1"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7-4-54-3"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_17 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5-9-2-44"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_IC_17"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_17</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g53370-6-8-8-3-2"
+       transform="translate(-19.458098,101.13093)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect10247-2-4-2-1-0"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text13160-3-2-7-1-0"><svg:tspan
+           sodipodi:role="line"
+           id="tspan13158-7-4-54-3-3"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_14 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text13160-7-5-9-2-44-9"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_IC_14"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_14</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g49385"
+       transform="translate(14.937745,101.13093)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect49375"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text49379"><svg:tspan
+           sodipodi:role="line"
+           id="tspan49377"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_15 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text49383"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_IC_15"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_15</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g49397"
+       transform="translate(-96.691564,101.13093)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect49387"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text49391"><svg:tspan
+           sodipodi:role="line"
+           id="tspan49389"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_20 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text49395"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_IC_20"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_20</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g49409"
+       transform="translate(-62.295721,101.13093)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect49399"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text49403"><svg:tspan
+           sodipodi:role="line"
+           id="tspan49401"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_18 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text49407"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_IC_18"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_18</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g66005"
+       transform="translate(16.060277,67.802553)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect65995"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text65999"><svg:tspan
+           sodipodi:role="line"
+           id="tspan65997"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_24 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66003"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_IC_24"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_24</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g66017"
+       transform="translate(16.060277,51.730242)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011"><svg:tspan
+           sodipodi:role="line"
+           id="tspan66009"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_23 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_IC_23"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_23</svg:tspan></svg:text>
+    </svg:g>
+  </svg:g>
+  <metadata>
+    <sensors>P_IC_01 P_IC_02 P_IC_03 L_TS_01 P_TS_01 T_HX_01 T_HX_02 T_HX_03 T_HX_04 T_HX_05 T_HX_06 T_IC_14 T_IC_15 T_IC_17 T_IC_18 T_IC_20 T_IC_23 T_IC_24 F_GS_01 S_GS_04 P_IC_01 P_IV_01 P_TP_01 M_TS_01 S_TS_01 T_TS_01 T_TS_02 T_TS_03 W_TS_01</sensors>
+    <property
+       targetId="n2levelbox"
+       targetAttribute="height"
+       offset="0"
+       scaling="0.27926043"
+       sensor="L_TS_01" />
+    <property
+       targetId="n2levelbox"
+       targetAttribute="y"
+       offset="42.451"
+       scaling="-0.27926043"
+       sensor="L_TS_01" />
+    <property
+       targetId="activeregionbox"
+       targetAttribute="opacity"
+       offset="0"
+       scaling="0.067"
+       sensor="P_TS_01" />
+    <property
+       targetId="n2dewarfill"
+       targetAttribute="height"
+       offset="-27.776"
+       scaling="0.217"
+       sensor="M_TS_01" />
+    <property
+       targetId="n2dewarfill"
+       targetAttribute="y"
+       offset="101.923"
+       scaling="-0.217"
+       sensor="M_TS_01" />
+    <links>gassystem lab</links>
+    <valves>S_GS_04 S_TS_01</valves>
+  </metadata>
+</svg:svg>
