@@ -20,10 +20,13 @@ block content
         button.btn.btn-primary(onclick="ControlInput()") Submit
         button.btn.btn-secondary(data-dismiss='modal') Close
   div.main-container(style="width:90%")
-    object(id='svg_frame' type='image/svg+xml' data=`/images/${experiment}/thermosiphon.svg`)
+    object(id='svg_frame' type='image/svg+xml' data=`/images/${experiment}/main.svg`)
 
   script.
     $(document).ready(function() {
-      LoadSVG();
-      setInterval(UpdateOnce, 5000);
+      document.querySelector('object#svg_frame').addEventListener('load', Setup);
+      PopulateNavbar();
+      LoadSVG('main');
+      //setInterval(UpdateOnce, 5000);
+      SetRefreshRate(5);
     });

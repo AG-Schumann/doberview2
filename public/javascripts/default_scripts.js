@@ -88,6 +88,7 @@ function SensorDropdown(sensor) {
           $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
           $("#current_valve_state").html(doc.value);
         });
+        control_map[data.name].push((data.is_normally_open != undefined));
       } else {
         // this is a setpoint
         $("#sensor_valve").prop('hidden', true);
@@ -435,6 +436,7 @@ function CommandDropdown() {
     $("#command_to").empty();
     $("#command_to").append('<option value="hypervisor">hypervisor</option>');
     data.forEach(sensor => $("#command_to").append(`<option value="${sensor}">${sensor}</option>`));
+    ['pl_alarm', 'pl_control', 'pl_convert'].forEach(pl => $("#command_to").append(`<option value="${pl}">${pl}</option>`));
   });
   $("#accepted_commands_list").empty();
 
@@ -464,7 +466,8 @@ function ToggleValve() {
   var sensor = $("#detail_sensor_name").html();
   var device = control_map[sensor][0];
   var target = control_map[sensor][1];
-  var state = $("#current_valve_state").html() == 0 ? 1 : 0;
+  var normallyClosed = control_map[sensor][2];
+  var state = $("#current_valve_state").html() == normallyClosed ? 1 : 0;
   if (sensor && target && device && confirm(`Confirm valve toggle`)) {
     SendToHypervisor(device, `set ${target} ${state}`, `set ${target} ${state}`);
   }
