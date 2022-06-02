@@ -97,7 +97,7 @@ function AlarmTemplate() {
     pipeline: [
       {
         name: 'source_NAME',
-        type: 'DeviceRespondingAlarm',
+        type: 'DeviceRespondingAlarmInflux',
         input_var: 'SENSOR'
       },
       {
@@ -117,18 +117,18 @@ function ControlTemplate() {
     pipeline: [
       {
         name: 'source_A',
-        type: 'InfluxSourceNode',
+        type: 'SensorSourceNode',
         input_var: 'SENSOR_A'
       },
       {
         name: 'source_B',
-        type: 'InfluxSourceNode',
+        type: 'SensorSourceNode',
         input_var: 'SENSOR_B'
       },
       {
         name: 'merge',
         type: 'MergeNode',
-        input_var: ['SENSOR_A', 'SENSOR_B'],
+        input_var: null,
         upstream: ['source_A', 'source_B']
       },
       {
@@ -149,7 +149,7 @@ function ControlTemplate() {
       },
       {
         name: 'control',
-        type: 'GeneralDigitalControl',
+        type: 'DigitalControl',
         upstream: ['eval_high'],
         input_var: null
       }
@@ -170,7 +170,7 @@ function ConvertTemplate() {
     pipeline: [
       {
         name: 'source_NAME',
-        type: 'InfluxSourceNode',
+        type: 'SensorSourceNode',
         input_var: 'SENSOR'
       },
       {

@@ -25,8 +25,6 @@ router.get('/github/callback',
         request('https://api.github.com/orgs/AG-Schumann/members', { json: true, headers: {'user-agent': 'node.js'} }, (err, res2, body) => {
             if (err) { return console.log(err); }
             var members = body.map(({login})=> login);
-            console.log(members);
-            console.log(req.user.username);
             if (members.includes(req.user.username)) {
                 res.redirect(req.session.Redirect || '/');
             }

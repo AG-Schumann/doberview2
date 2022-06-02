@@ -22,15 +22,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.70710678"
-     inkscape:cx="359.91735"
-     inkscape:cy="288.49957"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="339.0577"
+     inkscape:cy="503.46003"
      inkscape:window-width="1920"
-     inkscape:window-height="986"
-     inkscape:window-x="-11"
-     inkscape:window-y="-11"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g81684"
+     inkscape:current-layer="valve_S_IC_02"
      showguides="false" />
   <svg:defs
      id="defs2">
@@ -830,16 +830,16 @@
          sodipodi:nodetypes="ccccc"
          class="findmeeasily" />
       <svg:g
-         id="g73582"
+         id="valve_S_IC_03"
          transform="translate(-20.108287,1.0584663)"
          class="on"
-         style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none">
+         style="stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none">
         <svg:ellipse
            style="stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="path2753"
            cx="32.470833"
            cy="120.87712"
-           rx="10.003463"
+           rx="10.003"
            ry="9.9274206" />
         <svg:g
            id="g73570"
@@ -854,7 +854,7 @@
              id="path73486" />
         </svg:g>
         <svg:g
-           id="g8603"
+           id="valve_S_IC_04"
            class="spinner on"
            style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;transform-origin:11% 57.5%"
            transform="translate(-0.58414995,-0.02281032)">
@@ -876,10 +876,10 @@
         </svg:g>
       </svg:g>
       <svg:g
-         id="g79023"
+         id="valve_S_IV_02"
          transform="translate(-20.108287,30.464546)"
-         class="off"
-         style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none">
+         class="on"
+         style="stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none">
         <svg:ellipse
            style="stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="ellipse79007"
@@ -900,7 +900,7 @@
              id="path79011" />
         </svg:g>
         <svg:g
-           id="g79021"
+           id="valve_S_IV_03"
            class="spinner on"
            style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;transform-origin:11% 57.5%"
            transform="translate(-0.58414995,-0.02281032)">
@@ -922,9 +922,10 @@
         </svg:g>
       </svg:g>
       <svg:g
-         id="g80502">
+         id="valve_S_IV_01"
+         class="on">
         <svg:ellipse
-           style="stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+           style="stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1;stroke:#000000;stroke-opacity:1"
            id="path2753-2-3"
            cx="32.470833"
            cy="120.87712"
@@ -953,17 +954,18 @@
            ry="2.9656444" />
         <svg:circle
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:4, 4;stroke-dashoffset:3.2;transform-origin:18.27% 72.07%"
-           id="path79551"
+           id="valve_S_IV_04"
            cx="54.236446"
            cy="151.34166"
            r="5.2255206"
            class="spinner off offgone" />
       </svg:g>
       <svg:g
-         id="g81684"
-         transform="translate(0,-29.40608)">
+         id="valve_S_IC_02"
+         transform="translate(0,-29.40608)"
+         class="on">
         <svg:ellipse
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           style="fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="ellipse81672"
            cx="32.470833"
            cy="120.87712"
@@ -992,7 +994,7 @@
            ry="2.9656444" />
         <svg:circle
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:4, 4;stroke-dashoffset:3.2;transform-origin:18.27% 72.07%"
-           id="circle81682"
+           id="valve_S_IC_05"
            cx="54.236446"
            cy="151.34166"
            r="5.2255206"
@@ -1445,7 +1447,7 @@
     </svg:g>
   </svg:g>
   <metadata>
-    <sensors>P_IC_01 P_IC_02 P_IC_03 L_TS_01 P_TS_01 T_HX_01 T_HX_02 T_HX_03 T_HX_04 T_HX_05 T_HX_06 T_IC_14 T_IC_15 T_IC_17 T_IC_18 T_IC_20 T_IC_23 T_IC_24 F_GS_01 S_GS_04 P_IC_01 P_IV_01 P_TP_01 M_TS_01 S_TS_01 T_TS_01 T_TS_02 T_TS_03 W_TS_01</sensors>
+    <sensors>P_IC_01 P_IC_02 P_IC_03 L_TS_01 P_TS_01 T_HX_01 T_HX_02 T_HX_03 T_HX_04 T_HX_05 T_HX_06 T_IC_14 T_IC_15 T_IC_17 T_IC_18 T_IC_20 T_IC_23 T_IC_24 F_GS_01 S_GS_04 P_IC_01 P_IV_01 P_TP_01 M_TS_01 S_TS_01 T_TS_01 T_TS_02 T_TS_03 W_TS_01 S_IV_02 S_IV_03 S_IC_02 S_IC_03 S_IC_04 S_IV_01 S_IV_04 S_IC_05</sensors>
     <property
        targetId="n2levelbox"
        targetAttribute="height"
@@ -1477,6 +1479,6 @@
        scaling="-0.217"
        sensor="M_TS_01" />
     <links>gassystem lab</links>
-    <valves>S_GS_04 S_TS_01</valves>
+    <valves>S_GS_04 S_TS_01 S_IV_02 S_IV_03 S_IC_03 S_IC_04 S_IV_01 S_IV_04 S_IC_02 S_IC_05</valves>
   </metadata>
 </svg:svg>
