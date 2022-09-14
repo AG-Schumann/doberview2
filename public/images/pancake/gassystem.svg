@@ -24,14 +24,14 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.9050967"
-     inkscape:cx="722.0223"
-     inkscape:cy="395.53785"
+     inkscape:cx="449.67571"
+     inkscape:cy="467.35338"
      inkscape:window-width="1920"
-     inkscape:window-height="986"
-     inkscape:window-x="-11"
-     inkscape:window-y="-11"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g10066-4"
      inkscape:lockguides="true" />
   <svg:defs
      id="defs98774">
@@ -387,10 +387,10 @@
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="valve_S_TS_01-5-1-1-7"
+           id="valve_S_XS_01"
            sodipodi:nodetypes="ccccc"
-           class="v findmeeasily"
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           class="valve"
+           style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <svg:path
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 21.508891,39.574379 V 66.906861 H 35.832869 V 39.574379"
@@ -415,6 +415,10 @@
            style="fill:none;stroke:#000000"
            d="m 23.920581,37.820422 c 0,-6.416087 9.500597,-6.356659 9.500597,0 v 26.893989 h -9.500597 z"
            sodipodi:nodetypes="ccccc" />
+        <svg:path
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 28.67088,66.947575 V 87.204736"
+           id="path6585" />
       </svg:g>
       <svg:g
          id="g10066-4"
@@ -442,10 +446,10 @@
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="valve_S_TS_01-5-1-1-7-9"
+           id="valve_S_XS_03"
            sodipodi:nodetypes="ccccc"
-           class="v findmeeasily"
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           class="valve"
+           style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <svg:path
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 21.508891,39.574379 V 66.906861 H 35.832869 V 39.574379"
@@ -470,6 +474,10 @@
            style="fill:none;stroke:#000000"
            d="m 23.920581,37.820422 c 0,-6.416087 9.500597,-6.356659 9.500597,0 v 26.893989 h -9.500597 z"
            sodipodi:nodetypes="ccccc" />
+        <svg:path
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 28.67088,67.257635 V 121.41453"
+           id="path6585-0" />
       </svg:g>
       <svg:g
          id="g10146"
@@ -497,10 +505,10 @@
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="path10138"
+           id="valve_S_XS_04"
            sodipodi:nodetypes="ccccc"
-           class="v findmeeasily"
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           class="valve"
+           style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <svg:path
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 21.508891,39.574379 V 66.906861 H 35.832869 V 39.574379"
@@ -525,6 +533,10 @@
            style="fill:none;stroke:#000000"
            d="m 23.920581,37.820422 c 0,-6.416087 9.500597,-6.356659 9.500597,0 v 26.893989 h -9.500597 z"
            sodipodi:nodetypes="ccccc" />
+        <svg:path
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 28.600715,67.05093 V 87.308091"
+           id="path6585-9" />
       </svg:g>
       <svg:g
          id="g10164"
@@ -552,10 +564,10 @@
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="path10156"
+           id="valve_S_XS_05"
            sodipodi:nodetypes="ccccc"
-           class="v findmeeasily"
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           class="valve"
+           style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <svg:path
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 21.508891,39.574379 V 66.906861 H 35.832869 V 39.574379"
@@ -580,6 +592,10 @@
            style="fill:none;stroke:#000000"
            d="m 23.920581,37.820422 c 0,-6.416087 9.500597,-6.356659 9.500597,0 v 26.893989 h -9.500597 z"
            sodipodi:nodetypes="ccccc" />
+        <svg:path
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 28.670029,67.154286 V 121.31118"
+           id="path6585-0-0" />
       </svg:g>
       <svg:g
          id="g10182"
@@ -607,10 +623,10 @@
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="path10174"
+           id="valve_S_XS_06"
            sodipodi:nodetypes="ccccc"
-           class="v findmeeasily"
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           class="valve"
+           style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <svg:path
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 21.508891,39.574379 V 66.906861 H 35.832869 V 39.574379"
@@ -635,6 +651,10 @@
            style="fill:none;stroke:#000000"
            d="m 23.920581,37.820422 c 0,-6.416087 9.500597,-6.356659 9.500597,0 v 26.893989 h -9.500597 z"
            sodipodi:nodetypes="ccccc" />
+        <svg:path
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 28.67088,67.088138 V 87.345299"
+           id="path6585-4" />
       </svg:g>
       <svg:g
          id="g10200"
@@ -662,10 +682,10 @@
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="path10192"
+           id="valve_S_XS_07"
            sodipodi:nodetypes="ccccc"
-           class="v findmeeasily"
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           class="valve"
+           style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <svg:path
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 21.508891,39.574379 V 66.906861 H 35.832869 V 39.574379"
@@ -694,6 +714,10 @@
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 22.911055,21.425087 H -93.748996"
            id="path11110" />
+        <svg:path
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 28.670029,67.154286 V 121.31118"
+           id="path6585-0-6" />
       </svg:g>
       <svg:rect
          style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:2.52647;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -1545,7 +1569,7 @@
     </svg:g>
   </svg:g>
   <metadata>
-    <sensors>S_GS_01 S_GS_02 S_GS_05 S_GS_06 S_GS_10 M_XS_01 M_XS_02 M_XS_03 M_XS_04 M_XS_05 M_XS_06 M_XS_07 M_TS_01 L_XS_01 L_XS_02 L_XS_03 L_XS_04 L_XS_05 L_XS_06 P_XS_02 P_XS_01 F_GS_01 P_IC_03 P_GS_01</sensors>
+    <sensors>S_GS_01 S_GS_02 S_GS_05 S_GS_06 S_GS_10 M_XS_01 M_XS_02 M_XS_03 M_XS_04 M_XS_05 M_XS_06 M_XS_07 M_TS_01 L_XS_01 L_XS_02 L_XS_03 L_XS_04 L_XS_05 L_XS_06 S_XS_01 S_XS_03 S_XS_04 S_XS_05 S_XS_06 S_XS_07 P_XS_02 P_XS_01 F_GS_01 P_IC_03 P_GS_01</sensors>
     <links>main</links>
     <property
        sensor="M_XS_01"
@@ -1644,5 +1668,101 @@
        targetAttribute="y"
        offset="203.297"
        min="166.664" />
+    <property
+       sensor="L_XS_01"
+       scaling="0.303694"
+       targetId="dewar1fill"
+       targetAttribute="height"
+       min="0"
+       max="27.332481"
+       offset="-59.524070" />
+    <property
+       sensor="L_XS_02"
+       scaling="0.303694"
+       targetId="dewar2fill"
+       targetAttribute="height"
+       min="0"
+       max="27.332481"
+       offset="-59.524070" />
+    <property
+       sensor="L_XS_03"
+       scaling="0.303694"
+       targetId="dewar3fill"
+       targetAttribute="height"
+       min="0"
+       max="27.332481"
+       offset="-59.524070" />
+    <property
+       sensor="L_XS_04"
+       scaling="0.303694"
+       targetId="dewar4fill"
+       targetAttribute="height"
+       min="0"
+       max="27.332481"
+       offset="-59.524070" />
+    <property
+       sensor="L_XS_05"
+       scaling="0.303694"
+       targetId="dewar5fill"
+       targetAttribute="height"
+       min="0"
+       max="27.332481"
+       offset="-59.524070" />
+    <property
+       sensor="L_XS_06"
+       scaling="0.303694"
+       targetId="dewar6fill"
+       targetAttribute="height"
+       min="0"
+       max="27.332481"
+       offset="-59.524070" />
+    <property
+       sensor="L_XS_01"
+       scaling="-0.303694"
+       targetId="dewar1fill"
+       targetAttribute="y"
+       min="39.574383"
+       max="66.906864"
+       offset="126.430934" />
+    <property
+       sensor="L_XS_02"
+       scaling="-0.303694"
+       targetId="dewar2fill"
+       targetAttribute="y"
+       min="39.574383"
+       max="66.906864"
+       offset="126.430934" />
+    <property
+       sensor="L_XS_03"
+       scaling="-0.303694"
+       targetId="dewar3fill"
+       targetAttribute="y"
+       min="39.574383"
+       max="66.906864"
+       offset="126.430934" />
+    <property
+       sensor="L_XS_04"
+       scaling="-0.303694"
+       targetId="dewar4fill"
+       targetAttribute="y"
+       min="39.574383"
+       max="66.906864"
+       offset="126.430934" />
+    <property
+       sensor="L_XS_05"
+       scaling="-0.303694"
+       targetId="dewar5fill"
+       targetAttribute="y"
+       min="39.574383"
+       max="66.906864"
+       offset="126.430934" />
+    <property
+       sensor="L_XS_06"
+       scaling="-0.303694"
+       targetId="dewar6fill"
+       targetAttribute="y"
+       min="39.574383"
+       max="66.906864"
+       offset="126.430934" />
   </metadata>
 </svg:svg>

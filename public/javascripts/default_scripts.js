@@ -5,7 +5,7 @@ var SIG_FIGS=3;
 var LOG_THRESHOLD=3;
 var control_map = {};
 
-
+var detail_chart = null;
 
 function Notify(msg, type='success') {
   var elem = $("#notify_" + type)
@@ -209,12 +209,12 @@ function DrawSensorHistory(sensor) {
     else
       var t_min = data[0][0], t_max = data[data.length-2][0];
     var alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
-    var series = [{name: $("#detail_sensor_name").html(), type: 'line', data: data.filter(row => (row[0] && row[1])), animation: {duration: 250}, color: '#0d6efd'}];
+    var series = [{name: $("#detail_sensor_name").html(), type: 'line', data: data.filter(row => ((row[0] != null) && (row[1] != null))), animation: {duration: 250}, color: '#0d6efd'}];
     if (alarm_low && alarm_high && $("#plot_alarms").is(":checked")) {
       series.push({name: "lower threshold", type: 'area', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', threshold: -Infinity});
       series.push({name: "upper threshold", type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
     }
-    Highcharts.chart('sensor_chart', {
+    detail_chart = Highcharts.chart('sensor_chart', {
       chart: {
         zoomtype: 'xy',
         height: '300px',
@@ -238,6 +238,7 @@ function DrawSensorHistory(sensor) {
         valueSuffix: unit
       },
     });
+    $("#last_value").html(SigFigs(series[0].data.at(-1)[1]));
     return;
   });
 }
@@ -356,6 +357,13 @@ function ValidateNewSensor(echo_ret=true) {
     if (a.length < 2) {
       Notify('Invalid value transform', 'error');
       return false;
+    }
+  }
+  if ($("#new_topic").val() == 'status' && !$("#new_integer").is(':checked')) {
+    if (confirm("Is this an integer quantity?")) {
+      $("#new_integer").val(1);
+    } else {
+
     }
   }
   if ($("#new_integer").is(":checked") && $("#new_topic").val() != 'status') {

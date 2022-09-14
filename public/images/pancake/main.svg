@@ -22,15 +22,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="339.0577"
-     inkscape:cy="503.46003"
+     inkscape:zoom="2"
+     inkscape:cx="290.5"
+     inkscape:cy="456.5"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="valve_S_IC_02"
+     inkscape:current-layer="valve_S_IV_01"
      showguides="false" />
   <svg:defs
      id="defs2">
@@ -925,8 +925,15 @@
          id="valve_S_IV_01"
          class="on">
         <svg:ellipse
+           style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="error_tmp_isovac"
+           cx="54.23959"
+           cy="151.34166"
+           rx="10.003463"
+           ry="9.9274206" />
+        <svg:ellipse
            style="stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-           id="path2753-2-3"
+           id="status_tmp_isovac"
            cx="32.470833"
            cy="120.87712"
            rx="10.003463"
@@ -954,7 +961,7 @@
            ry="2.9656444" />
         <svg:circle
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:4, 4;stroke-dashoffset:3.2;transform-origin:18.27% 72.07%"
-           id="valve_S_IV_04"
+           id="valve_S_IV_05"
            cx="54.236446"
            cy="151.34166"
            r="5.2255206"
@@ -965,8 +972,15 @@
          transform="translate(0,-29.40608)"
          class="on">
         <svg:ellipse
+           style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="error_tmp_innervessel"
+           cx="54.23959"
+           cy="151.34166"
+           rx="10.003463"
+           ry="9.9274206" />
+        <svg:ellipse
            style="fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="ellipse81672"
+           id="status_tmp_innervessel"
            cx="32.470833"
            cy="120.87712"
            rx="10.003463"
@@ -994,7 +1008,7 @@
            ry="2.9656444" />
         <svg:circle
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:4, 4;stroke-dashoffset:3.2;transform-origin:18.27% 72.07%"
-           id="valve_S_IC_05"
+           id="valve_S_IC_06"
            cx="54.236446"
            cy="151.34166"
            r="5.2255206"
@@ -1447,7 +1461,7 @@
     </svg:g>
   </svg:g>
   <metadata>
-    <sensors>P_IC_01 P_IC_02 P_IC_03 L_TS_01 P_TS_01 T_HX_01 T_HX_02 T_HX_03 T_HX_04 T_HX_05 T_HX_06 T_IC_14 T_IC_15 T_IC_17 T_IC_18 T_IC_20 T_IC_23 T_IC_24 F_GS_01 S_GS_04 P_IC_01 P_IV_01 P_TP_01 M_TS_01 S_TS_01 T_TS_01 T_TS_02 T_TS_03 W_TS_01 S_IV_02 S_IV_03 S_IC_02 S_IC_03 S_IC_04 S_IV_01 S_IV_04 S_IC_05</sensors>
+    <sensors>P_IC_01 P_IC_02 P_IC_03 L_TS_01 P_TS_01 T_HX_01 T_HX_02 T_HX_03 T_HX_04 T_HX_05 T_HX_06 T_IC_14 T_IC_15 T_IC_17 T_IC_18 T_IC_20 T_IC_23 T_IC_24 F_GS_01 S_GS_04 P_IC_01 P_IV_01 P_TP_01 M_TS_01 S_TS_01 T_TS_01 T_TS_02 T_TS_03 W_TS_01 S_IV_02 S_IV_03 S_IC_02 S_IC_03 S_IC_04 S_IV_01 S_IV_04 S_IV_05 S_IC_05 S_IC_06</sensors>
     <property
        targetId="n2levelbox"
        targetAttribute="height"
@@ -1478,7 +1492,19 @@
        offset="101.923"
        scaling="-0.217"
        sensor="M_TS_01" />
+    <property
+       targetId="status_tmp_innervessel"
+       targetAttribute="opacity"
+       offset="1"
+       scaling="-1"
+       sensor="S_IC_05" />
+    <property
+       targetId="status_tmp_isovac"
+       targetAttribute="opacity"
+       offset="1"
+       scaling="-1"
+       sensor="S_IV_04" />
     <links>gassystem lab</links>
-    <valves>S_GS_04 S_TS_01 S_IV_02 S_IV_03 S_IC_03 S_IC_04 S_IV_01 S_IV_04 S_IC_02 S_IC_05</valves>
+    <valves>S_GS_04 S_TS_01 S_IV_02 S_IV_03 S_IC_03 S_IC_04 S_IV_01 S_IV_04 S_IC_02</valves>
   </metadata>
 </svg:svg>
