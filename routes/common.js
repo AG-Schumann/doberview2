@@ -1,7 +1,7 @@
 var net = require('net');
 var url = require('url');
 var axios = require('axios');
-var zmq require('zeromq');
+var zmq = require('zeromq');
 
 // Doberview common functions, defined once here rather than in every file
 
@@ -16,11 +16,10 @@ function SendCommand(req, to, command, delay=0) {
         from: req.user.displayName,
         command: command,
         time: logged/1000,
-      });
+      }));
 
-    });
-    return {};
-  })
+    }
+  )
   .catch(err => {console.log(err.message); return {err: err.message};});
 }
 
