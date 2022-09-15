@@ -6,7 +6,7 @@ var common = require('./common');
 router.get('/', function(req, res) {
   var q = url.parse(req.url, true).query;
   var config = common.GetRenderConfig(req);
-  config.grafana_url = 'http://10.4.73.172:3000/d/rRzTBhwZk/pancake-slowcontrol?orgId=1&refresh=5s&kiosk=tv';
+  config.grafana_url = process.env.GRAFANA_URL;
   res.render('grafana', config);
 });
 

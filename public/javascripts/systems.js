@@ -1,61 +1,147 @@
 var sensors = [];
 var valves = [];
 var units = {};
+var properties = [];
+var linktargets = {};
+var intervalid = 0;
+
+function PopulateNavbar() {
+  // Add rate selector to navigation bar
+  var allowedrates = [1, 2, 5, 10, 30];
+  var content = '<li class="nav-item"><div class="nav-item dropdown">';
+  content += '<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">';
+  content += 'Refresh <span id="currentrefreshrate"></span></a>';
+  content += '<ul id="refresh_rate_list" class="dropdown-menu" data-bs-popper="none">';
+  for (const rate of allowedrates) {
+    content += `<li><a class="dropdown-item" role="button" onclick="SetRefreshRate(${rate})">${rate} s</a></li>`
+  }
+  content += '</ul></div></li>';
+
+  // Add test alarm to navigation bar
+  var alarmlevels = [0, 1, 2];
+  content += '<li class="nav-item"><div class="nav-item dropdown">';
+  content += '<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Test alarm</a>';
+  content += '<ul id="test_alarm_level_list" class="dropdown-menu" data-bs-popper="none">';
+  for (const level of alarmlevels) {
+    content += `<li><a class="dropdown-item" role="button" onclick="TestAlarm(${level})">Level ${level}</a></li>`
+  }
+  content += '</ul></div></li>';
+
+  $('#navbar_content').prepend(content);
+}
+
+function TestAlarm(level) {
+  var req = {'level': level};
+  $.get("/alarms/test", req, (data, status) => {
+    if (typeof data.err != 'undefined')
+      alert(data.err);
+    else
+      console.log(`Sent level ${level} alarm`);
+  });
+}
+
+function SetRefreshRate(rate) {
+  if (intervalid != 0)
+    clearInterval(intervalid);
+  intervalid = setInterval(UpdateOnce, rate * 1000);
+  document.querySelector('#currentrefreshrate').innerHTML = rate + ' s';
+}
 
 function SigFigs(val) {
   LOG_THRESHOLD=3;
   SIG_FIGS=3;
-  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toFixed(SIG_FIGS) : val.toExponential(SIG_FIGS);
+  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toPrecision(SIG_FIGS) : val.toExponential(SIG_FIGS);
+}
+
+function GetAttributeOrDefault(element, attribute, deflt) {
+  if (element.hasAttribute(attribute))
+    return element.getAttribute(attribute);
+  else
+    return deflt;
 }
 
 function Setup(){
-  var doc = document.getElementById('svg_frame').getSVGDocument();
-  var metadata = doc.all[1];
-  sensors = metadata.children[0].innerHTML.split(' ');
-  valves = metadata.children[1].innerHTML.split(' ');
-  links = metadata.children[2].innerHTML.split(' ');
+  console.log('Setting up fields');
+  var doc = document.querySelector('object#svg_frame').getSVGDocument();
+  var metadata = doc.querySelector('metadata');
+  sensors = metadata.querySelector('sensors').innerHTML.split(' ');
+  links = metadata.querySelector('links').innerHTML.split(' ');
   if (valves.length == 1 && valves[0] === '')
     valves = [];
   sensors.forEach(s => $.getJSON(`/devices/sensor_detail?sensor=${s}`, data => {
     units[s] = data.units;
-    doc.getElementById(`value_${s}`).addEventListener('click', function() {SensorDropdown(s);});
+    for (var element of doc.querySelectorAll(`[id^=value_${s}],[id^=valve_${s}]`)) {
+      element.addEventListener('click', function() {SensorDropdown(s);});
+      element.style['cursor'] = 'pointer';
+    }
   }));
+  properties = [];
+  for (var property of metadata.getElementsByTagName('property')) {
+    properties.push({
+        'sensor': property.getAttribute('sensor'),
+        'targetId': property.getAttribute('targetId'),
+        'targetAttribute': property.getAttribute('targetAttribute'),
+        'scaling': parseFloat(GetAttributeOrDefault(property, 'scaling', 1)),
+        'offset': parseFloat(GetAttributeOrDefault(property, 'offset', 0)),
+        'min': parseFloat(GetAttributeOrDefault(property, 'min', -Infinity)),
+        'max': parseFloat(GetAttributeOrDefault(property, 'max', Infinity)),
+    });
+  }
+  linktargets = {};
+  for (var link of links) {
+    for (var element of doc.querySelectorAll(`[id^=link_${link}]`)) {
+      linktargets[element.id] = link;
+      element.addEventListener('click', LoadSVG);
+      element.style['cursor'] = 'pointer';
+    }
+  }
   UpdateOnce();
 }
 
 function LoadSVG(fn) {
-  if (typeof fn != 'undefined') {
-    var current_fn = $("#svg_frame").attr('data');
-    var p = current_fn.split('/');
-    if (fn.slice(-4) != '.svg')
-      fn = `${fn}.svg`;
-    p[p.length-1] = fn;
-    fn = p.join('/');
-    $("#svg_frame").attr('data', fn);
-  } else {
+  try {
+    // Need to determine new SVG based on event target
+    // unless fn is already a string, then get exception
+    fn = linktargets[fn.currentTarget.id];
+  } catch (e) {
+    // Was probably a string. Do nothing.
   }
+  //if (typeof fn != 'undefined') {
+  var current_fn = $("#svg_frame").attr('data');
+  var p = current_fn.split('/');
+  if (fn.slice(-4) != '.svg')
+    fn = `${fn}.svg`;
+  p[p.length-1] = fn;
+  fn = p.join('/');
+  $("#svg_frame").attr('data', fn);
+  //}
   console.log(`Loading ${$("#svg_frame").attr('data')}`);
-  setTimeout(() => {
-    // this is jank but not sure how else to do this
-    Setup();
-    console.log('Setup?');
-  }, 500); // if loading takes more than 500ms then increase
 }
 
 function UpdateOnce() {
+  var updatestarttime = Date.now();
   var doc = document.getElementById('svg_frame').getSVGDocument();
   sensors.forEach(s => {
     $.getJSON(`/devices/get_last_point?sensor=${s}`, data => {
-      if (valves.includes(s)) {
-        var elements = doc.querySelectorAll(`[id^=valve_${s}]`);
-        for (var element of elements) {
-          element.classList.remove(data.value ? 'off' : "on");
-          element.classList.add(data.value ? 'on' : 'off');
+      var value = parseFloat(data.value);
+      for (var element of doc.querySelectorAll(`[id^=valve_${s}]`)) {
+        element.classList.remove(value ? 'off' : "on");
+        element.classList.add(value ? 'on' : 'off');
+      }
+      for (var element of doc.querySelectorAll(`[id^=value_${s}]`)) {
+        element.innerHTML = `${SigFigs(value)}`;
+      }
+      for (var property of properties) {
+        if (property['sensor'] == s) {
+          transformedValue = value * property['scaling'] + property['offset'];
+          transformedValue = Math.max(transformedValue, property['min']);
+          transformedValue = Math.min(transformedValue, property['max']);
+          var target = doc.getElementById(property['targetId']);
+          target.setAttribute(property['targetAttribute'], transformedValue);
         }
-      } else {
-        doc.getElementById(`value_${s}`).innerHTML = `${SigFigs(data.value)} ${units[s]}`;
       }
     });
   });
+  console.debug('Updating took ' + (Date.now() - updatestarttime) / 1000 + ' seconds')
 }
 

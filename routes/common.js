@@ -7,14 +7,12 @@ var axios = require('axios');
 
 function SendCommand(req, to, command, delay=0) {
   var logged = new Date().getTime() + delay;
-  return req.db.get('experiment_config').findOne({name: 'hypervisor'})
+  return req.db.get('dispatch').findOne({name: 'hypervisor'})
   .then((doc) => {
-    var hn = doc.global_dispatch.hypervisor[0];
-    var p = doc.global_dispatch.hypervisor[1];
-    const client = net.createConnection(p, hn, () => {
+    const client = net.createConnection(doc.port, doc.host, () => {
       client.write(JSON.stringify({
         to: to,
-        from: 'web',
+        from: req.user.displayName,
         command: command,
         time: logged/1000,
       }), () => client.destroy());
@@ -25,6 +23,7 @@ function SendCommand(req, to, command, delay=0) {
 }
 
 function ensureAuthenticated(req, res, next) {
+  var is_subnet = req.ip.startsWith(process.env.PRIVILEDGED_SUBNET);
   if (req.isAuthenticated()) { return next(); }
   res.json({notify_msg: 'You must be logged in to do this', notify_status: 'error'});
 }

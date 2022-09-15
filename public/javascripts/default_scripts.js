@@ -5,7 +5,7 @@ var SIG_FIGS=3;
 var LOG_THRESHOLD=3;
 var control_map = {};
 
-
+var detail_chart = null;
 
 function Notify(msg, type='success') {
   var elem = $("#notify_" + type)
@@ -88,6 +88,7 @@ function SensorDropdown(sensor) {
           $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
           $("#current_valve_state").html(doc.value);
         });
+        control_map[data.name].push((data.is_normally_open != undefined));
       } else {
         // this is a setpoint
         $("#sensor_valve").prop('hidden', true);
@@ -208,12 +209,12 @@ function DrawSensorHistory(sensor) {
     else
       var t_min = data[0][0], t_max = data[data.length-2][0];
     var alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
-    var series = [{name: $("#detail_sensor_name").html(), type: 'line', data: data.filter(row => (row[0] && row[1])), animation: {duration: 250}, color: '#0d6efd'}];
+    var series = [{name: $("#detail_sensor_name").html(), type: 'line', data: data.filter(row => ((row[0] != null) && (row[1] != null))), animation: {duration: 250}, color: '#0d6efd'}];
     if (alarm_low && alarm_high && $("#plot_alarms").is(":checked")) {
       series.push({name: "lower threshold", type: 'area', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', threshold: -Infinity});
       series.push({name: "upper threshold", type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
     }
-    Highcharts.chart('sensor_chart', {
+    detail_chart = Highcharts.chart('sensor_chart', {
       chart: {
         zoomtype: 'xy',
         height: '300px',
@@ -237,6 +238,7 @@ function DrawSensorHistory(sensor) {
         valueSuffix: unit
       },
     });
+    $("#last_value").html(SigFigs(series[0].data.at(-1)[1]));
     return;
   });
 }
@@ -357,6 +359,13 @@ function ValidateNewSensor(echo_ret=true) {
       return false;
     }
   }
+  if ($("#new_topic").val() == 'status' && !$("#new_integer").is(':checked')) {
+    if (confirm("Is this an integer quantity?")) {
+      $("#new_integer").val(1);
+    } else {
+
+    }
+  }
   if ($("#new_integer").is(":checked") && $("#new_topic").val() != 'status') {
     Notify($("#new_topic").val() + " doesn't come in integers", 'error');
     return false;
@@ -435,6 +444,7 @@ function CommandDropdown() {
     $("#command_to").empty();
     $("#command_to").append('<option value="hypervisor">hypervisor</option>');
     data.forEach(sensor => $("#command_to").append(`<option value="${sensor}">${sensor}</option>`));
+    ['pl_alarm', 'pl_control', 'pl_convert'].forEach(pl => $("#command_to").append(`<option value="${pl}">${pl}</option>`));
   });
   $("#accepted_commands_list").empty();
 
@@ -464,7 +474,8 @@ function ToggleValve() {
   var sensor = $("#detail_sensor_name").html();
   var device = control_map[sensor][0];
   var target = control_map[sensor][1];
-  var state = $("#current_valve_state").html() == 0 ? 1 : 0;
+  var normallyClosed = control_map[sensor][2];
+  var state = $("#current_valve_state").html() == normallyClosed ? 1 : 0;
   if (sensor && target && device && confirm(`Confirm valve toggle`)) {
     SendToHypervisor(device, `set ${target} ${state}`, `set ${target} ${state}`);
   }

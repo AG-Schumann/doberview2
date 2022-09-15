@@ -218,7 +218,11 @@ router.get('/get_last_point', function(req, res) {
 
     if (resp.data.split('\n').length > 1) {
       var blob = resp.data.split('\n')[1].split(',');
-      return res.json({'value': blob[3], 'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1)});
+      return res.json({
+                       'value': blob[3], 
+                       'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1),
+                       'time': parseInt(blob[2])/1e6
+                      });
     }
     else {
       return res.json({'value': 'None', 'time_ago': 'drölf '})
