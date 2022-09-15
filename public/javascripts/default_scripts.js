@@ -418,7 +418,7 @@ function SendToHypervisor(target, command, msg_if_success=null, delay=0) {
   var msg = msg_if_success == null ? command + " sent to Hypervisor" : msg_if_success;
   $.ajax({
     type: 'POST',
-    url: 'hypervisor/command',
+    url: '/hypervisor/command',
     data: {target: target, command: command, delay: delay},
     success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
