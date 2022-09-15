@@ -1,16 +1,6 @@
 
 var table = null;
-function PopulateNavbar() {
-  var content = '<li><div class="d-flex"><div class="navbar-text"> Minimum severity: &nbsp;</div>' +
-      '<select id="min_severity"><option value="30" selected="selected">Warning</option>' +
-      '<option value="40">Error</option><option value="50">Critial</option></select></div></li>' +
-      '<li><div class="d-flex"><div class="navbar-text">Get this many: &nbsp;</div>' +
-      '<input id="get_num" type="number" min="30" max="3000" value="200"/></div></li>' +
-      '<li><div class="d-flex"><div class="navbar-text">Name: &nbsp;</div>' +
-      '<input id="get_name" type="text"></li>' +
-      '<li><button class="btn btn-primary" onclick="GetLogs()">Fetch</button></li>';
-  $('#navbar_content').prepend(content);
-}
+
 
 function GetLogs() {
   if (table != null) delete table;
@@ -26,6 +16,12 @@ function GetLogs() {
     ],
     layout: 'fitDataStretch',
     pagination: true,
-    paginationSize: 30,
+    paginationSize: 100,
   });
+}
+
+function now_minus_hours(h) {
+  var now = new Date().getTime();
+  var time_delta = h * 3600 * 1000;
+  return new Date(now - time_delta);
 }

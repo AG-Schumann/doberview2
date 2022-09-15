@@ -21,7 +21,7 @@ block content
               | #{flavor.toUpperCase()} PIPELINES
           .accordion-collapse.collapse.show(id=`${flavor}_tables`, aria-labelledby=`${flavor}_header` data-bs-parent='#pipelineAccordion')
             .accordion-body
-              h3 Active pipelines
+              h3 Active pipelines &nbsp
                 i.fas.fa-bell
               table.table.table-striped.table-hover
                 thead
@@ -119,7 +119,7 @@ block content
               {"modes": ['tree', 'view', 'form', 'code', 'text']});
       ['alarm', 'control', 'convert'].forEach(pl => PopulatePipelines(pl));
       setInterval(UpdateLoop, 5000);
-      $('[data-bs-toggle="tooltip"]').tooltip();
+      $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});
       var query_search = new URLSearchParams(window.location.search);
       if (query_search.has('pipeline_id')) {
         PipelineDropdown(query_search.get('pipeline_id'));

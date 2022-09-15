@@ -20,7 +20,7 @@ function PopulateNavbar() {
       '<div class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Jump to</a> ' +
       '<ul class="dropdown-menu" id="jump_to_list"></ul></div></li>' +
       '<li class="nav-item">' +
-      '<div class="input-group pe-3"><span class="input-group-text"><i class="fas fa-solid fa-magnifying-glass"></i>' +
+      '<div class="input-group pe-3" style="min-width:205px"><span class="input-group-text"><i class="fas fa-solid fa-magnifying-glass"></i>' +
       '</span> <input class="form-control" id="searchSensorInput" type="text" onkeyup="FilterSensors()" placeholder="Search sensor"/> ' +
       '<button class="btn bg-transparent" type="button" style="margin-left: -40px; z-index: 100;" onclick="$(`#searchSensorInput`).val(``); FilterSensors();">' +
       '<i class="fa fa-times"></i></button></div></li>';

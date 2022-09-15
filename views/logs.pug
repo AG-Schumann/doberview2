@@ -2,15 +2,51 @@ extends layout
 
 block extrahead
   link(href="https://unpkg.com/tabulator-tables@5.0.10/dist/css/tabulator.min.css" rel="stylesheet")
+  link(rel="stylesheet" href="stylesheets/jquery.datetimepicker.css")
   script(type="text/javascript" src="https://unpkg.com/tabulator-tables@5.0.10/dist/js/tabulator.min.js")
   script(type="text/javascript" src="javascripts/log_scripts.js")
+  script(type="text/javascript" src="javascripts/jquery.datetimepicker.full.min.js")
+
 
 block content
   div.main-container
+    .d-flex.flex-row
+      .mr-auto.p-2
+        div
+          label(for="min_severity") min. severity: &nbsp;
+          select.form-select(id="min_severity")
+            option(value="30" selected="selected") Warning
+            option(value="40") Error
+            option(value="50") Critical
+        div
+          label(for="from_selector") from: &nbsp;
+          input.form-control(type="text" id="from_selector")
+        div
+          label(for="to_selector") to: &nbsp;
+          input.form-control(type="text" id="to_selector")
+        div
+          label(for="get_name") filter name:
+          input.form-control#get_name(type="text")
+        div
+          button.btn.btn-primary.mt-4(onclick="GetLogs()") Fetch
     div#log_table
+
+
 
   script.
     $(document).ready(function() {
       PopulateNavbar();
       GetLogs();
+      var to = new Date();
+      var from = to.setHours(to.getHours() - 2);
     });
+    $('#from_selector').datetimepicker({
+      format: "Y-m-d H:i:s",
+      value: now_minus_hours(1),
+    });
+    $('#to_selector').datetimepicker({
+      format: "Y-m-d H:i:s",
+      value: new Date(),
+    });
+
+
