@@ -135,6 +135,8 @@ function MakeAlarm(name) {
 }
 
 function DeviceDropdown(device) {
+  $("#device_ctrl_btn").prop("onclick", null).off("click");
+  $("#device_manage_btn").prop("onclick", null).off("click");
   $.getJSON(`/devices/device_detail?device=${device}`, (data) => {
     $(".modal").modal('hide');
     if (Object.keys(data).length == 0)
@@ -143,19 +145,32 @@ function DeviceDropdown(device) {
     $("#device_host").val(data.host).attr('disabled', true);
     $.getJSON(`/hypervisor/device_status?device=${device}`, (doc) => {
       if (doc.active == true) {
-        $("#device_ctrl_btn").text("Stop").click(() => ControlDevice("stop"));
+        $("#device_ctrl_btn").text("Stop");
         $("#device_manage_btn").prop('disabled', false);
-        if (doc.managed == true) {
-          $("#device_manage_btn").text("Unmanage").click(() => ManageDevice('unmanage'));
-        } else {
-          $("#device_manage_btn").text("Manage").click(() => ManageDevice('manage'));
-        }
       } else {
-        $("#device_ctrl_btn").text("Start").click(() => ControlDevice(`start ${device}`));
-        $("#device_manage_btn").text("Manage").click(() => {}).prop('disabled', true);
+        $("#device_ctrl_btn").text("Start");
+        $("#device_manage_btn").prop('disabled', true);
       }
+      if (doc.managed == true) {
+        $("#device_manage_btn").text("Unmanage");
+      } else {
+        $("#device_manage_btn").text("Manage");
+      }
+      $("#device_ctrl_btn").click(function() {
+        if (doc.active == true) {
+          ControlDevice("stop");
+        } else {
+          ControlDevice(`start ${device}`);
+        }
+      })
+      $("#device_manage_btn").click(function() {
+        if (doc.managed == true) {
+          ManageDevice('unmanage');
+        } else {
+          ManageDevice('manage');
+        }
+      })
     });
-
     if (typeof data.address != 'undefined') {
       if (typeof data.address.ip != 'undefined') {
         $("#device_ip").val(data.address.ip);

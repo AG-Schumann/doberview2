@@ -5,21 +5,21 @@ var zmq = require('zeromq');
 
 // Doberview common functions, defined once here rather than in every file
 
-function SendCommand(req, to, command, delay=0) {
+function  SendCommand(req, to, command, delay=0) {
   var logged = new Date().getTime() + delay;
-  return req.db.get('dispatch').findOne({name: 'hypervisor'})
+  return req.db.get('experiment_config').findOne({name: 'hypervisor'})
   .then((doc) => {
-    const sock = new zmq.socket('pub');
-    sock.bindSync('tcp://apollo:8906');
+    const sock = new zmq.socket('req');
+    sock.connect('tcp://' + doc.host + ':' + doc.comms.command.send);
     sock.send(JSON.stringify({
-        to: to,
-        from: req.user.displayName,
-        command: command,
-        time: logged/1000,
-      }));
-
-    }
-  )
+      to: to,
+      from: req.user.displayName,
+      command: command,
+      time: logged/1000,}));
+  })
+  .then(() => {
+    sock.recv();
+  })
   .catch(err => {console.log(err.message); return {err: err.message};});
 }
 
