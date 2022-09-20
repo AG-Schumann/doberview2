@@ -101,7 +101,7 @@ function AlarmTemplate() {
     pipeline: [
       {
         name: 'source_NAME',
-        type: 'DeviceRespondingAlarmInflux',
+        type: 'DeviceRespondingInfluxNode',
         input_var: 'SENSOR'
       },
       {
@@ -153,7 +153,7 @@ function ControlTemplate() {
       },
       {
         name: 'control',
-        type: 'DigitalControl',
+        type: 'DigitalControlNode',
         upstream: ['eval_high'],
         input_var: null
       }
