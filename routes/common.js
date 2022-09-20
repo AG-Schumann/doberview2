@@ -1,30 +1,30 @@
 var net = require('net');
 var url = require('url');
 var axios = require('axios');
-
+var zmq = require('zeromq');
 
 // Doberview common functions, defined once here rather than in every file
 
-function SendCommand(req, to, command, delay=0) {
+function  SendCommand(req, to, command, delay=0) {
   var logged = new Date().getTime() + delay;
   return req.db.get('experiment_config').findOne({name: 'hypervisor'})
   .then((doc) => {
-    var hn = doc.global_dispatch.hypervisor[0];
-    var p = doc.global_dispatch.hypervisor[1];
-    const client = net.createConnection(p, hn, () => {
-      client.write(JSON.stringify({
-        to: to,
-        from: 'web',
-        command: command,
-        time: logged/1000,
-      }), () => client.destroy());
-    });
-    return {};
+    const sock = new zmq.socket('req');
+    sock.connect('tcp://' + doc.host + ':' + doc.comms.command.send);
+    sock.send(JSON.stringify({
+      to: to,
+      from: req.user.displayName,
+      command: command,
+      time: logged/1000,}));
+  })
+  .then(() => {
+    sock.recv();
   })
   .catch(err => {console.log(err.message); return {err: err.message};});
 }
 
 function ensureAuthenticated(req, res, next) {
+  //var is_subnet = req.ip.startsWith(process.env.PRIVILEDGED_SUBNET);
   if (req.isAuthenticated()) { return next(); }
   res.json({notify_msg: 'You must be logged in to do this', notify_status: 'error'});
 }

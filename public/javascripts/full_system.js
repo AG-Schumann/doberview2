@@ -50,7 +50,7 @@ function GetGroupedSensors() {
 }
 
 function SigFigs(val) {
-  if (val.includes('.') ) {
+  if (typeof(val) == "number" || val.includes('.') ) {
     // value is float
     val = parseFloat(val);
     return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toFixed(SIG_FIGS) : val.toExponential(SIG_FIGS);

@@ -183,6 +183,11 @@ html
               hr
               h5 Recent history
               br
+              table
+                tbody
+                  tr
+                    th.py2 Last value
+                    td#last_value XXX
               .d-flex.flex-row
                 .mr-auto.p-2
                   input#plot_alarms(type="checkbox" data-toggle='toggle' data-width='150px' data-on='<i class="fa-solid fa-eye"></i>&nbsp thresholds' data-off='<i class="fa-regular fa-eye-slash"></i>&nbsp thresholds' data-onstyle='danger' data-offstyle='secondary' onchange="DrawSensorHistory()")

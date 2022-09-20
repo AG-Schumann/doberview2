@@ -53,7 +53,9 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['cycles'] = parseInt('0');
   doc['error'] = parseInt('0');
   doc['rate'] = -1;
-  doc['depends_on'] = doc.pipeline.filter(n => (typeof n.upstream == 'undefined' || n.upstream.length == 0)).map(n => n.input_var);
+  var depends_on = {};
+  doc.pipeline.forEach(n => {if (typeof n.upstream == 'undefined' || n.upstream.length == 0) depends_on[n.input_var] = 1;});
+  doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
   req.db.get('pipelines').update({name: doc.name}, {$set: doc}, {upsert: true})
@@ -135,6 +137,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
 router.post('/pipeline_ctl', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   var flavor = data.name.split('_')[0];
+  console.log(data);
   if (['stop','start','restart','active','silent'].includes(data.cmd))
     common.SendCommand(req, `pl_${flavor}`, `pipelinectl_${data.cmd} ${data.name}`);
   else
