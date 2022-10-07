@@ -231,7 +231,7 @@ function DrawSensorHistory(sensor) {
     }
     detail_chart = Highcharts.chart('sensor_chart', {
       chart: {
-        zoomtype: 'xy',
+        zoomType: 'xy',
         height: '300px',
       },
       title: {text: null},
