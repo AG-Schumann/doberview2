@@ -10,26 +10,30 @@ block extrahead
 
 block content
   div.main-container
-    .d-flex.flex-row
-      .mr-auto.p-2
-        div
-          label(for="min_severity") min. severity: &nbsp;
-          select.form-select(id="min_severity")
-            option(value="30" selected="selected") Warning
-            option(value="40") Error
-            option(value="50") Critical
-        div
-          label(for="from_selector") from: &nbsp;
-          input.form-control(type="text" id="from_selector")
-        div
-          label(for="to_selector") to: &nbsp;
-          input.form-control(type="text" id="to_selector")
-        div
-          label(for="get_name") filter name:
-          input.form-control#get_name(type="text")
-        div
-          button.btn.btn-primary.mt-4(onclick="GetLogs()") Fetch
-    div#log_table
+    .d-flex.flex-row.mr-auto
+      div.mt-4
+        input#query_style(type="checkbox" data-toggle='toggle' data-width='100px' data-on='from-to' data-off='last X')
+      div
+        label(for="get_num") last X values: &nbsp;
+        input.form-control(type="number" id="get_num", value=200, step=10, min=0)
+      div(style="display:none")
+        label(for="from_selector") from: &nbsp;
+        input.form-control(type="text" id="from_selector")
+      div(style="display:none")
+        label(for="to_selector") to: &nbsp;
+        input.form-control(type="text" id="to_selector")
+      div
+        label(for="min_severity") min. severity: &nbsp;
+        select.form-select(id="min_severity")
+          option(value="30" selected="selected") Warning
+          option(value="40") Error
+          option(value="50") Critical
+      div
+        label(for="get_name") filter name:
+        input.form-control#get_name(type="text")
+      div.mt-4
+        button.btn.btn-primary(onclick="GetLogs()") Fetch
+    div.mt-2#log_table
 
 
 
@@ -37,8 +41,6 @@ block content
     $(document).ready(function() {
       PopulateNavbar();
       GetLogs();
-      var to = new Date();
-      var from = to.setHours(to.getHours() - 2);
     });
     $('#from_selector').datetimepicker({
       format: "Y-m-d H:i:s",

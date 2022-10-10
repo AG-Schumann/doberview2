@@ -113,7 +113,7 @@ function MakeAlarm(name) {
     pipeline: [
       {
         name: 'source',
-        type: 'DeviceRespondingAlarm',
+        type: 'DeviceRespondingInfluxNode',
         input_var: name
       },
       {
