@@ -7,12 +7,15 @@ block extrahead
 
 block content
   div.main-container
-    each host in hosts
-      div.container(id=`div_${host}`)
-        div.row
-          h3 #{host}
-          div.row
-            iframe(src=`${grafana_sysmon_url}&var-hostname=${host}` title="System monitor" style="width:100%;height:360px")
+    #hostAccordion.accordion
+      each host in hosts
+        .accordion-item
+          h2.accordion-header(id=`${host}_header`)
+            button.accordion-button(type='button' data-bs-toggle='collapse' data-bs-target=`#${host}_tables` aria-expanded='true' aria-controls=`${host}_tables`)
+              | #{host.toUpperCase()}
+          .accordion-collapse.collapse(id=`${host}_tables`, aria-labelledby=`${host}_header` data-bs-parent='#hostAccordion')
+            .accordion-body
+              iframe(src=`${grafana_sysmon_url}&var-hostname=${host}` style="width:100%;height:720px")
 
 
   script.
