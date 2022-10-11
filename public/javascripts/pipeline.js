@@ -28,9 +28,10 @@ function PopulatePipelines(flavor) {
     $(`#${flavor}_tables .pipeline_table`).empty()
     data.forEach(doc => {
       var n = doc.name;
+      var descr = doc.description;
       if (n.toUpperCase().indexOf(filter) > -1) {
         if (doc.status == 'active') {
-          var row = `<tr><td title='${doc.description}' onclick="PipelineDropdown('${n}')">${n}</td>`;
+          var row = `<tr><td title="${descr}" onclick="PipelineDropdown('${n}')">${n}</td>`;
           try{
             row += `<td>${doc.rate.toPrecision(3)}</td> <td>${(doc.dt || 0).toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
             row += `<td><i class="${silent}" data-bs-toggle="tooltip" title="Silence", onclick="SilenceDropdown('${n}')"></i>`;
