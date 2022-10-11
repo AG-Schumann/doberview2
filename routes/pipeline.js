@@ -53,7 +53,7 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['cycles'] = parseInt('0');
   doc['error'] = parseInt('0');
   doc['rate'] = -1;
-  doc['description'] = 'empty';
+  doc['description'] = 'No description yet';
   var depends_on = {};
   doc.pipeline.forEach(n => {if (typeof n.upstream == 'undefined' || n.upstream.length == 0) depends_on[n.input_var] = 1;});
   doc['depends_on'] = Object.keys(depends_on);
