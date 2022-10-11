@@ -19,8 +19,8 @@ router.get('/get_pipelines', function(req, res) {
   }
   var flavor = q.flavor;
   var now = new Date();
-  req.db.get('pipelines').find({name: {$regex: `^${flavor}_`}}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, rate: 1, error: 1}})
-  .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.heartbeat)/1000, cycle: doc.cycles, error: doc.error, rate: doc.rate}))))
+  req.db.get('pipelines').find({name: {$regex: `^${flavor}_`}}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, rate: 1, error: 1, description: 1}})
+  .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.heartbeat)/1000, cycle: doc.cycles, error: doc.error, rate: doc.rate, description: doc.description}))))
   .catch(err => {console.log(err.message); return res.json([]);});
 });
 
@@ -53,6 +53,7 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['cycles'] = parseInt('0');
   doc['error'] = parseInt('0');
   doc['rate'] = -1;
+  doc['description'] = 'empty';
   var depends_on = {};
   doc.pipeline.forEach(n => {if (typeof n.upstream == 'undefined' || n.upstream.length == 0) depends_on[n.input_var] = 1;});
   doc['depends_on'] = Object.keys(depends_on);
