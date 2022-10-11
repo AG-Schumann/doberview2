@@ -40,7 +40,8 @@ function PopulatePipelines(flavor) {
           }catch(error){console.log(error);console.log(doc);}
           $(`#${flavor}_active`).append(row);
         } else if (doc.status == 'silent') {
-          var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n}</td>`;
+          if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
+          else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n}</td>`;
           try{
             row += `<td>${doc.rate.toPrecision(3)}</td> <td>${(doc.dt || 0).toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
             row += `<td><i class="${active}" data-bs-toggle="tooltip" title="Activate" onclick="PipelineControl('active','${n}')"></i>`;
@@ -49,7 +50,8 @@ function PopulatePipelines(flavor) {
           }catch(error){console.log(error);console.log(doc);}
           $(`#${flavor}_silent`).append(row);
         } else if (doc.status == 'inactive') {
-          var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n}</td>`;
+          if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
+          else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n}</td>`;
           row += `<td><i class="fas fa-play" onclick="StartPipeline('${n}')"></td>`;
           $(`#${flavor}_inactive`).append(row);
         } else
