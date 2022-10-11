@@ -30,7 +30,7 @@ function PopulatePipelines(flavor) {
       var n = doc.name;
       if (n.toUpperCase().indexOf(filter) > -1) {
         if (doc.status == 'active') {
-          var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
+          var row = `<tr><td title='${doc.description}' onclick="PipelineDropdown('${n}')">${n}</td>`;
           try{
             row += `<td>${doc.rate.toPrecision(3)}</td> <td>${(doc.dt || 0).toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
             row += `<td><i class="${silent}" data-bs-toggle="tooltip" title="Silence", onclick="SilenceDropdown('${n}')"></i>`;
