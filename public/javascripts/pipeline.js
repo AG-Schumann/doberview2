@@ -29,7 +29,10 @@ function PopulatePipelines(flavor) {
     data.forEach(doc => {
       var n = doc.name;
       if (n.toUpperCase().indexOf(filter) > -1) {
-        if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${doc.pipeline['input_var']}</td>`;
+        if (doc.flavor == 'alarm') {
+          if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${doc.pipeline['input_var']}</td>`;
+          else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
+        else if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
         else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
         if (doc.status == 'active') {
           try{
