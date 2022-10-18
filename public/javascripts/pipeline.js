@@ -30,7 +30,7 @@ function PopulatePipelines(flavor) {
       var n = doc.name;
       if (n.toUpperCase().indexOf(filter) > -1) {
         if (doc.flavor == 'alarm') {
-          $.getJSON(`/devices/sensor_detail?sensor=${doc.pipeline['input_var']}`, data => {var descr = data['description']};
+          $.getJSON(`/devices/sensor_detail?sensor=${doc.pipeline['input_var']}`, data => {var descr = data['desc']};
           if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${descr}</td>`;
           else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${descr}</td>`;
         } else if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
