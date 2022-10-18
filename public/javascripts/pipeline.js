@@ -30,7 +30,7 @@ function PopulatePipelines(flavor) {
       var n = doc.name;
       if (n.toUpperCase().indexOf(filter) > -1) {
         if (flavor == 'alarm') {
-          if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${doc.pipeline}</td>`;
+          if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${doc.pipeline[0]}</td>`;
           else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
         else {
           if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
