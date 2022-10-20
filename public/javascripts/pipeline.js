@@ -33,7 +33,7 @@ function PopulatePipelines(flavor) {
           
           for (var pipe of doc.pipeline) {
             if (pipe['name'] == 'source' && sensor == undefined) var sensor = pipe['input_var'];
-            else {delete sensor; break;}
+            else if (pipe['name'] == 'source' && sensor != undefined) {delete sensor; break;}
           }
           if (sensor != undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${sensor}</td>`;
           else var row = `<tr><td onclick="PipelineDropdown('${n}')">${n}</td>`;
