@@ -42,7 +42,7 @@ function PopulatePipelines(flavor) {
           
           //if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${doc['pipeline'][0]['input_var']}</td>`;
           //else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
-        else {
+        } else {
           if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
           else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
         if (doc.status == 'active') {
