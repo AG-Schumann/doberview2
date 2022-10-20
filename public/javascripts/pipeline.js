@@ -29,13 +29,14 @@ function PopulatePipelines(flavor) {
     data.forEach(doc => {
       var n = doc.name;
       if (n.toUpperCase().indexOf(filter) > -1) {
+        var row;
         if (flavor == 'alarm') { //shows the description of the sensor in the pipelines display if the pipeline is an alarm pipeline
           
           for (var pipe of doc.pipeline) {
             if (pipe['name'] == 'source' && sensor == undefined) var sensor = pipe['input_var'];
             else if (pipe['name'] == 'source' && sensor != undefined) {delete sensor; break;}
           }
-          var row;
+          
           if (sensor != undefined) {
             $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, (thedata) => {
               var descr = thedata['description'];
@@ -47,8 +48,8 @@ function PopulatePipelines(flavor) {
           if (doc.description == undefined) row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
           else row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
         } else {
-          if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
-          else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
+          if (doc.description == undefined) row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
+          else row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
         if (doc.status == 'active') {
           try{
             row += `<td>${doc.rate.toPrecision(3)}</td> <td>${(doc.dt || 0).toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
