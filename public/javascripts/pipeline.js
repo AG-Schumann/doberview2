@@ -32,7 +32,7 @@ function PopulatePipelines(flavor) {
         if (flavor == 'alarm') { //shows the description of the sensor in the pipelines display if the pipeline is an alarm pipeline
           
           for (var pipe of doc.pipeline) {
-            if (pipe['name']) == 'source' && sensor == undefined) var sensor = pipe['input_var'];
+            if (pipe['name'] == 'source' && sensor == undefined) var sensor = pipe['input_var'];
             else {delete sensor; break;}
           }
           if (sensor != undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${sensor}</td>`;
