@@ -38,7 +38,7 @@ function PopulatePipelines(flavor) {
           }
           
           if (sensor != undefined) {
-            $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, (sensordata) => {
+            $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, sensordata => {
               var descr = sensordata['description'];
               row += `<tr><td onclick="PipelineDropdown('${n}')">${descr}</td>`;
               //if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${descr}</td>`;
