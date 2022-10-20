@@ -31,7 +31,7 @@ function PopulatePipelines(flavor) {
       if (n.toUpperCase().indexOf(filter) > -1) {
         if (flavor == 'alarm') { //shows the description of the sensor in the pipelines display if the pipeline is an alarm pipeline
           
-          for (var pipe in doc.pipeline) {
+          for (var pipe of doc.pipeline) {
             if (pipe['name']) == 'source' && sensor == undefined) var sensor = pipe['input_var'];
             else {delete sensor; break;}
           }
