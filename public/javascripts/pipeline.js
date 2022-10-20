@@ -29,7 +29,6 @@ function PopulatePipelines(flavor) {
     data.forEach(doc => {
       var n = doc.name;
       if (n.toUpperCase().indexOf(filter) > -1) {
-        var row = '';
         if (flavor == 'alarm') { //shows the description of the sensor in the pipelines display if the pipeline is an alarm pipeline
           
           for (var pipe of doc.pipeline) {
@@ -38,6 +37,7 @@ function PopulatePipelines(flavor) {
           }
           
           if (sensor != undefined) {
+            var row = '';
             $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, sensordata => {
               var descr = sensordata['description'];
               row += `<tr><td onclick="PipelineDropdown('${n}')">${descr}</td>`;
@@ -45,11 +45,11 @@ function PopulatePipelines(flavor) {
               //else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${descr}</td>`;
             });
           } else {
-          if (doc.description == undefined) row += `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
-          else row += `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
+          if (doc.description == undefined) var row += `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
+          else var row += `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
         } else {
-          if (doc.description == undefined) row += `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
-          else row += `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
+          if (doc.description == undefined) var row += `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
+          else var row += `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
         if (doc.status == 'active') {
           try{
             row += `<td>${doc.rate.toPrecision(3)}</td> <td>${(doc.dt || 0).toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
