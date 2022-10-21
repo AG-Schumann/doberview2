@@ -15,6 +15,7 @@ function PopulateNavbar() {
 }
 
 function UpdateLoop() {
+  $(".tooltip").tooltip("hide");
   ['alarm', 'control', 'convert'].forEach(flavor => PopulatePipelines(flavor));
 }
 
@@ -38,13 +39,13 @@ function PopulatePipelines(flavor) {
             var descr;
             $.ajax({url:`/devices/sensor_detail?sensor=${sensor}`, dataType: 'json', async:false, success: sensordata => {descr = sensordata['description'];}});
             if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${descr}</td>`;
-            else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${descr}</td>`;
+            else var row = `<tr><td data-bs-toggle="tooltip" title="${doc.description}" onclick="PipelineDropdown('${n}')">${descr}</td>`;
           } else { // if there is not one unique sensor
 	    if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
-	    else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
+	    else var row = `<tr><td data-bs-toggle="tooltip" title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
         } else { // if pipeline is not an alarm pipeline
           if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
-          else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
+          else var row = `<tr><td data-bs-toggle="tooltip" title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
         if (doc.status == 'active') {
           try{
             row += `<td>${doc.rate.toPrecision(3)}</td> <td>${(doc.dt || 0).toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
