@@ -30,23 +30,17 @@ function PopulatePipelines(flavor) {
       var n = doc.name;
       if (n.toUpperCase().indexOf(filter) > -1) {
         if (flavor == 'alarm') { //shows the description of the sensor in the pipelines display if the pipeline is an alarm pipeline
-          
-          for (var pipe of doc.pipeline) {
+          for (var pipe of doc.pipeline) { // checks if there is only one sensor as the pipeline source
             if (pipe['name'] == 'source' && sensor == undefined) var sensor = pipe['input_var'];
             else if (pipe['name'] == 'source' && sensor != undefined) {delete sensor; break;}
           }
-          
-          if (sensor != undefined) {
-            var row = ''; var descr;
-            $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, function(sensordata) {descr = sensordata['description'];});
-            row += `<tr><td onclick="PipelineDropdown('${n}')">${descr}</td>`;
-            
-            //if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${descr}</td>`;
-            //else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${descr}</td>`;
-          } else {
-          if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
-          else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
-        } else {
+          if (sensor != undefined) { // gets the unique sensor description
+            var descr;
+            $.ajax({url:`/devices/sensor_detail?sensor=${sensor}`, dataType: 'json', async:false, success: sensordata => {descr = sensordata['description'];}});
+            if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${descr}</td>`;
+            else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${descr}</td>`;
+          } 
+        } else { // if there is not one unique sensor or if pipeline is not an alarm pipeline
           if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
           else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
         if (doc.status == 'active') {
