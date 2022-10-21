@@ -71,10 +71,10 @@ function SensorDropdown(sensor) {
           $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="btn ${cls} btn-sm">${name}</button></a></li>`);
           if (name == `alarm_${name}`) {
             $("#plot_alarms").bootstrapToggle(doc.status=='inactive' ? 'off' : 'on')
-          }
+          } else no_alarm = true;
         }); // get json
       }); // for each
-    } else
+    } else if (typeof data.pipelines == 'undefined' || no_alarm == true)
       $("#pipeline_list").append(`<li><button class="btn btn-primary btn-sm" onclick=MakeAlarm("${data.name}")>Make new alarm</button></li>`);
     $("#sensor_device_name").text(data.device).attr('onclick', `DeviceDropdown("${data.device}")`);
     if (typeof data.control_quantity != 'undefined') {
