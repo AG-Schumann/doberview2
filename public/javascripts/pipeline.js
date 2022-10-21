@@ -39,8 +39,10 @@ function PopulatePipelines(flavor) {
             $.ajax({url:`/devices/sensor_detail?sensor=${sensor}`, dataType: 'json', async:false, success: sensordata => {descr = sensordata['description'];}});
             if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${descr}</td>`;
             else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${descr}</td>`;
-          } 
-        } else { // if there is not one unique sensor or if pipeline is not an alarm pipeline
+          } else { // if there is not one unique sensor
+	    if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
+	    else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
+        } else { // if pipeline is not an alarm pipeline
           if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
           else var row = `<tr><td title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
         if (doc.status == 'active') {
