@@ -76,9 +76,7 @@ function UpdateOnce() {
 function FilterSensors() {
 
   var filter = $("#searchSensorInput").val().toUpperCase();
-  console.log(filter);
   var tr = $("#sensor_table").find("tr");
-  console.log(tr);
   for (var i = 0; i < tr.length; i++) {
     var sensor_name = tr[i].getElementsByTagName("td")[0];
     if (sensor_name) {

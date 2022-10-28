@@ -86,7 +86,7 @@ ul.CTAs li a {
 }
 .toast{
   z-index: 9000 !important;
-  position: absolute;
+  position: fixed;
   align-items: center;
   color: white;
   border-style: none;

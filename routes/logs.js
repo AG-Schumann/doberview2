@@ -11,11 +11,20 @@ router.get('/', function(req, res) {
 
 router.get('/get_logs', function(req, res) {
   var q = url.parse(req.url, true).query;
-  var limit = 100;
-  try {
+  var limit = 10000; // hard limit
+  if(typeof q.limit != "undefined") {
     limit = parseInt(q.limit);
-  }catch(err) {}
+  }
   var match = {};
+  if (typeof q.from != 'undefined' && typeof q.to != 'undefined') {
+    q.from.replace('%2B', 'T');
+    q.from.replace('%3A', ':');
+    q.to.replace('%2B', 'T');
+    q.to.replace('%3A', ':');
+    q.from = q.from + ' UTC';
+    q.to = q.to + ' UTC';
+    match['date'] = {$gte:new Date(q.from), $lt:new Date(q.to)};
+  }
   if (typeof q.severity != 'undefined') {
     match['level'] = {$gte: parseInt(q.severity)};
   }

@@ -195,7 +195,6 @@ function DeviceDropdown(device) {
         sensor_list = data.multi;
     sensor_list.forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
     $("#device_sensors").append('<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="PopulateNewSensor()">Add new!</button></li>');
-    $("#device_listener").html(`${data.dispatch_port}`);
     if (typeof data.commands != 'undefined')
       $("#device_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
     else
@@ -205,19 +204,11 @@ function DeviceDropdown(device) {
   });
 }
 
+
 function DrawSensorHistory(sensor) {
   sensor = sensor || $("#detail_sensor_name").html();
   var unit = $("#sensor_units").html();
   var interval = $("#selectinterval :selected").val();
-  $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, doc => {
-    if(doc.pipelines.includes(`alarm_${sensor}`)) {
-      $.getJSON(`/pipeline/get_pipeline?name=alarm_${sensor}`, doc => {
-        if(doc.status == "active")
-          $("#plot_alarms").prop("checked", true);
-      });
-    }
-  });
-
   $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
     if (data.length == 0)
       var t_min = 0, t_max = 0;
@@ -225,7 +216,7 @@ function DrawSensorHistory(sensor) {
       var t_min = data[0][0], t_max = data[data.length-2][0];
     var alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
     var series = [{name: $("#detail_sensor_name").html(), type: 'line', data: data.filter(row => ((row[0] != null) && (row[1] != null))), animation: {duration: 250}, color: '#0d6efd'}];
-    if (alarm_low && alarm_high && $("#plot_alarms").is(":checked")) {
+    if ($("#plot_alarms").prop('checked')) {
       series.push({name: "lower threshold", type: 'area', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', threshold: -Infinity});
       series.push({name: "upper threshold", type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
     }
