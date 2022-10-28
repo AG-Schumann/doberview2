@@ -57,6 +57,7 @@ function SensorDropdown(sensor) {
 
     $("#pipeline_list").empty();
     if (typeof data.pipelines != 'undefined' && data.pipelines.length > 0) {
+    $("#pipeline_list").append(`<li><button class="btn btn-primary btn-sm" onclick=MakeAlarm("${data.name}")>Make new alarm</button></li>`);
       data.pipelines.forEach(name => {
         $.getJSON(`/pipeline/status?name=${name}`, doc => {
           if (doc == null) return;
