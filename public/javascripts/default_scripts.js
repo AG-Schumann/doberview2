@@ -27,12 +27,18 @@ function SensorDropdown(sensor) {
   $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, (data) => {
     if (Object.keys(data).length == 0)
       return;
+    if(typeof data.multi_sensor == "string") {
+      $("#readout_interval").attr('disabled', 'disabled');
+      $("#readout_command").html('see ' + data.multi_sensor);
+    } else {
+      $("#readout_interval").removeAttr('disabled');
+      $("#readout_command").html(data.readout_command);
+    }
     $("#detail_sensor_name").html(data.name);
     $("#sensor_desc").val(data.description).attr('size', data.description.length + 3);
     $("#sensor_status").bootstrapToggle(data.status === 'online' ? 'on' : 'off');
     $("#readout_interval").val(data.readout_interval);
     $("#sensor_units").html(data.units);
-    $("#readout_command").html(data.readout_command);
     if (typeof data.value_xform != 'undefined')
       $("#value_xform").val(data.value_xform.join(','));
     else
@@ -62,7 +68,7 @@ function SensorDropdown(sensor) {
           if (doc == null) return;
           var cls;
           if (doc.status == 'inactive') {
-            cls = 'btn-danger';
+            cls = 'btn-secondary';
           } else if (doc.status == 'silent') {
             cls = 'btn-warning';
           } else {
