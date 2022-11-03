@@ -182,7 +182,20 @@ html
                 hr
               h5 Pipelines involving this sensor
               br
-              ul#pipeline_list
+              table.table(style="width:100%;")
+                thead
+                  tr
+                    th(colspan='2') Active
+                tbody#pipelines_active
+                thead
+                  tr
+                    th(colspan='2') Silenced
+                tbody#pipelines_silenced
+                thead
+                  tr
+                    th(colspan='2') Inactive
+                tbody#pipelines_inactive
+              button.btn.btn-primary#make_alarm_button(onclick=`MakeAlarm()`) Make new alarm
               hr
               h5 Recent history
               br

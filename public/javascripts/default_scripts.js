@@ -24,33 +24,33 @@ function SensorDropdown(sensor) {
   $("#alarm_high").change(() => {var low = parseInt($("#alarm_low").val()); var high = parseInt($("#alarm_high").val()); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}});
   $("#alarm_mid").change(() => {var mid = parseInt($("#alarm_mid").val()); var range = parseInt($("#alarm_range").val()); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
   $("#alarm_range").change(() => {var mid = parseInt($("#alarm_mid").val()); var range = parseInt($("#alarm_range").val()); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
-  $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, (data) => {
-    if (Object.keys(data).length == 0)
+  $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, (sensor_detail) => {
+    if (Object.keys(sensor_detail).length == 0)
       return;
-    if(typeof data.multi_sensor == "string") {
+    if(typeof sensor_detail.multi_sensor == "string") {
       $("#readout_interval").attr('disabled', 'disabled');
-      $("#readout_command").html('see ' + data.multi_sensor);
+      $("#readout_command").html('see ' + sensor_detail.multi_sensor);
     } else {
       $("#readout_interval").removeAttr('disabled');
-      $("#readout_command").html(data.readout_command);
+      $("#readout_command").html(sensor_detail.readout_command);
     }
-    $("#detail_sensor_name").html(data.name);
-    $("#sensor_desc").val(data.description).attr('size', data.description.length + 3);
-    $("#sensor_status").bootstrapToggle(data.status === 'online' ? 'on' : 'off');
-    $("#readout_interval").val(data.readout_interval);
-    $("#sensor_units").html(data.units);
-    if (typeof data.value_xform != 'undefined')
-      $("#value_xform").val(data.value_xform.join(','));
+    $("#detail_sensor_name").html(sensor_detail.name);
+    $("#sensor_desc").val(sensor_detail.description).attr('size', sensor_detail.description.length + 3);
+    $("#sensor_status").bootstrapToggle(sensor_detail.status === 'online' ? 'on' : 'off');
+    $("#readout_interval").val(sensor_detail.readout_interval);
+    $("#sensor_units").html(sensor_detail.units);
+    if (typeof sensor_detail.value_xform != 'undefined')
+      $("#value_xform").val(sensor_detail.value_xform.join(','));
     else
       $("#value_xform").val("");
 
-    if (typeof data.alarm_thresholds != 'undefined' && data.alarm_thresholds.length == 2) {
-      $("#alarm_low").val(data.alarm_thresholds[0]);
-      $("#alarm_high").val(data.alarm_thresholds[1]);
-      $("#alarm_mid").val((data.alarm_thresholds[1]+data.alarm_thresholds[0])/2);
-      $("#alarm_range").val((data.alarm_thresholds[1]-data.alarm_thresholds[0])/2);
-      $("#alarm_recurrence").val(data.alarm_recurrence);
-      $("#alarm_baselevel").val(data.alarm_level);
+    if (typeof sensor_detail.alarm_thresholds != 'undefined' && sensor_detail.alarm_thresholds.length == 2) {
+      $("#alarm_low").val(sensor_detail.alarm_thresholds[0]);
+      $("#alarm_high").val(sensor_detail.alarm_thresholds[1]);
+      $("#alarm_mid").val((sensor_detail.alarm_thresholds[1]+sensor_detail.alarm_thresholds[0])/2);
+      $("#alarm_range").val((sensor_detail.alarm_thresholds[1]-sensor_detail.alarm_thresholds[0])/2);
+      $("#alarm_recurrence").val(sensor_detail.alarm_recurrence);
+      $("#alarm_baselevel").val(sensor_detail.alarm_level);
     } else {
       $("#alarm_low").val(null);
       $("#alarm_high").val(null);
@@ -61,46 +61,49 @@ function SensorDropdown(sensor) {
       $("#plot_alarms").bootstrapToggle('off')
     }
 
-    $("#pipeline_list").empty();
-    if (typeof data.pipelines != 'undefined' && data.pipelines.length > 0) {
-    $("#pipeline_list").append(`<li><button class="btn btn-primary btn-sm" onclick=MakeAlarm("${data.name}")>Make new alarm</button></li>`);
-      data.pipelines.forEach(name => {
-        $.getJSON(`/pipeline/status?name=${name}`, doc => {
+    $("#pipelines_active").empty();
+    $("#pipelines_silenced").empty();
+    $("#pipelines_inactive").empty();
+    $("#make_alarm_button").show();
+    if (typeof sensor_detail.pipelines != 'undefined' && sensor_detail.pipelines.length > 0) {
+      sensor_detail.pipelines.forEach(pipeline_name => {
+        if (pipeline_name === 'alarm_' + sensor_detail.name)
+          $("#make_alarm_button").hide();
+        $.getJSON(`/pipeline/status?name=${pipeline_name}`, doc => {
           if (doc == null) return;
-          var cls;
-          if (doc.status == 'inactive') {
-            cls = 'btn-secondary';
-          } else if (doc.status == 'silent') {
-            cls = 'btn-warning';
+          let flavor = `${pipeline_name}`.split('_')[0];
+          let goto_btn = `<button class="btn btn-primary" onclick="location.href='pipeline?pipeline_id=${pipeline_name}'"> Go to</button>`;
+          if (doc.status === 'active') {
+            let stop_btn = `<button class="btn btn-danger" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_stop ${pipeline_name}')"> Stop</button>`;
+            $("#pipelines_active").append(`<tr><td>${pipeline_name}</td><td>`+stop_btn+`</td><td>`+goto_btn+`</td></tr>`);
+          } else if (doc.status === 'silent') {
+            $("#pipelines_silenced").append(`<tr><td>${pipeline_name}</td><td>`+goto_btn+`</td></tr>`);
           } else {
-            cls = 'btn-success';
-          }
-          $("#pipeline_list").append(`<li><a href="/pipeline?pipeline_id=${name}"><button class="btn ${cls} btn-sm">${name}</button></a></li>`);
-          if (name == `alarm_${name}`) {
-            $("#plot_alarms").bootstrapToggle(doc.status=='inactive' ? 'off' : 'on')
+            let start_btn = `<button class="btn btn-success" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_start ${pipeline_name}')"> Start</button>`;
+            $("#pipelines_inactive").append(`<tr><td>${pipeline_name}</td><td>`+start_btn+`</td><td>`+goto_btn+`</td></tr>`);
           }
         }); // get json
       }); // for each
     } else
-      $("#pipeline_list").append(`<li><button class="btn btn-primary btn-sm" onclick=MakeAlarm("${data.name}")>Make new alarm</button></li>`);
-    $("#sensor_device_name").text(data.device).attr('onclick', `DeviceDropdown("${data.device}")`);
-    if (typeof data.control_quantity != 'undefined') {
-      control_map[data.name] = [data.device, data.control_quantity];
+      $("#pipeline_list").append(`<li><button class="btn btn-primary btn-sm" onclick=MakeAlarm("${sensor_detail.name}")>Make new alarm</button></li>`);
+    $("#sensor_device_name").text(sensor_detail.device).attr('onclick', `DeviceDropdown("${sensor_detail.device}")`);
+    if (typeof sensor_detail.control_quantity != 'undefined') {
+      control_map[sensor_detail.name] = [sensor_detail.device, sensor_detail.control_quantity];
       $("#sensor_control").css('display', 'inline');
-      if (data.topic == 'status') {
+      if (sensor_detail.topic === 'status') {
         // this is a valve
         $("#sensor_valve").prop('hidden', false);
         $("#sensor_setpoint").prop('hidden', true);
-        $.getJSON(`/devices/get_last_point?sensor=${data.name}`, doc => {
+        $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
           $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
           $("#current_valve_state").html(doc.value);
         });
-        control_map[data.name].push((data.is_normally_open != undefined));
+        control_map[sensor_detail.name].push((sensor_detail.is_normally_open != undefined));
       } else {
         // this is a setpoint
         $("#sensor_valve").prop('hidden', true);
         $("#sensor_setpoint").prop('hidden', false);
-        $.getJSON(`/devices/get_last_point?sensor=${data.name}`, doc => {
+        $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
           $("#sensor_setpoint_control").val(doc.value);
         });
       }
@@ -113,6 +116,8 @@ function SensorDropdown(sensor) {
 }
 
 function MakeAlarm(name) {
+  if (typeof name == 'undefined')
+    name = $("#detail_sensor_name").html();
   var template = {
     name: `alarm_${name}`,
     node_config: {},

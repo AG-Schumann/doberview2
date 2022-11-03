@@ -12,6 +12,7 @@ block extrahead
 
 block content
   - var flavors = ['alarm', 'control', 'convert'];
+  - var states = ['active', 'silent', 'inactive'];
   div.main-container
     #pipelineAccordion.accordion
       each flavor in flavors
@@ -21,55 +22,19 @@ block content
               | #{flavor.toUpperCase()} PIPELINES
           .accordion-collapse.collapse.show(id=`${flavor}_tables`, aria-labelledby=`${flavor}_header` data-bs-parent='#pipelineAccordion')
             .accordion-body
-              h3 Active pipelines &nbsp
-                i.fas.fa-bell
-              table.table.table-striped.table-hover
-                thead
-                  tr
-                    th Name
-                    th Process time [ms] &nbsp
-                      i.fas.fa-solid.fa-circle-question(data-bs-toggle="tooltip" data-bs-html="true"
-                        title="It takes of order 10ms to get a value from Influx.<br><br>" +
-                        "If the process time is faster than this, something's not working, " +
-                        "and there'll probably be new entries in the logs.<br><br>" +
-                        "Pipelines only run as fast as the slowest sensor they depend on. " +
-                        "If you want a faster pipeline, speed up the sensors.")
-
-                    th Seconds since last cycle
-                    th Cycles since last error &nbsp
-                      i.fas.fa-solid.fa-circle-question(data-bs-toggle="tooltip" data-bs-html="true"
-                        title="The internal buffers take a few cycles to fill, so there can be \"errors\" shortly " +
-                        "after pipeline startup.<br><br>As long as the error number is small and the cycle number isn't, it's fine")
-                    th Actions
-                tbody.pipeline_table(id=`${flavor}_active`)
-                  tr
-                    td(colspan=7) Loading!
-              br
-              h3 Silent pipelines &nbsp;
-                i.fas.fa-bell-slash
-              table.table.table-hover.table-striped
-                thead
-                  tr
-                    th Name
-
-                    th Process time [ms]
-                    th Seconds since last cycle
-                    th Cycles since last error
-                    th Actions
-                tbody.pipeline_table(id=`${flavor}_silent`)
-                  tr
-                    td(colspan=7) Loading!
-              br
-              h3 Inactive pipelines &nbsp;
-                i.fas.fa-hand-paper
-              table.table.table-hover.table-striped
-                thead
-                  tr
-                    th Name
-                    th Start
-                tbody.pipeline_table(id=`${flavor}_inactive`)
-                  tr
-                    td(colspan=2) Loading!
+              each status in states
+                  h3 #{status} pipelines &nbsp;
+                    i.fas.fa-bell
+                  table.table.table-striped.table-hover
+                    thead
+                      tr
+                        th Name
+                        th Description
+                        th Actions
+                    tbody.pipeline_table(id=`${flavor}_${status}`)
+                      tr
+                        td(colspan=2) Loading!
+                  br
 
 
     #silence_dropdown.modal.fade
@@ -118,7 +83,7 @@ block content
       document.jsoneditor = new JSONEditor(document.getElementById('json_text'),
               {"modes": ['tree', 'view', 'form', 'code', 'text']});
       ['alarm', 'control', 'convert'].forEach(pl => PopulatePipelines(pl));
-      setInterval(UpdateLoop, 5000);
+      //setInterval(UpdateLoop, 5000);
       $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});
       var query_search = new URLSearchParams(window.location.search);
       if (query_search.has('pipeline_id')) {

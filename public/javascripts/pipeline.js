@@ -26,49 +26,27 @@ function PopulatePipelines(flavor) {
   var active = 'fas fa-bell';
   var restart = "fas fa-angle-double-left";
   $.getJSON(`/pipeline/get_pipelines?flavor=${flavor}`, data => {
-    $(`#${flavor}_tables .pipeline_table`).empty()
+    $(`#${flavor}_active`).empty();
+    $(`#${flavor}_silent`).empty();
+    $(`#${flavor}_inactive`).empty();
     data.forEach(doc => {
-      var n = doc.name;
-      if (n.toUpperCase().indexOf(filter) > -1) {
-        if (flavor == 'alarm') { //shows the description of the sensor in the pipelines display if the pipeline is an alarm pipeline
-          for (var pipe of doc.pipeline) { // checks if there is only one sensor as the pipeline source
-            if (pipe['name'] == 'source' && sensor == undefined) var sensor = pipe['input_var'];
-            else if (pipe['name'] == 'source' && sensor != undefined) {delete sensor; break;}
+      let n = doc.name;
+      let status = doc.status;
+      $(`#${flavor}_${status}`).append(`<tr><td>${n}</td>`);
+      if (flavor == 'alarm') {
+        let alarm_name = n.split(/_(.*)/s)[1]; // get name of alarm without 'alarm_'
+        $.getJSON(`/devices/sensor_list`, sensor_list => {
+          if (sensor_list.includes(alarm_name)) {
+            $.getJSON(`sensor_detail?sensor=${alarm_name}`, sensor_detail => {
+              $(`#${flavor}_${status}_description`).html(`<td>${sensor_detail.description}</td>`);
+            });
+          } else {
+            $(`#${flavor}_${status}_description`).html(`<td>${doc.description}</td>`);
           }
-          if (sensor != undefined) { // gets the unique sensor description
-            var descr;
-            $.ajax({url:`/devices/sensor_detail?sensor=${sensor}`, dataType: 'json', async:false, success: sensordata => {descr = sensordata['description'];}});
-            if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${descr}</td>`;
-            else var row = `<tr><td data-bs-toggle="tooltip" title="${doc.description}" onclick="PipelineDropdown('${n}')">${descr}</td>`;
-          } else { // if there is not one unique sensor
-	    if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
-	    else var row = `<tr><td data-bs-toggle="tooltip" title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
-        } else { // if pipeline is not an alarm pipeline
-          if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
-          else var row = `<tr><td data-bs-toggle="tooltip" title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
-        if (doc.status == 'active') {
-          try{
-            row += `<td>${doc.rate.toPrecision(3)}</td> <td>${(doc.dt || 0).toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
-            row += `<td><i class="${silent}" data-bs-toggle="tooltip" title="Silence", onclick="SilenceDropdown('${n}')"></i>`;
-            row += `<i class="${stop}" data-bs-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
-            row += `<i class="${restart}" data-bs-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
-          }catch(error){console.log(error);console.log(doc);}
-          $(`#${flavor}_active`).append(row);
-        } else if (doc.status == 'silent') {
-          try{
-            row += `<td>${doc.rate.toPrecision(3)}</td> <td>${(doc.dt || 0).toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
-            row += `<td><i class="${active}" data-bs-toggle="tooltip" title="Activate" onclick="PipelineControl('active','${n}')"></i>`;
-            row += `<i class="${stop}" data-bs-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
-            row += `<i class="${restart}" data-bs-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
-          }catch(error){console.log(error);console.log(doc);}
-          $(`#${flavor}_silent`).append(row);
-        } else if (doc.status == 'inactive') {
-          row += `<td><i class="fas fa-play" onclick="StartPipeline('${n}')"></td>`;
-          $(`#${flavor}_inactive`).append(row);
-        } else
-          console.log(doc)
+        });
+      } else {
+        $(`#${flavor}_${status}_description`).html(`<td>${doc.description}</td>`);
       }
-      $('[data-bs-toggle="tooltip"]').tooltip();
     }); // data.forEach
   }); // getJSON
 }
