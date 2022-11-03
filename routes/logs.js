@@ -11,11 +11,15 @@ router.get('/', function(req, res) {
 
 router.get('/get_logs', function(req, res) {
   var q = url.parse(req.url, true).query;
-  var limit = 100;
-  try {
+  var limit = 10000; // hard limit
+  let tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  if(typeof q.limit != "undefined") {
     limit = parseInt(q.limit);
-  }catch(err) {}
+  }
   var match = {};
+  if (typeof q.from != 'undefined' && typeof q.to != 'undefined') {
+    match['date'] = {$gte:new Date(q.from), $lt:new Date(q.to)};
+  }
   if (typeof q.severity != 'undefined') {
     match['level'] = {$gte: parseInt(q.severity)};
   }
@@ -26,7 +30,7 @@ router.get('/get_logs', function(req, res) {
     {$match: match},
     {$sort: {_id: -1}},
     {$limit: limit},
-    {$project: {name: 1, level: 1, msg: 1, funcname: 1, logged: {$dateToString: {date: {$toDate: '$_id'}}}, _id: 0}}
+    {$project: {name: 1, level: 1, msg: 1, funcname: 1, date: {$dateToString: {date: "$date", timezone:tz, format: "%Y-%m-%d %H:%M:%S.%L"}}, _id: 0}}
   ]).then(docs => res.json(docs))
   .catch(err => {console.log(err.message); return res.json([]);});
 });

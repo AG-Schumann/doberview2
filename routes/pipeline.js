@@ -60,12 +60,15 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
-  req.db.get('pipelines').update({name: doc.name}, {$set: doc}, {upsert: true})
-  .then(() => req.db.get('sensors').update({}, {$pull: {'pipelines': doc.name}}, {multi: true}))
-  .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
+  req.db.get('pipelines').count({name: doc.name}).then(function(count) {
+    return (count ? 'Pipeline changed' : 'Pipeline added')
+  })
+      .then((message) => res.json({notify_msg: message, notify_status: 'success'}))
+      .then(req.db.get('pipelines').update({name: doc.name}, doc, {upsert: true, replaceOne: true}))
+      .then(() => req.db.get('sensors').update({}, {$pull: {'pipelines': doc.name}}, {multi: true}))
+      .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
       {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
-  .then(() => res.json({notify_msg: 'Pipeline added', notify_status: 'success'}))
-  .catch(err => {console.log(err.message); return res.json({err: err.message});});
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 router.post('/delete_pipeline', common.ensureAuthenticated, function(req, res) {

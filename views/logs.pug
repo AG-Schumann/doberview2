@@ -4,7 +4,7 @@ block extrahead
   link(href="https://unpkg.com/tabulator-tables@5.0.10/dist/css/tabulator.min.css" rel="stylesheet")
   link(rel="stylesheet" href="stylesheets/jquery.datetimepicker.css")
   script(type="text/javascript" src="https://unpkg.com/tabulator-tables@5.0.10/dist/js/tabulator.min.js")
-  script(type="text/javascript" src="javascripts/log_scripts.js")
+  script(type="text/javascript" src="javascripts/logs.js")
   script(type="text/javascript" src="javascripts/jquery.datetimepicker.full.min.js")
 
 
@@ -12,16 +12,16 @@ block content
   div.main-container
     .d-flex.flex-row.mr-auto
       div.mt-4
-        input#query_style(type="checkbox" data-toggle='toggle' data-width='100px' data-on='from-to' data-off='last X')
-      div
-        label(for="get_num") last X values: &nbsp;
-        input.form-control(type="number" id="get_num", value=200, step=10, min=0)
-      div(style="display:none")
-        label(for="from_selector") from: &nbsp;
-        input.form-control(type="text" id="from_selector")
-      div(style="display:none")
-        label(for="to_selector") to: &nbsp;
-        input.form-control(type="text" id="to_selector")
+        input#query_mode(type="checkbox" data-toggle='toggle' data-width='100px' data-on='from-to' data-off='last X', onchange='ToggleQueryMode()')
+      #get_num
+        label last X values: &nbsp;
+        input.form-control(type="number", id='get_num_input', value=200, step=10, min=0)
+      #from_selector(style="display:none")
+        label from: &nbsp;
+        input.form-control(type="text", id="from_selector_input" style="width:250px;")
+      #to_selector(style="display:none")
+        label to: &nbsp;
+        input.form-control(type="text", id="to_selector_input" style="width:250px;")
       div
         label(for="min_severity") min. severity: &nbsp;
         select.form-select(id="min_severity")
@@ -39,16 +39,18 @@ block content
 
   script.
     $(document).ready(function() {
-      PopulateNavbar();
       GetLogs();
     });
-    $('#from_selector').datetimepicker({
-      format: "Y-m-d H:i:s",
+    $('#from_selector_input').datetimepicker({
+      format: "Y-m-d H:i:s O",
       value: now_minus_hours(1),
+      showTimezone: true,
     });
-    $('#to_selector').datetimepicker({
-      format: "Y-m-d H:i:s",
+    $('#to_selector_input').datetimepicker({
+      format: "Y-m-d H:i:s O",
       value: new Date(),
+      showTimezone: true,
+      timezone: "UTC"
     });
 
 

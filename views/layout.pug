@@ -113,15 +113,15 @@ html
                     td
                       input.form-control-sm(type="text" id="sensor_desc" name="sensor_desc" size='4')
                   tr
-                    th.py-2 Readout interval &nbsp
+                    th.py-2 Readout interval &nbsp;
                     td
                       input.form-control-sm(type="number" id="readout_interval" name="readout_interval" max="300" size='4')
-                      span &nbsp s
+                      span &nbsp; s
                   tr
                     th.py-2 Units
                     td#sensor_units
                   tr
-                    th.py-2 Readout command &nbsp
+                    th.py-2 Readout command &nbsp;
                     td#readout_command(style='font-family:"Courier New",monospace')
                   tr
                     th.py-2 Transform:
@@ -233,7 +233,7 @@ html
                 table
                   tbody
                     tr
-                      th.py-3 Host &nbsp
+                      th.py-3 Host &nbsp;
                       td
                         input(type="text" id="device_host" name="device_host")
                     tr(class="device_eth")
@@ -255,11 +255,9 @@ html
                           option(value="9600") 9600
                           option(value="19200") 19,200
                     tr(class="device_serial")
-                      th.py-3 SerialID &nbsp
+                      th.py-3 SerialID &nbsp;
                       td
                         input(type="text" id="device_serial_id" name="device_serial_id")
-                span Listens on port &nbsp;
-                span#device_listener
               hr
               h5  Commands
               br
@@ -358,10 +356,9 @@ html
         }
         else {
           $("#login_button").hide();
-          $("#logout_button").show()
+          $("#logout_button").show();
         }
       });
       $("#sensorbox").on('hide.bs.modal', function () {
         $("#selectinterval").val(3);
-        $("#plot_alarms").prop('checked', false);
       });
