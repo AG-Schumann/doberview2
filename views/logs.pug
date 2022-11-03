@@ -17,11 +17,11 @@ block content
         label last X values: &nbsp;
         input.form-control(type="number", id='get_num_input', value=200, step=10, min=0)
       #from_selector(style="display:none")
-        label from (UTC): &nbsp;
-        input.form-control(type="text", id="from_selector_input")
+        label from: &nbsp;
+        input.form-control(type="text", id="from_selector_input" style="width:250px;")
       #to_selector(style="display:none")
-        label to (UTC): &nbsp;
-        input.form-control(type="text", id="to_selector_input")
+        label to: &nbsp;
+        input.form-control(type="text", id="to_selector_input" style="width:250px;")
       div
         label(for="min_severity") min. severity: &nbsp;
         select.form-select(id="min_severity")
@@ -39,18 +39,16 @@ block content
 
   script.
     $(document).ready(function() {
-      PopulateNavbar();
-      setInterval(UpdateClock, 500);
       GetLogs();
     });
     $('#from_selector_input').datetimepicker({
-      format: "Y-m-d H:i:s",
+      format: "Y-m-d H:i:s O",
       value: now_minus_hours(1),
       showTimezone: true,
     });
     $('#to_selector_input').datetimepicker({
-      format: "Y-m-d H:i:s",
-      value: now_utc(),
+      format: "Y-m-d H:i:s O",
+      value: new Date(),
       showTimezone: true,
       timezone: "UTC"
     });
