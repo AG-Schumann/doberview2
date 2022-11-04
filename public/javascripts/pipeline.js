@@ -37,15 +37,13 @@ function PopulatePipelines(flavor) {
       $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
           `<span class="badge p-2 bg-${status_color} rounded-circle"><span class="visually-hidden">X</span></span></td>` +
           `<td onclick="PipelineDropdown('${n}')">${n}</td>` +
-          `<td id="${n}_description" onclick="PipelineDropdown('${n}')">Loading</td>` +
-          `<td id="${n}_actions">Loading</td></tr>`);
+          `<td id="${n}_description" onclick="PipelineDropdown('${n}')"></td>` +
+          `<td id="${n}_actions"></td></tr>`);
       if (flavor == 'alarm') {
         let alarm_name = n.split(/_(.*)/s)[1]; // get name of alarm without 'alarm_'
-        $.getJSON(`/devices/sensor_list`, sensor_list => {
-          if (sensor_list.includes(alarm_name)) {
-            $.getJSON(`sensor_detail?sensor=${alarm_name}`, sensor_detail => {
+        $.getJSON(`sensor_detail?sensor=${alarm_name}`, sensor_detail => {
+          if (sensor_detail !== 'undefided') {
               $(`#${n}_description`).html(`${sensor_detail.description}`);
-            });
           } else {
             $(`#${n}_description`).html(`${doc.description}`);
           }
