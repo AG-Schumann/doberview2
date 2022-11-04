@@ -67,6 +67,14 @@ html
           span.navbar-toggler-icon
         #navbarSupportedContent.collapse.navbar-collapse.justify-content-between
           ul.navbar-nav#navbar_content
+          #select_experiment
+            .dropdown
+              a.btn.btn-warning.dropdown-toggle(role='button' data-bs-toggle='dropdown' onchange="ChangeExperiment()") #{experiment}
+              ul.dropdown-menu
+                li
+                  a.dropdown-item(onclick="ChangeExperiment('pancake')") PANCAKE
+                li
+                  a.dropdown-item(onclick="ChangeExperiment('xebra')") XeBra
           #login
             .nav-item.dropdown(style="padding-right: 0px")
               a#login_dropdown.nav-link.dropdown-toggle(data-bs-toggle='dropdown' href='#' role='button' aria-expanded='false') #{username}

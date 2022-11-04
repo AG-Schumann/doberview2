@@ -24,12 +24,13 @@ var app = express();
 app.disable('x-powered-by');
 
 // uri has format mongodb://{user}:{pass}@{host}:{port}
-var experiment = process.env.DOBERVIEW_EXPERIMENT;
-var authdb = process.env.DOBERVIEW_AUTH_DB || 'admin';
-var uri_base = process.env.DOBERVIEW_MONGO_URI;
+global.experiment = process.env.DOBERVIEW_EXPERIMENT;
+global.authdb = process.env.DOBERVIEW_AUTH_DB || 'admin';
+global.uri_base = process.env.DOBERVIEW_MONGO_URI;
 
-var uri = `${uri_base}/${experiment}`;
-var db = monk(uri, {authSource: authdb});
+let uri = `${uri_base}/${experiment}`;
+let db = monk(`${uri_base}/${experiment}`, {authSource: authdb});
+
 
 // session caching
 var session = require('express-session');
@@ -63,14 +64,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 console.log(`New connection at ${new Date()}`);
 
-// make all our stuff visible to the router
-app.use((req, res, next) => {
-  //if (!req.isAuthenticated()) return res.redirect('/login');
-  req.db = db;
-
-  return next();
-});
-
 app.use('/', deviceRouter);
 app.use('/devices', deviceRouter);
 app.use('/pipeline', pipelineRouter);
@@ -85,6 +78,12 @@ app.use('/auth', authRouter);
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect(req.header('Referer') || '/');
+});
+app.post('/experiment', function(req, res){
+  global.experiment = req.body.experiment;
+  res.json({
+    success: true
+  });
 });
 
 

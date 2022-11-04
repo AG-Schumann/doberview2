@@ -7,7 +7,7 @@ var zmq = require('zeromq');
 
 function  SendCommand(req, to, command, delay=0) {
   var logged = new Date().getTime() + delay;
-  return req.db.get('experiment_config').findOne({name: 'hypervisor'})
+  return db.get('experiment_config').findOne({name: 'hypervisor'})
   .then((doc) => {
     const sock = new zmq.socket('req');
     sock.connect('tcp://' + doc.host + ':' + doc.comms.command.send);
@@ -31,6 +31,8 @@ function ensureAuthenticated(req, res, next) {
 
 function GetRenderConfig(req) {
   var config = {};
+  let map = {'xebra': 'XeBra', 'pancake': 'PANCAKE'}
+  config.experiment = map[experiment];
   if (req.user) config.username = req.user.displayName; else config.username = 'Login';
   return config;
 }

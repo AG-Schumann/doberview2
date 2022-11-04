@@ -2,8 +2,10 @@ var express = require('express');
 var url = require('url');
 var router = express.Router();
 var common = require('./common');
+const monk = require("monk");
 
 router.get('/', function(req, res) {
+  global.db = monk(`${uri_base}/${experiment}`, {authSource: authdb});
   var q = url.parse(req.url, true).query;
   var config = common.GetRenderConfig(req);
   res.render('logs', config);
@@ -26,7 +28,7 @@ router.get('/get_logs', function(req, res) {
   if (typeof q.name != 'undefined' && q.name != "") {
     match['name'] = q.name;
   }
-  req.db.get('logs').aggregate([
+  db.get('logs').aggregate([
     {$match: match},
     {$sort: {_id: -1}},
     {$limit: limit},
