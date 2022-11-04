@@ -21,7 +21,6 @@ function UpdateLoop() {
 
 function PopulatePipelines(flavor) {
   var filter = $("#searchPipelineInput").val().toUpperCase();
-  var stop = 'fas fa-hand-paper';
   var silent = 'fas fa-bell-slash';
   var active = 'fas fa-bell';
   var restart = "fas fa-angle-double-left";
@@ -32,20 +31,39 @@ function PopulatePipelines(flavor) {
     data.forEach(doc => {
       let n = doc.name;
       let status = doc.status;
-      $(`#${flavor}_${status}`).append(`<tr><td>${n}</td>`);
+      let last_error = doc.cycle - doc.error; // last error X cycles ago
+      let status_color = ((last_error < 5) ? 'danger' : 'success');
+      if(doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
+      $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
+          `<span class="badge p-2 bg-${status_color} rounded-circle"><span class="visually-hidden">X</span></span></td>` +
+          `<td onclick="PipelineDropdown('${n}')">${n}</td>` +
+          `<td id="${n}_description" onclick="PipelineDropdown('${n}')">Loading</td>` +
+          `<td id="${n}_actions">Loading</td></tr>`);
       if (flavor == 'alarm') {
         let alarm_name = n.split(/_(.*)/s)[1]; // get name of alarm without 'alarm_'
         $.getJSON(`/devices/sensor_list`, sensor_list => {
           if (sensor_list.includes(alarm_name)) {
             $.getJSON(`sensor_detail?sensor=${alarm_name}`, sensor_detail => {
-              $(`#${flavor}_${status}_description`).html(`<td>${sensor_detail.description}</td>`);
+              $(`#${n}_description`).html(`${sensor_detail.description}`);
             });
           } else {
-            $(`#${flavor}_${status}_description`).html(`<td>${doc.description}</td>`);
+            $(`#${n}_description`).html(`${doc.description}`);
           }
         });
       } else {
-        $(`#${flavor}_${status}_description`).html(`<td>${doc.description}</td>`);
+        $(`#${n}_description`).html(`${doc.description}`);
+      }
+      let stop_button = `<button class="btn btn-danger action_button" onclick="PipelineControl('stop','${n}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
+      let silence_button = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${n}')"><i class="fas fa-solid fa-bell-slash"></i>Silence</button>`;
+      let activate_button = `<button class="btn btn-success action_button" onclick="PipelineControl('active','${n}')"><i class="fas fa-solid fa-bell"></i>Activate</button>`;
+      let restart_button = `<button class="btn btn-primary action_button" onclick="PipelineControl('restart','${n}')"><i class="fas fa-solid fa-rotate"></i> Restart</button>`;
+      let start_button = `<button class="btn btn-success action_button" onclick="StartPipeline('${n}')"><i class="fas fa-solid fa-play"></i> Start</button>`;
+      if (status === 'active') {
+        $(`#${n}_actions`).html(`${silence_button}${stop_button}${restart_button}`);
+      } else if (status === 'silent') {
+        $(`#${n}_actions`).html(`${activate_button}${stop_button}${restart_button}`);
+      } else {
+        $(`#${n}_actions`).html(`${start_button}`);
       }
     }); // data.forEach
   }); // getJSON

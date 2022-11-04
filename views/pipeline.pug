@@ -24,16 +24,16 @@ block content
             .accordion-body
               each status in states
                   h3 #{status} pipelines &nbsp;
-                    i.fas.fa-bell
                   table.table.table-striped.table-hover
                     thead
                       tr
+                        th Status
                         th Name
                         th Description
                         th Actions
                     tbody.pipeline_table(id=`${flavor}_${status}`)
                       tr
-                        td(colspan=2) Loading!
+                        td(colspan=4) Loading!
                   br
 
 

@@ -60,32 +60,34 @@ function SensorDropdown(sensor) {
       $("#alarm_baselevel").val(null);
       $("#plot_alarms").bootstrapToggle('off')
     }
-
     $("#pipelines_active").empty();
     $("#pipelines_silenced").empty();
     $("#pipelines_inactive").empty();
     $("#make_alarm_button").show();
     if (typeof sensor_detail.pipelines != 'undefined' && sensor_detail.pipelines.length > 0) {
-      sensor_detail.pipelines.forEach(pipeline_name => {
-        if (pipeline_name === 'alarm_' + sensor_detail.name)
+      sensor_detail.pipelines.forEach(pl_name => {
+        if (pl_name === 'alarm_' + sensor_detail.name)
           $("#make_alarm_button").hide();
-        $.getJSON(`/pipeline/status?name=${pipeline_name}`, doc => {
+        $.getJSON(`/pipeline/status?name=${pl_name}`, doc => {
           if (doc == null) return;
-          let flavor = `${pipeline_name}`.split('_')[0];
-          let goto_btn = `<button class="btn btn-primary" onclick="location.href='pipeline?pipeline_id=${pipeline_name}'"> Go to</button>`;
+          let flavor = `${pl_name}`.split('_')[0];
+          let last_error = doc.cycle - doc.error; // last error X cycles ago
+          let status_color = ((last_error < 5) ? 'danger' : 'success');
+          if(doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
+          let error_status =  `<span class="badge p-2 bg-${status_color} rounded-circle"><span class="visually-hidden">X</span></span>`;
+          let goto_btn = `<button class="btn btn-primary action_button" onclick="location.href='pipeline?pipeline_id=${pl_name}'"> Go to</button>`;
           if (doc.status === 'active') {
-            let stop_btn = `<button class="btn btn-danger" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_stop ${pipeline_name}')"> Stop</button>`;
-            $("#pipelines_active").append(`<tr><td>${pipeline_name}</td><td>`+stop_btn+`</td><td>`+goto_btn+`</td></tr>`);
+            let stop_btn = `<button class="btn btn-danger action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_stop ${pl_name}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
+            $("#pipelines_active").append(`<tr><td>${pl_name}</td><td>`+stop_btn+`</td><td>`+goto_btn+`</td></tr>`);
           } else if (doc.status === 'silent') {
-            $("#pipelines_silenced").append(`<tr><td>${pipeline_name}</td><td>`+goto_btn+`</td></tr>`);
+            $("#pipelines_silenced").append(`<tr><td>${pl_name}</td><td>`+goto_btn+`</td></tr>`);
           } else {
-            let start_btn = `<button class="btn btn-success" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_start ${pipeline_name}')"> Start</button>`;
-            $("#pipelines_inactive").append(`<tr><td>${pipeline_name}</td><td>`+start_btn+`</td><td>`+goto_btn+`</td></tr>`);
+            let start_btn = `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_start ${pl_name}')"><i class="fas fa-solid fa-play"></i>Start</button>`;
+            $("#pipelines_inactive").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+start_btn+`</td><td>`+goto_btn+`</td></tr>`);
           }
         }); // get json
       }); // for each
-    } else
-      $("#pipeline_list").append(`<li><button class="btn btn-primary btn-sm" onclick=MakeAlarm("${sensor_detail.name}")>Make new alarm</button></li>`);
+    }
     $("#sensor_device_name").text(sensor_detail.device).attr('onclick', `DeviceDropdown("${sensor_detail.device}")`);
     if (typeof sensor_detail.control_quantity != 'undefined') {
       control_map[sensor_detail.name] = [sensor_detail.device, sensor_detail.control_quantity];
@@ -221,6 +223,7 @@ function DrawSensorHistory(sensor) {
   sensor = sensor || $("#detail_sensor_name").html();
   var unit = $("#sensor_units").html();
   var interval = $("#selectinterval :selected").val();
+  console.log(interval);
   $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
     if (data.length == 0)
       var t_min = 0, t_max = 0;

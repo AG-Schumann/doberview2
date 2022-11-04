@@ -1,10 +1,9 @@
 .table tbody tr td {
   word-wrap: break-word;
-  max-width: 150px;
+  max-width: 300px;
+  vertical-align: middle;
 }
-.table tbody tr td i {
-  margin-right: 5px;
-}
-.table tbody tr td i:hover {
-  color: #6c757d;
+
+.action_button {
+  margin-right : 10px;
 }
