@@ -120,7 +120,7 @@ function SensorDropdown(sensor) {
 function MakeAlarm(name) {
   if (typeof name == 'undefined')
     name = $("#detail_sensor_name").html();
-  let desc = $("#sensor_desc").html();
+  let desc = $("#sensor_desc").val();
   var template = {
     name: `alarm_${name}`,
     description: desc,
