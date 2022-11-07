@@ -83,7 +83,7 @@ block content
       document.jsoneditor = new JSONEditor(document.getElementById('json_text'),
               {"modes": ['tree', 'view', 'form', 'code', 'text']});
       ['alarm', 'control', 'convert'].forEach(pl => PopulatePipelines(pl));
-      //setInterval(UpdateLoop, 5000);
+      setInterval(UpdateLoop, 5000);
       $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});
       var query_search = new URLSearchParams(window.location.search);
       if (query_search.has('pipeline_id')) {

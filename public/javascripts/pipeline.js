@@ -37,22 +37,8 @@ function PopulatePipelines(flavor) {
       $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
           `<span class="badge p-2 bg-${status_color} rounded-circle"><span class="visually-hidden">X</span></span></td>` +
           `<td onclick="PipelineDropdown('${n}')">${n}</td>` +
-          `<td id="${n}_description" onclick="PipelineDropdown('${n}')">Loading</td>` +
+          `<td id="${n}_description" onclick="PipelineDropdown('${n}')">${doc.description}</td>` +
           `<td id="${n}_actions">Loading</td></tr>`);
-      if (flavor == 'alarm') {
-        let alarm_name = n.split(/_(.*)/s)[1]; // get name of alarm without 'alarm_'
-        $.getJSON(`/devices/sensor_list`, sensor_list => {
-          if (sensor_list.includes(alarm_name)) {
-            $.getJSON(`sensor_detail?sensor=${alarm_name}`, sensor_detail => {
-              $(`#${n}_description`).html(`${sensor_detail.description}`);
-            });
-          } else {
-            $(`#${n}_description`).html(`${doc.description}`);
-          }
-        });
-      } else {
-        $(`#${n}_description`).html(`${doc.description}`);
-      }
       let stop_button = `<button class="btn btn-danger action_button" onclick="PipelineControl('stop','${n}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
       let silence_button = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${n}')"><i class="fas fa-solid fa-bell-slash"></i>Silence</button>`;
       let activate_button = `<button class="btn btn-success action_button" onclick="PipelineControl('active','${n}')"><i class="fas fa-solid fa-bell"></i>Activate</button>`;

@@ -118,10 +118,13 @@ function SensorDropdown(sensor) {
 }
 
 function MakeAlarm(name) {
+  let desc = '';
   if (typeof name == 'undefined')
     name = $("#detail_sensor_name").html();
+    desc = $("#detail_sensor_description").html();
   var template = {
     name: `alarm_${name}`,
+    description: desc,
     node_config: {},
     status: 'inactive',
     pipeline: [
