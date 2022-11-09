@@ -35,7 +35,10 @@ function PopulatePipelines(flavor) {
       let status_color = ((last_error < 5) ? 'danger' : 'success');
       if(doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
       $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
-          `<span class="badge p-2 bg-${status_color} rounded-circle"><span class="visually-hidden">X</span></span></td>` +
+          `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right"` +
+          `title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n`+
+          `last cycle: &nbsp; ${(doc.dt || 0).toPrecision(1)} s \n`+
+          `last error: &nbsp; ${doc.cycle-doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>` +
           `<td onclick="PipelineDropdown('${n}')">${n}</td>` +
           `<td id="${n}_description" onclick="PipelineDropdown('${n}')">${doc.description}</td>` +
           `<td id="${n}_actions">Loading</td></tr>`);
@@ -51,6 +54,7 @@ function PopulatePipelines(flavor) {
       } else {
         $(`#${n}_actions`).html(`${start_button}`);
       }
+      $('[data-bs-toggle="tooltip"]').tooltip();
     }); // data.forEach
   }); // getJSON
 }
@@ -94,6 +98,7 @@ function SilenceDropdown(name) {
 function AlarmTemplate() {
   return {
     name: 'alarm_NAME',
+    description: '',
     pipeline: [
       {
         name: 'source_NAME',
@@ -114,6 +119,7 @@ function AlarmTemplate() {
 function ControlTemplate() {
   return {
     name: 'control_NAME',
+    description: '',
     pipeline: [
       {
         name: 'source_A',
@@ -167,6 +173,7 @@ function ControlTemplate() {
 function ConvertTemplate() {
   return {
     name: 'convert_NAME',
+    description: '',
     pipeline: [
       {
         name: 'source_NAME',

@@ -7,3 +7,7 @@
 .action_button {
   margin-right : 10px;
 }
+
+.tooltip-inner {
+  white-space: pre-wrap;
+}
