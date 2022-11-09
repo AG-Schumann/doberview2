@@ -7,6 +7,7 @@ var control_map = {};
 
 var detail_chart = null;
 
+
 function Notify(msg, type='success') {
   var elem = $("#notify_" + type)
   elem.children().html(msg);
