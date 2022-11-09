@@ -49,6 +49,7 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
       typeof doc.pipeline == 'undefined' || 
       doc.pipeline.length == 0)
     return res.json({err: 'Bad input'});
+  doc['name'] = doc.name;
   doc['status'] = doc.status || 'inactive';
   doc['description'] = String(doc.description);
   doc['cycles'] = parseInt('0');
