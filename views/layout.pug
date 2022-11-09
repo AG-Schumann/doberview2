@@ -363,6 +363,7 @@ html
 
     script.
       $(document).ready(()=>{
+        $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});
         if ($("#login_dropdown").html() == 'Login') {
           $("#login_button").show();
           $("#logout_button").hide();

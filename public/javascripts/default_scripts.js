@@ -68,23 +68,28 @@ function SensorDropdown(sensor) {
       sensor_detail.pipelines.forEach(pl_name => {
         if (pl_name === 'alarm_' + sensor_detail.name)
           $("#make_alarm_button").hide();
-        $.getJSON(`/pipeline/status?name=${pl_name}`, doc => {
+        $.getJSON(`/pipeline/get_pipeline?name=${pl_name}`, doc => {
           if (doc == null) return;
+          let now = new Date();
           let flavor = `${pl_name}`.split('_')[0];
           let last_error = doc.cycle - doc.error; // last error X cycles ago
           let status_color = ((last_error < 5) ? 'danger' : 'success');
           if(doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
-          let error_status =  `<span class="badge p-2 bg-${status_color} rounded-circle"><span class="visually-hidden">X</span></span>`;
+          let error_status =  `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip"`+
+              `data-bs-placement="right" title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n`+
+              `last cycle: &nbsp; ${((now-doc.heartbeat)/1000 || 0).toPrecision(1)} s \n`+
+              `last error: &nbsp; ${doc.cycles - doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>`;
           let goto_btn = `<button class="btn btn-primary action_button" onclick="location.href='pipeline?pipeline_id=${pl_name}'"> Go to</button>`;
           if (doc.status === 'active') {
             let stop_btn = `<button class="btn btn-danger action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_stop ${pl_name}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
-            $("#pipelines_active").append(`<tr><td>${pl_name}</td><td>`+stop_btn+`</td><td>`+goto_btn+`</td></tr>`);
+            $("#pipelines_active").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+stop_btn+`</td><td>`+goto_btn+`</td></tr>`);
           } else if (doc.status === 'silent') {
-            $("#pipelines_silenced").append(`<tr><td>${pl_name}</td><td>`+goto_btn+`</td></tr>`);
+            $("#pipelines_silenced").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+goto_btn+`</td></tr>`);
           } else {
             let start_btn = `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_start ${pl_name}')"><i class="fas fa-solid fa-play"></i>Start</button>`;
             $("#pipelines_inactive").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+start_btn+`</td><td>`+goto_btn+`</td></tr>`);
           }
+          $('[data-bs-toggle="tooltip"]').tooltip();
         }); // get json
       }); // for each
     }

@@ -107,3 +107,7 @@ ul.CTAs li a {
 #pipelines_of_sensor_table tbody tr td {
   vertical-align: middle;
 }
+
+.tooltip-inner {
+  white-space: pre-wrap;
+}
