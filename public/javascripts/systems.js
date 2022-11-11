@@ -63,9 +63,11 @@ function GetAttributeOrDefault(element, attribute, deflt) {
 function Setup(){
   console.log('Setting up fields');
   var doc = document.querySelector('object#svg_frame').getSVGDocument();
-  var metadata = doc.querySelector('metadata');
-  sensors = metadata.querySelector('sensors').innerHTML.split(' ');
-  links = metadata.querySelector('links').innerHTML.split(' ');
+  
+  // Get a full list of sensors which will need updating
+  var regex = /(?<=^val[uv]e_)[^\-]+/; // Extract what comes after value or valve before -
+  var vals = doc.querySelectorAll('[id^=value_], [id^=valve_]')
+  sensors = Set(Array.from(v, n => n.getAttribute('id').match(regex)[0]))
   if (valves.length == 1 && valves[0] === '')
     valves = [];
   sensors.forEach(s => $.getJSON(`/devices/sensor_detail?sensor=${s}`, data => {
@@ -75,6 +77,7 @@ function Setup(){
       element.style['cursor'] = 'pointer';
     }
   }));
+  var metadata = doc.querySelector('metadata');
   properties = [];
   for (var property of metadata.getElementsByTagName('property')) {
     properties.push({
@@ -86,14 +89,15 @@ function Setup(){
         'min': parseFloat(GetAttributeOrDefault(property, 'min', -Infinity)),
         'max': parseFloat(GetAttributeOrDefault(property, 'max', Infinity)),
     });
+    sensors.push(property.getAttribute('sensor'))
   }
-  linktargets = {};
-  for (var link of links) {
-    for (var element of doc.querySelectorAll(`[id^=link_${link}]`)) {
-      linktargets[element.id] = link;
-      element.addEventListener('click', LoadSVG);
-      element.style['cursor'] = 'pointer';
-    }
+  
+  // Check for links
+  regex = /(?<=^link_)[^\-]+/;
+  for (var element of doc.querySelectorAll(`[id^=link_]`)) {
+    linktargets[element.id] = n.getAttribute('id').match(regex)[0];
+    element.addEventListener('click', LoadSVG);
+    element.style['cursor'] = 'pointer';
   }
   UpdateOnce();
 }
