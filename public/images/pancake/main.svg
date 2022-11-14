@@ -1196,10 +1196,10 @@
            y="201.83575"
            id="text35980-9"><svg:tspan
              sodipodi:role="line"
-             id="value_L_XS_04-0"
              style="font-size:6.35px;stroke-width:0.264583"
              x="197.88019"
-             y="201.83575">Gas system</svg:tspan></svg:text>
+             y="201.83575"
+             id="textgs">Gas system</svg:tspan></svg:text>
       </svg:g>
     </svg:g>
     <svg:g
@@ -1222,7 +1222,7 @@
            y="202.48842"
            id="text35980-9-1"><svg:tspan
              sodipodi:role="line"
-             id="value_L_XS_04-0-2"
+             id="textlab"
              style="font-size:6.35px;text-align:center;text-anchor:middle;stroke-width:0.264583"
              x="216.19844"
              y="202.48842">Lab</svg:tspan></svg:text>
@@ -1248,7 +1248,7 @@
            y="202.48842"
            id="text35980-9-1-4"><svg:tspan
              sodipodi:role="line"
-             id="value_L_XS_04-0-2-4"
+             id="textfc"
              style="font-size:6.35px;text-align:center;text-anchor:middle;stroke-width:0.264583"
              x="216.19844"
              y="202.48842">Fast cooling</svg:tspan></svg:text>
@@ -1487,7 +1487,6 @@
     </svg:g>
   </svg:g>
   <metadata>
-    <sensors>P_IC_01 P_IC_02 P_IC_03 L_TS_01 P_TS_01 T_HX_01 T_HX_02 T_HX_03 T_HX_04 T_HX_05 T_HX_06 T_IC_14 T_IC_15 T_IC_17 T_IC_18 T_IC_20 T_IC_23 T_IC_24 F_GS_01 S_GS_04 P_IC_01 P_IV_01 P_TP_01 M_TS_01 S_TS_01 T_TS_01 T_TS_02 T_TS_03 W_TS_01 S_IV_02 S_IV_03 S_IC_02 S_IC_03 S_IC_04 S_IV_01 S_IV_04 S_IV_05 S_IC_05 S_IC_06</sensors>
     <property
        targetId="n2levelbox"
        targetAttribute="height"
@@ -1530,7 +1529,5 @@
        offset="1"
        scaling="-1"
        sensor="S_IV_04" />
-    <links>gassystem lab fastcooling</links>
-    <valves>S_GS_04 S_TS_01 S_IV_02 S_IV_03 S_IC_03 S_IC_04 S_IV_01 S_IV_04 S_IC_02</valves>
   </metadata>
 </svg:svg>

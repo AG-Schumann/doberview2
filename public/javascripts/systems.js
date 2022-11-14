@@ -1,5 +1,4 @@
 var sensors = [];
-var valves = [];
 var units = {};
 var properties = [];
 var linktargets = {};
@@ -63,20 +62,42 @@ function GetAttributeOrDefault(element, attribute, deflt) {
 function Setup(){
   console.log('Setting up fields');
   var doc = document.querySelector('object#svg_frame').getSVGDocument();
-  
+ 
+  var regex = /(?<=^sensorbox_)[^\-]+/; 
+  for (var sensorbox of doc.querySelectorAll('[id^=sensorbox_]')) {
+    sensor = sensorbox.getAttribute('id').match(regex)[0];
+    var suffix = `-${Math.floor(Math.random() * 10000)}`;
+    // Add a description box for the sensor
+    var descbox = doc.createElementNS("http://www.w3.org/2000/svg", 'text');
+    descbox.id = `descbox_${sensor}-${suffix}`;
+    fontsize = sensorbox.getAttribute('height') / 4;
+    descbox.setAttribute('x', parseFloat(sensorbox.getAttribute('x')) + 1);
+    descbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + fontsize + 0.5);
+    descbox.textContent = `${sensor} (UNITS)`;
+    descbox.style.fontFamily = 'sans-serif';
+    descbox.style.fontSize = `${fontsize}px`;
+    sensorbox.parentElement.appendChild(descbox);
+
+    // Add the value box
+    var valbox = doc.createElementNS("http://www.w3.org/2000/svg", 'text');
+    valbox.id = `value_${sensor}-${suffix}`;
+    fontsize = sensorbox.getAttribute('height') / 2;
+    valbox.setAttribute('x', parseFloat(sensorbox.getAttribute('x')) + 1);
+    valbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + fontsize*2 - 3);
+    valbox.textContent = `${sensor}`;
+    valbox.style.fontFamily = 'sans-serif';
+    valbox.style.fontSize = `${fontsize}px`;
+    sensorbox.parentElement.appendChild(valbox);
+
+    sensorbox.addEventListener('click', function() {SensorDropdown(sensor);});
+    sensorbox.style['cursor'] = 'pointer';
+  }
+
   // Get a full list of sensors which will need updating
-  var regex = /(?<=^val[uv]e_)[^\-]+/; // Extract what comes after value or valve before -
-  var vals = doc.querySelectorAll('[id^=value_], [id^=valve_]')
-  sensors = Set(Array.from(v, n => n.getAttribute('id').match(regex)[0]))
-  if (valves.length == 1 && valves[0] === '')
-    valves = [];
-  sensors.forEach(s => $.getJSON(`/devices/sensor_detail?sensor=${s}`, data => {
-    units[s] = data.units;
-    for (var element of doc.querySelectorAll(`[id^=value_${s}],[id^=valve_${s}]`)) {
-      element.addEventListener('click', function() {SensorDropdown(s);});
-      element.style['cursor'] = 'pointer';
-    }
-  }));
+  regex = /(?<=^val[uv]e_)[^\-]+/; // Extract what comes after value or valve before -
+  var vals = doc.querySelectorAll('[id^=value_], [id^=valve_]');
+  sensors = new Set(Array.from(vals, n => n.getAttribute('id').match(regex)[0]));
+
   var metadata = doc.querySelector('metadata');
   properties = [];
   for (var property of metadata.getElementsByTagName('property')) {
@@ -89,13 +110,24 @@ function Setup(){
         'min': parseFloat(GetAttributeOrDefault(property, 'min', -Infinity)),
         'max': parseFloat(GetAttributeOrDefault(property, 'max', Infinity)),
     });
-    sensors.push(property.getAttribute('sensor'))
+    sensors.add(property.getAttribute('sensor'));
   }
-  
+
+  sensors.forEach(s => $.getJSON(`/devices/sensor_detail?sensor=${s}`, data => {
+    units[s] = data.units;
+    for (var element of doc.querySelectorAll(`[id^=value_${s}],[id^=valve_${s}]`)) {
+      element.addEventListener('click', function() {SensorDropdown(s);});
+      element.style['cursor'] = 'pointer';
+    }
+    for (var element of doc.querySelectorAll(`[id^=descbox_${s}]`)) {
+      element.textContent = `${sensor} (${units[s]})`;
+    }
+  }));
+
   // Check for links
   regex = /(?<=^link_)[^\-]+/;
   for (var element of doc.querySelectorAll(`[id^=link_]`)) {
-    linktargets[element.id] = n.getAttribute('id').match(regex)[0];
+    linktargets[element.id] = element.getAttribute('id').match(regex)[0];
     element.addEventListener('click', LoadSVG);
     element.style['cursor'] = 'pointer';
   }
@@ -133,7 +165,7 @@ function UpdateOnce() {
         element.classList.add(value ? 'on' : 'off');
       }
       for (var element of doc.querySelectorAll(`[id^=value_${s}]`)) {
-        element.innerHTML = `${SigFigs(value)}`;
+        element.innerHTML = `${SigFigs(value)}`.replace('-', '\u2212');
       }
       for (var property of properties) {
         if (property['sensor'] == s) {
