@@ -65,7 +65,7 @@ function Setup(){
  
   var regex = /(?<=^sensorbox_)[^\-]+/; 
   for (var sensorbox of doc.querySelectorAll('[id^=sensorbox_]')) {
-    sensor = sensorbox.getAttribute('id').match(regex)[0];
+    var sensor = sensorbox.getAttribute('id').match(regex)[0];
     var suffix = `-${Math.floor(Math.random() * 10000)}`;
     // Add a description box for the sensor
     var descbox = doc.createElementNS("http://www.w3.org/2000/svg", 'text');
@@ -89,8 +89,6 @@ function Setup(){
     valbox.style.fontSize = `${fontsize}px`;
     sensorbox.parentElement.appendChild(valbox);
 
-    sensorbox.addEventListener('click', function() {SensorDropdown(sensor);});
-    sensorbox.style['cursor'] = 'pointer';
   }
 
   // Get a full list of sensors which will need updating
@@ -115,12 +113,12 @@ function Setup(){
 
   sensors.forEach(s => $.getJSON(`/devices/sensor_detail?sensor=${s}`, data => {
     units[s] = data.units;
-    for (var element of doc.querySelectorAll(`[id^=value_${s}],[id^=valve_${s}]`)) {
+    for (var element of doc.querySelectorAll(`[id*=_${s}]`)) {
       element.addEventListener('click', function() {SensorDropdown(s);});
       element.style['cursor'] = 'pointer';
     }
     for (var element of doc.querySelectorAll(`[id^=descbox_${s}]`)) {
-      element.textContent = `${sensor} (${units[s]})`;
+      element.textContent = `${s} (${units[s]})`;
     }
   }));
 
