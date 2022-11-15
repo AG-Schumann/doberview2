@@ -21,9 +21,6 @@ function UpdateLoop() {
 
 function PopulatePipelines(flavor) {
   var filter = $("#searchPipelineInput").val().toUpperCase();
-  var silent = 'fas fa-bell-slash';
-  var active = 'fas fa-bell';
-  var restart = "fas fa-angle-double-left";
   $.getJSON(`/pipeline/get_pipelines?flavor=${flavor}`, data => {
     $(`#${flavor}_active`).empty();
     $(`#${flavor}_silent`).empty();
@@ -263,23 +260,41 @@ function FillTemplate(which) {
 function AddOrUpdatePipeline() {
   if (ValidatePipeline(false)) {
     var doc = JSON.parse(JSON.stringify(document.jsoneditor.get()));
-    if (typeof doc._id != 'undefined')
-      delete doc._id;
-    $.ajax({
-      type: 'POST',
-      url: "/pipeline/add_pipeline",
-      data: doc,
-      success: (data) => {
-        if (typeof data != 'undefined' && typeof data.err != 'undefined')
-          alert(data.err);
-        else {
-          $("#pipelinebox").modal('hide');
-          Notify(data.notify_msg, data.notify_status);
-        }
-      },
-      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
-    });
+    let old_name = $('#detail_pipeline_name').html();
+    if (old_name.startsWith("New")) {
+      $.ajax({
+        type: 'POST',
+        url: "/pipeline/add_pipeline",
+        data: doc,
+        success: (data) => {
+          if (typeof data != 'undefined' && typeof data.err != 'undefined')
+            alert(data.err);
+          else {
+            $("#pipelinebox").modal('hide');
+            Notify(data.notify_msg, data.notify_status);
+          }
+        },
+        error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+      });
+    } else {
+      doc.old_name = old_name;
+      $.ajax({
+        type: 'POST',
+        url: "/pipeline/update_pipeline",
+        data: doc,
+        success: (data) => {
+          if (typeof data != 'undefined' && typeof data.err != 'undefined')
+            alert(data.err);
+          else {
+            $("#pipelinebox").modal('hide');
+            Notify(data.notify_msg, data.notify_status);
+          }
+        },
+        error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+      });
+    }
   }
+
 }
 
 
