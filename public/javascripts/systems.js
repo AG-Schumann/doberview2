@@ -47,9 +47,9 @@ function SetRefreshRate(rate) {
 }
 
 function SigFigs(val) {
-  LOG_THRESHOLD=3;
+  LOG_THRESHOLD=2;
   SIG_FIGS=3;
-  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toPrecision(SIG_FIGS) : val.toExponential(SIG_FIGS);
+  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toPrecision(SIG_FIGS) : val.toExponential(SIG_FIGS - 1);
 }
 
 function GetAttributeOrDefault(element, attribute, deflt) {
@@ -67,26 +67,26 @@ function Setup(){
   for (var sensorbox of doc.querySelectorAll('[id^=sensorbox_]')) {
     var sensor = sensorbox.getAttribute('id').match(regex)[0];
     var suffix = `-${Math.floor(Math.random() * 10000)}`;
+    var boxheight = sensorbox.getAttribute('height');
+
     // Add a description box for the sensor
     var descbox = doc.createElementNS("http://www.w3.org/2000/svg", 'text');
     descbox.id = `descbox_${sensor}-${suffix}`;
-    fontsize = sensorbox.getAttribute('height') / 4;
     descbox.setAttribute('x', parseFloat(sensorbox.getAttribute('x')) + 1);
-    descbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + fontsize + 0.5);
+    descbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + boxheight * 0.3);
     descbox.textContent = `${sensor} (UNITS)`;
     descbox.style.fontFamily = 'sans-serif';
-    descbox.style.fontSize = `${fontsize}px`;
+    descbox.style.fontSize = `${boxheight/4}px`;
     sensorbox.parentElement.appendChild(descbox);
 
     // Add the value box
     var valbox = doc.createElementNS("http://www.w3.org/2000/svg", 'text');
     valbox.id = `value_${sensor}-${suffix}`;
-    fontsize = sensorbox.getAttribute('height') / 2;
     valbox.setAttribute('x', parseFloat(sensorbox.getAttribute('x')) + 1);
-    valbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + fontsize*2 - 3);
+    valbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + boxheight * 0.8);
     valbox.textContent = `${sensor}`;
     valbox.style.fontFamily = 'sans-serif';
-    valbox.style.fontSize = `${fontsize}px`;
+    valbox.style.fontSize = `${boxheight*0.45}px`;
     sensorbox.parentElement.appendChild(valbox);
 
   }
@@ -163,7 +163,7 @@ function UpdateOnce() {
         element.classList.add(value ? 'on' : 'off');
       }
       for (var element of doc.querySelectorAll(`[id^=value_${s}]`)) {
-        element.innerHTML = `${SigFigs(value)}`.replace('-', '\u2212');
+        element.innerHTML = `${SigFigs(value)}`.replaceAll('-', '\u2212');
       }
       for (var property of properties) {
         if (property['sensor'] == s) {
