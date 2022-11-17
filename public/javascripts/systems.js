@@ -47,9 +47,16 @@ function SetRefreshRate(rate) {
 }
 
 function SigFigs(val) {
-  LOG_THRESHOLD=2;
-  SIG_FIGS=3;
-  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toPrecision(SIG_FIGS) : val.toExponential(SIG_FIGS - 1);
+  LOG_THRESHOLD_POS=3;
+  LOG_THRESHOLD_NEG=2;
+  SIG_FIGS=4;
+  if ((-LOG_THRESHOLD_NEG < Math.log10(Math.abs(val)))
+      & (Math.log10(Math.abs(val)) < LOG_THRESHOLD_POS+1)
+      | val == 0) {
+    return val.toPrecision(SIG_FIGS);
+  } else {
+    return val.toExponential(SIG_FIGS);
+  }
 }
 
 function GetAttributeOrDefault(element, attribute, deflt) {

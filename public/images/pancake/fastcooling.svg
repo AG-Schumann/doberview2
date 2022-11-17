@@ -22,15 +22,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1"
-     inkscape:cx="664"
-     inkscape:cy="442"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="405.17219"
+     inkscape:cy="647.70981"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g114297"
      showguides="false" />
   <svg:defs
      id="defs2">
@@ -488,12 +488,12 @@
        id="g114297"
        transform="translate(-10.977265,133.5748)">
       <svg:rect
-         style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1.01054;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="n2dewarfill"
-         width="45.767387"
-         height="35.180824"
-         x="12.921951"
-         y="38.966217" />
+         width="46.296555"
+         height="35.515572"
+         x="12.657368"
+         y="38.763" />
       <svg:rect
          style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="sensorbox_M_TS_01"
@@ -551,5 +551,21 @@
   </svg:g>
   <metadata>
     <links>main</links>
+    <property
+       targetId="n2dewarfill"
+       targetAttribute="height"
+       scaling="0.217"
+       offset="-27.776"
+       sensor="M_TS_01"
+       max="35.515572"
+       min="0" />
+    <property
+       targetId="n2dewarfill"
+       targetAttribute="y"
+       scaling="-0.217"
+       offset="102.055"
+       sensor="M_TS_01"
+       min="38.762836"
+       max="74.35" />
   </metadata>
 </svg:svg>
