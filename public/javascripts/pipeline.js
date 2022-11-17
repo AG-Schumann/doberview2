@@ -21,52 +21,35 @@ function UpdateLoop() {
 
 function PopulatePipelines(flavor) {
   var filter = $("#searchPipelineInput").val().toUpperCase();
-  var stop = 'fas fa-hand-paper';
-  var silent = 'fas fa-bell-slash';
-  var active = 'fas fa-bell';
-  var restart = "fas fa-angle-double-left";
   $.getJSON(`/pipeline/get_pipelines?flavor=${flavor}`, data => {
-    $(`#${flavor}_tables .pipeline_table`).empty()
+    $(`#${flavor}_active`).empty();
+    $(`#${flavor}_silent`).empty();
+    $(`#${flavor}_inactive`).empty();
     data.forEach(doc => {
-      var n = doc.name;
-      if (n.toUpperCase().indexOf(filter) > -1) {
-        if (flavor == 'alarm') { //shows the description of the sensor in the pipelines display if the pipeline is an alarm pipeline
-          for (var pipe of doc.pipeline) { // checks if there is only one sensor as the pipeline source
-            if (pipe['name'] == 'source' && sensor == undefined) var sensor = pipe['input_var'];
-            else if (pipe['name'] == 'source' && sensor != undefined) {delete sensor; break;}
-          }
-          if (sensor != undefined) { // gets the unique sensor description
-            var descr;
-            $.ajax({url:`/devices/sensor_detail?sensor=${sensor}`, dataType: 'json', async:false, success: sensordata => {descr = sensordata['description'];}});
-            if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${descr}</td>`;
-            else var row = `<tr><td data-bs-toggle="tooltip" title="${doc.description}" onclick="PipelineDropdown('${n}')">${descr}</td>`;
-          } else { // if there is not one unique sensor
-	    if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
-	    else var row = `<tr><td data-bs-toggle="tooltip" title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
-        } else { // if pipeline is not an alarm pipeline
-          if (doc.description == undefined) var row = `<tr><td onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;
-          else var row = `<tr><td data-bs-toggle="tooltip" title="${doc.description}" onclick="PipelineDropdown('${n}')">${n.replace(flavor+'_','').replaceAll('_',' ')}</td>`;}
-        if (doc.status == 'active') {
-          try{
-            row += `<td>${doc.rate.toPrecision(3)}</td> <td>${(doc.dt || 0).toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
-            row += `<td><i class="${silent}" data-bs-toggle="tooltip" title="Silence", onclick="SilenceDropdown('${n}')"></i>`;
-            row += `<i class="${stop}" data-bs-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
-            row += `<i class="${restart}" data-bs-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
-          }catch(error){console.log(error);console.log(doc);}
-          $(`#${flavor}_active`).append(row);
-        } else if (doc.status == 'silent') {
-          try{
-            row += `<td>${doc.rate.toPrecision(3)}</td> <td>${(doc.dt || 0).toPrecision(1)}</td> <td>${doc.cycle-doc.error}</td>`;
-            row += `<td><i class="${active}" data-bs-toggle="tooltip" title="Activate" onclick="PipelineControl('active','${n}')"></i>`;
-            row += `<i class="${stop}" data-bs-toggle="tooltip" title="Stop" onclick="PipelineControl('stop','${n}')"></i>`;
-            row += `<i class="${restart}" data-bs-toggle="tooltip" title="Restart" onclick="PipelineControl('restart','${n}')"></i></tr>`;
-          }catch(error){console.log(error);console.log(doc);}
-          $(`#${flavor}_silent`).append(row);
-        } else if (doc.status == 'inactive') {
-          row += `<td><i class="fas fa-play" onclick="StartPipeline('${n}')"></td>`;
-          $(`#${flavor}_inactive`).append(row);
-        } else
-          console.log(doc)
+      let n = doc.name;
+      let status = doc.status;
+      let last_error = doc.cycle - doc.error; // last error X cycles ago
+      let status_color = ((last_error < 5) ? 'danger' : 'success');
+      if(doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
+      $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
+          `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right"` +
+          `title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n`+
+          `last cycle: &nbsp; ${(doc.dt || 0).toPrecision(1)} s \n`+
+          `last error: &nbsp; ${doc.cycle-doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>` +
+          `<td onclick="PipelineDropdown('${n}')">${n}</td>` +
+          `<td id="${n}_description" onclick="PipelineDropdown('${n}')">${doc.description}</td>` +
+          `<td id="${n}_actions">Loading</td></tr>`);
+      let stop_button = `<button class="btn btn-danger action_button" onclick="PipelineControl('stop','${n}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
+      let silence_button = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${n}')"><i class="fas fa-solid fa-bell-slash"></i>Silence</button>`;
+      let activate_button = `<button class="btn btn-success action_button" onclick="PipelineControl('active','${n}')"><i class="fas fa-solid fa-bell"></i>Activate</button>`;
+      let restart_button = `<button class="btn btn-primary action_button" onclick="PipelineControl('restart','${n}')"><i class="fas fa-solid fa-rotate"></i> Restart</button>`;
+      let start_button = `<button class="btn btn-success action_button" onclick="StartPipeline('${n}')"><i class="fas fa-solid fa-play"></i> Start</button>`;
+      if (status === 'active') {
+        $(`#${n}_actions`).html(`${silence_button}${stop_button}${restart_button}`);
+      } else if (status === 'silent') {
+        $(`#${n}_actions`).html(`${activate_button}${stop_button}${restart_button}`);
+      } else {
+        $(`#${n}_actions`).html(`${start_button}`);
       }
       $('[data-bs-toggle="tooltip"]').tooltip();
     }); // data.forEach
@@ -112,6 +95,7 @@ function SilenceDropdown(name) {
 function AlarmTemplate() {
   return {
     name: 'alarm_NAME',
+    description: '',
     pipeline: [
       {
         name: 'source_NAME',
@@ -132,6 +116,7 @@ function AlarmTemplate() {
 function ControlTemplate() {
   return {
     name: 'control_NAME',
+    description: '',
     pipeline: [
       {
         name: 'source_A',
@@ -185,6 +170,7 @@ function ControlTemplate() {
 function ConvertTemplate() {
   return {
     name: 'convert_NAME',
+    description: '',
     pipeline: [
       {
         name: 'source_NAME',
@@ -274,23 +260,41 @@ function FillTemplate(which) {
 function AddOrUpdatePipeline() {
   if (ValidatePipeline(false)) {
     var doc = JSON.parse(JSON.stringify(document.jsoneditor.get()));
-    if (typeof doc._id != 'undefined')
-      delete doc._id;
-    $.ajax({
-      type: 'POST',
-      url: "/pipeline/add_pipeline",
-      data: doc,
-      success: (data) => {
-        if (typeof data != 'undefined' && typeof data.err != 'undefined')
-          alert(data.err);
-        else {
-          $("#pipelinebox").modal('hide');
-          Notify(data.notify_msg, data.notify_status);
-        }
-      },
-      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
-    });
+    let old_name = $('#detail_pipeline_name').html();
+    if (old_name.startsWith("New")) {
+      $.ajax({
+        type: 'POST',
+        url: "/pipeline/add_pipeline",
+        data: doc,
+        success: (data) => {
+          if (typeof data != 'undefined' && typeof data.err != 'undefined')
+            alert(data.err);
+          else {
+            $("#pipelinebox").modal('hide');
+            Notify(data.notify_msg, data.notify_status);
+          }
+        },
+        error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+      });
+    } else {
+      doc.old_name = old_name;
+      $.ajax({
+        type: 'POST',
+        url: "/pipeline/update_pipeline",
+        data: doc,
+        success: (data) => {
+          if (typeof data != 'undefined' && typeof data.err != 'undefined')
+            alert(data.err);
+          else {
+            $("#pipelinebox").modal('hide');
+            Notify(data.notify_msg, data.notify_status);
+          }
+        },
+        error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+      });
+    }
   }
+
 }
 
 
