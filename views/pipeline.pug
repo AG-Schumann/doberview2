@@ -84,13 +84,21 @@ block content
         "mode": "tree",
         onEditable: function (node) {
           switch (node.field) {
+            case '_id':
+            case 'cycles':
+            case 'depends_on':
+            case 'error':
+            case 'heartbeat':
+            case 'rate':
+            case 'status':
+                return {field: false, value: false}
             case 'name':
             case 'description':
             case 'pipeline':
             case 'node_config':
               return {field: false, value: true}
             default:
-              return {field: false, value: false}
+              return {field: true, value: true}
           }
         }
       }
