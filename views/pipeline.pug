@@ -83,8 +83,30 @@ block content
   script.
     $(document).ready(function() {
       PopulateNavbar();
-      document.jsoneditor = new JSONEditor(document.getElementById('json_text'),
-              {"modes": ['tree', 'view', 'form', 'code', 'text']});
+      const options = {
+        "mode": "tree",
+        onEditable: function (node) {
+          switch (node.field) {
+            case '_id':
+            case 'cycles':
+            case 'depends_on':
+            case 'error':
+            case 'heartbeat':
+            case 'rate':
+            case 'status':
+                return {field: false, value: false}
+            case 'name':
+            case 'description':
+            case 'pipeline':
+            case 'node_config':
+              return {field: false, value: true}
+            default:
+              return {field: true, value: true}
+          }
+        }
+      }
+
+      document.jsoneditor = new JSONEditor(document.getElementById('json_text'), options);
       ['alarm', 'control', 'convert'].forEach(pl => PopulatePipelines(pl));
       setInterval(UpdateLoop, 5000);
       $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});

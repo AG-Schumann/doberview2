@@ -1,425 +1,522 @@
-<svg
-    viewBox="0 0 940 220"
-    xmlns="http://www.w3.org/2000/svg"
->
-    <metadata>
-        <sensors>T_IC_03 T_IC_04 T_IC_06 T_IC_01 T_IC_08 T_IC_07 T_IC_13 T_IC_10 T_IC_11 T_IC_12 T_IC_05 T_IC_02</sensors>
-        <valves></valves>
-        <links></links>
-    </metadata>
-    
-    <style>
-        rect{
-            stroke: black;
-            stroke-width: 2pt;
-            fill: None
-        }
-        
-        polygon, polyline, line{
-            stroke: black;
-            stroke-width: 1pt;
-            fill: None
-        }
-        line.on{
-            stroke-width: 1pt;
-            stroke: green;
-        }
-        line.off{
-            stroke-width: .25pt;
-            stroke: red;
-        }
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
 
-        polygon.on{
-            fill: green;
-        }
-        polygon.off{
-            fill: red;
-        }
+<svg:svg
+   width="297mm"
+   height="210mm"
+   viewBox="0 0 297 210"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   sodipodi:docname="fastcooling.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1"
+     inkscape:cx="665.5"
+     inkscape:cy="522"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     showguides="false" />
+  <svg:defs
+     id="defs2">
+    <svg:marker
+       style="overflow:visible;"
+       id="marker55454"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.2) rotate(180) translate(6,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55452" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible"
+       id="marker55444"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Sstart"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.2) translate(6,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55442" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible;"
+       id="Arrow1Send"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Send"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.2) rotate(180) translate(6,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55165" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible"
+       id="Arrow1Sstart"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Sstart"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.2) translate(6,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55162" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible;"
+       id="Arrow1Lend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.8) rotate(180) translate(12.5,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55153" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible"
+       id="Arrow1Lstart"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.8) translate(12.5,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path55150" />
+    </svg:marker>
+    <svg:style
+       id="style74938"><![CDATA[
+.on {
+  fill:#008000;
+}
 
-        
-        .mat_copper{
-            fill: chocolate;
-        }
-        text{
-            text-anchor: middle;
-            alignment-baseline: middle;
-        }
-        .txt_ontop{
-            alignment-baseline: baseline;
-        }
-        .txt_below{
-            alignment-baseline: hanging;
-        }
-    </style>
 
+.off {
+  fill:#808080;
+}
 
-    <g>
-        <!-- arrow in -->
-        <polyline points="443.3333333333333,70  453.3333333333333,80  463.3333333333333,70"/>
-        
-        <!-- arrow out -->
-        <polyline points="476.6666666666667,80  486.6666666666667,70  496.6666666666667,80 "/>
-        
-        <!-- valve -->
-        <polygon
-            id="valve_S_FC_01"
-            points="443.3333333333333,100.0 463.3333333333333,120.0 463.3333333333333,100.0 443.3333333333333,120.0"
-        />"
-        
-        <!-- pipes -->
-        
-        
-        
-        
-        
-        
-        <!-- line in above valve -->
-        <line
-            x1="453.3333333333333"
-            x2="453.3333333333333"
-            y1="110.0"
-            y2="70"
-        />
-        
-        <!-- line in  below valve -->
-        <line
-            id="valve_S_FC_01"
-            x1="453.3333333333333"
-            x2="453.3333333333333"
-            y1="175"
-            y2="110.0"
-        />
-        
-        
-        <!-- line out --> 
-        <line
-            id="valve_S_FC_01"
-            x1="486.6666666666667"
-            x2="486.6666666666667"
-            y1="210"
-            y2="70"
-        />
-        
-        
-        <!-- vertical pipes -->
-        <line
-            id="valve_S_FC_01"
-            x1="45.0"
-            x2="845.0"
-            y1="175"
-            y2="175"
-        />
-        
-        <line
-            id="valve_S_FC_01"
-            x1="95.0"
-            x2="895.0"
-            y1="210"
-            y2="210"
-        />
-        
-    </g>
+.offgone.off {
+  opacity:0;
+}
 
-
-    <!-- Pad 6 -->
-    <g> 
-        <rect
-            class="mat_copper"
-            x="20"
-            y="70"
-            height="80"
-            width="100"
-        />
-         <text
-            x="70.0"
-            y="72.00"
-            class="txt_below"
-        >
-            Pad 6
-        </text>
-        <text
-            id="value_T_IC_03"
-            x="70.0"
-            y="110.0"
-        >
-            T_PAD_Pad 6
-        </text>
-        <text
-            id="value_T_IC_04"
-            class="txt_below"
-            x="70.0"
-            y="45.0"
-        >
-            T_WALL_Pad 6
-        </text>
-        <line
-            id="valve_S_FC_01"
-            x1="45.0"
-            x2="45.0"
-            y1="150"
-            y2="175"
-            
-        />
-        
-        <line
-            id="valve_S_FC_01"
-            x1="95.0"
-            x2="95.0"
-            y1="150"
-            y2="210"
-        />
-    
-    </g>
-    
-    <!-- Pad 4 -->
-    <g> 
-        <rect
-            class="mat_copper"
-            x="170"
-            y="70"
-            height="80"
-            width="100"
-        />
-         <text
-            x="220.0"
-            y="72.00"
-            class="txt_below"
-        >
-            Pad 4
-        </text>
-        <text
-            id="value_T_IC_06"
-            x="220.0"
-            y="110.0"
-        >
-            T_PAD_Pad 4
-        </text>
-        <text
-            id="value_T_IC_01"
-            class="txt_below"
-            x="220.0"
-            y="45.0"
-        >
-            T_WALL_Pad 4
-        </text>
-        <line
-            id="valve_S_FC_01"
-            x1="195.0"
-            x2="195.0"
-            y1="150"
-            y2="175"
-            
-        />
-        
-        <line
-            id="valve_S_FC_01"
-            x1="245.0"
-            x2="245.0"
-            y1="150"
-            y2="210"
-        />
-    
-    </g>
-    
-    <!-- Pad 2 -->
-    <g> 
-        <rect
-            class="mat_copper"
-            x="320"
-            y="70"
-            height="80"
-            width="100"
-        />
-         <text
-            x="370.0"
-            y="72.00"
-            class="txt_below"
-        >
-            Pad 2
-        </text>
-        <text
-            id="value_T_IC_08"
-            x="370.0"
-            y="110.0"
-        >
-            T_PAD_Pad 2
-        </text>
-        <text
-            id="value_T_IC_07"
-            class="txt_below"
-            x="370.0"
-            y="45.0"
-        >
-            T_WALL_Pad 2
-        </text>
-        <line
-            id="valve_S_FC_01"
-            x1="345.0"
-            x2="345.0"
-            y1="150"
-            y2="175"
-            
-        />
-        
-        <line
-            id="valve_S_FC_01"
-            x1="395.0"
-            x2="395.0"
-            y1="150"
-            y2="210"
-        />
-    
-    </g>
-    
-    <!-- Pad 1 -->
-    <g> 
-        <rect
-            class="mat_copper"
-            x="520"
-            y="70"
-            height="80"
-            width="100"
-        />
-         <text
-            x="570.0"
-            y="72.00"
-            class="txt_below"
-        >
-            Pad 1
-        </text>
-        <text
-            id="value_T_IC_13"
-            x="570.0"
-            y="110.0"
-        >
-            T_PAD_Pad 1
-        </text>
-        <text
-            id="value_T_IC_10"
-            class="txt_below"
-            x="570.0"
-            y="45.0"
-        >
-            T_WALL_Pad 1
-        </text>
-        <line
-            id="valve_S_FC_01"
-            x1="545.0"
-            x2="545.0"
-            y1="150"
-            y2="175"
-            
-        />
-        
-        <line
-            id="valve_S_FC_01"
-            x1="595.0"
-            x2="595.0"
-            y1="150"
-            y2="210"
-        />
-    
-    </g>
-    
-    <!-- Pad 3 -->
-    <g> 
-        <rect
-            class="mat_copper"
-            x="670"
-            y="70"
-            height="80"
-            width="100"
-        />
-         <text
-            x="720.0"
-            y="72.00"
-            class="txt_below"
-        >
-            Pad 3
-        </text>
-        <text
-            id="value_T_IC_11"
-            x="720.0"
-            y="110.0"
-        >
-            T_PAD_Pad 3
-        </text>
-        <text
-            id="value_T_IC_12"
-            class="txt_below"
-            x="720.0"
-            y="45.0"
-        >
-            T_WALL_Pad 3
-        </text>
-        <line
-            id="valve_S_FC_01"
-            x1="695.0"
-            x2="695.0"
-            y1="150"
-            y2="175"
-            
-        />
-        
-        <line
-            id="valve_S_FC_01"
-            x1="745.0"
-            x2="745.0"
-            y1="150"
-            y2="210"
-        />
-    
-    </g>
-    
-    <!-- Pad 5 -->
-    <g> 
-        <rect
-            class="mat_copper"
-            x="820"
-            y="70"
-            height="80"
-            width="100"
-        />
-         <text
-            x="870.0"
-            y="72.00"
-            class="txt_below"
-        >
-            Pad 5
-        </text>
-        <text
-            id="value_T_IC_05"
-            x="870.0"
-            y="110.0"
-        >
-            T_PAD_Pad 5
-        </text>
-        <text
-            id="value_T_IC_02"
-            class="txt_below"
-            x="870.0"
-            y="45.0"
-        >
-            T_WALL_Pad 5
-        </text>
-        <line
-            id="valve_S_FC_01"
-            x1="845.0"
-            x2="845.0"
-            y1="150"
-            y2="175"
-            
-        />
-        
-        <line
-            id="valve_S_FC_01"
-            x1="895.0"
-            x2="895.0"
-            y1="150"
-            y2="210"
-        />
-    
-    </g>
-        
-    
-</svg>
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+ 
+.spinner.on {
+  animation: spin 4s infinite linear;
+  transform: translate(100px, 100px);
+}]]></svg:style>
+  </svg:defs>
+  <svg:g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 289.57,129.11664 v 54.23958 H 187.06 84.55 v -52.91666"
+       id="path2223"
+       sodipodi:nodetypes="ccccc" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 269.57,134.73905 v 54.23958 H 167.06 64.55 v -52.91666"
+       id="path2223-4"
+       sodipodi:nodetypes="ccccc" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 43.127083,195.26248 h 40.745834 83.608333 v -5.82083"
+       id="path3242"
+       sodipodi:nodetypes="cccc" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 237.24632,203.61176 H 222.10761 191.04375 V 188.92708"
+       id="path3242-2"
+       sodipodi:nodetypes="cccc" />
+    <svg:g
+       id="g53370-6-8-4"
+       transform="translate(-34.276659,-17.130645)" />
+    <svg:g
+       id="g9529"
+       transform="matrix(1.1477216,0,0,1.0226242,6.7047141,-50.661547)"
+       style="fill:#cccccc">
+      <svg:path
+         id="rect1501"
+         style="fill:#cccccc;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
+         d="m 222.76292,204.37714 h -5.56372 v -56.84591 l -65.63284,0.90313 v 55.94278 h -5.56385 V 148.43436 H 79.800341 v 55.94278 H 74.236872 L 74.237084,110 c 0,-34.853057 148.525836,-35.389959 148.525836,0 z"
+         sodipodi:nodetypes="ccccccccccccc" />
+    </svg:g>
+    <svg:g
+       id="g9529-3"
+       transform="matrix(1.0357989,0,0,0.84918172,22.812246,-30.297105)"
+       style="fill:#cccccc">
+      <svg:path
+         id="rect1501-7"
+         style="fill:#ffffff;stroke:#000000;stroke-width:0.965301;stroke-miterlimit:4;stroke-dasharray:none"
+         d="m 222.76292,147.08675 c 0,0 -102.80562,0 -148.526048,0 l 2.12e-4,-34.52103 c 0,-32.476299 148.525836,-32.976588 148.525836,0 z"
+         sodipodi:nodetypes="ccccc" />
+    </svg:g>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="118.02046"
+       y="96.286499"
+       id="text4457"><svg:tspan
+         sodipodi:role="line"
+         id="tspan4455"
+         style="stroke-width:0.264583"
+         x="118.02046"
+         y="96.286499" /></svg:text>
+    <svg:g
+       id="link_main"
+       class="link"
+       transform="translate(54.937499,0.80900216)">
+      <svg:g
+         id="g158619-1">
+        <svg:rect
+           style="fill:#ff5599;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect35972-4-5"
+           width="45.538071"
+           height="13.428596"
+           x="193.57204"
+           y="193.40993" />
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="216.19844"
+           y="202.48842"
+           id="text35980-9-1"><svg:tspan
+             sodipodi:role="line"
+             id="linkc"
+             style="font-size:6.35px;text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="216.19844"
+             y="202.48842">Cryostat</svg:tspan></svg:text>
+      </svg:g>
+    </svg:g>
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_17"
+       width="28.955645"
+       height="13.955644"
+       x="162.26816"
+       y="161.77884" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_14"
+       width="28.955645"
+       height="13.955644"
+       x="183.4144"
+       y="103.24769" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_15"
+       width="28.955645"
+       height="13.955644"
+       x="224.91661"
+       y="103.24769" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_20"
+       width="28.955645"
+       height="13.955644"
+       x="100.40998"
+       y="103.24769" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_18"
+       width="28.955645"
+       height="13.955644"
+       x="141.91219"
+       y="103.24769" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_24"
+       width="28.955645"
+       height="13.955644"
+       x="265.10675"
+       y="76.856789" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_23"
+       width="28.955645"
+       height="13.955644"
+       x="265.10675"
+       y="60.784481" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_33"
+       width="28.955645"
+       height="13.955644"
+       x="213.70616"
+       y="75.958" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_37"
+       width="28.955645"
+       height="13.955644"
+       x="151.65692"
+       y="53.0863" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_11"
+       width="28.955645"
+       height="13.955644"
+       x="60.072029"
+       y="146.06693" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_13"
+       width="28.955645"
+       height="13.955644"
+       x="60.072029"
+       y="128.27489" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_05"
+       width="28.955645"
+       height="13.955644"
+       x="60.072029"
+       y="163.85901" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_12"
+       width="28.955645"
+       height="13.955644"
+       x="101.19858"
+       y="146.06693" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_10"
+       width="28.955999"
+       height="13.955644"
+       x="101.19858"
+       y="128.27489" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_02"
+       width="28.955645"
+       height="13.955644"
+       x="101.19858"
+       y="163.85901" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_01"
+       width="28.955645"
+       height="13.955644"
+       x="223.96565"
+       y="146.06693" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_07"
+       width="28.955645"
+       height="13.955644"
+       x="223.96565"
+       y="128.27489" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_04"
+       width="28.955645"
+       height="13.955644"
+       x="223.96565"
+       y="163.85901" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_06"
+       width="28.955645"
+       height="13.955644"
+       x="265.09195"
+       y="146.06693" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_08"
+       width="28.955645"
+       height="13.955644"
+       x="265.09195"
+       y="128.27489" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_03"
+       width="28.955645"
+       height="13.955644"
+       x="265.09195"
+       y="163.85901" />
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="58.929722"
+       y="126.20026"
+       id="text9531"><svg:tspan
+         sodipodi:role="line"
+         id="tspan9529"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="58.929722"
+         y="126.20026">Pads:</svg:tspan></svg:text>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="100.05627"
+       y="126.20026"
+       id="text9531-5"><svg:tspan
+         sodipodi:role="line"
+         id="tspan9529-6"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="100.05627"
+         y="126.20026">Wall:</svg:tspan></svg:text>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="223.32326"
+       y="126.20026"
+       id="text9531-8"><svg:tspan
+         sodipodi:role="line"
+         id="tspan9529-8"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="223.32326"
+         y="126.20026">Wall:</svg:tspan></svg:text>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="264.4498"
+       y="126.20026"
+       id="text9531-5-8"><svg:tspan
+         sodipodi:role="line"
+         id="tspan9529-6-6"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="264.4498"
+         y="126.20026">Pads:</svg:tspan></svg:text>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="132.41014"
+       y="139.11346"
+       id="text16965"><svg:tspan
+         sodipodi:role="line"
+         id="tspan16963"
+         style="stroke-width:0.264583"
+         x="132.41014"
+         y="139.11346">1</svg:tspan></svg:text>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="132.53157"
+       y="156.89275"
+       id="text16965-7"><svg:tspan
+         sodipodi:role="line"
+         id="tspan16963-5"
+         style="stroke-width:0.264583"
+         x="132.53157"
+         y="156.89275">3</svg:tspan></svg:text>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="132.45665"
+       y="174.60477"
+       id="text16965-5"><svg:tspan
+         sodipodi:role="line"
+         id="tspan16963-8"
+         style="stroke-width:0.264583"
+         x="132.45665"
+         y="174.60477">5</svg:tspan></svg:text>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="214.88043"
+       y="139.22246"
+       id="text16965-76"><svg:tspan
+         sodipodi:role="line"
+         id="tspan16963-1"
+         style="stroke-width:0.264583"
+         x="214.88043"
+         y="139.22246">2</svg:tspan></svg:text>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="215.00188"
+       y="157.00174"
+       id="text16965-7-3"><svg:tspan
+         sodipodi:role="line"
+         id="tspan16963-5-1"
+         style="stroke-width:0.264583"
+         x="215.00188"
+         y="157.00174">4</svg:tspan></svg:text>
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="214.92694"
+       y="174.71376"
+       id="text16965-5-4"><svg:tspan
+         sodipodi:role="line"
+         id="tspan16963-8-2"
+         style="stroke-width:0.264583"
+         x="214.92694"
+         y="174.71376">6</svg:tspan></svg:text>
+    <svg:g
+       id="g114297"
+       transform="translate(-10.977265,133.5748)">
+      <svg:rect
+         style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="n2dewarfill"
+         width="45.767387"
+         height="35.180824"
+         x="12.921951"
+         y="38.966217" />
+      <svg:rect
+         style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="sensorbox_M_TS_01"
+         width="28.955645"
+         height="13.955644"
+         x="21.50551"
+         y="55.199261" />
+      <svg:path
+         id="rect98897"
+         style="fill:none;stroke:#000000;stroke-width:1.20914"
+         d="m 12.921951,38.966217 c 15.195129,-8.203536 31.515381,-8.453062 45.767388,0 V 74.147045 H 12.921951 Z"
+         sodipodi:nodetypes="ccccc" />
+    </svg:g>
+    <svg:path
+       d="m 214.85819,200.34482 v 6.93134 l 11.69706,-6.93134 v 6.93134 z"
+       id="valve_S_TS_01"
+       sodipodi:nodetypes="ccccc"
+       class="v findmeeasily"
+       style="stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </svg:g>
+  <metadata>
+    <sensors>T_IC_23 T_IC_24 T_IC_20 T_IC_18 T_IC_14 T_IC_15 T_IC_01 T_IC_02 T_IC_03 T_IC_04 T_IC_05 T_IC_06 T_IC_07 T_IC_08 T_IC_10 T_IC_11 T_IC_12 T_IC_13 T_IC_17 T_IC_37 T_IC_33</sensors>
+    <links>main</links>
+    <valves>S_IC_01 S_TS_01</valves>
+  </metadata>
+</svg:svg>

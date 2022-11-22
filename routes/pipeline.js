@@ -51,26 +51,55 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
       typeof doc.pipeline == 'undefined' || 
       doc.pipeline.length == 0)
     return res.json({err: 'Bad input'});
-  doc['status'] = doc.status || 'inactive';
+  doc['name'] = doc.name;
+  doc['status'] = 'inactive';
+  doc['description'] = String(doc.description);
   doc['cycles'] = parseInt('0');
   doc['error'] = parseInt('0');
   doc['rate'] = -1;
   var depends_on = {};
   doc.pipeline.forEach(n => {
     if (typeof n.upstream == 'undefined' || n.upstream.length == 0) depends_on[n.input_var] = 1;
-    if (n.type == 'InfluxSinkNode') depends_on[n.output_var] = 1;});
+  });
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
-  db.get('pipelines').count({name: doc.name}).then(function(count) {
-    return (count ? 'Pipeline changed' : 'Pipeline added')
-  })
-      .then((message) => res.json({notify_msg: message, notify_status: 'success'}))
-      .then(db.get('pipelines').update({name: doc.name}, doc, {upsert: true, replaceOne: true}))
-      .then(() => db.get('sensors').update({}, {$pull: {'pipelines': doc.name}}, {multi: true}))
-      .then(() => db.get('sensors').update({name: {$in: doc['depends_on']}},
-      {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
+  req.db.get('pipelines').insert(doc)
+      .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
+          {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
+      .then(res.json({notify_msg: 'Pipeline added', notify_status: 'success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
+router.post('/update_pipeline', common.ensureAuthenticated, function(req, res) {
+  var doc = req.body;
+  let old_name = doc.old_name;
+  delete doc.old_name;
+  if (typeof doc.name == 'undefined' ||
+      !['alarm', 'control', 'convert'].includes(doc.name.split('_')[0]) ||
+      typeof doc.pipeline == 'undefined' ||
+      doc.pipeline.length == 0)
+    return res.json({err: 'Bad input'});
+  doc['name'] = doc.name;
+  doc['status'] = doc.status || 'inactive';
+  doc['description'] = String(doc.description);
+  doc['cycles'] = parseInt('0');
+  doc['error'] = parseInt('0');
+  doc['rate'] = -1;
+  var depends_on = {};
+  doc.pipeline.forEach(n => {
+    if (typeof n.upstream == 'undefined' || n.upstream.length == 0) depends_on[n.input_var] = 1;
+  });
+  doc['depends_on'] = Object.keys(depends_on);
+  if (typeof doc.node_config == 'undefined')
+    doc['node_config'] = {};
+  req.db.get('pipelines').update({_id: doc._id}, doc, {replaceOne: true})
+      .then(() => req.db.get('sensors').update({}, {$pull: {'pipelines': old_name}}, {multi: true}))
+      .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
+          {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
+      .then(res.json({notify_msg: 'Pipeline updated', notify_status: 'success'}))
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
+
 });
 
 router.post('/delete_pipeline', common.ensureAuthenticated, function(req, res) {

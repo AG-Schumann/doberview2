@@ -21,9 +21,6 @@ function UpdateLoop() {
 
 function PopulatePipelines(flavor) {
   var filter = $("#searchPipelineInput").val().toUpperCase();
-  var silent = 'fas fa-bell-slash';
-  var active = 'fas fa-bell';
-  var restart = "fas fa-angle-double-left";
   $.getJSON(`/pipeline/get_pipelines?flavor=${flavor}`, data => {
     $(`#${flavor}_active`).empty();
     $(`#${flavor}_silent`).empty();
@@ -35,22 +32,13 @@ function PopulatePipelines(flavor) {
       let status_color = ((last_error < 5) ? 'danger' : 'success');
       if(doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
       $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
-          `<span class="badge p-2 bg-${status_color} rounded-circle"><span class="visually-hidden">X</span></span></td>` +
+          `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right"` +
+          `title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n`+
+          `last cycle: &nbsp; ${(doc.dt || 0).toPrecision(1)} s \n`+
+          `last error: &nbsp; ${doc.cycle-doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>` +
           `<td onclick="PipelineDropdown('${n}')">${n}</td>` +
-          `<td id="${n}_description" onclick="PipelineDropdown('${n}')"></td>` +
-          `<td id="${n}_actions"></td></tr>`);
-      if (flavor == 'alarm') {
-        let alarm_name = n.split(/_(.*)/s)[1]; // get name of alarm without 'alarm_'
-        $.getJSON(`sensor_detail?sensor=${alarm_name}`, sensor_detail => {
-          if (sensor_detail !== 'undefided') {
-              $(`#${n}_description`).html(`${sensor_detail.description}`);
-          } else {
-            $(`#${n}_description`).html(`${doc.description}`);
-          }
-        });
-      } else {
-        $(`#${n}_description`).html(`${doc.description}`);
-      }
+          `<td id="${n}_description" onclick="PipelineDropdown('${n}')">${doc.description}</td>` +
+          `<td id="${n}_actions">Loading</td></tr>`);
       let stop_button = `<button class="btn btn-danger action_button" onclick="PipelineControl('stop','${n}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
       let silence_button = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${n}')"><i class="fas fa-solid fa-bell-slash"></i>Silence</button>`;
       let activate_button = `<button class="btn btn-success action_button" onclick="PipelineControl('active','${n}')"><i class="fas fa-solid fa-bell"></i>Activate</button>`;
@@ -63,6 +51,7 @@ function PopulatePipelines(flavor) {
       } else {
         $(`#${n}_actions`).html(`${start_button}`);
       }
+      $('[data-bs-toggle="tooltip"]').tooltip();
     }); // data.forEach
   }); // getJSON
 }
@@ -106,6 +95,7 @@ function SilenceDropdown(name) {
 function AlarmTemplate() {
   return {
     name: 'alarm_NAME',
+    description: '',
     pipeline: [
       {
         name: 'source_NAME',
@@ -126,6 +116,7 @@ function AlarmTemplate() {
 function ControlTemplate() {
   return {
     name: 'control_NAME',
+    description: '',
     pipeline: [
       {
         name: 'source_A',
@@ -179,6 +170,7 @@ function ControlTemplate() {
 function ConvertTemplate() {
   return {
     name: 'convert_NAME',
+    description: '',
     pipeline: [
       {
         name: 'source_NAME',
@@ -268,23 +260,41 @@ function FillTemplate(which) {
 function AddOrUpdatePipeline() {
   if (ValidatePipeline(false)) {
     var doc = JSON.parse(JSON.stringify(document.jsoneditor.get()));
-    if (typeof doc._id != 'undefined')
-      delete doc._id;
-    $.ajax({
-      type: 'POST',
-      url: "/pipeline/add_pipeline",
-      data: doc,
-      success: (data) => {
-        if (typeof data != 'undefined' && typeof data.err != 'undefined')
-          alert(data.err);
-        else {
-          $("#pipelinebox").modal('hide');
-          Notify(data.notify_msg, data.notify_status);
-        }
-      },
-      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
-    });
+    let old_name = $('#detail_pipeline_name').html();
+    if (old_name.startsWith("New")) {
+      $.ajax({
+        type: 'POST',
+        url: "/pipeline/add_pipeline",
+        data: doc,
+        success: (data) => {
+          if (typeof data != 'undefined' && typeof data.err != 'undefined')
+            alert(data.err);
+          else {
+            $("#pipelinebox").modal('hide');
+            Notify(data.notify_msg, data.notify_status);
+          }
+        },
+        error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+      });
+    } else {
+      doc.old_name = old_name;
+      $.ajax({
+        type: 'POST',
+        url: "/pipeline/update_pipeline",
+        data: doc,
+        success: (data) => {
+          if (typeof data != 'undefined' && typeof data.err != 'undefined')
+            alert(data.err);
+          else {
+            $("#pipelinebox").modal('hide');
+            Notify(data.notify_msg, data.notify_status);
+          }
+        },
+        error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+      });
+    }
   }
+
 }
 
 
