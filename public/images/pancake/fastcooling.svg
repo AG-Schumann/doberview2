@@ -22,15 +22,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1"
-     inkscape:cx="665.5"
-     inkscape:cy="522"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="405.17219"
+     inkscape:cy="647.70981"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g114297"
      showguides="false" />
   <svg:defs
      id="defs2">
@@ -488,12 +488,12 @@
        id="g114297"
        transform="translate(-10.977265,133.5748)">
       <svg:rect
-         style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1.01054;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="n2dewarfill"
-         width="45.767387"
-         height="35.180824"
-         x="12.921951"
-         y="38.966217" />
+         width="46.296555"
+         height="35.515572"
+         x="12.657368"
+         y="38.763" />
       <svg:rect
          style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="sensorbox_M_TS_01"
@@ -513,10 +513,59 @@
        sodipodi:nodetypes="ccccc"
        class="v findmeeasily"
        style="stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <svg:rect
+       style="fill:#aa0000;stroke:#000000;stroke-width:0.711173;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect10247-2-4-2-81-9-3-1"
+       width="37.475094"
+       height="9.5243702"
+       x="16.917749"
+       y="130.49052" />
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="26.227127"
+       y="137.14407"
+       id="text13160-7-5-9-2-2-4-8-23"><svg:tspan
+         sodipodi:role="line"
+         id="value_T_IC_36"
+         style="font-size:6.35px;fill:#ffffff;stroke-width:0.264583"
+         x="26.227127"
+         y="137.14407">T_IC_36</svg:tspan></svg:text>
+    <svg:g
+       id="g124293"
+       transform="translate(-3.5524446,71.246109)"
+       style="fill:#000000;stroke:#ffffff">
+      <svg:circle
+         style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0.852235;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path124079"
+         cx="25.269815"
+         cy="64.006599"
+         r="2.5738826" />
+      <svg:circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.625379;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path124079-0"
+         cx="25.269815"
+         cy="64.006599"
+         r="1" />
+    </svg:g>
   </svg:g>
   <metadata>
-    <sensors>T_IC_23 T_IC_24 T_IC_20 T_IC_18 T_IC_14 T_IC_15 T_IC_01 T_IC_02 T_IC_03 T_IC_04 T_IC_05 T_IC_06 T_IC_07 T_IC_08 T_IC_10 T_IC_11 T_IC_12 T_IC_13 T_IC_17 T_IC_37 T_IC_33</sensors>
     <links>main</links>
-    <valves>S_IC_01 S_TS_01</valves>
+    <property
+       targetId="n2dewarfill"
+       targetAttribute="height"
+       scaling="0.217"
+       offset="-27.776"
+       sensor="M_TS_01"
+       max="35.515572"
+       min="0" />
+    <property
+       targetId="n2dewarfill"
+       targetAttribute="y"
+       scaling="-0.217"
+       offset="102.055"
+       sensor="M_TS_01"
+       min="38.762836"
+       max="74.35" />
   </metadata>
 </svg:svg>

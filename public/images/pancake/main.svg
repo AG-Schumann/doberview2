@@ -30,7 +30,7 @@
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g114297"
      showguides="false" />
   <svg:defs
      id="defs2">
@@ -1087,38 +1087,13 @@
          height="35.180824"
          x="12.921951"
          y="38.966217" />
-      <svg:g
-         id="g156241">
-        <svg:rect
-           style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect10247-8-8"
-           width="28.955645"
-           height="13.955644"
-           x="21.50551"
-           y="55.199261" />
-        <svg:text
-           xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315"
-           id="text13160-8-48"><svg:tspan
-             sodipodi:role="line"
-             id="tspan13158-3-0"
-             style="font-size:3.52778px;stroke-width:0.264583"
-             x="21.889605"
-             y="58.670315">M_TS_01 (%)</svg:tspan></svg:text>
-        <svg:text
-           xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084"
-           id="text13160-7-3-3"><svg:tspan
-             sodipodi:role="line"
-             id="value_M_TS_01"
-             style="font-size:6.35px;stroke-width:0.264583"
-             x="22.526552"
-             y="65.208084">M_TS_01</svg:tspan></svg:text>
-      </svg:g>
+      <svg:rect
+         style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="sensorbox_M_TS_01"
+         width="28.955645"
+         height="13.955644"
+         x="21.50551"
+         y="55.199261" />
       <svg:path
          id="rect98897"
          style="fill:none;stroke:#000000;stroke-width:1.20914"
