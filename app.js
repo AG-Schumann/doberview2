@@ -2,10 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var monk = require('monk');
 
-var indexRouter = require('./routes/index');
 var deviceRouter = require('./routes/devices');
 var pipelineRouter = require('./routes/pipeline');
 var hostRouter = require('./routes/hosts');
@@ -28,10 +25,6 @@ global.experiment = process.env.DOBERVIEW_EXPERIMENT;
 global.authdb = process.env.DOBERVIEW_AUTH_DB || 'admin';
 global.uri_base = process.env.DOBERVIEW_MONGO_URI;
 
-let uri = `${uri_base}/${experiment}`;
-let db = monk(`${uri_base}/${experiment}`, {authSource: authdb});
-
-
 // session caching
 var session = require('express-session');
 
@@ -50,13 +43,10 @@ require('./config/passport');
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-//app.use(logger('[:date[iso]] :remote-addr :method :url :status :res[content-length] - :response-time ms'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(cookieParser());
@@ -85,7 +75,6 @@ app.post('/experiment', function(req, res){
     success: true
   });
 });
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

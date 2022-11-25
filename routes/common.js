@@ -38,23 +38,4 @@ function GetRenderConfig(req) {
   return config;
 }
 
-
-function axios_params(req, res) {
-  let mongo_db = monk(`${uri_base}/${experiment}`, {authSource: authdb});
-  mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
-    var get_url = new url.URL(doc['url'] + '/query');
-    var params = new url.URLSearchParams({
-      db: doc['db'],
-      org: doc['org'],
-      q: req.query
-    });
-    get_url.search = params.toString();
-    return res.json({
-      url: get_url.toString(),
-      method: 'get',
-      headers: {'Accept': 'application/csv', 'Authorization': `Token ${process.env.INFLUX_TOKEN}`},
-    })
-  });
-}
-
-module.exports = {SendCommand, ensureAuthenticated, axios_params, GetRenderConfig};
+module.exports = {SendCommand, ensureAuthenticated, GetRenderConfig};
