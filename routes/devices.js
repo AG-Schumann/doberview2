@@ -211,26 +211,46 @@ router.post('/update_sensor', common.ensureAuthenticated, function(req, res) {
 router.get('/get_last_point', function(req, res) {
   var q = url.parse(req.url, true).query;
   var sensor = q.sensor;
+  let query_start = Math.round(2*q.roi);
   var topic = topic_lut[sensor.split('_')[0]];
   if (typeof sensor == 'undefined' || typeof topic == 'undefined')
     return res.json({});
-
-  axios(common.axios_params(`SELECT last(value) FROM ${topic} WHERE sensor='${sensor}';`))
-  .then(resp => {
-
-    if (resp.data.split('\n').length > 1) {
-      var blob = resp.data.split('\n')[1].split(',');
+  db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    var get_url = new url.URL('http://10.4.73.172:8096' + '/api/v2/query');
+    var params = new url.URLSearchParams({
+      org: doc['org'],
+      db: doc['db'],
+    });
+    get_url.search = params.toString();
+    return axios.post(
+      get_url.toString(),
+        `from(bucket: "${doc['bucket']}")
+        |> range(start: -${query_start}s)
+        |> filter(fn: (r) => r["_measurement"] == "${topic}")
+        |> filter(fn: (r) => r["_field"] == "value")
+        |> filter(fn: (r) => r["sensor"] == "${sensor}")
+        |> keep(columns:["_time", "_value",])
+        |> last()`,
+        {
+          'headers': {
+            'Accept': 'application/csv',
+            'Authorization': `Token ${doc['token']}`,
+            'Content-type': 'application/vnd.flux'
+          },
+        })}).then(resp => {
+    if (resp.data.split('\r\n').length > 1) {
+      var blob = resp.data.split('\r\n')[1].split(',');
       return res.json({
-                       'value': blob[3], 
-                       'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1),
-                       'time': parseInt(blob[2])/1e6
-                      });
+        'value': blob[4],
+        'time_ago': ((new Date() - new Date(blob[3])) / 1000).toFixed(1),
+        'time': parseInt(blob[3]) / 1e6})
     }
     else {
-      return res.json({'value': 'None', 'time_ago': 'drölf '})
+      return res.json({'value': 'None', 'time_ago': 'None '})
     }
   }).catch(err => {console.log(err); return res.json({});});
 });
+
 
 router.get('/get_data', function(req, res) {
   var q = url.parse(req.url, true).query;
@@ -240,11 +260,32 @@ router.get('/get_data', function(req, res) {
   var topic = topic_lut[sensor.split('_')[0]];
   if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
-
-  axios(common.axios_params(`SELECT mean(value) FROM ${topic} WHERE sensor='${sensor}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`))
-  .then( blob => {
-    var data = blob.data.split('\n').slice(1);
-    return res.json(data.map(row => {var x = row.split(','); return [parseFloat(x[2]/1e6), parseFloat(x[3])];}));
+  db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    var get_url = new url.URL('http://10.4.73.172:8096' + '/api/v2/query');
+    var params = new url.URLSearchParams({
+      org: doc['org'],
+      db: doc['db'],
+    });
+    get_url.search = params.toString();
+    return axios.post(
+        get_url.toString(),
+        `from(bucket: "${doc['bucket']}")
+        |> range(start: -${history})
+        |> filter(fn: (r) => r["_measurement"] == "${topic}")
+        |> filter(fn: (r) => r["_field"] == "value")
+        |> filter(fn: (r) => r["sensor"] == "${sensor}")
+        |> keep(columns:["_time", "_value",])
+        |> aggregateWindow(every: ${binning}, fn: mean, createEmpty: false)
+        |> yield(name: "mean")`,
+        {
+          'headers': {
+            'Accept': 'application/csv',
+            'Authorization': `Token ${doc['token']}`,
+            'Content-type': 'application/vnd.flux'
+          },
+        })}).then(resp => {
+          var data = resp.data.split('\r\n').slice(1);
+          return res.json(data.map(row => {var x = row.split(','); return [new Date(x[6]).getTime(), parseFloat(x[5])];}));
   }).catch(err => {console.log(err); return res.json([]);});
 });
 

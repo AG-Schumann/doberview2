@@ -2,6 +2,7 @@ var net = require('net');
 var url = require('url');
 var axios = require('axios');
 var zmq = require('zeromq');
+const monk = require("monk");
 
 // Doberview common functions, defined once here rather than in every file
 
@@ -38,21 +39,22 @@ function GetRenderConfig(req) {
 }
 
 
-function axios_params(query, db=null) {
-  var _db = db==null ? process.env.DOBERVIEW_INFLUX_DATABASE : db;
-  var get_url = new url.URL(process.env.DOBERVIEW_INFLUX_URI);
-  var params = new url.URLSearchParams({
-    db: _db,
-    org: process.env.DOBERVIEW_ORG,
-    q: query
+function axios_params(req, res) {
+  let mongo_db = monk(`${uri_base}/${experiment}`, {authSource: authdb});
+  mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    var get_url = new url.URL(doc['url'] + '/query');
+    var params = new url.URLSearchParams({
+      db: doc['db'],
+      org: doc['org'],
+      q: req.query
+    });
+    get_url.search = params.toString();
+    return res.json({
+      url: get_url.toString(),
+      method: 'get',
+      headers: {'Accept': 'application/csv', 'Authorization': `Token ${process.env.INFLUX_TOKEN}`},
+    })
   });
-  get_url.search=params.toString();
-  return {
-    url: get_url.toString(),
-    method: 'get',
-    headers: {'Accept': 'application/csv', 'Authorization': `Token ${process.env.INFLUX_TOKEN}`},
-  };
 }
-
 
 module.exports = {SendCommand, ensureAuthenticated, axios_params, GetRenderConfig};

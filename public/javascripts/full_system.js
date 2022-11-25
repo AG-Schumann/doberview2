@@ -64,9 +64,12 @@ function UpdateOnce() {
       if(data['status'] == 'offline')
         $(`#${r}_status`).html('OFFLINE');
       else {
-        $.getJSON(`/devices/get_last_point?sensor=${r}`, (val) => {
+        let roi = data['readout_interval'];
+        $.getJSON(`/devices/get_last_point?sensor=${r}&roi=${roi}`, (val) => {
           if (val.value)
             $(`#${r}_status`).html(`${SigFigs(val.value)} ${units[r]} (${val.time_ago}s ago)`);
+          else
+            $(`#${r}_status`).html('DELAYED');
         });
       }
     });
