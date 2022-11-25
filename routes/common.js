@@ -1,8 +1,4 @@
-var net = require('net');
-var url = require('url');
-var axios = require('axios');
 var zmq = require('zeromq');
-const monk = require("monk");
 
 // Doberview common functions, defined once here rather than in every file
 
