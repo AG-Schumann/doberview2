@@ -243,6 +243,7 @@ function DrawSensorHistory(sensor) {
       series.push({name: "lower threshold", type: 'area', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', threshold: -Infinity});
       series.push({name: "upper threshold", type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
     }
+    ymax = Math.max.apply(Math,array.map(function(o){return o.y;}));
     detail_chart = Highcharts.chart('sensor_chart', {
       chart: {
         zoomType: 'xy',
