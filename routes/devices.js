@@ -3,13 +3,16 @@ var url = require('url');
 var axios = require('axios').default;
 var router = express.Router();
 var common = require('./common');
-const monk = require("monk");
-
 const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage', D: 'time', X: 'other', I: 'current', C: 'capacity'};
 
-
 router.get('/', function(req, res) {
-  global.db = monk(`${uri_base}/${experiment}`, {authSource: authdb});
+  let session = req.session;
+  if(session.experiment){
+    db = common.GetMongoDb({exp: session.experiment});
+  }else {
+    res.redirect('../');
+    return;
+  }
   var config = common.GetRenderConfig(req);
   res.render('full_system', config);
 });

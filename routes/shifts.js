@@ -2,15 +2,18 @@ var express = require('express');
 var url = require('url');
 var router = express.Router();
 var common = require('./common');
-const monk = require("monk");
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  res.redirect('/?notify_msg=You must be logged in to do that&notify_status=error');
+  res.redirect('/devices?notify_msg=You must be logged in to do that&notify_status=error');
 }
 
 router.get('/', ensureAuthenticated, function(req, res) {
-  global.db = monk(`${uri_base}/${experiment}`, {authSource: authdb});
+  let session = req.session;
+  if(session.experiment){
+    db = common.GetMongoDb({exp: session.experiment});
+  } else
+    res.redirect('../');
   var config = common.GetRenderConfig(req);
   res.render('shifts', config);
 });

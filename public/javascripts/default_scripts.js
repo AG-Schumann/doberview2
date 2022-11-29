@@ -23,8 +23,8 @@ function ChangeExperiment(name) {
   $.ajax({
     type: 'POST',
     url: '/experiment',
-    data: {experiment: name},
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else {Notify(data.notify_msg, data.notify_status);}},
+    data: {name: name},
+    success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
     complete:  function(data) {
       location.reload();
