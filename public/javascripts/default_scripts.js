@@ -44,23 +44,35 @@ function SensorDropdown(sensor) {
       $("#value_xform").val(sensor_detail.value_xform.join(','));
     else
       $("#value_xform").val("");
-
-    if (typeof sensor_detail.alarm_thresholds != 'undefined' && sensor_detail.alarm_thresholds.length == 2) {
-      $("#alarm_low").val(sensor_detail.alarm_thresholds[0]);
-      $("#alarm_high").val(sensor_detail.alarm_thresholds[1]);
-      $("#alarm_mid").val((sensor_detail.alarm_thresholds[1]+sensor_detail.alarm_thresholds[0])/2);
-      $("#alarm_range").val((sensor_detail.alarm_thresholds[1]-sensor_detail.alarm_thresholds[0])/2);
-      $("#alarm_recurrence").val(sensor_detail.alarm_recurrence);
-      $("#alarm_baselevel").val(sensor_detail.alarm_level);
+    let alarm_vals = sensor_detail.alarm_values;
+    if (typeof alarm_vals != 'undefined') {
+      $("#int_alarm").show();
+      $("#float_alarm").hide();
+      for (let k in alarm_vals) {
+        $("#int_alarm").append(`<tr><td><input class="form-control-sm" type="number" value="${k}"></td><td><input class="form-control-sm" type="text" value="${alarm_vals[k]}"></td><td><button type="button" class="btn btn-sm btn-primary" onclick="DeleteAlarmLevel(this)">Delete</button></td></tr>`);
+      }
+      $("#int_alarm").append(`<tr><td></td><td></td><td><button type="button" class="btn btn-sm btn-primary" onclick="AddAlarmLevel()">Add</button></td></tr>`);
     } else {
-      $("#alarm_low").val(null);
-      $("#alarm_high").val(null);
-      $("#alarm_mid").val(null);
-      $("#alarm_range").val(null);
-      $("#alarm_recurrence").val(null);
-      $("#alarm_baselevel").val(null);
-      $("#plot_alarms").bootstrapToggle('off')
+      if (typeof sensor_detail.alarm_thresholds != 'undefined' && sensor_detail.alarm_thresholds.length == 2) {
+        $("#int_alarm").hide();
+        $("#float_alarm").show();
+        $("#alarm_low").val(sensor_detail.alarm_thresholds[0]);
+        $("#alarm_high").val(sensor_detail.alarm_thresholds[1]);
+        $("#alarm_mid").val((sensor_detail.alarm_thresholds[1] + sensor_detail.alarm_thresholds[0]) / 2);
+        $("#alarm_range").val((sensor_detail.alarm_thresholds[1] - sensor_detail.alarm_thresholds[0]) / 2);
+
+      } else {
+        $("#alarm_low").val(null);
+        $("#alarm_high").val(null);
+        $("#alarm_mid").val(null);
+        $("#alarm_range").val(null);
+
+      }
     }
+    var recurrence = (typeof sensor_detail.alarm_recurrence === 'undefined') ? null : sensor_detail.alarm_recurrence;
+    var base_level = (typeof sensor_detail.alarm_level === 'undefined') ? null : sensor_detail.alarm_level;
+    $("#alarm_recurrence").val(recurrence);
+    $("#alarm_baselevel").val(base_level);
     $("#pipelines_active").empty();
     $("#pipelines_silenced").empty();
     $("#pipelines_inactive").empty();
@@ -123,6 +135,17 @@ function SensorDropdown(sensor) {
   });
 }
 
+function AddAlarmLevel() {
+  $("#int_alarm > tr").eq($('#int_alarm tr').length-2)
+      .after('<tr></tr><td><input class="form-control-sm" type="number"></td>' +
+          '<td><input class="form-control-sm" type="text"></td>' +
+          '<td><button type="button" class="btn btn-sm btn-primary" onclick="DeleteAlarmLevel(this)">Delete</button></td>' +
+          '</tr>');
+}
+
+function DeleteAlarmLevel(btn) {
+  btn.closest('tr').remove();
+}
 function MakeAlarm(name) {
   if (typeof name == 'undefined')
     name = $("#detail_sensor_name").html();

@@ -133,8 +133,13 @@ html
               hr
               h5 Alarms
               br
-              table
-                tbody
+              table.table
+                tbody#int_alarm
+                  tr
+                    th Value
+                    th Message
+                    th
+                tbody#float_alarm
                   tr
                     th Low
                     th High
@@ -151,6 +156,7 @@ html
                       input.form-control-sm(type="number" id="alarm_mid" name="alarm_mid" size='6')
                     td
                       input.form-control-sm(type="number" id="alarm_range" name="alarm_range" size='6')
+                tfoot
                   tr
                     th Recurrence
                     th Base level
