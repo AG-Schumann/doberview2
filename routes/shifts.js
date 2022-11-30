@@ -5,22 +5,27 @@ var common = require('./common');
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  res.redirect('/?notify_msg=You must be logged in to do that&notify_status=error');
+  res.redirect('/devices?notify_msg=You must be logged in to do that&notify_status=error');
 }
 
 router.get('/', ensureAuthenticated, function(req, res) {
+  let session = req.session;
+  if(session.experiment){
+    db = common.GetMongoDb({exp: session.experiment});
+  } else
+    res.redirect('../');
   var config = common.GetRenderConfig(req);
   res.render('shifts', config);
 });
 
 router.get('/on_shift', function (req, res) {
-  req.db.get('contacts').find({on_shift: true})
+  db.get('contacts').find({on_shift: true})
       .then(docs => res.json(docs))
       .catch(err => {console.log(err.message); return res.json([]);});
 });
 
 router.get('/get_contacts', function(req, res) {
-  req.db.get('contacts').find({}, {projection: {name: 1, on_shift: 1}})
+  db.get('contacts').find({}, {projection: {name: 1, on_shift: 1}})
       .then(docs => res.json(docs))
       .catch(err => {console.log(err.message); return res.json([]);});
 });
@@ -30,7 +35,7 @@ router.get('/contact_detail', function(req, res) {
   if (typeof q.name == 'undefined')
     return res.json({});
   var name = q.name;
-  req.db.get('contacts').findOne({name: name})
+  db.get('contacts').findOne({name: name})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -39,7 +44,7 @@ router.post('/set_shifters', function(req, res) {
   var shifters = req.body.shifters;
   if (typeof shifters == 'undefined' || shifters.length === 0)
     return res.json({err: 'No input received'});
-  var coll = req.db.get('contacts');
+  var coll = db.get('contacts');
   coll.update({name: {$in: shifters}}, {$set: {on_shift: true}}, {multi: true})
   .then(() => coll.update({name: {$nin: shifters}}, {$set: {on_shift: false}}, {multi: true}))
   .then(() => res.json({}))
@@ -51,14 +56,14 @@ router.post('/update_shifter', function(req, res) {
   shifter.name = shifter.first_name + shifter.last_name[0];
   shifter.expert = shifter.expert === "true";
   shifter.on_shift = shifter.on_shift === "true";
-  req.db.get('contacts').update({name: shifter.name}, {$set: shifter}, {upsert: true})
+  db.get('contacts').update({name: shifter.name}, {$set: shifter}, {upsert: true})
   .then(() => res.json({}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 router.post('/delete_shifter', function(req, res) {
   var name = req.body.name;
-  req.db.get('contacts').remove({name: name})
+  db.get('contacts').remove({name: name})
   .then(() => res.json({}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });

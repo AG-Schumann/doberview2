@@ -27,8 +27,8 @@ function GetLogs() {
 }
 
 function now_minus_hours(h) {
-  var now = new Date();
-  var time_delta = h * 3600 * 1000;
+  let now = new Date();
+  let time_delta = h * 3600 * 1000;
   return new Date(now - time_delta);
 }
 

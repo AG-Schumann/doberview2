@@ -5,6 +5,11 @@ var common = require('./common');
 
 
 router.get('/', function(req, res) {
+  let session = req.session;
+  if(session.experiment){
+    db = common.GetMongoDb({exp: session.experiment});
+  } else
+    res.redirect('../');
   var q = url.parse(req.url, true).query;
   var load = q.pipeline_id || "";
   var config = common.GetRenderConfig(req);
@@ -19,7 +24,7 @@ router.get('/get_pipelines', function(req, res) {
   }
   var flavor = q.flavor;
   var now = new Date();
-  req.db.get('pipelines').find({name: {$regex: `^${flavor}_`}}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, rate: 1, error: 1, description: 1, pipeline: 1}})
+  db.get('pipelines').find({name: {$regex: `^${flavor}_`}}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, rate: 1, error: 1, description: 1, pipeline: 1}})
   .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.heartbeat)/1000, cycle: doc.cycles, error: doc.error, rate: doc.rate, description: doc.description, pipeline: doc.pipeline}))))
   .catch(err => {console.log(err.message); return res.json([]);});
 });
@@ -28,7 +33,7 @@ router.get('/get_pipeline', function(req, res) {
   var q = url.parse(req.url, true).query;
   if (typeof q.name == 'undefined')
     return res.json({});
-  req.db.get('pipelines').findOne({name: q.name})
+  db.get('pipelines').findOne({name: q.name})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({});});
 });
@@ -37,7 +42,7 @@ router.get('/status', function(req, res) {
   var q = url.parse(req.url, true).query;
   if (typeof q.name == 'undefined')
     return res.json({});
-  req.db.get('pipelines').findOne({name: q.name}, {projection: {status: 1}})
+  db.get('pipelines').findOne({name: q.name}, {projection: {status: 1}})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({});});
 });
@@ -104,8 +109,8 @@ router.post('/delete_pipeline', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   if (typeof data.pipeline == 'undefined')
     return res.json({err: 'Bad input'})
-  req.db.get('pipelines').remove({name: data.pipeline})
-  .then(() => req.db.get('sensors').update({'pipelines': data.pipeline},
+  db.get('pipelines').remove({name: data.pipeline})
+  .then(() => db.get('sensors').update({'pipelines': data.pipeline},
       {$pull: {pipelines: data.pipeline}}, {multi: true}))
   .then(() => res.json({notify_msg: 'Pipeline deleted', notify_status: 'success'}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -120,7 +125,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
   var now = new Date();
   var flavor = data.name.split('_')[0];
   if (duration == 'forever') {
-    req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
+    db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
     .then(() => res.json({}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else if (duration == 'monday') {
