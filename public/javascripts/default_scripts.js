@@ -278,7 +278,7 @@ function DrawSensorHistory(sensor) {
       },
     });
     $("#last_value").html(SigFigs(series[0].data.at(-1)[1]));
-    return;
+
   });
 }
 
