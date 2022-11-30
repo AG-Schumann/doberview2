@@ -10,7 +10,7 @@ router.get('/', function(req, res) {
 function checkUrl (req, res, next){
     req.session.Redirect = req.header('Referer') || '/';
     next();
-};
+}
 
 router.get('/github', checkUrl,
     passport.authenticate('github', { scope: ['user:email'] }),
