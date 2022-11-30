@@ -3,8 +3,7 @@ const history = ['10m', '1h', '3h', '6h', '12h', '24h', '48h', '72h', '1w', '2w'
 var SIG_FIGS=3;
 var LOG_THRESHOLD=3;
 var control_map = {};
-
-var detail_chart = null;
+let detail_chart = null;
 
 
 function Notify(msg, type='success') {
@@ -26,7 +25,7 @@ function ChangeExperiment(name) {
     data: {name: name},
     success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
-    complete:  function(data) {
+    complete:  function() {
       location.reload();
       }
   });
@@ -164,7 +163,7 @@ function MakeAlarm(name) {
     data: template,
     success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else {Notify(data.notify_msg, data.notify_status);}},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
-    complete:  function(data) {SensorDropdown(name);}
+    complete:  function() {SensorDropdown(name);}
   });
 }
 
@@ -299,7 +298,7 @@ function UpdateAlarms() {
       level: $("#alarm_baselevel").val(),
     },
     success: (data) => {
-      if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
+      if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }
@@ -331,7 +330,7 @@ function UpdateSensor() {
     url: '/devices/update_sensor',
     data: data,
     success: (data) => {
-      if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
+      if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }
@@ -349,7 +348,7 @@ function UpdateDevice() {
       type:'POST',
       url: '/devices/update_device_address',
       data: {data: data},
-      success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
+      success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
     });
   }
@@ -402,8 +401,6 @@ function ValidateNewSensor(echo_ret=true) {
   if ($("#new_topic").val() == 'status' && !$("#new_integer").is(':checked')) {
     if (confirm("Is this an integer quantity?")) {
       $("#new_integer").val(1);
-    } else {
-
     }
   }
   if ($("#new_integer").is(":checked") && $("#new_topic").val() != 'status') {
@@ -460,7 +457,7 @@ function SendToHypervisor(target, command, msg_if_success=null, delay=0) {
     type: 'POST',
     url: '/hypervisor/command',
     data: {target: target, command: command, delay: delay},
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
+    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }
