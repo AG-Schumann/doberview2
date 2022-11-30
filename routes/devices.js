@@ -214,7 +214,6 @@ router.post('/update_sensor', common.ensureAuthenticated, function(req, res) {
 router.get('/get_last_point', function(req, res) {
   var q = url.parse(req.url, true).query;
   var sensor = q.sensor;
-  let query_start = Math.round(2*q.roi);
   var topic = topic_lut[sensor.split('_')[0]];
   if (typeof sensor == 'undefined' || typeof topic == 'undefined')
     return res.json({});
@@ -228,7 +227,7 @@ router.get('/get_last_point', function(req, res) {
     return axios.post(
       get_url.toString(),
         `from(bucket: "${doc['bucket']}")
-        |> range(start: -${query_start}s)
+        |> range(start: -24h)
         |> filter(fn: (r) => r["_measurement"] == "${topic}")
         |> filter(fn: (r) => r["_field"] == "value")
         |> filter(fn: (r) => r["sensor"] == "${sensor}")
