@@ -3,18 +3,23 @@ var url = require('url');
 var axios = require('axios').default;
 var router = express.Router();
 var common = require('./common');
-
 const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage', D: 'time', X: 'other', I: 'current', C: 'capacity'};
 
-
 router.get('/', function(req, res) {
+  let session = req.session;
+  if(session.experiment){
+    db = common.GetMongoDb({exp: session.experiment});
+  }else {
+    res.redirect('../');
+    return;
+  }
   var config = common.GetRenderConfig(req);
   res.render('full_system', config);
 });
 
 router.get('/params', function(req, res) {
   var ret = {};
-  req.db.get('experiment_config').findOne({name: 'doberview_config'})
+  db.get('experiment_config').findOne({name: 'doberview_config'})
   .then(doc => {
     ret['subsystems'] = doc.subsystems.map(ss => ss[0]);
     ret['topics'] = doc.topics;
@@ -47,25 +52,25 @@ router.post('/new_sensor', common.ensureAuthenticated, function(req, res) {
   var subsystem = doc.subsystem;
   var num = '01';
   var name;
-  req.db.get('sensors').aggregate([
+  db.get('sensors').aggregate([
     {$match: {subsystem: subsystem, topic: topic}},
     {$addFields: {number: {$toInt: {$arrayElemAt: [{$split: ['$name', '_']}, 2]}}}},
     {$group: {_id: null, number: {$max: '$number'}}}
   ]).then(docs => {
     if (docs.length != 0)
       num = ('00' + (docs[0].number+1)).slice(-2);
-    return req.db.get('experiment_config').findOne({name: 'doberview_config'});
+    return db.get('experiment_config').findOne({name: 'doberview_config'});
   }).then(sdoc => {
     var ss = sdoc.subsystems.filter(row => row[0] == subsystem)[0][1];
     doc.name = `${topic_abb}_${ss}_${num}`;
-    return req.db.get('sensors').insert(doc);
-  }).then(() => req.db.get('devices').update({name: doc.device}, {$addToSet: {sensors: doc.name}}))
+    return db.get('sensors').insert(doc);
+  }).then(() => db.get('devices').update({name: doc.device}, {$addToSet: {sensors: doc.name}}))
     .then(() => res.json({name: doc.name}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 router.get('/device_list', function(req, res) {
-  req.db.get('devices').distinct('name')
+  db.get('devices').distinct('name')
   .then(docs => res.json(docs))
   .catch(err => {console.log(err.message); res.json([]);});
 });
@@ -75,7 +80,7 @@ router.get('/device_detail', function(req, res) {
   var device = q.device;
   if (typeof device == 'undefined')
     return res.json({});
-  req.db.get('devices').findOne({name: device})
+  db.get('devices').findOne({name: device})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -85,7 +90,7 @@ router.get('/sensors_grouped', function(req, res) {
   var group_by = q.group_by;
   if (typeof group_by == 'undefined')
     return res.json([]);
-  req.db.get('sensors').aggregate([
+  db.get('sensors').aggregate([
     {$sort: {'name': 1}},
     {$group: {
       _id: '$' + group_by,
@@ -97,7 +102,7 @@ router.get('/sensors_grouped', function(req, res) {
 });
 
 router.get('/sensor_list', function(req, res) {
-  req.db.get('sensors').distinct('name')
+  db.get('sensors').distinct('name')
   .then(docs => res.json(docs))
   .catch(err => {console.log(err.message); res.json([]);});
 });
@@ -107,7 +112,7 @@ router.get('/sensor_detail', function(req, res) {
   var sensor = q.sensor;
   if (typeof sensor == 'undefined')
     return res.json({});
-  req.db.get('sensors').findOne({name: sensor})
+  db.get('sensors').findOne({name: sensor})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -137,7 +142,7 @@ router.post('/update_device_address', common.ensureAuthenticated, function(req, 
   if (typeof data.serial_id != 'undefined')
     updates['address.serialID'] = data.serial_id;
   if (Object.keys(updates).length != 0) {
-    req.db.get('devices').update({device: device}, {$set: updates})
+    db.get('devices').update({device: device}, {$set: updates})
       .then(() => res.json({msg: 'Success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else
@@ -160,7 +165,7 @@ router.post('/update_alarm', common.ensureAuthenticated, function(req, res) {
       return res.json({err: 'Invalid alarm parameters'});
     }
   }
-  req.db.get('sensors').update({name: data.sensor}, {$set: updates})
+  db.get('sensors').update({name: data.sensor}, {$set: updates})
     .then(() => res.json({ret}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -201,7 +206,7 @@ router.post('/update_sensor', common.ensureAuthenticated, function(req, res) {
   if (typeof data.description != 'undefined' && data.description != "")
     updates['description'] = data.description;
   console.log(updates);
-  req.db.get('sensors').update({name: sensor}, {$set: updates})
+  db.get('sensors').update({name: sensor}, {$set: updates})
     .then(() => res.json(ret))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -212,23 +217,42 @@ router.get('/get_last_point', function(req, res) {
   var topic = topic_lut[sensor.split('_')[0]];
   if (typeof sensor == 'undefined' || typeof topic == 'undefined')
     return res.json({});
-
-  axios(common.axios_params(`SELECT last(value) FROM ${topic} WHERE sensor='${sensor}';`))
-  .then(resp => {
-
-    if (resp.data.split('\n').length > 1) {
-      var blob = resp.data.split('\n')[1].split(',');
+  db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    var get_url = new url.URL(doc['url'] + '/api/v2/query');
+    var params = new url.URLSearchParams({
+      org: doc['org'],
+      db: doc['db'],
+    });
+    get_url.search = params.toString();
+    return axios.post(
+      get_url.toString(),
+        `from(bucket: "${doc['bucket']}")
+        |> range(start: -24h)
+        |> filter(fn: (r) => r["_measurement"] == "${topic}")
+        |> filter(fn: (r) => r["_field"] == "value")
+        |> filter(fn: (r) => r["sensor"] == "${sensor}")
+        |> keep(columns:["_time", "_value",])
+        |> last()`,
+        {
+          'headers': {
+            'Accept': 'application/csv',
+            'Authorization': `Token ${doc['token']}`,
+            'Content-type': 'application/vnd.flux'
+          },
+        })}).then(resp => {
+    if (resp.data.split('\r\n').length > 1) {
+      var blob = resp.data.split('\r\n')[1].split(',');
       return res.json({
-                       'value': blob[3], 
-                       'time_ago': ((new Date()-parseInt(blob[2])/1e6)/1000).toFixed(1),
-                       'time': parseInt(blob[2])/1e6
-                      });
+        'value': blob[4],
+        'time_ago': ((new Date() - new Date(blob[3])) / 1000).toFixed(1),
+        'time': parseInt(blob[3]) / 1e6})
     }
     else {
-      return res.json({'value': 'None', 'time_ago': 'drölf '})
+      return res.json({'value': 'None', 'time_ago': 'None '})
     }
   }).catch(err => {console.log(err); return res.json({});});
 });
+
 
 router.get('/get_data', function(req, res) {
   var q = url.parse(req.url, true).query;
@@ -238,11 +262,32 @@ router.get('/get_data', function(req, res) {
   var topic = topic_lut[sensor.split('_')[0]];
   if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
-
-  axios(common.axios_params(`SELECT mean(value) FROM ${topic} WHERE sensor='${sensor}' AND time > now()-${history} GROUP BY time(${binning}) fill(none);`))
-  .then( blob => {
-    var data = blob.data.split('\n').slice(1);
-    return res.json(data.map(row => {var x = row.split(','); return [parseFloat(x[2]/1e6), parseFloat(x[3])];}));
+  db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    var get_url = new url.URL(doc['url'] + '/api/v2/query');
+    var params = new url.URLSearchParams({
+      org: doc['org'],
+      db: doc['db'],
+    });
+    get_url.search = params.toString();
+    return axios.post(
+        get_url.toString(),
+        `from(bucket: "${doc['bucket']}")
+        |> range(start: -${history})
+        |> filter(fn: (r) => r["_measurement"] == "${topic}")
+        |> filter(fn: (r) => r["_field"] == "value")
+        |> filter(fn: (r) => r["sensor"] == "${sensor}")
+        |> keep(columns:["_time", "_value",])
+        |> aggregateWindow(every: ${binning}, fn: mean, createEmpty: false)
+        |> yield(name: "mean")`,
+        {
+          'headers': {
+            'Accept': 'application/csv',
+            'Authorization': `Token ${doc['token']}`,
+            'Content-type': 'application/vnd.flux'
+          },
+        })}).then(resp => {
+          var data = resp.data.split('\r\n').slice(1);
+          return res.json(data.map(row => {var x = row.split(','); return [new Date(x[6]).getTime(), parseFloat(x[5])];}));
   }).catch(err => {console.log(err); return res.json([]);});
 });
 

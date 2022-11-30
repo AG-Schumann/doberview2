@@ -67,6 +67,8 @@ function UpdateOnce() {
         $.getJSON(`/devices/get_last_point?sensor=${r}`, (val) => {
           if (val.value)
             $(`#${r}_status`).html(`${SigFigs(val.value)} ${units[r]} (${val.time_ago}s ago)`);
+          else
+            $(`#${r}_status`).html('DELAYED');
         });
       }
     });

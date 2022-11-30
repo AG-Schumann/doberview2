@@ -2,8 +2,6 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var monk = require('monk');
 
 var indexRouter = require('./routes/index');
 var deviceRouter = require('./routes/devices');
@@ -21,20 +19,18 @@ const hostname = process.env.DOBERVIEW_HOST;
 const port = process.env.DOBERVIEW_PORT;
 
 var app = express();
+
 app.disable('x-powered-by');
 
+// dict of expereiments with {<database_name>: <display_name>, ...}
+global.experiments = {'xebra': 'XeBRA', 'pancake': 'PANCAKE'}
 // uri has format mongodb://{user}:{pass}@{host}:{port}
-var experiment = process.env.DOBERVIEW_EXPERIMENT;
-var authdb = process.env.DOBERVIEW_AUTH_DB || 'admin';
-var uri_base = process.env.DOBERVIEW_MONGO_URI;
-
-var uri = `${uri_base}/${experiment}`;
-var db = monk(uri, {authSource: authdb});
-
+global.authdb = process.env.DOBERVIEW_AUTH_DB || 'admin';
+global.uri_base = process.env.DOBERVIEW_MONGO_URI;
 // session caching
-var session = require('express-session');
+const sessions = require('express-session');
 
-app.use(session({
+app.use(sessions({
   secret: 'secret-key', //process.env.EXPRESS_SESSION,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week in ms
@@ -49,13 +45,10 @@ require('./config/passport');
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-//app.use(logger('[:date[iso]] :remote-addr :method :url :status :res[content-length] - :response-time ms'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(cookieParser());
@@ -63,15 +56,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 console.log(`New connection at ${new Date()}`);
 
-// make all our stuff visible to the router
-app.use((req, res, next) => {
-  //if (!req.isAuthenticated()) return res.redirect('/login');
-  req.db = db;
-
-  return next();
-});
-
-app.use('/', deviceRouter);
+app.use('/', indexRouter);
 app.use('/devices', deviceRouter);
 app.use('/pipeline', pipelineRouter);
 app.use('/alarms', alarmRouter);
@@ -86,7 +71,14 @@ app.get('/logout', function(req, res){
   req.logout();
   res.redirect(req.header('Referer') || '/');
 });
-
+app.post('/experiment', function(req, res){
+  console.log("changing experiment to " + req.body.name);
+  let session = req.session;
+  session.experiment = req.body.name;
+  res.json({
+    success: true
+  });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

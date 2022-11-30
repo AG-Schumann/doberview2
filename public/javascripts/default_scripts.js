@@ -1,4 +1,3 @@
-'use strict';
 const binning = ['1s', '6s', '10s', '36s', '1m', '2m', '4m', '6m', '14m', '24m', '48m'];
 const history = ['10m', '1h', '3h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
 var SIG_FIGS=3;
@@ -18,6 +17,19 @@ function Notify(msg, type='success') {
 function SigFigsPlot(ctx) {
   var value = typeof ctx.value == 'string' ? parseFloat(ctx.value) : ctx.value;
   return Math.abs(Math.log10(Math.abs(value))) < LOG_THRESHOLD ? value.toFixed(SIG_FIGS) : value.toExponential(SIG_FIGS);
+}
+
+function ChangeExperiment(name) {
+  $.ajax({
+    type: 'POST',
+    url: '/experiment',
+    data: {name: name},
+    success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
+    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+    complete:  function(data) {
+      location.reload();
+      }
+  });
 }
 
 function SensorDropdown(sensor) {
@@ -231,7 +243,6 @@ function DrawSensorHistory(sensor) {
   sensor = sensor || $("#detail_sensor_name").html();
   var unit = $("#sensor_units").html();
   var interval = $("#selectinterval :selected").val();
-  console.log(interval);
   $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
     if (data.length == 0)
       var t_min = 0, t_max = 0;
