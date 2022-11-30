@@ -1,6 +1,5 @@
 var sensors = [];
 var units = {};
-var rois = {};
 var properties = [];
 var linktargets = {};
 var intervalid = 0;
@@ -113,7 +112,6 @@ function Setup(){
   }
   sensors.forEach(s => $.getJSON(`/devices/sensor_detail?sensor=${s}`, data => {
     units[s] = data.units;
-    rois[s] = data.readout_interval;
     for (var element of doc.querySelectorAll(`[id*=_${s}]`)) {
       element.addEventListener('click', function() {SensorDropdown(s);});
       element.style['cursor'] = 'pointer';
@@ -157,7 +155,7 @@ function UpdateOnce() {
   var updatestarttime = Date.now();
   var doc = document.getElementById('svg_frame').getSVGDocument();
   sensors.forEach(s => {
-    $.getJSON(`/devices/get_last_point?sensor=${s}&roi=${rois[s]}`, data => {
+    $.getJSON(`/devices/get_last_point?sensor=${s}}`, data => {
       var value = parseFloat(data.value);
       for (var element of doc.querySelectorAll(`[id^=valve_${s}]`)) {
         element.classList.remove(value ? 'off' : "on");
