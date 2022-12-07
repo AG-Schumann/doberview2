@@ -244,17 +244,16 @@ function DrawSensorHistory(sensor) {
       series.push({name: "upper threshold", type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
     }
     
-    var datasorted = data.concat()
+    var datasorted = data.concat();
     datasorted.sort(function(a,b){
       return a[1] - b[1];
     });
     
-    var ymin = datasorted[Math.round(datasorted.length*0.05)][1];
-    var ymax = datasorted[Math.round(datasorted.length*0.95)][1];
+    var ymin = datasorted[Math.round(datasorted.length*0.02)][1];
+    var ymax = datasorted[Math.round(datasorted.length*0.98)][1];
     var upperbound = ymax + (ymax-ymin)/2;
     var lowerbound = ymin - (ymax-ymin)/2;
     
->>>>>>> 1dd37cd3f39ce1ff3310b8c682c45b5a172c9a26
     detail_chart = Highcharts.chart('sensor_chart', {
       chart: {
         zoomType: 'xy',
