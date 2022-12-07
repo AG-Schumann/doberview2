@@ -207,6 +207,7 @@ html
               .d-flex.flex-row
                 .mr-auto.p-2
                   input#plot_alarms(type="checkbox" data-toggle='toggle' data-width='150px' data-on='<i class="fa-solid fa-eye"></i>&nbsp thresholds' data-off='<i class="fa-regular fa-eye-slash"></i>&nbsp thresholds' data-onstyle='danger' data-offstyle='secondary' onchange="DrawSensorHistory()")
+                  input#plot_zoom(type="checkbox" data-toggle='toggle' data-width='70px' data-on='Nice' data-off='Bad' data-onstyle='primary' data-offstyle='secondary' onchange="DrawSensorHistory()")
                   input#plot_log(type="checkbox" data-toggle='toggle' data-width='80px' data-on='log' data-off='linear' data-onstyle='primary' data-offstyle='secondary' onchange="DrawSensorHistory()")
                 .p-2(style="margin-left:auto")
                   select.form-select#selectinterval(onchange="DrawSensorHistory()")
