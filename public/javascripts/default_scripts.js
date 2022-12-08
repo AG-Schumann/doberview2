@@ -253,10 +253,10 @@ function DrawSensorHistory(sensor) {
         return a[1] - b[1];
       });
 
-      var ymin = datasorted[Math.round(datasorted.length*0.02)][1];
-      var ymax = datasorted[Math.round(datasorted.length*0.98)][1];
-      var upperbound = ymax + (ymax-ymin)/5;
-      var lowerbound = ymin - (ymax-ymin)/5;
+      var ymin = datasorted[Math.round(datasorted.length*0.05)][1];
+      var ymax = datasorted[Math.round(datasorted.length*0.95)][1];
+      var upperbound = ymax + (ymax-ymin)/3;
+      var lowerbound = ymin - (ymax-ymin)/3;
     }
     
     detail_chart = Highcharts.chart('sensor_chart', {
