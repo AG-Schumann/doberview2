@@ -184,23 +184,6 @@ html
                       td
                         button.btn.btn-primary#sensor_setpoint_btn(onclick="ChangeSetpoint()") Set
                 hr
-              h5 Pipelines involving this sensor
-              br
-              table.table#pipelines_of_sensor_table(style="width:100%;")
-                thead
-                  tr
-                    th(colspan='2') Active
-                tbody#pipelines_active
-                thead
-                  tr
-                    th(colspan='2') Silenced
-                tbody#pipelines_silenced
-                thead
-                  tr
-                    th(colspan='2') Inactive
-                tbody#pipelines_inactive
-              button.btn.btn-primary#make_alarm_button(onclick=`MakeAlarm()`) Make new alarm
-              hr
               h5 Recent history
               br
               table
@@ -210,7 +193,8 @@ html
                     td#last_value XXX
               .d-flex.flex-row
                 .mr-auto.p-2
-                  input#plot_alarms(type="checkbox" data-toggle='toggle' data-width='150px' data-on='<i class="fa-solid fa-eye"></i>&nbsp thresholds' data-off='<i class="fa-regular fa-eye-slash"></i>&nbsp thresholds' data-onstyle='danger' data-offstyle='secondary' onchange="DrawSensorHistory()")
+                  input#plot_alarms(type="checkbox" data-toggle='toggle' data-width='110px' data-on='<i class="fa-solid fa-eye"></i>&nbsp limits' data-off='<i class="fa-regular fa-eye-slash"></i>&nbsp limits' data-onstyle='danger' data-offstyle='secondary' onchange="DrawSensorHistory()")
+                  input#plot_zoom(type="checkbox" data-toggle='toggle' data-width='130px' data-on='<i class="fa-regular fa-eye-slash"></i>&nbsp outliers' data-off='<i class="fa-solid fa-eye"></i>&nbsp outliers' data-onstyle='primary' data-offstyle='secondary' onchange="DrawSensorHistory()")
                   input#plot_log(type="checkbox" data-toggle='toggle' data-width='80px' data-on='log' data-off='linear' data-onstyle='primary' data-offstyle='secondary' onchange="DrawSensorHistory()")
                 .p-2(style="margin-left:auto")
                   select.form-select#selectinterval(onchange="DrawSensorHistory()")
@@ -230,6 +214,24 @@ html
                     i.fa.fa-sync-alt
 
               .container.sensor_chart#sensor_chart
+
+              h5 Pipelines involving this sensor
+              br
+              button.btn.btn-primary#make_alarm_button(onclick=`MakeAlarm()`) Make new alarm
+              table.table#pipelines_of_sensor_table(style="width:100%;")
+                thead
+                  tr
+                    th(colspan='2') Active
+                tbody#pipelines_active
+                thead
+                  tr
+                    th(colspan='2') Silenced
+                tbody#pipelines_silenced
+                thead
+                  tr
+                    th(colspan='2') Inactive
+                tbody#pipelines_inactive
+              hr
           .modal-footer
             button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
 

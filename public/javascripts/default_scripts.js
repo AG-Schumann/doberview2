@@ -254,6 +254,22 @@ function DrawSensorHistory(sensor) {
       series.push({name: "lower threshold", type: 'area', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', threshold: -Infinity});
       series.push({name: "upper threshold", type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
     }
+
+    var lowerbound = null;
+    var upperbound = null;
+
+    if ($("#plot_zoom").prop('checked')) {
+      var datasorted = data.concat();
+      datasorted.sort(function(a,b){
+        return a[1] - b[1];
+      });
+
+      var ymin = datasorted[Math.round(datasorted.length*0.05)][1];
+      var ymax = datasorted[Math.round(datasorted.length*0.95)][1];
+      var upperbound = ymax + (ymax-ymin)/3;
+      var lowerbound = ymin - (ymax-ymin)/3;
+    }
+    
     detail_chart = Highcharts.chart('sensor_chart', {
       chart: {
         zoomType: 'xy',
@@ -270,6 +286,8 @@ function DrawSensorHistory(sensor) {
               //labels: {//format: '{value:.3f}',
               //        formatter: SigFigsPlot},
               type: $("#plot_log").is(":checked") ? "logarithmic" : "linear",
+              min: lowerbound,
+              max: upperbound
               },
       time: {useUTC: false},
       legend: {enabled: false},
