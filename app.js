@@ -21,8 +21,8 @@ const port = parseInt(process.env.DOBERVIEW_PORT);
 var app = express();
 app.disable('x-powered-by');
 
-// dict of experiments with {<database_name>: <display_name>, ...}
-global.experiments = {'xebra': 'XeBRA', 'pancake': 'PANCAKE'}
+// dict of experiments with {<display_name>: <database_name>, ...}
+global.experiments = {'XeBRA': 'xebra', 'PANCAKE': 'pancake'};
 // uri has format mongodb://{user}:{pass}@{host}:{port}
 global.authdb = process.env.DOBERVIEW_AUTH_DB || 'admin';
 global.uri_base = process.env.DOBERVIEW_MONGO_URI;

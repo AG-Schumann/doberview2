@@ -25,7 +25,7 @@ html
       h1.text-center Please select an experiment
       br
       .d-grid.gap-2.col-6.mx-auto
-        each display_name, real_name in experiments
+        each real_name, display_name in experiments
           button.btn.btn-large.btn-primary(type='button' onclick=`SetExperiment({'name':'${real_name}'}, {})`) #{display_name}
 
       script.

@@ -155,7 +155,7 @@ function UpdateOnce() {
   var updatestarttime = Date.now();
   var doc = document.getElementById('svg_frame').getSVGDocument();
   sensors.forEach(s => {
-    $.getJSON(`/devices/get_last_point?sensor=${s}}`, data => {
+    $.getJSON(`/devices/get_last_point?sensor=${s}`, data => {
       var value = parseFloat(data.value);
       for (var element of doc.querySelectorAll(`[id^=valve_${s}]`)) {
         element.classList.remove(value ? 'off' : "on");

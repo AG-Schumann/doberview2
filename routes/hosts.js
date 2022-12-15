@@ -8,16 +8,26 @@ const influx_url = process.env.DOBERVIEW_INFLUX_URI;
 
 
 router.get('/', function(req, res) {
+  let session = req.session;
+  if(session.experiment){
+    db = common.GetMongoDb({exp: session.experiment});
+  } else
+    res.redirect('../');
   var q = url.parse(req.url, true).query;
   var config = common.GetRenderConfig(req);
-  config.hosts = ['apollo', 'calliope', 'clio'];
   config.grafana_sysmon_url = 'http://10.4.73.172:3000/d/WzsbkBwWk/system-mon?orgId=1&kiosk';
-  res.render('hosts', config);
+  db.get("hosts").distinct("name").then(host_list => {
+    config.hosts = host_list;
+    res.render('hosts', config);
+  });
 });
 
+/*
 router.get('/params', function(req, res) {
-  return res.json({hosts: ['apollo', 'calliope']});
+  const host_list = db.get(hosts).distinct("name")
+  return res.json({hosts: host_list});
 });
+
 
 router.get('/get_snapshot', function(req, res) {
   var q = url.parse(req.url, true).query;
@@ -50,5 +60,5 @@ router.get('/get_history', function(req, res) {
     return res.json(data.map(row => {var x = row.split(','); return [parseFloat(x[2]/1e6), parseFloat(x[3]), parseFloat(x[4])];}));
   }).catch(err => {console.log(err); return res.json([]);});
 });
-
+*/
 module.exports = router;
