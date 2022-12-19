@@ -67,8 +67,8 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
-  req.db.get('pipelines').insert(doc)
-      .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
+  db.get('pipelines').insert(doc)
+      .then(() => db.get('sensors').update({name: {$in: doc['depends_on']}},
           {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
       .then(res.json({notify_msg: 'Pipeline added', notify_status: 'success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -96,9 +96,9 @@ router.post('/update_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
-  req.db.get('pipelines').update({_id: doc._id}, doc, {replaceOne: true})
-      .then(() => req.db.get('sensors').update({}, {$pull: {'pipelines': old_name}}, {multi: true}))
-      .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
+  db.get('pipelines').update({_id: doc._id}, doc, {replaceOne: true})
+      .then(() => db.get('sensors').update({}, {$pull: {'pipelines': old_name}}, {multi: true}))
+      .then(() => db.get('sensors').update({name: {$in: doc['depends_on']}},
           {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
       .then(res.json({notify_msg: 'Pipeline updated', notify_status: 'success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
