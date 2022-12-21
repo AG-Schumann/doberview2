@@ -4,6 +4,8 @@ var properties = [];
 var linktargets = {};
 var intervalid = 0;
 
+const TOGGLE_SLIDER_FRACTIONAL_HEIGHT = 0.8;
+
 function PopulateNavbar() {
   // Add rate selector to navigation bar
   var allowedrates = [1, 2, 5, 10, 30];
@@ -128,6 +130,28 @@ function Setup(){
     element.addEventListener('click', LoadSVG);
     element.style['cursor'] = 'pointer';
   }
+
+  // Check for pipeline interaction elements
+  for (var element of doc.querySelectorAll('.pipeline_config_toggle')) {
+    var tbwidth = parseFloat(element.getAttribute('width'));
+    var tbheight = parseFloat(element.getAttribute('height'));
+    var tbx = parseFloat(element.getAttribute('x'));
+    var tby = parseFloat(element.getAttribute('y'));
+    var tbpipeline = element.getAttribute('pipeline');
+    var tbtarget = element.getAttribute('target');
+    var toggle = doc.createElementNS("http://www.w3.org/2000/svg", 'circle');
+    toggle.setAttribute('r', tbheight * TOGGLE_SLIDER_FRACTIONAL_HEIGHT / 2);
+    toggle.setAttribute('cx', tbx + tbheight / 2);
+    toggle.setAttribute('cy', tby + tbheight / 2);
+    toggle.setAttribute('class', 'pipeline_toggler');
+    toggle.setAttribute('pipeline', tbpipeline);
+    toggle.setAttribute('target', tbtarget);
+    toggle.setAttribute('slideby', tbwidth - tbheight);
+    toggle.setAttribute('state', 0);
+    toggle.style.strokeWidth = 1;
+    toggle.style.fill = '#ff0000';
+    element.parentElement.appendChild(toggle);
+  }
   UpdateOnce();
 }
 
@@ -180,5 +204,15 @@ function UpdateOnce() {
     });
     console.debug('Updating took ' + (Date.now() - updatestarttime) / 1000 + ' seconds')
   });
-}
 
+  doc.querySelectorAll('.pipeline_toggler').forEach(e => {
+    var newstate = 1 - parseInt(e.getAttribute('state'));
+    var newfill = newstate ? '#009900' : '#990000';
+    var newx = parseFloat(e.getAttribute('cx')) + parseFloat(e.getAttribute('slideby')) * (newstate*2-1);
+    e.style.fill = newfill;
+    e.setAttribute('cx', newx);
+    e.setAttribute('state', newstate);
+  });
+  console.debug('Updating took ' + (Date.now() - updatestarttime) / 1000 + ' seconds')
+}
+:w
