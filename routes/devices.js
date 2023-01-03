@@ -253,6 +253,41 @@ router.get('/get_last_point', function(req, res) {
   }).catch(err => {console.log(err); return res.json({});});
 });
 
+router.get('/get_last_points', function(req, res) {
+  var q = url.parse(req.url, true).query;
+  db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    var get_url = new url.URL(doc['url'] + '/api/v2/query');
+    var params = new url.URLSearchParams({
+      org: doc['org'],
+      db: doc['db'],
+    });
+    get_url.search = params.toString();
+    return axios.post(
+      get_url.toString(),
+        `from(bucket: "${doc['bucket']}")
+        |> range(start: -24h)
+        |> group(columns: ["sensor"])
+        |> keep(columns:["_time", "_value","sensor"])
+        |> last()`,
+        {
+          'headers': {
+            'Accept': 'application/csv',
+            'Authorization': `Token ${doc['token']}`,
+            'Content-type': 'application/vnd.flux'
+          },
+        })}).then(resp => {
+          const lines = csv.split('\n');
+          const keys = lines[0].split(',');
+          return lines.slice(1).map(line => {
+            return line.split(',').reduce((acc, cur, i) => {
+                const toAdd = {};
+                toAdd[keys[i]] = cur;
+                return { ...acc, ...toAdd };
+            }, {});
+          });
+  }).catch(err => {console.log(err); return res.json({});});
+});
+
 
 router.get('/get_data', function(req, res) {
   var q = url.parse(req.url, true).query;
