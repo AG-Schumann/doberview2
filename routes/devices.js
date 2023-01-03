@@ -278,13 +278,13 @@ router.get('/get_last_points', function(req, res) {
         })}).then(resp => {
           const lines = resp.data.split('\r\n');
           const keys = lines[0].split(',');
-          return lines.slice(1).map(line => {
+          return res.json(lines.slice(1).map(line => {
             return line.split(',').reduce((acc, cur, i) => {
                 const toAdd = {};
                 toAdd[keys[i]] = cur;
                 return { ...acc, ...toAdd };
             }, {});
-          });
+          }));
   }).catch(err => {console.log(err); return res.json({});});
 });
 
