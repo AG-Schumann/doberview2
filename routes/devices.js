@@ -276,7 +276,7 @@ router.get('/get_last_points', function(req, res) {
             'Content-type': 'application/vnd.flux'
           },
         })}).then(resp => {
-          const lines = csv.split('\n');
+          const lines = resp.data.split('\r\n');
           const keys = lines[0].split(',');
           return lines.slice(1).map(line => {
             return line.split(',').reduce((acc, cur, i) => {
