@@ -278,12 +278,17 @@ router.get('/get_last_points', function(req, res) {
         })}).then(resp => {
           const lines = resp.data.split('\r\n');
           const keys = lines[0].split(',');
+          const value_index = keys.indexOf('_value');
+          const time_index = keys.indexOf('time');
+          const sensor_index = keys.indexOf('sensor');
           return res.json(lines.slice(1).map(line => {
-            return line.split(',').reduce((acc, cur, i) => {
-                const toAdd = {};
-                toAdd[keys[i]] = cur;
-                return { ...acc, ...toAdd };
-            }, {});
+            const v = line.split(',');
+            return {
+              'value': v[value_index],
+              'sensor': v[sensor_index],
+              'time': v[time_index],
+              'time_ago': ((new Date() - new Date(v[time_index])) / 1000).toFixed(1),
+            };
           }));
   }).catch(err => {console.log(err); return res.json({});});
 });

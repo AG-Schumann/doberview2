@@ -59,7 +59,16 @@ function SigFigs(val) {
 }
 
 function UpdateOnce() {
+
   sensors.forEach(r => {
+    $.getJSON('/devices/get_last_points', data => {
+      data.forEach(val => {
+        if (val.value)
+          $(`#${r}_status`).html(`${SigFigs(val.value)} ${units[r]} (${val.time_ago}s ago)`);
+        else
+          $(`#${r}_status`).html('DELAYED');
+      })
+    });
     $.getJSON(`/devices/sensor_detail?sensor=${r}`, data => {
       if(data['status'] == 'offline')
         $(`#${r}_status`).html('OFFLINE');
