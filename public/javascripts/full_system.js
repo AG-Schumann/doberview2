@@ -55,6 +55,19 @@ function SigFigs(val) {
   return val;
 }
 
+function FormatTimeSince(seconds) {
+  v = parseFloat(seconds);
+  if (v < 10)
+    // For small numbers of seconds go down to tenths
+    return v.toFixed(1) + 's';
+  else if (v < 120)
+    return v.toFixed(0) + 's';
+  else if (v < 2 * 60 * 60)
+    return (v / 60).toFixed(0) + 'm';
+  else
+    return (v / 60 / 60).toFixed(0) + 'h';
+}
+
 function UpdateOnce() {
   var group_by = $('#sensor_grouping input:radio:checked').val();
   $.when(
@@ -69,7 +82,7 @@ function UpdateOnce() {
          $(`#${doc.name}_desc`).html(`${doc.desc} (${doc.name})`);
          var last_point = data[0][doc.name];
          if (last_point && (last_point.value))
-           var new_status = `${SigFigs(last_point.value)} ${doc.units} (${last_point.time_ago}s ago)`;
+           var new_status = `${SigFigs(last_point.value)} ${doc.units} (${FormatTimeSince(last_point.time_ago)} ago)`;
          else
            var new_status = 'No recent data';
          if (doc.status == 'offline') {
