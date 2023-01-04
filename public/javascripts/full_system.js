@@ -1,6 +1,3 @@
-const sensors = [];
-const units = {};
-
 // Settings:
 var SIG_FIGS = 3;
 var LOG_THRESHOLD = 3;
@@ -42,7 +39,6 @@ function GetGroupedSensors() {
     data.forEach(group => {
       var click = group_by == 'device' ? `onclick='DeviceDropdown("${group._id}")'` : "";
       var head = `<thead id=${group._id}><tr ${click}><th colspan=2> ${group._id}</th></tr></thead><tbody id="${group._id}_tbody">`;
-      group['sensors'].forEach(doc => units[doc.name] = doc.units);
       $("#jump_to_list").append(`<li><a class="dropdown-item py-2" href="#${group._id}">${group._id}</a></li>`)
       $("#sensor_table").append(head + group['sensors'].reduce((tot, rd) => tot + `<tr><td id="${rd.name}_desc" onclick="SensorDropdown('${rd.name}')">Loading!</td><td id="${rd.name}_status">Loading!</td></tr>`, "") + '</tbody>');
     }); // data.forEach
@@ -70,11 +66,10 @@ function UpdateOnce() {
          // Add any possible new sensor
          if (!$(`#${doc.name}_status`).length)
            $(`#${group._id}`).append(`<tr><td id="${doc.name}_desc" onclick="SensorDropdown('${doc.name}')">Loading!</td><td id="${doc.name}_status">Loading!</td></tr>`);
-         units[doc.name] = doc.units;
          $(`#${doc.name}_desc`).html(`${doc.desc} (${doc.name})`);
          var last_point = data[0][doc.name];
          if (last_point && (last_point.value))
-           var new_status = `${SigFigs(last_point.value)} ${units[last_point.sensor]} (${last_point.time_ago}s ago)`;
+           var new_status = `${SigFigs(last_point.value)} ${doc.units} (${last_point.time_ago}s ago)`;
          else
            var new_status = 'No recent data';
          if (doc.status == 'offline') {
