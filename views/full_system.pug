@@ -11,7 +11,6 @@ block content
     $(document).ready(function () {
       PopulateNavbar();
       GetGroupedSensors();
-      PopulateSensors();
       setInterval(UpdateOnce, 5000);
       var query_search = new URLSearchParams(window.location.search);
       if (query_search.has('notify_msg')) {

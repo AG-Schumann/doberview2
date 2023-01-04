@@ -94,7 +94,12 @@ router.get('/sensors_grouped', function(req, res) {
     {$sort: {'name': 1}},
     {$group: {
       _id: '$' + group_by,
-      sensors: {$push: {name: '$name', desc: '$description', units: '$units'}}
+      sensors: {$push: {
+        name: '$name',
+        desc: '$description',
+        units: '$units',
+        status: '$status'
+      }}
     }},
     {$sort: {_id: 1}}
   ]).then(docs => res.json(docs))
@@ -285,15 +290,15 @@ router.get('/get_last_points', function(req, res) {
             if ((line.length > 0) & (!line.includes('_value'))) {
               // Sometimes Influx sends extra header lines!
               const v = line.split(',');
-              result.push({
+              result[v[sensor_index]] = {
                 'value': v[value_index],
                 'sensor': v[sensor_index],
                 'time': v[time_index],
                 'time_ago': ((new Date() - new Date(v[time_index])) / 1000).toFixed(1),
-              });
+              };
             }
             return result;
-          }, []));
+          }, {}));
   }).catch(err => {console.log(err); return res.json({});});
 });
 
