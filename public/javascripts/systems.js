@@ -154,9 +154,9 @@ function LoadSVG(fn) {
 function UpdateOnce() {
   var updatestarttime = Date.now();
   var doc = document.getElementById('svg_frame').getSVGDocument();
-  sensors.forEach(s => {
-    $.getJSON(`/devices/get_last_point?sensor=${s}`, data => {
-      var value = parseFloat(data.value);
+  $.getJSON(`/devices/get_last_points?sensors=${[...sensors].join(',')}`, data => {
+    sensors.forEach(s => {
+      var value = parseFloat(data[s]['value']);
       for (var element of doc.querySelectorAll(`[id^=valve_${s}]`)) {
         element.classList.remove(value ? 'off' : "on");
         element.classList.add(value ? 'on' : 'off');
@@ -166,7 +166,7 @@ function UpdateOnce() {
       }
       for (var property of properties) {
         if (property['sensor'] == s) {
-          transformedValue = value * property['scaling'] + property['offset'];
+          var transformedValue = value * property['scaling'] + property['offset'];
           transformedValue = Math.max(transformedValue, property['min']);
           transformedValue = Math.min(transformedValue, property['max']);
           var target = doc.getElementById(property['targetId']);
@@ -174,7 +174,7 @@ function UpdateOnce() {
         }
       }
     });
+    console.debug('Updating took ' + (Date.now() - updatestarttime) / 1000 + ' seconds')
   });
-  console.debug('Updating took ' + (Date.now() - updatestarttime) / 1000 + ' seconds')
 }
 

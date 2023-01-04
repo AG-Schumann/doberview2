@@ -259,7 +259,18 @@ router.get('/get_last_point', function(req, res) {
 });
 
 router.get('/get_last_points', function(req, res) {
+  // Get last value recorded by each sensor
+  // Only searches past 24 hours
+  // Optional get argument "sensors": a comma separated list of sensors to get data for
+  // If sensors is not defined, returns data for all sensors
   var q = url.parse(req.url, true).query;
+  //var q = req.body;
+  var defstring = "";
+  var filterstring = "";
+  if (q.sensors) {
+    defstring = `sensors = ${JSON.stringify(q.sensors.split(','))}`;
+    filterstring = '|> filter(fn: (r) => contains(value: r.sensor, set: sensors))';
+  }
   db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
@@ -267,13 +278,16 @@ router.get('/get_last_points', function(req, res) {
       db: doc['db'],
     });
     get_url.search = params.toString();
+    //res.json(q);
     return axios.post(
       get_url.toString(),
-        `from(bucket: "${doc['bucket']}")
+        `${defstring}
+        from(bucket: "${doc['bucket']}")
         |> range(start: -24h)
         |> group(columns: ["sensor"])
         |> keep(columns:["_time", "_value","sensor"])
-        |> last()`,
+        |> last()
+        ${filterstring}`,
         {
           'headers': {
             'Accept': 'application/csv',
