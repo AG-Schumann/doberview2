@@ -13,12 +13,12 @@ function PopulateNavbar() {
       '<span>Add sensor &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-solid fa-thermometer"></i></span>' +
       '</button></li>' +
       '<li class="nav-item"><div class="d-flex"><div class="navbar-text">&nbsp; Group by: &nbsp;</div>' +
-      '<div class="btn-group" id="sensor_grouping" role="group"> ' +
-      '<input class="btn-check" id="groupSubsystem" type="radio" name="btnradio" value="subsystem" onclick="GetGroupedSensors()" checked=""> ' +
+      '<div class="btn-group" id="sensor_grouping" role="group" onclick="UpdateOnce(regoup=true)"> ' +
+      '<input class="btn-check" id="groupSubsystem" type="radio" name="btnradio" value="subsystem" checked=""> ' +
       '<label class="btn btn-outline-primary" for="groupSubsystem">Subsystem</label> ' +
-      '<input class="btn-check" id="groupSensor" type="radio" name="btnradio" value="device" onclick="GetGroupedSensors()"> ' +
+      '<input class="btn-check" id="groupSensor" type="radio" name="btnradio" value="device"> ' +
       '<label class="btn btn-outline-primary" for="groupSensor">Device</label>' +
-      '<input class="btn-check" id="groupTopic" type="radio" name="btnradio" value="topic" onclick="GetGroupedSensors()"> ' +
+      '<input class="btn-check" id="groupTopic" type="radio" name="btnradio" value="topic"> ' +
       '<label class="btn btn-outline-primary" for="groupTopic">Topic</label></div></div></li>' +
       '<li class="nav-item">' +
       '<div class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Jump to</a> ' +
@@ -29,21 +29,6 @@ function PopulateNavbar() {
       '<button class="btn bg-transparent" type="button" style="margin-left: -40px; z-index: 100;" onclick="$(`#searchSensorInput`).val(``); FilterSensors();">' +
       '<i class="fa fa-times"></i></button></div></li>';
   $('#navbar_content').prepend(content);
-}
-
-function GetGroupedSensors() {
-  var group_by = $('#sensor_grouping input:radio:checked').val();
-  $.getJSON(`/devices/sensors_grouped?group_by=${group_by}`, (data) => {
-    $("#sensor_table").empty();
-    $("#jump_to_list").empty();
-    data.forEach(group => {
-      var click = group_by == 'device' ? `onclick='DeviceDropdown("${group._id}")'` : "";
-      var head = `<thead id=${group._id}><tr ${click}><th colspan=2> ${group._id}</th></tr></thead><tbody id="${group._id}_tbody">`;
-      $("#jump_to_list").append(`<li><a class="dropdown-item py-2" href="#${group._id}">${group._id}</a></li>`)
-      $("#sensor_table").append(head + group['sensors'].reduce((tot, rd) => tot + `<tr><td id="${rd.name}_desc" onclick="SensorDropdown('${rd.name}')">Loading!</td><td id="${rd.name}_status">Loading!</td></tr>`, "") + '</tbody>');
-    }); // data.forEach
-  }); // getJSON
-  UpdateOnce();
 }
 
 function SigFigs(val) {
@@ -68,17 +53,27 @@ function FormatTimeSince(seconds) {
     return (v / 60 / 60).toFixed(0) + 'h';
 }
 
-function UpdateOnce() {
+function UpdateOnce(regroup=false) {
+  if (regroup) $('#sensor_table').html('<thead><tr><th colspan=2>Loading...</th></tr></thead>');
   var group_by = $('#sensor_grouping input:radio:checked').val();
   $.when(
     $.getJSON('/devices/get_last_points'),
     $.getJSON(`/devices/sensors_grouped?group_by=${group_by}`)
   ).done((data, sensors_grouped) => {
+    if (regroup) {
+      $("#sensor_table").empty();
+      $("#jump_to_list").empty();
+    }
     sensors_grouped[0].forEach(group => {
+      if (regroup) {
+        var click = group_by == 'device' ? `onclick='DeviceDropdown("${group._id}")'` : "";
+        $("#sensor_table").append(`<thead id=${group._id}><tr ${click}><th colspan=2> ${group._id}</th></tr></thead><tbody id="${group._id}_tbody"></tbody>`);
+        $("#jump_to_list").append(`<li><a class="dropdown-item py-2" href="#${group._id}">${group._id}</a></li>`);
+      }
        group['sensors'].forEach(doc => {
-         // Add any possible new sensor
+         // Add table row if sensor new
          if (!$(`#${doc.name}_status`).length)
-           $(`#${group._id}`).append(`<tr><td id="${doc.name}_desc" onclick="SensorDropdown('${doc.name}')">Loading!</td><td id="${doc.name}_status">Loading!</td></tr>`);
+           $(`#${group._id}_tbody`).append(`<tr><td id="${doc.name}_desc" onclick="SensorDropdown('${doc.name}')">Loading!</td><td id="${doc.name}_status">Loading!</td></tr>`);
          $(`#${doc.name}_desc`).html(`${doc.desc} (${doc.name})`);
          var last_point = data[0][doc.name];
          if (last_point && (last_point.value))
