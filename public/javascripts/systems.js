@@ -156,6 +156,10 @@ function UpdateOnce() {
   var doc = document.getElementById('svg_frame').getSVGDocument();
   $.getJSON(`/devices/get_last_points?sensors=${[...sensors].join(',')}`, data => {
     sensors.forEach(s => {
+      if (!data[s]) {
+        console.log(`No data for sensor ${s}`);
+        return;
+      }
       var value = parseFloat(data[s]['value']);
       for (var element of doc.querySelectorAll(`[id^=valve_${s}]`)) {
         element.classList.remove(value ? 'off' : "on");
