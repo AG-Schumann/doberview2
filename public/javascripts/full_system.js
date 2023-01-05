@@ -13,7 +13,7 @@ function PopulateNavbar() {
       '<span>Add sensor &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-solid fa-thermometer"></i></span>' +
       '</button></li>' +
       '<li class="nav-item"><div class="d-flex"><div class="navbar-text">&nbsp; Group by: &nbsp;</div>' +
-      '<div class="btn-group" id="sensor_grouping" role="group" onclick="UpdateOnce(regoup=true)"> ' +
+      '<div class="btn-group" id="sensor_grouping" role="group" onchange="UpdateOnce(regoup=true)"> ' +
       '<input class="btn-check" id="groupSubsystem" type="radio" name="btnradio" value="subsystem" checked=""> ' +
       '<label class="btn btn-outline-primary" for="groupSubsystem">Subsystem</label> ' +
       '<input class="btn-check" id="groupSensor" type="radio" name="btnradio" value="device"> ' +
