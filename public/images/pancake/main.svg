@@ -23,14 +23,14 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="1"
-     inkscape:cx="462.5"
-     inkscape:cy="527"
+     inkscape:cx="460.5"
+     inkscape:cy="367"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g2446"
      showguides="false" />
   <svg:defs
      id="defs2">
@@ -1033,16 +1033,6 @@
        d="m 29.441063,10.544781 0,-4.194781 h 93.061027 v 7.9375"
        id="path106341"
        sodipodi:nodetypes="cccc" />
-    <svg:rect
-       style="fill:#ffffff;stroke:#000000;stroke-width:0.831617;stroke-linecap:square;stroke-linejoin:round;stroke-dashoffset:12.0945"
-       id="rect2107"
-       width="19.168383"
-       height="9.1683826"
-       x="24.314831"
-       y="172.26581"
-       class="pipeline_config_toggle"
-       pipeline="control_pump_isovac"
-       target="general.c.want_vac" />
     <svg:g
        id="g114297"
        transform="translate(-6.2858017,-22.076463)">
@@ -1294,22 +1284,6 @@
            x="204.96988"
            y="61.667484">T_IC_15</svg:tspan></svg:text>
     </svg:g>
-    <svg:text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="3.148432"
-       y="175.39793"
-       id="text49395-2"><svg:tspan
-         sodipodi:role="line"
-         style="font-size:6.35px;stroke-width:0.264583"
-         x="3.148432"
-         y="175.39793"
-         id="tspan5069">Pump</svg:tspan><svg:tspan
-         sodipodi:role="line"
-         style="font-size:6.35px;stroke-width:0.264583"
-         x="3.148432"
-         y="183.33543"
-         id="tspan3051">IV</svg:tspan></svg:text>
     <svg:g
        id="g49397"
        transform="translate(-96.691564,101.13093)">
@@ -1442,6 +1416,70 @@
            x="204.96988"
            y="61.667484">T_IC_23</svg:tspan></svg:text>
     </svg:g>
+    <svg:g
+       id="g2267"
+       transform="translate(0,-5.8208336)">
+      <svg:rect
+         style="fill:#ffffff;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:12.0945"
+         id="rect2107"
+         width="19.168383"
+         height="9.1683826"
+         x="24.314831"
+         y="172.26581"
+         class="pipeline_config_toggle"
+         pipeline="control_pump_isovac"
+         target="general.c.want_vac"
+         rx="2"
+         ry="2" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="3.148432"
+         y="175.39793"
+         id="text49395-2"><svg:tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="3.148432"
+           y="175.39793"
+           id="tspan5573">Pump</svg:tspan><svg:tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="3.148432"
+           y="183.33543"
+           id="tspan3051">OV</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g2446"
+       transform="translate(1.2886282,6.3500003)">
+      <svg:rect
+         style="fill:#ffffff;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:12.0945"
+         id="rect2107-8"
+         width="19.168383"
+         height="9.1683826"
+         x="23.026194"
+         y="90.457512"
+         class="pipeline_config_toggle"
+         pipeline="control_pump_innervessel"
+         target="general.c.want_vac"
+         rx="2"
+         ry="2" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="1.8598038"
+         y="93.589638"
+         id="text49395-2-8"><svg:tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="1.8598038"
+           y="93.589638"
+           id="tspan5573-2">Pump</svg:tspan><svg:tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="1.8598038"
+           y="101.52714"
+           id="tspan3051-9">IV</svg:tspan></svg:text>
+    </svg:g>
   </svg:g>
   <metadata>
     <property
@@ -1449,13 +1487,17 @@
        targetAttribute="height"
        offset="0"
        scaling="0.27926043"
-       sensor="L_TS_01" />
+       sensor="L_TS_01"
+       min="0"
+       max="35.181" />
     <property
        targetId="n2levelbox"
        targetAttribute="y"
        offset="42.451"
        scaling="-0.27926043"
-       sensor="L_TS_01" />
+       sensor="L_TS_01"
+       min="38.966217"
+       max="74,147" />
     <property
        targetId="activeregionbox"
        targetAttribute="opacity"
@@ -1467,24 +1509,32 @@
        targetAttribute="height"
        offset="-27.776"
        scaling="0.217"
-       sensor="M_TS_01" />
+       sensor="M_TS_01"
+       min="0"
+       max="35.180824" />
     <property
        targetId="n2dewarfill"
        targetAttribute="y"
        offset="101.923"
        scaling="-0.217"
-       sensor="M_TS_01" />
+       sensor="M_TS_01"
+       min="38.966217"
+       max="74,147041" />
     <property
        targetId="status_tmp_innervessel"
        targetAttribute="opacity"
        offset="1"
        scaling="-1"
-       sensor="S_IC_05" />
+       sensor="S_IC_05"
+       min="0"
+       max="1" />
     <property
        targetId="status_tmp_isovac"
        targetAttribute="opacity"
        offset="1"
        scaling="-1"
-       sensor="S_IV_04" />
+       sensor="S_IV_04"
+       min="0"
+       max="1" />
   </metadata>
 </svg:svg>

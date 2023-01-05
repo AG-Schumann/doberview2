@@ -3,6 +3,7 @@ var units = {};
 var properties = [];
 var linktargets = {};
 var intervalid = 0;
+var pipelineconfigs = {};
 
 const TOGGLE_SLIDER_FRACTIONAL_HEIGHT = 0.8;
 
@@ -59,6 +60,24 @@ function GetAttributeOrDefault(element, attribute, deflt) {
     return element.getAttribute(attribute);
   else
     return deflt;
+}
+
+function TogglePipelineConfig(e){
+  var element = e.target;
+  var pipeline = element.getAttribute('pipeline');
+  var target = element.getAttribute('target');
+  var value = 1 - parseInt(element.getAttribute('state'));
+  $.post('/pipeline/set_single_node_config',
+         data={pipeline: pipeline, target: target, value: value},
+         data => {
+           if (typeof data != 'undefined' && typeof data.err != 'undefined')
+            alert(data.err);
+          else {
+            $("#pipelinebox").modal('hide');
+            Notify(data.notify_msg, data.notify_status);
+          }
+  });
+
 }
 
 function Setup(){
@@ -150,7 +169,10 @@ function Setup(){
     toggle.setAttribute('state', 0);
     toggle.style.strokeWidth = 1;
     toggle.style.fill = '#ff0000';
+    toggle.onclick = TogglePipelineConfig;
     element.parentElement.appendChild(toggle);
+    if (!pipelineconfigs[tbpipeline]) pipelineconfigs[tbpipeline] = [];
+    pipelineconfigs[tbpipeline].push(tbtarget);
   }
   UpdateOnce();
 }
@@ -176,7 +198,6 @@ function LoadSVG(fn) {
 }
 
 function UpdateOnce() {
-  var updatestarttime = Date.now();
   var doc = document.getElementById('svg_frame').getSVGDocument();
   $.getJSON(`/devices/get_last_points?sensors=${[...sensors].join(',')}`, data => {
     sensors.forEach(s => {
@@ -202,25 +223,19 @@ function UpdateOnce() {
         }
       }
     });
-    console.debug('Updating took ' + (Date.now() - updatestarttime) / 1000 + ' seconds')
   });
 
-  doc.querySelectorAll('.pipeline_toggler').forEach(e => {
-    var newstate = 1 - parseInt(e.getAttribute('state'));
-    var newfill = newstate ? '#009900' : '#990000';
-    var newx = parseFloat(e.getAttribute('cx')) + parseFloat(e.getAttribute('slideby')) * (newstate*2-1);
-    e.style.fill = newfill;
-    e.setAttribute('cx', newx);
-    e.setAttribute('state', newstate);
+  $.post('/pipeline/get_pipelines_configs',
+         data={pipelines: pipelineconfigs},
+         resp => {
+    doc.querySelectorAll('.pipeline_toggler').forEach(e => {
+      var state = parseInt(e.getAttribute('state'));
+      var newstate = parseInt(resp[e.getAttribute('pipeline')][e.getAttribute('target')]);
+      var newfill = newstate ? '#009900' : '#990000';
+      var newx = parseFloat(e.getAttribute('cx')) + parseFloat(e.getAttribute('slideby')) * (newstate-state);
+      e.style.fill = newfill;
+      e.setAttribute('cx', newx);
+      e.setAttribute('state', newstate);
+    });
   });
-  doc.querySelectorAll('.pipeline_toggler').forEach(e => {
-    var newstate = 1 - parseInt(e.getAttribute('state'));
-    var newfill = newstate ? '#009900' : '#990000';
-    var newx = parseFloat(e.getAttribute('cx')) + parseFloat(e.getAttribute('slideby')) * (newstate*2-1);
-    e.style.fill = newfill;
-    e.setAttribute('cx', newx);
-    e.setAttribute('state', newstate);
-  });
-  console.debug('Updating took ' + (Date.now() - updatestarttime) / 1000 + ' seconds')
 }
-:w
