@@ -213,6 +213,14 @@ function UpdateOnce() {
     e.setAttribute('cx', newx);
     e.setAttribute('state', newstate);
   });
+  doc.querySelectorAll('.pipeline_toggler').forEach(e => {
+    var newstate = 1 - parseInt(e.getAttribute('state'));
+    var newfill = newstate ? '#009900' : '#990000';
+    var newx = parseFloat(e.getAttribute('cx')) + parseFloat(e.getAttribute('slideby')) * (newstate*2-1);
+    e.style.fill = newfill;
+    e.setAttribute('cx', newx);
+    e.setAttribute('state', newstate);
+  });
   console.debug('Updating took ' + (Date.now() - updatestarttime) / 1000 + ' seconds')
 }
 :w
