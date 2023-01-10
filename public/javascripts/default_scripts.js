@@ -114,7 +114,7 @@ function SensorDropdown(sensor) {
         $("#sensor_valve").prop('hidden', false);
         $("#sensor_setpoint").prop('hidden', true);
         $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
-          $("#sensor_valve_btn").text(doc.value === 0 ? "Open" : "Close");
+          $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
           $("#current_valve_state").html(doc.value);
         });
         control_map[sensor_detail.name].push((sensor_detail.is_normally_open !== undefined));

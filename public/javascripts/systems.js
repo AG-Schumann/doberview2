@@ -3,6 +3,9 @@ var units = {};
 var properties = [];
 var linktargets = {};
 var intervalid = 0;
+var pipelineconfigs = {};
+
+const TOGGLE_SLIDER_FRACTIONAL_HEIGHT = 0.8;
 
 function PopulateNavbar() {
   // Add rate selector to navigation bar
@@ -57,6 +60,24 @@ function GetAttributeOrDefault(element, attribute, deflt) {
     return element.getAttribute(attribute);
   else
     return deflt;
+}
+
+function TogglePipelineConfig(e){
+  var element = e.target;
+  var pipeline = element.getAttribute('pipeline');
+  var target = element.getAttribute('target');
+  var value = 1 - parseInt(element.getAttribute('state'));
+  $.post('/pipeline/set_single_node_config',
+         data={pipeline: pipeline, target: target, value: value},
+         data => {
+           if (typeof data != 'undefined' && typeof data.err != 'undefined')
+            alert(data.err);
+          else {
+            $("#pipelinebox").modal('hide');
+            Notify(data.notify_msg, data.notify_status);
+          }
+  });
+
 }
 
 function Setup(){
@@ -128,6 +149,31 @@ function Setup(){
     element.addEventListener('click', LoadSVG);
     element.style['cursor'] = 'pointer';
   }
+
+  // Check for pipeline interaction elements
+  for (var element of doc.querySelectorAll('.pipeline_config_toggle')) {
+    var tbwidth = parseFloat(element.getAttribute('width'));
+    var tbheight = parseFloat(element.getAttribute('height'));
+    var tbx = parseFloat(element.getAttribute('x'));
+    var tby = parseFloat(element.getAttribute('y'));
+    var tbpipeline = element.getAttribute('pipeline');
+    var tbtarget = element.getAttribute('target');
+    var toggle = doc.createElementNS("http://www.w3.org/2000/svg", 'circle');
+    toggle.setAttribute('r', tbheight * TOGGLE_SLIDER_FRACTIONAL_HEIGHT / 2);
+    toggle.setAttribute('cx', tbx + tbheight / 2);
+    toggle.setAttribute('cy', tby + tbheight / 2);
+    toggle.setAttribute('class', 'pipeline_toggler');
+    toggle.setAttribute('pipeline', tbpipeline);
+    toggle.setAttribute('target', tbtarget);
+    toggle.setAttribute('slideby', tbwidth - tbheight);
+    toggle.setAttribute('state', 0);
+    toggle.style.strokeWidth = 1;
+    toggle.style.fill = '#ff0000';
+    toggle.onclick = TogglePipelineConfig;
+    element.parentElement.appendChild(toggle);
+    if (!pipelineconfigs[tbpipeline]) pipelineconfigs[tbpipeline] = [];
+    pipelineconfigs[tbpipeline].push(tbtarget);
+  }
   UpdateOnce();
 }
 
@@ -152,7 +198,6 @@ function LoadSVG(fn) {
 }
 
 function UpdateOnce() {
-  var updatestarttime = Date.now();
   var doc = document.getElementById('svg_frame').getSVGDocument();
   $.getJSON(`/devices/get_last_points?sensors=${[...sensors].join(',')}`, data => {
     sensors.forEach(s => {
@@ -178,7 +223,19 @@ function UpdateOnce() {
         }
       }
     });
-    console.debug('Updating took ' + (Date.now() - updatestarttime) / 1000 + ' seconds')
+  });
+
+  $.post('/pipeline/get_pipelines_configs',
+         data={pipelines: pipelineconfigs},
+         resp => {
+    doc.querySelectorAll('.pipeline_toggler').forEach(e => {
+      var state = parseInt(e.getAttribute('state'));
+      var newstate = parseInt(resp[e.getAttribute('pipeline')][e.getAttribute('target')]);
+      var newfill = newstate ? '#009900' : '#990000';
+      var newx = parseFloat(e.getAttribute('cx')) + parseFloat(e.getAttribute('slideby')) * (newstate-state);
+      e.style.fill = newfill;
+      e.setAttribute('cx', newx);
+      e.setAttribute('state', newstate);
+    });
   });
 }
-
