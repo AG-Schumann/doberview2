@@ -25,21 +25,11 @@ function PopulateNavbar() {
   content += '<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Test alarm</a>';
   content += '<ul id="test_alarm_level_list" class="dropdown-menu" data-bs-popper="none">';
   for (const level of alarmlevels) {
-    content += `<li><a class="dropdown-item" role="button" onclick="TestAlarm(${level})">Level ${level}</a></li>`
+    content += `<li><a class="dropdown-item" role="button" onclick="DeviceCommand('pl_alarm', 'testalarm ${level}')">Level ${level}</a></li>`
   }
   content += '</ul></div></li>';
 
   $('#navbar_content').prepend(content);
-}
-
-function TestAlarm(level) {
-  var req = {'level': level};
-  $.get("/alarms/test", req, (data, status) => {
-    if (typeof data.err != 'undefined')
-      alert(data.err);
-    else
-      console.log(`Sent level ${level} alarm`);
-  });
 }
 
 function SetRefreshRate(rate) {
