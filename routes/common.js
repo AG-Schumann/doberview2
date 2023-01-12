@@ -28,7 +28,7 @@ function ensureAuthenticated(req, res, next) {
 
 function GetRenderConfig(req) {
   var config = {};
-  config.experiment = experiments[req.session.experiment];
+  config.experiment = Object.keys(experiments).find(key => experiments[key] === req.session.experiment);
   if (req.user) config.username = req.user.displayName; else config.username = 'Login';
   return config;
 }

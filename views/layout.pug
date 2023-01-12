@@ -24,7 +24,6 @@ html
     meta(name="application-name" content="pagetitle")
 
     block extrahead
-
   body
     #sidebar_wrapper
       nav#sidebar.colored
@@ -64,11 +63,11 @@ html
           span.navbar-toggler-icon
         #navbarSupportedContent.collapse.navbar-collapse.justify-content-between
           ul.navbar-nav#navbar_content
-          #select_experiment
+          #select_experiment(style="padding-right: 20px;")
             .dropdown
               a.btn.btn-primary.dropdown-toggle(role='button' data-bs-toggle='dropdown' onchange="ChangeExperiment()") #{experiment}
               ul.dropdown-menu
-                each display_name, real_name in experiments
+                each real_name, display_name in experiments
                   li
                     a.dropdown-item(onclick=`ChangeExperiment('${real_name}')`) #{display_name}
           #login
@@ -82,12 +81,12 @@ html
                   a#logout_button.btn.btn-dark(href="/logout")
                     i.fa-solid.fa-right-from-bracket
                     span &nbsp; Logout
-                hr
-                ol.ps-4
-                  li You must be part of the AG Schumann GitHub organization. If you aren't, ask one of the owners to add you.
-                  li Set your membership to 'public' in the&nbsp;
-                    a(href="https://github.com/orgs/AG-Schumann/people" target="_blank" rel="noopener noreferrer") settings of the organization.
-                  li Click the button above and log in with your GitHub credentials.
+                  hr
+                  ol#login_help.ps-4
+                    li You must be part of the AG Schumann GitHub organization. If you aren't, ask one of the owners to add you.
+                    li Set your membership to 'public' in the&nbsp;
+                      a(href="https://github.com/orgs/AG-Schumann/people" target="_blank" rel="noopener noreferrer") settings of the organization.
+                    li Click the button above and log in with your GitHub credentials.
     #notify_success.toast.bg-success.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
         .toast-body
     #notify_error.toast.bg-danger.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
