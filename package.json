@@ -7,16 +7,22 @@
   },
   "dependencies": {
     "axios": "^0.21.4",
+    "bootstrap": "^5.2.3",
+    "bootstrap5-toggle": "^4.3.5",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "highcharts": "^10.3.2",
     "http-errors": "~1.6.3",
     "jquery": "^3.6.0",
+    "jquery-datetimepicker": "^2.5.21",
+    "jsoneditor": "^9.9.2",
     "monk": "^7.3.4",
     "morgan": "~1.9.1",
     "passport": "^0.5.2",
     "passport-github2": "^0.1.12",
     "pug": "^3.0.2",
+    "tabulator-tables": "^5.4.2",
     "zeromq": "^5.2.8"
   },
   "devDependencies": {

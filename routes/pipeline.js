@@ -5,6 +5,11 @@ var common = require('./common');
 
 
 router.get('/', function(req, res) {
+  let session = req.session;
+  if(session.experiment){
+    db = common.GetMongoDb({exp: session.experiment});
+  } else
+    res.redirect('../');
   var q = url.parse(req.url, true).query;
   var load = q.pipeline_id || "";
   var config = common.GetRenderConfig(req);
@@ -19,7 +24,7 @@ router.get('/get_pipelines', function(req, res) {
   }
   var flavor = q.flavor;
   var now = new Date();
-  req.db.get('pipelines').find({name: {$regex: `^${flavor}_`}}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, rate: 1, error: 1, description: 1, pipeline: 1}})
+  db.get('pipelines').find({name: {$regex: `^${flavor}_`}}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, rate: 1, error: 1, description: 1, pipeline: 1}})
   .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.heartbeat)/1000, cycle: doc.cycles, error: doc.error, rate: doc.rate, description: doc.description, pipeline: doc.pipeline}))))
   .catch(err => {console.log(err.message); return res.json([]);});
 });
@@ -28,7 +33,7 @@ router.get('/get_pipeline', function(req, res) {
   var q = url.parse(req.url, true).query;
   if (typeof q.name == 'undefined')
     return res.json({});
-  req.db.get('pipelines').findOne({name: q.name})
+  db.get('pipelines').findOne({name: q.name})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({});});
 });
@@ -37,7 +42,7 @@ router.get('/status', function(req, res) {
   var q = url.parse(req.url, true).query;
   if (typeof q.name == 'undefined')
     return res.json({});
-  req.db.get('pipelines').findOne({name: q.name}, {projection: {status: 1}})
+  db.get('pipelines').findOne({name: q.name}, {projection: {status: 1}})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({});});
 });
@@ -62,8 +67,8 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
-  req.db.get('pipelines').insert(doc)
-      .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
+  db.get('pipelines').insert(doc)
+      .then(() => db.get('sensors').update({name: {$in: doc['depends_on']}},
           {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
       .then(res.json({notify_msg: 'Pipeline added', notify_status: 'success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -91,9 +96,9 @@ router.post('/update_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
-  req.db.get('pipelines').update({_id: doc._id}, doc, {replaceOne: true})
-      .then(() => req.db.get('sensors').update({}, {$pull: {'pipelines': old_name}}, {multi: true}))
-      .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
+  db.get('pipelines').update({_id: doc._id}, doc, {replaceOne: true})
+      .then(() => db.get('sensors').update({}, {$pull: {'pipelines': old_name}}, {multi: true}))
+      .then(() => db.get('sensors').update({name: {$in: doc['depends_on']}},
           {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
       .then(res.json({notify_msg: 'Pipeline updated', notify_status: 'success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -104,8 +109,8 @@ router.post('/delete_pipeline', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   if (typeof data.pipeline == 'undefined')
     return res.json({err: 'Bad input'})
-  req.db.get('pipelines').remove({name: data.pipeline})
-  .then(() => req.db.get('sensors').update({'pipelines': data.pipeline},
+  db.get('pipelines').remove({name: data.pipeline})
+  .then(() => db.get('sensors').update({'pipelines': data.pipeline},
       {$pull: {pipelines: data.pipeline}}, {multi: true}))
   .then(() => res.json({notify_msg: 'Pipeline deleted', notify_status: 'success'}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -120,7 +125,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
   var now = new Date();
   var flavor = data.name.split('_')[0];
   if (duration == 'forever') {
-    req.db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
+    db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
     .then(() => res.json({}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else if (duration == 'monday') {
@@ -178,6 +183,45 @@ router.post('/pipeline_ctl', common.ensureAuthenticated, function(req, res) {
     return res.json({err: 'Invalid command'});
   return res.json({notify_msg: 'Command sent to pipeline', notify_status: 'success'});
 
+});
+
+router.post('/get_pipelines_configs', function(req, res) {
+  var data = req.body;
+  var pipelines = data.pipelines;
+
+  if (typeof pipelines == 'undefined') return res.json([]);
+  db.get('pipelines')
+    .find({'name': {'$in': Object.keys(pipelines)}}, {fields: {'node_config': 1, 'name': 1}})
+    .then(docs => {
+      var ret = {};
+      docs.forEach(doc => {
+        var pipeline = doc.name;
+        var attrs = pipelines[pipeline];
+        ret[pipeline] = attrs.reduce((result, a) => {
+          result[a] = a.split('.').reduce((tot, x) => {return tot[x]}, doc.node_config);
+          return result;
+        }, {});
+      });
+      return res.json(ret);
+    })
+    .catch(err => { res.json({err:err.message}); });
+});
+
+router.post('/set_single_node_config', common.ensureAuthenticated, function(req, res) {
+  var data = req.body;
+  // First check the node_config entry exists: this endpoint isn't meant to create new ones
+  db.get('pipelines')
+    .findOne({'name': data.pipeline}, {'fields': {'node_config': 1}})
+    .then(doc => {
+      if (typeof data.target.split('.').reduce((tot, x) => {return tot[x]}, doc.node_config) == 'undefined')
+        return res.json({err:`${data.target} not in node_config of ${data.pipeline}`});
+      // Now can do the update
+      var op = {$set: {}};
+      op['$set']['node_config.' + data.target] = data.value;
+      db.get('pipelines').update({'name': data.pipeline}, op)
+        .then(res.json({notify_msg: 'Updated pipeline config', notify_status: 'success'}));
+    })
+    .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 module.exports = router;

@@ -10,9 +10,8 @@ block content
   script.
     $(document).ready(function () {
       PopulateNavbar();
-      GetGroupedSensors();
-      PopulateSensors();
-      //setInterval(UpdateOnce, 5000);
+      UpdateOnce(regroup=true);
+      setInterval(UpdateOnce, 5000);
       var query_search = new URLSearchParams(window.location.search);
       if (query_search.has('notify_msg')) {
         Notify(query_search.get('notify_msg'), query_search.get('notify_status'));

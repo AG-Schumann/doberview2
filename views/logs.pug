@@ -1,12 +1,11 @@
 extends layout
 
 block extrahead
-  link(href="https://unpkg.com/tabulator-tables@5.0.10/dist/css/tabulator.min.css" rel="stylesheet")
-  link(rel="stylesheet" href="stylesheets/jquery.datetimepicker.css")
-  script(type="text/javascript" src="https://unpkg.com/tabulator-tables@5.0.10/dist/js/tabulator.min.js")
+  link(href="/modules/tabulator-tables/dist/css/tabulator_bootstrap5.css" rel="stylesheet")
+  link(href="/modules/jquery-datetimepicker/jquery.datetimepicker.css" rel="stylesheet" )
+  script(type="text/javascript" src="/modules/tabulator-tables/dist/js/tabulator.js")
+  script(type="text/javascript" src="/modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js")
   script(type="text/javascript" src="javascripts/logs.js")
-  script(type="text/javascript" src="javascripts/jquery.datetimepicker.full.min.js")
-
 
 block content
   div.main-container
@@ -35,8 +34,6 @@ block content
         button.btn.btn-primary(onclick="GetLogs()") Fetch
     div.mt-2#log_table
 
-
-
   script.
     $(document).ready(function() {
       GetLogs();
@@ -52,5 +49,4 @@ block content
       showTimezone: true,
       timezone: "UTC"
     });
-
-
+    

@@ -1,11 +1,9 @@
-'use strict';
 const binning = ['1s', '6s', '10s', '36s', '1m', '2m', '4m', '6m', '14m', '24m', '48m'];
 const history = ['10m', '1h', '3h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
 var SIG_FIGS=3;
 var LOG_THRESHOLD=3;
 var control_map = {};
-
-var detail_chart = null;
+let detail_chart = null;
 
 
 function Notify(msg, type='success') {
@@ -15,30 +13,41 @@ function Notify(msg, type='success') {
   toast.show();
 }
 
-function SigFigsPlot(ctx) {
-  var value = typeof ctx.value == 'string' ? parseFloat(ctx.value) : ctx.value;
-  return Math.abs(Math.log10(Math.abs(value))) < LOG_THRESHOLD ? value.toFixed(SIG_FIGS) : value.toExponential(SIG_FIGS);
+function ChangeExperiment(name) {
+  $.ajax({
+    type: 'POST',
+    url: '/experiment',
+    data: {name: name},
+    success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
+    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+    complete:  function() {
+      location.reload();
+      }
+  });
 }
 
 function SensorDropdown(sensor) {
-  $("#alarm_low").change(() => {var low = parseInt($("#alarm_low").val()); var high = parseInt($("#alarm_high").val()); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}});
-  $("#alarm_high").change(() => {var low = parseInt($("#alarm_low").val()); var high = parseInt($("#alarm_high").val()); if (low && high) {$("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);}});
-  $("#alarm_mid").change(() => {var mid = parseInt($("#alarm_mid").val()); var range = parseInt($("#alarm_range").val()); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
-  $("#alarm_range").change(() => {var mid = parseInt($("#alarm_mid").val()); var range = parseInt($("#alarm_range").val()); if (mid && range) {$("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);}});
+  $("#alarm_low, #alarm_high").change(() => {let low = parseInt($("#alarm_low").val());
+    let high = parseInt($("#alarm_high").val());
+    $("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);});
+  $("#alarm_mid, #alarm_range").change(() => {let mid = parseInt($("#alarm_mid").val());
+    let range = parseInt($("#alarm_range").val());
+    $("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);});
   $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, (sensor_detail) => {
-    if (Object.keys(sensor_detail).length == 0)
+    if (Object.keys(sensor_detail).length === 0)
       return;
+    let roi = $("#readout_interval");
     if(typeof sensor_detail.multi_sensor == "string") {
-      $("#readout_interval").attr('disabled', 'disabled');
+      roi.attr('disabled', 'disabled');
       $("#readout_command").html('see ' + sensor_detail.multi_sensor);
     } else {
-      $("#readout_interval").removeAttr('disabled');
+      roi.removeAttr('disabled');
       $("#readout_command").html(sensor_detail.readout_command);
     }
     $("#detail_sensor_name").html(sensor_detail.name);
     $("#sensor_desc").val(sensor_detail.description).attr('size', sensor_detail.description.length + 3);
     $("#sensor_status").bootstrapToggle(sensor_detail.status === 'online' ? 'on' : 'off');
-    $("#readout_interval").val(sensor_detail.readout_interval);
+    roi.val(sensor_detail.readout_interval);
     $("#sensor_units").html(sensor_detail.units);
     if (typeof sensor_detail.value_xform != 'undefined')
       $("#value_xform").val(sensor_detail.value_xform.join(','));
@@ -88,13 +97,16 @@ function SensorDropdown(sensor) {
           let last_error = doc.cycle - doc.error; // last error X cycles ago
           let status_color = ((last_error < 5) ? 'danger' : 'success');
           if(doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
-          let error_status =  `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip"`+
+          let error_status =  `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" `+
               `data-bs-placement="right" title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n`+
               `last cycle: &nbsp; ${((now-doc.heartbeat)/1000 || 0).toPrecision(1)} s \n`+
               `last error: &nbsp; ${doc.cycles - doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>`;
-          let goto_btn = `<button class="btn btn-primary action_button" onclick="location.href='pipeline?pipeline_id=${pl_name}'"> Go to</button>`;
+          let goto_btn = `<button class="btn btn-primary action_button" `+
+              `onclick="location.href='pipeline?pipeline_id=${pl_name}'"> Go to</button>`;
           if (doc.status === 'active') {
-            let stop_btn = `<button class="btn btn-danger action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_stop ${pl_name}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
+            let stop_btn = `<button class="btn btn-danger action_button" `+
+                `onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_stop ${pl_name}')">`+
+                `<i class="fas fa-solid fa-stop"></i>Stop</button>`;
             $("#pipelines_active").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+stop_btn+`</td><td>`+goto_btn+`</td></tr>`);
           } else if (doc.status === 'silent') {
             $("#pipelines_silenced").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+goto_btn+`</td></tr>`);
@@ -118,7 +130,7 @@ function SensorDropdown(sensor) {
           $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
           $("#current_valve_state").html(doc.value);
         });
-        control_map[sensor_detail.name].push((sensor_detail.is_normally_open != undefined));
+        control_map[sensor_detail.name].push((sensor_detail.is_normally_open !== undefined));
       } else {
         // this is a setpoint
         $("#sensor_valve").prop('hidden', true);
@@ -150,7 +162,7 @@ function MakeAlarm(name) {
   if (typeof name == 'undefined')
     name = $("#detail_sensor_name").html();
   let desc = $("#sensor_desc").val();
-  var template = {
+  const template = {
     name: `alarm_${name}`,
     description: desc,
     node_config: {},
@@ -175,7 +187,7 @@ function MakeAlarm(name) {
     data: template,
     success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else {Notify(data.notify_msg, data.notify_status);}},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
-    complete:  function(data) {SensorDropdown(name);}
+    complete:  function() {SensorDropdown(name);}
   });
 }
 
@@ -184,32 +196,34 @@ function DeviceDropdown(device) {
   $("#device_manage_btn").prop("onclick", null).off("click");
   $.getJSON(`/devices/device_detail?device=${device}`, (data) => {
     $(".modal").modal('hide');
-    if (Object.keys(data).length == 0)
+    if (Object.keys(data).length === 0)
       return;
     $("#detail_device_name").html(data.name);
     $("#device_host").val(data.host).attr('disabled', true);
     $.getJSON(`/hypervisor/device_status?device=${device}`, (doc) => {
-      if (doc.active == true) {
-        $("#device_ctrl_btn").text("Stop");
-        $("#device_manage_btn").prop('disabled', false);
+      let control_btn = $("#device_ctrl_btn");
+      let manage_btn = $("#device_manage_btn");
+      if (doc.active === true) {
+        control_btn.text("Stop");
+        manage_btn.prop('disabled', false);
       } else {
-        $("#device_ctrl_btn").text("Start");
-        $("#device_manage_btn").prop('disabled', true);
+        control_btn.text("Start");
+        manage_btn.prop('disabled', true);
       }
-      if (doc.managed == true) {
-        $("#device_manage_btn").text("Unmanage");
+      if (doc.managed === true) {
+        manage_btn.text("Unmanage");
       } else {
-        $("#device_manage_btn").text("Manage");
+        manage_btn.text("Manage");
       }
-      $("#device_ctrl_btn").click(function() {
-        if (doc.active == true) {
+      control_btn.click(function() {
+        if (doc.active === true) {
           ControlDevice("stop");
         } else {
           ControlDevice(`start ${device}`);
         }
       })
-      $("#device_manage_btn").click(function() {
-        if (doc.managed == true) {
+      manage_btn.click(function() {
+        if (doc.managed === true) {
           ManageDevice('unmanage');
         } else {
           ManageDevice('manage');
@@ -225,7 +239,7 @@ function DeviceDropdown(device) {
         $("#device_host").attr('disabled', false);
       } else if (typeof data.address.tty != 'undefined') {
         $("#device_tty").val(data.address.tty);
-        $("#device_baud option").filter(function() {return this.value == data.address.baud;}).prop('selected', true);
+        $("#device_baud option").filter(function() {return this.value === data.address.baud;}).prop('selected', true);
         $("#device_serial_id").val(data.address.serialID || null);
         $(".device_eth").attr('hidden', true);
         $(".device_serial").attr('hidden', false);
@@ -254,18 +268,34 @@ function DrawSensorHistory(sensor) {
   sensor = sensor || $("#detail_sensor_name").html();
   var unit = $("#sensor_units").html();
   var interval = $("#selectinterval :selected").val();
-  console.log(interval);
   $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
-    if (data.length == 0)
-      var t_min = 0, t_max = 0;
-    else
-      var t_min = data[0][0], t_max = data[data.length-2][0];
-    var alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
-    var series = [{name: $("#detail_sensor_name").html(), type: 'line', data: data.filter(row => ((row[0] != null) && (row[1] != null))), animation: {duration: 250}, color: '#0d6efd'}];
+    let t_min = 0, t_max = 0;
+    if (data.length !== 0) {
+      t_min = data[0][0];
+      t_max = data[data.length-2][0];
+    }
+    let alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
+    let series = [{name: $("#detail_sensor_name").html(), type: 'line', data: data.filter(row => ((row[0] != null) && (row[1] != null))), animation: {duration: 250}, color: '#0d6efd'}];
     if ($("#plot_alarms").prop('checked')) {
       series.push({name: "lower threshold", type: 'area', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', threshold: -Infinity});
       series.push({name: "upper threshold", type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
     }
+
+    var lowerbound = null;
+    var upperbound = null;
+
+    if ($("#plot_zoom").prop('checked')) {
+      var datasorted = data.concat();
+      datasorted.sort(function(a,b){
+        return a[1] - b[1];
+      });
+
+      var ymin = datasorted[Math.round(datasorted.length*0.05)][1];
+      var ymax = datasorted[Math.round(datasorted.length*0.95)][1];
+      var upperbound = ymax + (ymax-ymin)/3;
+      var lowerbound = ymin - (ymax-ymin)/3;
+    }
+    
     detail_chart = Highcharts.chart('sensor_chart', {
       chart: {
         zoomType: 'xy',
@@ -279,9 +309,9 @@ function DrawSensorHistory(sensor) {
               max: Date.now()},
       yAxis: {title: {text: null},
               crosshair: true,
-              //labels: {//format: '{value:.3f}',
-              //        formatter: SigFigsPlot},
               type: $("#plot_log").is(":checked") ? "logarithmic" : "linear",
+              min: lowerbound,
+              max: upperbound
               },
       time: {useUTC: false},
       legend: {enabled: false},
@@ -291,7 +321,7 @@ function DrawSensorHistory(sensor) {
       },
     });
     $("#last_value").html(SigFigs(series[0].data.at(-1)[1]));
-    return;
+
   });
 }
 
@@ -300,7 +330,7 @@ function UpdateAlarms() {
     Notify('Please enter sensible values', 'error');
     return;
   }
-  var msg = 'Updated alarm for ' + $("#detail_sensor_name").html();
+  let msg = 'Updated alarm for ' + $("#detail_sensor_name").html();
   $.ajax({
     type: 'POST',
     url: '/devices/update_alarm',
@@ -311,13 +341,13 @@ function UpdateAlarms() {
       level: $("#alarm_baselevel").val(),
     },
     success: (data) => {
-      if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
+      if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }
 
 function UpdateSensor() {
-  var data = {
+  let data = {
     sensor: $("#detail_sensor_name").html(),
     readout_interval: $("#readout_interval").val(),
     description: $("#sensor_desc").val(),
@@ -343,7 +373,7 @@ function UpdateSensor() {
     url: '/devices/update_sensor',
     data: data,
     success: (data) => {
-      if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
+      if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }
@@ -361,7 +391,7 @@ function UpdateDevice() {
       type:'POST',
       url: '/devices/update_device_address',
       data: {data: data},
-      success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
+      success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
     });
   }
@@ -414,8 +444,6 @@ function ValidateNewSensor(echo_ret=true) {
   if ($("#new_topic").val() == 'status' && !$("#new_integer").is(':checked')) {
     if (confirm("Is this an integer quantity?")) {
       $("#new_integer").val(1);
-    } else {
-
     }
   }
   if ($("#new_integer").is(":checked") && $("#new_topic").val() != 'status') {
@@ -472,7 +500,7 @@ function SendToHypervisor(target, command, msg_if_success=null, delay=0) {
     type: 'POST',
     url: '/hypervisor/command',
     data: {target: target, command: command, delay: delay},
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
+    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }
@@ -513,21 +541,21 @@ function GetAcceptedCommands(device) {
 }
 
 
-function DeviceCommand(to, command) {
-  var to = to || $("#detail_device_name").html();
-  var command = command || $("#device_command").val();
-  if (to && command) {
-    SendToHypervisor(to, command, 'Command sent');
+function DeviceCommand(to, cmd) {
+  let receiver = to || $("#detail_device_name").html();
+  let command = cmd || $("#device_command").val();
+  if (receiver && command) {
+    SendToHypervisor(receiver, command, 'Command sent');
   }
   $("#device_command").val("");
 }
 
 function ToggleValve() {
-  var sensor = $("#detail_sensor_name").html();
-  var device = control_map[sensor][0];
-  var target = control_map[sensor][1];
-  var normallyClosed = control_map[sensor][2];
-  var state = $("#current_valve_state").html() == normallyClosed ? 1 : 0;
+  let sensor = $("#detail_sensor_name").html();
+  let device = control_map[sensor][0];
+  let target = control_map[sensor][1];
+  let normallyClosed = control_map[sensor][2];
+  let state = $("#current_valve_state").html() == normallyClosed ? 1 : 0;
   if (sensor && target && device && confirm(`Confirm valve toggle`)) {
     SendToHypervisor(device, `set ${target} ${state}`, `set ${target} ${state}`);
   }

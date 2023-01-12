@@ -111,3 +111,9 @@ ul.CTAs li a {
 .tooltip-inner {
   white-space: pre-wrap;
 }
+
+#login_help  {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
