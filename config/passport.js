@@ -1,5 +1,4 @@
 var passport = require('passport');
-const https = require('https');
 
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));

@@ -1,15 +1,15 @@
 function PopulateNavbar() {
-  var content = '<li><div class="d-flex"><div class="dropdown">' +
+  let content = '<li><div class="d-flex"><div class="dropdown">' +
       '<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">' +
       '<span>Add new &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-code-branch"></i></span></button>' +
-      '<ul class="dropdown-menu">'
-  for(var flavor of ['alarm', 'control', 'convert']) {
-    content += '<li><a class="dropdown-item" onclick=NewPipelineDropdown("'+ flavor +'")> New '  + flavor + ' pipeline</a></li>'
+      '<ul class="dropdown-menu">';
+  for(let flavor of ['alarm', 'control', 'convert']) {
+    content += '<li><a class="dropdown-item" onclick=NewPipelineDropdown("'+ flavor +'")> New ' + flavor + ' pipeline</a></li>'
   }
-  content += '</ul></div></div></li><li><div class="d-flex"><div class="input-group"><span class="input-group-text">' +
+  content += '</ul></div></div></li><li class="nav-item"><div class="d-flex"><div class="input-group"><span class="input-group-text">' +
       '<i class="fas fa-solid fa-magnifying-glass"></i></span>' +
-      '<input class="form-control" id="searchPipelineInput" type="text" onkeyup="PopulatePipelines()" placeholder="Search pipelines">' +
-      '<button class="btn bg-transparent" type="button" style="margin-left: -40px; z-index: 100;" onclick="$(`#searchPipelineInput`).val(``); PopulatePipelines();">' +
+      '<input class="form-control" id="searchPipelineInput" type="text" onkeyup="UpdateLoop()" placeholder="Search pipelines">' +
+      '<button id="clear_search_btn" class="btn bg-transparent" type="button"  onclick="$(`#searchPipelineInput`).val(``); PopulatePipelines();">' +
       '<i class="fa fa-times"></i></button></div></div></li>';
   $('#navbar_content').html(content);
 }
@@ -27,31 +27,33 @@ function PopulatePipelines(flavor) {
     $(`#${flavor}_inactive`).empty();
     data.forEach(doc => {
       let n = doc.name;
-      let status = doc.status;
-      let last_error = doc.cycle - doc.error; // last error X cycles ago
-      let status_color = ((last_error < 5) ? 'danger' : 'success');
-      if(doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
-      $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
-          `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right"` +
-          `title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n`+
-          `last cycle: &nbsp; ${(doc.dt || 0).toPrecision(1)} s \n`+
-          `last error: &nbsp; ${doc.cycle-doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>` +
-          `<td onclick="PipelineDropdown('${n}')">${n}</td>` +
-          `<td id="${n}_description" onclick="PipelineDropdown('${n}')">${doc.description}</td>` +
-          `<td id="${n}_actions">Loading</td></tr>`);
-      let stop_button = `<button class="btn btn-danger action_button" onclick="PipelineControl('stop','${n}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
-      let silence_button = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${n}')"><i class="fas fa-solid fa-bell-slash"></i>Silence</button>`;
-      let activate_button = `<button class="btn btn-success action_button" onclick="PipelineControl('active','${n}')"><i class="fas fa-solid fa-bell"></i>Activate</button>`;
-      let restart_button = `<button class="btn btn-primary action_button" onclick="PipelineControl('restart','${n}')"><i class="fas fa-solid fa-rotate"></i> Restart</button>`;
-      let start_button = `<button class="btn btn-success action_button" onclick="StartPipeline('${n}')"><i class="fas fa-solid fa-play"></i> Start</button>`;
-      if (status === 'active') {
-        $(`#${n}_actions`).html(`${silence_button}${stop_button}${restart_button}`);
-      } else if (status === 'silent') {
-        $(`#${n}_actions`).html(`${activate_button}${stop_button}${restart_button}`);
-      } else {
-        $(`#${n}_actions`).html(`${start_button}`);
+      if (filter === '' || (n.toUpperCase().indexOf(filter) > -1)) {
+        let status = doc.status;
+        let last_error = doc.cycle - doc.error; // last error X cycles ago
+        let status_color = ((last_error < 5) ? 'danger' : 'success');
+        if (doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
+        $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
+            `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right"` +
+            `title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n` +
+            `last cycle: &nbsp; ${(doc.dt || 0).toPrecision(1)} s \n` +
+            `last error: &nbsp; ${doc.cycle - doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>` +
+            `<td onclick="PipelineDropdown('${n}')">${n}</td>` +
+            `<td id="${n}_description" onclick="PipelineDropdown('${n}')">${doc.description}</td>` +
+            `<td id="${n}_actions">Loading</td></tr>`);
+        let stop_button = `<button class="btn btn-danger action_button" onclick="PipelineControl('stop','${n}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
+        let silence_button = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${n}')"><i class="fas fa-solid fa-bell-slash"></i>Silence</button>`;
+        let activate_button = `<button class="btn btn-success action_button" onclick="PipelineControl('active','${n}')"><i class="fas fa-solid fa-bell"></i>Activate</button>`;
+        let restart_button = `<button class="btn btn-primary action_button" onclick="PipelineControl('restart','${n}')"><i class="fas fa-solid fa-rotate"></i> Restart</button>`;
+        let start_button = `<button class="btn btn-success action_button" onclick="StartPipeline('${n}')"><i class="fas fa-solid fa-play"></i> Start</button>`;
+        if (status === 'active') {
+          $(`#${n}_actions`).html(`${silence_button}${stop_button}${restart_button}`);
+        } else if (status === 'silent') {
+          $(`#${n}_actions`).html(`${activate_button}${stop_button}${restart_button}`);
+        } else {
+          $(`#${n}_actions`).html(`${start_button}`);
+        }
+        $('[data-bs-toggle="tooltip"]').tooltip();
       }
-      $('[data-bs-toggle="tooltip"]').tooltip();
     }); // data.forEach
   }); // getJSON
 }
@@ -252,7 +254,7 @@ function ValidatePipeline(echo=true) {
 }
 
 function FillTemplate(which) {
-  var doc = which == 'alarm' ? AlarmTemplate() : which == 'control' ? ControlTemplate() : ConvertTemplate();
+  const doc = which === 'alarm' ? AlarmTemplate() : which === 'control' ? ControlTemplate() : ConvertTemplate();
   document.jsoneditor.set(doc);
   Visualize(doc);
 }
