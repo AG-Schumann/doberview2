@@ -125,7 +125,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
   var now = new Date();
   var flavor = data.name.split('_')[0];
   if (duration == 'forever') {
-    db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
+    db.get('pipelines').update({name: data.name}, {$set: {silent_until: -1}})
     .then(() => res.json({}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else if (duration == 'monday') {
@@ -167,9 +167,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
     }
     until = new Date(now.getTime() + duration * 60 * 1000);
   }
-  var delay = until - now;
-  common.SendCommand(req, `pl_${flavor}`, `pipelinectl_silent ${data.name}`);
-  common.SendCommand(req, `pl_${flavor}`, `pipelinectl_active ${data.name}`, delay);
+  db.get('pipelines').update({name: data.name}, {$set: {silent_until: until}})
   return res.json({});
 });
 

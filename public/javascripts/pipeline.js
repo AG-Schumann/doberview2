@@ -29,6 +29,7 @@ function PopulatePipelines(flavor) {
       let n = doc.name;
       if (filter === '' || (n.toUpperCase().indexOf(filter) > -1)) {
         let status = doc.status;
+        if ((status === 'active') && (doc.silent_until > Date.now())) status = 'silent';
         let last_error = doc.cycle - doc.error; // last error X cycles ago
         let status_color = ((last_error < 5) ? 'danger' : 'success');
         if (doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
@@ -39,7 +40,8 @@ function PopulatePipelines(flavor) {
             `last error: &nbsp; ${doc.cycle - doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>` +
             `<td onclick="PipelineDropdown('${n}')">${n}</td>` +
             `<td id="${n}_description" onclick="PipelineDropdown('${n}')">${doc.description}</td>` +
-            `<td id="${n}_actions">Loading</td></tr>`);
+            `<td id="${n}_silent_until" onclick="PipelineDropdown('${n}')" style="display:none;">Loading</td>`+
+            `<td id="${n}_actions">Loading</td><td id="${n}_silent_until"></td></tr>`);
         let stop_button = `<button class="btn btn-danger action_button" onclick="PipelineControl('stop','${n}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
         let silence_button = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${n}')"><i class="fas fa-solid fa-bell-slash"></i>Silence</button>`;
         let activate_button = `<button class="btn btn-success action_button" onclick="PipelineControl('active','${n}')"><i class="fas fa-solid fa-bell"></i>Activate</button>`;
@@ -48,7 +50,9 @@ function PopulatePipelines(flavor) {
         if (status === 'active') {
           $(`#${n}_actions`).html(`${silence_button}${stop_button}${restart_button}`);
         } else if (status === 'silent') {
-          $(`#${n}_actions`).html(`${activate_button}${stop_button}${restart_button}`);
+          $(`#${n}_silent_until`).show();
+          $(`#${n}_silent_until`).html(`${doc.silent_until}`);
+          $(`#${n}_actions`).html(`${activate_button}${silence_button}${stop_button}${restart_button}`);
         } else {
           $(`#${n}_actions`).html(`${start_button}`);
         }
