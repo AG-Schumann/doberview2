@@ -23,15 +23,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1.28"
-     inkscape:cx="849.21873"
-     inkscape:cy="544.53124"
+     inkscape:zoom="1.8101934"
+     inkscape:cx="264.88883"
+     inkscape:cy="160.75631"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g16158"
+     inkscape:current-layer="g10066"
      inkscape:lockguides="true" />
   <svg:defs
      id="defs98774">
@@ -107,8 +107,8 @@
      inkscape:groupmode="layer"
      id="layer1">
     <svg:path
-       style="fill:none;stroke:#000000;stroke-width:1.04574;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 216.03241,198.0193 V 8.5858691 h 67.56845 V 199.138"
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 216.03241,198.09075 V 20.756709 h 67.56845 V 199.138"
        id="path132941"
        sodipodi:nodetypes="cccc" />
     <svg:path
@@ -359,7 +359,7 @@
        id="path8102" />
     <svg:g
        id="g11403"
-       transform="translate(27.516678)">
+       transform="translate(27.516678,12.700002)">
       <svg:g
          id="g10066"
          transform="translate(-9.0621074,0.43848907)">
@@ -380,14 +380,14 @@
            id="path9896" />
         <svg:rect
            style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="dewar1fill"
+           id="dewar6fill"
            width="14.323978"
            height="27.332481"
            x="21.508892"
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="valve_S_XS_01"
+           id="valve_S_XS_07"
            sodipodi:nodetypes="ccccc"
            class="valve"
            style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -405,7 +405,7 @@
            y="37.298077" />
         <svg:rect
            style="fill:#80ffb3;fill-opacity:1;stroke:none;stroke-width:1.11232;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="bottle1fill"
+           id="bottle6fill"
            width="9.5023003"
            height="27.41633"
            x="23.918879"
@@ -439,14 +439,14 @@
            id="path9896-2" />
         <svg:rect
            style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="dewar2fill"
+           id="dewar5fill"
            width="14.323978"
            height="27.332481"
            x="21.508892"
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="valve_S_XS_03"
+           id="valve_S_XS_06"
            sodipodi:nodetypes="ccccc"
            class="valve"
            style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -464,7 +464,7 @@
            y="37.298077" />
         <svg:rect
            style="fill:#80ffb3;fill-opacity:1;stroke:none;stroke-width:1.11232;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="bottle2fill"
+           id="bottle5fill"
            width="9.5023003"
            height="27.41633"
            x="23.918879"
@@ -498,14 +498,14 @@
            id="path10134" />
         <svg:rect
            style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="dewar3fill"
+           id="dewar4fill"
            width="14.323978"
            height="27.332481"
            x="21.508892"
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="valve_S_XS_04"
+           id="valve_S_XS_05"
            sodipodi:nodetypes="ccccc"
            class="valve"
            style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -523,7 +523,7 @@
            y="37.298077" />
         <svg:rect
            style="fill:#80ffb3;fill-opacity:1;stroke:none;stroke-width:1.11232;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="bottle3fill"
+           id="bottle4fill"
            width="9.5023003"
            height="27.41633"
            x="23.918879"
@@ -557,14 +557,14 @@
            id="path10152" />
         <svg:rect
            style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="dewar4fill"
+           id="dewar3fill"
            width="14.323978"
            height="27.332481"
            x="21.508892"
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="valve_S_XS_05"
+           id="valve_S_XS_04"
            sodipodi:nodetypes="ccccc"
            class="valve"
            style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -582,7 +582,7 @@
            y="37.298077" />
         <svg:rect
            style="fill:#80ffb3;fill-opacity:1;stroke:none;stroke-width:1.11232;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="bottle4fill"
+           id="bottle3fill"
            width="9.5023003"
            height="27.41633"
            x="23.918879"
@@ -616,14 +616,14 @@
            id="path10170" />
         <svg:rect
            style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="dewar5fill"
+           id="dewar2fill"
            width="14.323978"
            height="27.332481"
            x="21.508892"
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="valve_S_XS_06"
+           id="valve_S_XS_03"
            sodipodi:nodetypes="ccccc"
            class="valve"
            style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -641,7 +641,7 @@
            y="37.298077" />
         <svg:rect
            style="fill:#80ffb3;fill-opacity:1;stroke:none;stroke-width:1.11232;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="bottle5fill"
+           id="bottle2fill"
            width="9.5023003"
            height="27.41633"
            x="23.918879"
@@ -675,14 +675,14 @@
            id="path10188" />
         <svg:rect
            style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="dewar6fill"
-           width="14.323978"
+           id="dewar1fill"
+           width="14.324"
            height="27.332481"
            x="21.508892"
            y="39.574383" />
         <svg:path
            d="m 24.650703,24.092411 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="valve_S_XS_07"
+           id="valve_S_XS_01"
            sodipodi:nodetypes="ccccc"
            class="valve"
            style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -700,7 +700,7 @@
            y="37.298077" />
         <svg:rect
            style="fill:#80ffb3;fill-opacity:1;stroke:none;stroke-width:1.11232;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="bottle6fill"
+           id="bottle1fill"
            width="9.5023003"
            height="27.41633"
            x="23.918879"
@@ -729,7 +729,7 @@
     </svg:g>
     <svg:g
        id="g156241"
-       transform="translate(-18.084553,-34.062156)">
+       transform="translate(-18.084553,-21.362148)">
       <svg:rect
          style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect10247-8-8"
@@ -760,237 +760,55 @@
            x="22.526552"
            y="65.208084">M_TS_01</svg:tspan></svg:text>
     </svg:g>
-    <svg:g
-       id="g156241-6"
-       transform="translate(10.520446,15.321091)">
-      <svg:rect
-         style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect10247-8-8-1"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text13160-8-48-9"><svg:tspan
-           sodipodi:role="line"
-           id="tspan13158-3-0-4"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">M_XS_01 (kg)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text13160-7-3-3-4"><svg:tspan
-           sodipodi:role="line"
-           id="value_M_XS_01"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">M_XS_01</svg:tspan></svg:text>
-    </svg:g>
-    <svg:g
-       id="g156241-6-1"
-       transform="translate(10.520446,32.45174)">
-      <svg:rect
-         style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect10247-8-8-1-7"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text13160-8-48-9-3"><svg:tspan
-           sodipodi:role="line"
-           id="tspan13158-3-0-4-2"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">L_XS_01 (pf)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text13160-7-3-3-4-9"><svg:tspan
-           sodipodi:role="line"
-           id="value_L_XS_01"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">L_XS_01</svg:tspan></svg:text>
-    </svg:g>
-    <svg:g
-       id="g24268"
-       transform="translate(54.104917,15.321091)">
-      <svg:rect
-         style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect24258"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text24262"><svg:tspan
-           sodipodi:role="line"
-           id="tspan24260"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">M_XS_03 (kg)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text24266"><svg:tspan
-           sodipodi:role="line"
-           id="value_M_XS_03"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">M_XS_03</svg:tspan></svg:text>
-    </svg:g>
-    <svg:g
-       id="g24280"
-       transform="translate(54.104917,32.45174)">
-      <svg:rect
-         style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect24270"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text24274"><svg:tspan
-           sodipodi:role="line"
-           id="tspan24272"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">L_XS_03 (pf)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text24278"><svg:tspan
-           sodipodi:role="line"
-           id="value_L_XS_03"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">L_XS_03</svg:tspan></svg:text>
-    </svg:g>
-    <svg:g
-       id="g24292"
-       transform="translate(97.173334,15.321091)">
-      <svg:rect
-         style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect24282"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text24286"><svg:tspan
-           sodipodi:role="line"
-           id="tspan24284"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">M_XS_015(kg)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text24290"><svg:tspan
-           sodipodi:role="line"
-           id="value_M_XS_05"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">M_XS_05</svg:tspan></svg:text>
-    </svg:g>
-    <svg:g
-       id="g24304"
-       transform="translate(97.173334,32.45174)">
-      <svg:rect
-         style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect24294"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text24298"><svg:tspan
-           sodipodi:role="line"
-           id="tspan24296"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">L_XS_05 (pf)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text24302"><svg:tspan
-           sodipodi:role="line"
-           id="value_L_XS_05"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">L_XS_05</svg:tspan></svg:text>
-    </svg:g>
-    <svg:g
-       id="g35946"
-       transform="translate(31.68462,49.427536)">
-      <svg:rect
-         style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect35936"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text35940"><svg:tspan
-           sodipodi:role="line"
-           id="tspan35938"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">M_XS_02 (kg)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text35944"><svg:tspan
-           sodipodi:role="line"
-           id="value_M_XS_02"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">M_XS_02</svg:tspan></svg:text>
-    </svg:g>
+    <svg:rect
+       style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_M_XS_06"
+       width="28.955645"
+       height="13.955644"
+       x="32.025955"
+       y="83.22036" />
+    <svg:rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_L_XS_06"
+       width="28.955645"
+       height="13.955644"
+       x="32.025955"
+       y="100.35101" />
+    <svg:rect
+       style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_M_XS_04"
+       width="28.955645"
+       height="13.955644"
+       x="75.610428"
+       y="83.22036" />
+    <svg:rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_L_XS_04"
+       width="28.955645"
+       height="13.955644"
+       x="75.610428"
+       y="100.35101" />
+    <svg:rect
+       style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_M_XS_02"
+       width="28.955645"
+       height="13.955644"
+       x="118.67884"
+       y="83.22036" />
+    <svg:rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_L_XS_02"
+       width="28.955645"
+       height="13.955644"
+       x="118.67884"
+       y="100.35101" />
+    <svg:rect
+       style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_M_XS_05"
+       width="28.955645"
+       height="13.955644"
+       x="53.190132"
+       y="117.32681" />
     <svg:g
        id="g53370"
        transform="translate(-158.69025,116.70827)">
@@ -1118,105 +936,27 @@
            x="204.96988"
            y="61.667484">P_IC_03</svg:tspan></svg:text>
     </svg:g>
-    <svg:g
-       id="g35958"
-       transform="translate(32.312686,66.558185)">
-      <svg:rect
-         style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect35948"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text35952"><svg:tspan
-           sodipodi:role="line"
-           id="tspan35950"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">L_XS_02 (pf)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text35956"><svg:tspan
-           sodipodi:role="line"
-           id="value_L_XS_02"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">L_XS_02</svg:tspan></svg:text>
-    </svg:g>
-    <svg:g
-       id="g35970"
-       transform="translate(75.639122,49.427536)">
-      <svg:rect
-         style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect35960"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text35964"><svg:tspan
-           sodipodi:role="line"
-           id="tspan35962"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">M_XS_04 (kg)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text35968"><svg:tspan
-           sodipodi:role="line"
-           id="value_M_XS_04"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">M_XS_04</svg:tspan></svg:text>
-    </svg:g>
-    <svg:g
-       id="g35982"
-       transform="translate(76.267188,66.558185)">
-      <svg:rect
-         style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect35972"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text35976"><svg:tspan
-           sodipodi:role="line"
-           id="tspan35974"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">L_XS_04 (pf)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text35980"><svg:tspan
-           sodipodi:role="line"
-           id="value_L_XS_04"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">L_XS_04</svg:tspan></svg:text>
-    </svg:g>
+    <svg:rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_L_XS_05"
+       width="28.955645"
+       height="13.955644"
+       x="53.818195"
+       y="134.45746" />
+    <svg:rect
+       style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_M_XS_03"
+       width="28.955645"
+       height="13.955644"
+       x="97.14463"
+       y="117.32681" />
+    <svg:rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_L_XS_03"
+       width="28.955645"
+       height="13.955644"
+       x="97.772697"
+       y="134.45746" />
     <svg:g
        id="link_main"
        class="link"
@@ -1240,72 +980,20 @@
            x="216.09111"
            y="202.10034">Cryostat</svg:tspan></svg:text>
     </svg:g>
-    <svg:g
-       id="g35994"
-       transform="translate(119.59267,49.427536)">
-      <svg:rect
-         style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect35984"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text35988"><svg:tspan
-           sodipodi:role="line"
-           id="tspan35986"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">M_XS_06 (kg)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text35992"><svg:tspan
-           sodipodi:role="line"
-           id="value_M_XS_06"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">M_XS_06</svg:tspan></svg:text>
-    </svg:g>
-    <svg:g
-       id="g36006"
-       transform="translate(119.59267,66.558185)">
-      <svg:rect
-         style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect35996"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="21.889605"
-         y="58.670315"
-         id="text36000"><svg:tspan
-           sodipodi:role="line"
-           id="tspan35998"
-           style="font-size:3.52778px;stroke-width:0.264583"
-           x="21.889605"
-           y="58.670315">L_XS_06 (pf)</svg:tspan></svg:text>
-      <svg:text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-         x="22.526552"
-         y="65.208084"
-         id="text36004"><svg:tspan
-           sodipodi:role="line"
-           id="value_L_XS_06"
-           style="font-size:6.35px;stroke-width:0.264583"
-           x="22.526552"
-           y="65.208084">L_XS_06</svg:tspan></svg:text>
-    </svg:g>
+    <svg:rect
+       style="fill:#80ffb3;fill-opacity:1;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_M_XS_01"
+       width="28.955645"
+       height="13.955644"
+       x="141.09818"
+       y="117.32681" />
+    <svg:rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_L_XS_01"
+       width="28.955645"
+       height="13.955644"
+       x="141.09818"
+       y="134.45746" />
     <svg:image
        width="52.408421"
        height="20.121656"
@@ -1347,24 +1035,24 @@
          id="path1423" />
     </svg:g>
     <svg:path
-       style="fill:none;stroke:#000000;stroke-width:1.10978;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 33.482318,8.5858691 H 216.03241"
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 68.072344,9.6914087 H 24.725491 V 20.756709 H 216.00852"
        id="path16306"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cccc" />
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="8.9323292"
-       y="56.173653"
+       y="68.873665"
        id="text20601-0"><svg:tspan
          sodipodi:role="line"
          id="tspan20599-9"
          style="stroke-width:0.264583"
          x="8.9323292"
-         y="56.173653">CXS</svg:tspan></svg:text>
+         y="68.873665">CXS</svg:tspan></svg:text>
     <svg:g
        id="g24971"
-       transform="rotate(-90,120.49531,-44.504613)">
+       transform="rotate(-90,126.84523,-38.154621)">
       <svg:path
          style="fill:#2ad4ff;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 32.521273,4.2203577 V 16.059562 H 7.0158249 L 1.2423857,10.13996 6.869662,4.2203577 Z"
@@ -1384,9 +1072,9 @@
     </svg:g>
     <svg:g
        id="g24971-5"
-       transform="rotate(90,83.536261,125.67773)">
+       transform="rotate(90,77.186269,132.02765)">
       <svg:path
-         style="fill:#ff5599;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+         style="fill:#ff5599;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 32.521273,4.2203577 V 16.059562 H 7.0158249 L 1.2423857,10.13996 6.869662,4.2203577 Z"
          id="path22765-7"
          sodipodi:nodetypes="cccccc" />
@@ -1418,30 +1106,67 @@
        class="v findmeeasily"
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <svg:path
-       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-       d="M 199.07403,43.383853 V 8.4749348"
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 199.07403,56.083861 V 21.174942"
        id="path2528" />
     <svg:path
-       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-       d="M 175.03022,43.337337 V 8.3312922"
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 175.03022,56.037345 V 21.031299"
        id="path2530" />
     <svg:path
-       d="m 201.32139,14.997908 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
+       d="m 201.32139,27.697916 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
        id="valve_S_TS_01-5-1-1-3"
        sodipodi:nodetypes="ccccc"
        class="v findmeeasily"
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <svg:path
-       d="m 177.26808,14.795378 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
+       d="m 177.26808,27.495386 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
        id="valve_S_TS_01-5-1-1-3-1"
        sodipodi:nodetypes="ccccc"
        class="v findmeeasily"
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <svg:path
-       d="m 201.32159,30.906617 h -4.47996 l 4.47996,7.61628 h -4.47996 z"
-       id="path35964"
+       d="m 201.32159,43.606625 h -4.47996 l 4.47996,7.61628 h -4.47996 z"
+       id="valve_S_GS_08"
        sodipodi:nodetypes="ccccc"
-       class="off"
+       class="valve"
+       style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <svg:g
+       id="g24971-5-8"
+       transform="translate(66.829958,-0.4485513)">
+      <svg:path
+         style="fill:#ff5599;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 32.521273,4.2203577 V 16.059562 H 7.0158249 L 1.2423857,10.13996 6.869662,4.2203577 Z"
+         id="path22765-7-2"
+         sodipodi:nodetypes="cccccc" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="19.307816"
+         y="8.2582102"
+         id="text24378-9-9"><svg:tspan
+           sodipodi:role="line"
+           id="tspan24376-5-3"
+           style="font-size:4.93889px;text-align:center;text-anchor:middle;stroke-width:0.264583"
+           x="19.307816"
+           y="8.2582102">from</svg:tspan><svg:tspan
+           sodipodi:role="line"
+           style="font-size:4.93889px;text-align:center;text-anchor:middle;stroke-width:0.264583"
+           x="19.307816"
+           y="14.431823"
+           id="tspan31532-2">isovac</svg:tspan></svg:text>
+    </svg:g>
+    <svg:path
+       d="m 33.487771,7.4514337 v 4.4799493 l 7.61627,-4.4799493 v 4.4799493 z"
+       id="valve_S_TS_01-5-1-1-3-4"
+       sodipodi:nodetypes="ccccc"
+       class="v findmeeasily"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <svg:path
+       d="m 49.740584,7.4514288 v 4.4799592 l 7.61628,-4.4799593 v 4.4799593 z"
+       id="valve_S_GS_07"
+       sodipodi:nodetypes="ccccc"
+       class="valve"
        style="fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <svg:g
        id="g5022">
