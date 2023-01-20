@@ -36,35 +36,40 @@ function SensorDropdown(sensor) {
   $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, (sensor_detail) => {
     if (Object.keys(sensor_detail).length === 0)
       return;
+    let is_int = sensor_detail.is_int===1;
     let roi = $("#readout_interval");
     if(typeof sensor_detail.multi_sensor == "string") {
       roi.attr('disabled', 'disabled');
       $("#readout_command").html('see ' + sensor_detail.multi_sensor);
+      $("#sensor_status").bootstrapToggle('readonly');
+     // $("#sensor_status").attr("data-offstyle", "secondary"); //, "data-offstyle": "secondary"})
     } else {
       roi.removeAttr('disabled');
       $("#readout_command").html(sensor_detail.readout_command);
+      $("#sensor_status").bootstrapToggle('enable');
     }
     $("#detail_sensor_name").html(sensor_detail.name);
     $("#sensor_desc").val(sensor_detail.description).attr('size', sensor_detail.description.length + 3);
     $("#sensor_status").bootstrapToggle(sensor_detail.status === 'online' ? 'on' : 'off');
     roi.val(sensor_detail.readout_interval);
-    $("#sensor_units").html(sensor_detail.units);
+    $("#sensor_units").val(sensor_detail.units);
     if (typeof sensor_detail.value_xform != 'undefined')
       $("#value_xform").val(sensor_detail.value_xform.join(','));
     else
       $("#value_xform").val("");
     let alarm_vals = sensor_detail.alarm_values;
-    if (typeof alarm_vals != 'undefined') {
-      $("#int_alarm").show();
-      $("#float_alarm").hide();
+    $("#int_alarm_body").empty();
+    if (is_int) {
+      $("#int_alarm_body").show();
+      $("#float_alarm_body").hide();
       for (let k in alarm_vals) {
-        $("#int_alarm").append(`<tr><td><input class="form-control-sm" type="number" value="${k}"></td><td><input class="form-control-sm" type="text" value="${alarm_vals[k]}"></td><td><button type="button" class="btn btn-sm btn-primary" onclick="DeleteAlarmLevel(this)">Delete</button></td></tr>`);
+        $("#int_alarm_body").append(`<tr><td><input class="form-control-sm" type="number" value="${k}"></td><td><input class="form-control-sm" type="text" value="${alarm_vals[k]}"></td><td><button type="button" class="btn btn-sm btn-primary" onclick="DeleteAlarmLevel(this)">Delete</button></td></tr>`);
       }
-      $("#int_alarm").append(`<tr><td></td><td></td><td><button type="button" class="btn btn-sm btn-primary" onclick="AddAlarmLevel()">Add</button></td></tr>`);
+      $("#int_alarm_body").append(`<tr><td></td><td></td><td><button type="button" class="btn btn-sm btn-primary" onclick="AddAlarmLevel()">Add</button></td></tr>`);
     } else {
       if (typeof sensor_detail.alarm_thresholds != 'undefined' && sensor_detail.alarm_thresholds.length == 2) {
-        $("#int_alarm").hide();
-        $("#float_alarm").show();
+        $("#int_alarm_body").hide();
+        $("#float_alarm_body").show();
         $("#alarm_low").val(sensor_detail.alarm_thresholds[0]);
         $("#alarm_high").val(sensor_detail.alarm_thresholds[1]);
         $("#alarm_mid").val((sensor_detail.alarm_thresholds[1] + sensor_detail.alarm_thresholds[0]) / 2);
@@ -86,6 +91,7 @@ function SensorDropdown(sensor) {
     $("#pipelines_silenced").empty();
     $("#pipelines_inactive").empty();
     $("#make_alarm_button").show();
+    $("#make_alarm_button").attr( "onclick", `javascript: MakeAlarm("${sensor_detail.name}", is_int=${is_int});`);
     if (typeof sensor_detail.pipelines != 'undefined' && sensor_detail.pipelines.length > 0) {
       sensor_detail.pipelines.forEach(pl_name => {
         if (pl_name === 'alarm_' + sensor_detail.name)
@@ -147,8 +153,8 @@ function SensorDropdown(sensor) {
   });
 }
 
-function AddAlarmLevel() {
-  $("#int_alarm > tr").eq($('#int_alarm tr').length-2)
+function AddAlarmLevel(no) {
+  $("#int_alarm_body > tr").eq($('#int_alarm_body tr').length-2)
       .after('<tr></tr><td><input class="form-control-sm" type="number"></td>' +
           '<td><input class="form-control-sm" type="text"></td>' +
           '<td><button type="button" class="btn btn-sm btn-primary" onclick="DeleteAlarmLevel(this)">Delete</button></td>' +
@@ -158,29 +164,52 @@ function AddAlarmLevel() {
 function DeleteAlarmLevel(btn) {
   btn.closest('tr').remove();
 }
-function MakeAlarm(name) {
+function MakeAlarm(name, is_int=false) {
   if (typeof name == 'undefined')
     name = $("#detail_sensor_name").html();
   let desc = $("#sensor_desc").val();
-  const template = {
-    name: `alarm_${name}`,
-    description: desc,
-    node_config: {},
-    status: 'inactive',
-    pipeline: [
-      {
-        name: 'source',
-        type: 'DeviceRespondingInfluxNode',
-        input_var: name
-      },
-      {
-        name: 'alarm',
-        type: 'SimpleAlarmNode',
-        input_var: name,
-        upstream: ['source']
-      }
-    ]
-  };
+  let template = {};
+  if (is_int) {
+    template = {
+      name: `alarm_${name}`,
+      description: desc,
+      node_config: {},
+      status: 'inactive',
+      pipeline: [
+        {
+          name: 'source',
+          type: 'DeviceRespondingInfluxNode',
+          input_var: name
+        },
+        {
+          name: 'alarm',
+          type: 'IntegerAlarmNode',
+          input_var: name,
+          upstream: ['source']
+        }
+      ]
+    };
+  } else {
+    template = {
+      name: `alarm_${name}`,
+      description: desc,
+      node_config: {},
+      status: 'inactive',
+      pipeline: [
+        {
+          name: 'source',
+          type: 'DeviceRespondingInfluxNode',
+          input_var: name
+        },
+        {
+          name: 'alarm',
+          type: 'SimpleAlarmNode',
+          input_var: name,
+          upstream: ['source']
+        }
+      ]
+    };
+  }
   $.ajax({
     type: 'POST',
     url: '/pipeline/add_pipeline',
@@ -326,24 +355,54 @@ function DrawSensorHistory(sensor) {
 }
 
 function UpdateAlarms() {
-  if (!($("#alarm_low").val() && $("#alarm_high").val() && $("#alarm_recurrence").val() && $("#alarm_baselevel").val())) {
+  if (!($("#alarm_recurrence").val() && $("#alarm_baselevel").val())) {
     Notify('Please enter sensible values', 'error');
     return;
   }
   let msg = 'Updated alarm for ' + $("#detail_sensor_name").html();
-  $.ajax({
-    type: 'POST',
-    url: '/devices/update_alarm',
-    data: {
-      sensor: $("#detail_sensor_name").html(),
-      thresholds: [$("#alarm_low").val(), $("#alarm_high").val()],
-      recurrence: $("#alarm_recurrence").val(),
-      level: $("#alarm_baselevel").val(),
-    },
-    success: (data) => {
-      if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
-    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
-  });
+  if($("#int_alarm").find('tr').length) {
+    let msg = 'Updated alarm for ' + $("#detail_sensor_name").html();
+    let int_alarm_dict = {};
+    $('#int_alarm_body tr').each(function() {
+      let k = parseInt($(this).find('td:first-child input').val());
+      let v = $(this).find('td:nth-child(2) input').val();
+      if (!(typeof k=='undefined') && !(typeof v=='undefined')) {
+        int_alarm_dict[k] = v;
+      }
+    })
+    $.ajax({
+      type: 'POST',
+      url: '/devices/update_alarm',
+      data: {
+        sensor: $("#detail_sensor_name").html(),
+        alarm_values: JSON.stringify(int_alarm_dict),
+        recurrence: $("#alarm_recurrence").val(),
+        level: $("#alarm_baselevel").val(),
+      },
+      success: (data) => {
+        if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
+      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
+    });
+  } else {
+    if (!($("#alarm_low").val() && $("#alarm_high").val())) {
+      Notify('Please enter sensible values', 'error');
+      return;
+    }
+    $.ajax({
+      type: 'POST',
+      url: '/devices/update_alarm',
+      data: {
+        sensor: $("#detail_sensor_name").html(),
+        thresholds: [$("#alarm_low").val(), $("#alarm_high").val()],
+        recurrence: $("#alarm_recurrence").val(),
+        level: $("#alarm_baselevel").val(),
+      },
+      success: (data) => {
+        if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);
+      },
+      error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
+    });
+  }
 }
 
 function UpdateSensor() {
@@ -352,6 +411,7 @@ function UpdateSensor() {
     readout_interval: $("#readout_interval").val(),
     description: $("#sensor_desc").val(),
     status: $("#sensor_status").is(":checked") ? "online" : 'offline',
+    units: $("#sensor_units").val(),
   };
   if ($("#value_xform").val() != "") {
     var xform;
@@ -367,13 +427,12 @@ function UpdateSensor() {
     }
     data.value_xform = $("#value_xform").val();
   }
-  var msg = 'Updated general info of ' + data['sensor'];
   $.ajax({
     type: 'POST',
     url: '/devices/update_sensor',
     data: data,
     success: (data) => {
-      if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
+      if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }

@@ -122,7 +122,8 @@ html
                       span &nbsp; s
                   tr
                     th.py-2 Units
-                    td#sensor_units
+                    td
+                      input.form-control-sm(type="text" id="sensor_units" name="sensor_units" placeholder="")
                   tr
                     th.py-2 Readout command &nbsp;
                     td#readout_command(style='font-family:"Courier New",monospace')
@@ -136,13 +137,14 @@ html
               hr
               h5 Alarms
               br
-              table.table
-                tbody#int_alarm
+              table#alarm_table.table
+                thead
                   tr
                     th Value
                     th Message
                     th
-                tbody#float_alarm
+                tbody#int_alarm_body
+                tbody#float_alarm_body
                   tr
                     th Low
                     th High

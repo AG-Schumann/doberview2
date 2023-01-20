@@ -169,6 +169,14 @@ router.post('/update_alarm', common.ensureAuthenticated, function(req, res) {
     }catch(err) {
       return res.json({err: 'Invalid alarm parameters'});
     }
+  } else {
+    try {
+      updates['alarm_values'] = JSON.parse(data.alarm_values);
+      updates['alarm_recurrence'] = parseInt(data.recurrence);
+      updates['alarm_level'] = parseInt(data.level);
+    } catch (err) {
+      return res.json({err: 'Invalid alarm parameters'});
+    }
   }
   db.get('sensors').update({name: data.sensor}, {$set: updates})
     .then(() => res.json({ret}))
@@ -176,10 +184,10 @@ router.post('/update_alarm', common.ensureAuthenticated, function(req, res) {
 });
 
 router.post('/update_sensor', common.ensureAuthenticated, function(req, res) {
-  var updates = {};
-  var data = req.body;
-  var sensor = data.sensor;
-  var ret = {notify_msg: 'Sensor updated', notify_status: 'success'};
+  let updates = {};
+  let data = req.body;
+  let sensor = data.sensor;
+  let ret = {notify_msg: 'Sensor updated', notify_status: 'success'};
   if (typeof sensor == 'undefined') {
     console.log(req.body);
     return res.json({err: 'Invalid or missing parameters'});
@@ -210,7 +218,8 @@ router.post('/update_sensor', common.ensureAuthenticated, function(req, res) {
     updates['status'] = data.status;
   if (typeof data.description != 'undefined' && data.description != "")
     updates['description'] = data.description;
-  console.log(updates);
+  if (typeof data.units != 'undefined')
+    updates['units'] = data.units;
   db.get('sensors').update({name: sensor}, {$set: updates})
     .then(() => res.json(ret))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -272,6 +281,7 @@ router.get('/get_last_points', function(req, res) {
     filterstring = '|> filter(fn: (r) => contains(value: r.sensor, set: sensors))';
   }
   db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    doc['url'] = 'http://10.4.73.172:8096';
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
       org: doc['org'],
@@ -326,6 +336,7 @@ router.get('/get_data', function(req, res) {
   if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
   db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    doc['url'] = 'http://10.4.73.172:8096';
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
       org: doc['org'],
