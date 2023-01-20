@@ -281,7 +281,6 @@ router.get('/get_last_points', function(req, res) {
     filterstring = '|> filter(fn: (r) => contains(value: r.sensor, set: sensors))';
   }
   db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
-    doc['url'] = 'http://10.4.73.172:8096';
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
       org: doc['org'],
@@ -336,7 +335,6 @@ router.get('/get_data', function(req, res) {
   if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
   db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
-    doc['url'] = 'http://10.4.73.172:8096';
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
       org: doc['org'],

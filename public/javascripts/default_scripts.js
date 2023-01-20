@@ -42,7 +42,6 @@ function SensorDropdown(sensor) {
       roi.attr('disabled', 'disabled');
       $("#readout_command").html('see ' + sensor_detail.multi_sensor);
       $("#sensor_status").bootstrapToggle('readonly');
-     // $("#sensor_status").attr("data-offstyle", "secondary"); //, "data-offstyle": "secondary"})
     } else {
       roi.removeAttr('disabled');
       $("#readout_command").html(sensor_detail.readout_command);
@@ -62,7 +61,9 @@ function SensorDropdown(sensor) {
     if (is_int) {
       $("#int_alarm_body").show();
       $("#float_alarm_body").hide();
+      $("#int_alarm_body").append('<tr><th>Value</th><th>Message</th><th></th>');
       for (let k in alarm_vals) {
+
         $("#int_alarm_body").append(`<tr><td><input class="form-control-sm" type="number" value="${k}"></td><td><input class="form-control-sm" type="text" value="${alarm_vals[k]}"></td><td><button type="button" class="btn btn-sm btn-primary" onclick="DeleteAlarmLevel(this)">Delete</button></td></tr>`);
       }
       $("#int_alarm_body").append(`<tr><td></td><td></td><td><button type="button" class="btn btn-sm btn-primary" onclick="AddAlarmLevel()">Add</button></td></tr>`);
