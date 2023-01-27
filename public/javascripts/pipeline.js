@@ -29,7 +29,7 @@ function PopulatePipelines(flavor) {
       let n = doc.name;
       if (filter === '' || (n.toUpperCase().indexOf(filter) > -1)) {
         let status = doc.status;
-        if ((status === 'active') && ((doc.silent_until == -1) || doc.silent_until > Date.now())) status = 'silent';
+        if ((status === 'active') && ((doc.silent_until == -1) || doc.silent_until > Date.now()/1000)) status = 'silent';
         let last_error = doc.cycle - doc.error; // last error X cycles ago
         let status_color = ((last_error < 5) ? 'danger' : 'success');
         if (doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
