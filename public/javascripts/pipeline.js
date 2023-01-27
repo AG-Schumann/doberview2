@@ -51,7 +51,7 @@ function PopulatePipelines(flavor) {
           $(`#${n}_actions`).html(`${silence_button}${stop_button}${restart_button}`);
         } else if (status === 'silent') {
           $(`#${n}_silent_until`).show();
-          $(`#${n}_silent_until`).html(`${doc.silent_until}`);
+          $(`#${n}_silent_until`).html(new Date(doc.silent_until*1000).toLocaleString());
           $(`#${n}_actions`).html(`${activate_button}${silence_button}${stop_button}${restart_button}`);
         } else {
           $(`#${n}_actions`).html(`${start_button}`);
