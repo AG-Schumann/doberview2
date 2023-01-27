@@ -138,6 +138,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
     until.setDate(until.getDate() + (8-day));
     until.setHours(9);
     until.setMinutes(0);
+    until = until.getTime()/1000;
   } else if (duration == 'morning') {
     if ((7 <= now.getHours()) && (now.getHours() <= 17)) {
       // it's in the working day
@@ -149,6 +150,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
     }
     until.setHours(9);
     until.setMinutes(30);
+    until = until.getTime()/1000;
   } else if (duration == 'evening') {
     if ((now.getHours() < 8) || (17 < now.getHours())) {
       // not working hours
@@ -157,6 +159,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
     until = new Date();
     until.setHours(18);
     until.setMinutes(0);
+    until = until.getTime()/1000;
   } else {
     try{
       duration = parseInt(duration);
@@ -165,7 +168,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
       console.log(err.message);
       return res.json({err: "Invalid duration"});
     }
-    until = new Date(now.getTime() + duration * 60 * 1000);
+    until = now.getTime() / 1000 + duration * 60;
   }
   db.get('pipelines').update({name: data.name}, {$set: {silent_until: until}})
   return res.json({});
