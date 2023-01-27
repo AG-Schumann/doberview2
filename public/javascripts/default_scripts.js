@@ -531,7 +531,7 @@ function ToggleValve() {
   let device = control_map[sensor][0];
   let target = control_map[sensor][1];
   let normallyClosed = control_map[sensor][2];
-  let state = $("#current_valve_state").html() === normallyClosed ? 1 : 0;
+  let state = $("#current_valve_state").html() == normallyClosed ? 1 : 0;
   if (sensor && target && device && confirm(`Confirm valve toggle`)) {
     SendToHypervisor(device, `set ${target} ${state}`, `set ${target} ${state}`);
   }

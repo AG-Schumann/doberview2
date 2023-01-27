@@ -22,7 +22,7 @@ router.get('/', function(req, res) {
   });
 });
 
-/*
+
 router.get('/params', function(req, res) {
   const host_list = db.get(hosts).distinct("name")
   return res.json({hosts: host_list});
@@ -60,5 +60,5 @@ router.get('/get_history', function(req, res) {
     return res.json(data.map(row => {var x = row.split(','); return [parseFloat(x[2]/1e6), parseFloat(x[3]), parseFloat(x[4])];}));
   }).catch(err => {console.log(err); return res.json([]);});
 });
-*/
+
 module.exports = router;
