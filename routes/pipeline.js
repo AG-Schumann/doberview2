@@ -125,7 +125,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
   var now = new Date();
   var flavor = data.name.split('_')[0];
   if (duration == 'forever') {
-    db.get('pipelines').update({name: data.name}, {$set: {silent_until: -1}})
+    db.get('pipelines').update({name: data.name}, {$set: {silent_until: parseInt('-1')}})
     .then(() => res.json({}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else if (duration == 'monday') {
