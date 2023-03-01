@@ -282,6 +282,7 @@ function DrawSensorHistory(sensor) {
       series: series,
       xAxis: {type: 'datetime',
               crosshair: true,
+              min: t_min,
               max: Date.now()},
       yAxis: {title: {text: null},
               crosshair: true,
