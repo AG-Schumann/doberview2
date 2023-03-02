@@ -248,7 +248,7 @@ function DrawSensorHistory(sensor) {
     let t_min = 0, t_max = 0;
     if (data.length !== 0) {
       t_min = data[0][0];
-      t_max = data[data.length-2][0];
+      t_max = Date.now();
     }
     let alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
     let series = [{name: $("#detail_sensor_name").html(), type: 'line', data: data.filter(row => ((row[0] != null) && (row[1] != null))), animation: {duration: 250}, color: '#0d6efd'}];
@@ -282,6 +282,7 @@ function DrawSensorHistory(sensor) {
       series: series,
       xAxis: {type: 'datetime',
               crosshair: true,
+              min: t_min,
               max: Date.now()},
       yAxis: {title: {text: null},
               crosshair: true,
