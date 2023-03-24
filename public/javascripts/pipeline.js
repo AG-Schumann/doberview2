@@ -32,7 +32,8 @@ function PopulatePipelines(flavor) {
         if ((status === 'active') && ((doc.silent_until == -1) || doc.silent_until > Date.now()/1000)) status = 'silent';
         let last_error = doc.cycle - doc.error; // last error X cycles ago
         let status_color = ((last_error < 5) ? 'danger' : 'success');
-        if (doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
+        if (doc.cycle < 5) status_color = 'warning'; // status indicator yellow during pipeline start-up
+        if (doc.cycle === 0) status_color = 'secondary'; // status indicator grey when pipeline never ran
         $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
             `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right"` +
             `title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n` +
@@ -52,7 +53,7 @@ function PopulatePipelines(flavor) {
         } else if (status === 'silent') {
           $(`#${n}_silent_until`).show();
           if (doc.silent_until == -1) {
-            $(`#${n}_silent_until`).html('the end of time')
+            $(`#${n}_silent_until`).html('the end of time');
           } else {
             $(`#${n}_silent_until`).html(new Date(doc.silent_until*1000).toLocaleString());
 

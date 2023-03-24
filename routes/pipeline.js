@@ -123,38 +123,24 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
   var duration = data.duration;
   var until = null;
   var now = new Date();
-  var flavor = data.name.split('_')[0];
   if (duration == 'forever') {
-    until = -1;
+    until = parseInt('-1');
   } else if (duration == 'monday') {
     var day = now.getDay();
-    if ((1 <= day) && (day <= 4)) {
-      // it's between Monday and Thursday
-      return res.json({err: 'Not available Monday-Thursday'});
-    }
+    if (day === 0) day = 7;  // make Sunday 7 instead of 0
     until = new Date();
     until.setDate(until.getDate() + (8-day));
     until.setHours(9);
     until.setMinutes(0);
     until = until.getTime()/1000;
   } else if (duration == 'morning') {
-    if ((7 <= now.getHours()) && (now.getHours() <= 17)) {
-      // it's in the working day
-      return res.json({err: 'Not available from 0700 to 1700'});
-    }
-    until = new Date();
-    if (now.getHours() > 17) { // it's evening
-      until.setDate(now.getDate()+1);
-    }
+    until.setDate(now.getDate()+1);
     until.setHours(9);
     until.setMinutes(30);
     until = until.getTime()/1000;
   } else if (duration == 'evening') {
-    if ((now.getHours() < 8) || (17 < now.getHours())) {
-      // not working hours
-      return res.json({err: 'Only available during working hours'});
-    }
     until = new Date();
+    if (now.getHours() >= 18) until.setDate(now.getDate()+1); // set to next day if it's after 18:00
     until.setHours(18);
     until.setMinutes(0);
     until = until.getTime()/1000;
