@@ -122,7 +122,8 @@ html
                       span &nbsp; s
                   tr
                     th.py-2 Units
-                    td#sensor_units
+                    td
+                      input.form-control-sm(type="text" id="sensor_units" name="sensor_units" placeholder="")
                   tr
                     th.py-2 Readout command &nbsp;
                     td#readout_command(style='font-family:"Courier New",monospace')
@@ -136,8 +137,9 @@ html
               hr
               h5 Alarms
               br
-              table
-                tbody
+              table#alarm_table.table
+                tbody#int_alarm_body
+                tbody#float_alarm_body
                   tr
                     th Low
                     th High
@@ -154,6 +156,7 @@ html
                       input.form-control-sm(type="number" id="alarm_mid" name="alarm_mid" size='6')
                     td
                       input.form-control-sm(type="number" id="alarm_range" name="alarm_range" size='6')
+                tfoot
                   tr
                     th Recurrence
                     th Base level
