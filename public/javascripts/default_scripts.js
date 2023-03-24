@@ -239,7 +239,6 @@ function DeviceDropdown(device) {
   });
 }
 
-
 function DrawSensorHistory(sensor) {
   sensor = sensor || $("#detail_sensor_name").html();
   var unit = $("#sensor_units").html();
@@ -516,7 +515,6 @@ function GetAcceptedCommands(device) {
       $("#accepted_commands_list").html("<li>None</li>");
     });
 }
-
 
 function DeviceCommand(to, cmd) {
   let receiver = to || $("#detail_device_name").html();
