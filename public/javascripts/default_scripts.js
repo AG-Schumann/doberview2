@@ -93,7 +93,7 @@ function SensorDropdown(sensor) {
               `<i class="fas fa-solid fa-stop"></i>Stop</button>`;
           let start_btn = `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_start ${pl_name}')"><i class="fas fa-solid fa-play"></i>Start</button>`;
           let restart_btn = `<button class="btn btn-primary action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_restart ${pl_name}')"><i class="fas fa-solid fa-rotate"></i>Restart</button>`;
-          let silence_btn = `<button class="btn btn-secondary action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_silent ${pl_name}')"><i class="fas fa-solid fa-bell-slash"></i>Silence</button>`;
+          let silence_btn = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${pl_name}')"><i class="fas fa-solid fa-bell-slash"></i>Silence</button>`;
           let activate_btn = `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_active ${pl_name}')"><i class="fas fa-solid fa-play"></i>Activate</button>`;
           if (doc.status === 'active') {
             $("#pipelines_active").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+silence_btn+`</td><td>`+stop_btn+`</td><td>`+restart_btn+`</td></tr>`);
@@ -133,6 +133,11 @@ function SensorDropdown(sensor) {
     DrawSensorHistory(sensor);
     $('#sensorbox').modal('show');
   });
+}
+
+function SilenceDropdown(name) {
+  $('#silence_me').html(name);
+  $('#silence_dropdown').modal('show');
 }
 
 function MakeAlarm(name) {
