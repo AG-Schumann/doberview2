@@ -4,7 +4,7 @@ const monk = require("monk");
 
 function  SendCommand(req, to, command, delay=0) {
   var logged = new Date().getTime() + delay;
-  return db.get('experiment_config').findOne({name: 'hypervisor'})
+  return global.db.get('experiment_config').findOne({name: 'hypervisor'})
   .then((doc) => {
     const sock = new zmq.socket('req');
     sock.connect('tcp://' + doc.host + ':' + doc.comms.command.send);

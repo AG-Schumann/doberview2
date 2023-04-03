@@ -23,6 +23,7 @@ app.disable('x-powered-by');
 
 // dict of experiments with {<display_name>: <database_name>, ...}
 global.experiments = {'XeBRA': 'xebra', 'PANCAKE': 'pancake'};
+global.default_experiment = 'pancake';
 // uri has format mongodb://{user}:{pass}@{host}:{port}
 global.authdb = process.env.DOBERVIEW_AUTH_DB || 'admin';
 global.uri_base = process.env.DOBERVIEW_MONGO_URI;
@@ -41,6 +42,9 @@ app.use(sessions({
 // Passport auth
 var passport = require('passport');
 require('./config/passport');
+const common = require("./routes/common");
+global.db = common.GetMongoDb({exp: global.default_experiment});
+
 app.use(passport.initialize({}));
 app.use(passport.session({}));
 
@@ -96,5 +100,6 @@ app.use(function(req, res) {
 });
 
 app.listen(port, hostname, () => {console.log(`Server running on ${hostname}:${port}`);});
+
 
 module.exports = app;

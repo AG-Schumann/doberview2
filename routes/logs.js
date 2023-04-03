@@ -6,7 +6,7 @@ var common = require('./common');
 router.get('/', function(req, res) {
   let session = req.session;
   if(session.experiment){
-    db = common.GetMongoDb({exp: session.experiment});
+    global.db = common.GetMongoDb({exp: session.experiment});
   } else
     res.redirect('../');
   var q = url.parse(req.url, true).query;
@@ -31,7 +31,7 @@ router.get('/get_logs', function(req, res) {
   if (typeof q.name != 'undefined' && q.name != "") {
     match['name'] = q.name;
   }
-  db.get('logs').aggregate([
+  global.db.get('logs').aggregate([
     {$match: match},
     {$sort: {_id: -1}},
     {$limit: limit},

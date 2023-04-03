@@ -10,13 +10,13 @@ const influx_url = process.env.DOBERVIEW_INFLUX_URI;
 router.get('/', function(req, res) {
   let session = req.session;
   if(session.experiment){
-    db = common.GetMongoDb({exp: session.experiment});
+    global.db = common.GetMongoDb({exp: session.experiment});
   } else
     res.redirect('../');
   var q = url.parse(req.url, true).query;
   var config = common.GetRenderConfig(req);
   config.grafana_sysmon_url = 'http://10.4.73.172:3000/d/WzsbkBwWk/system-mon?orgId=1&kiosk';
-  db.get("hosts").distinct("name").then(host_list => {
+  global.db.get("hosts").distinct("name").then(host_list => {
     config.hosts = host_list;
     res.render('hosts', config);
   });
@@ -24,7 +24,7 @@ router.get('/', function(req, res) {
 
 
 router.get('/params', function(req, res) {
-  const host_list = db.get(hosts).distinct("name")
+  const host_list = global.db.get(hosts).distinct("name")
   return res.json({hosts: host_list});
 });
 
