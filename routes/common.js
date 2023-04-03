@@ -2,22 +2,18 @@ var zmq = require('zeromq');
 const monk = require("monk");
 // Doberview common functions, defined once here rather than in every file
 
-function  SendCommand(req, to, command, delay=0) {
+async function SendCommand(req, to, command, delay=0) {
   var logged = new Date().getTime() + delay;
-  return global.db.get('experiment_config').findOne({name: 'hypervisor'})
-  .then((doc) => {
-    const sock = new zmq.socket('req');
-    sock.connect('tcp://' + doc.host + ':' + doc.comms.command.send);
-    sock.send(JSON.stringify({
-      to: to,
-      from: req.user.displayName,
-      command: command,
-      time: logged/1000,}));
-  })
-  .then(() => {
-    sock.recv();
-  })
-  .catch(err => {console.log(err.message); return {err: err.message};});
+  let doc = await global.db.get('experiment_config').findOne({name: 'hypervisor'})
+  const sock = new zmq.Request();
+  sock.connect('tcp://' + doc.host + ':' + doc.comms.command.send);
+  await sock.send(JSON.stringify({
+    to: to,
+    from: req.user.displayName,
+    command: command,
+    time: logged/1000,}));
+  const [result] = await sock.receive();
+  console.log(result);
 }
 
 function ensureAuthenticated(req, res, next) {
