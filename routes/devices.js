@@ -59,12 +59,12 @@ router.post('/new_sensor', common.ensureAuthenticated, function(req, res) {
   ]).then(docs => {
     if (docs.length != 0)
       num = ('00' + (docs[0].number+1)).slice(-2);
-    return mongo_db.db(session.experiment).collection('experiment_config').findOne({name: 'doberview_config'});
+    return mongo_db.get('experiment_config').findOne({name: 'doberview_config'});
   }).then(sdoc => {
     var ss = sdoc.subsystems.filter(row => row[0] == subsystem)[0][1];
     doc.name = `${topic_abb}_${ss}_${num}`;
-    return mongo_db.db(session.experiment).collection('sensors').insert(doc);
-  }).then(() => mongo_db.db(session.experiment).collection('devices').update({name: doc.device}, {$addToSet: {sensors: doc.name}}))
+    return mongo_db.get('sensors').insert(doc);
+  }).then(() => mongo_db.get('devices').update({name: doc.device}, {$addToSet: {sensors: doc.name}}))
     .then(() => res.json({name: doc.name}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
