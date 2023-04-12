@@ -1,7 +1,6 @@
 var express = require('express');
 var url = require('url');
 var router = express.Router();
-var net = require('net');
 var common = require('./common');
 
 router.post('/command', common.ensureAuthenticated, function(req, res) {
@@ -16,7 +15,7 @@ router.post('/command', common.ensureAuthenticated, function(req, res) {
 });
 
 router.get('/status', function(req, res) {
-  db.get('experiment_config').findOne({name: 'hypervisor'})
+  mongo_db.get('experiment_config').findOne({name: 'hypervisor'})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({});});
 });
@@ -25,7 +24,7 @@ router.get('/device_status', function(req, res) {
   var q = url.parse(req.url, true).query;
   if (typeof q.device == 'undefined')
     return res.json({});
-  db.get('experiment_config').findOne({name: 'hypervisor'})
+  mongo_db.get('experiment_config').findOne({name: 'hypervisor'})
   .then(doc => res.json({
       active: doc.processes.active.includes(q.device),
       managed: doc.processes.managed.includes(q.device)

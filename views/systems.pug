@@ -20,7 +20,7 @@ block content
         button.btn.btn-primary(onclick="ControlInput()") Submit
         button.btn.btn-secondary(data-dismiss='modal') Close
   div.main-container(style="width:90%")
-    object(id='svg_frame' type='image/svg+xml' data=`/images/${experiment}/main.svg`)
+    object(id='svg_frame' type='image/svg+xml' data=`${main_svg}`)
 
   script.
     $(document).ready(function() {

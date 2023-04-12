@@ -3,7 +3,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 
-var indexRouter = require('./routes/index');
 var deviceRouter = require('./routes/devices');
 var pipelineRouter = require('./routes/pipeline');
 var hostRouter = require('./routes/hosts');
@@ -14,9 +13,10 @@ var hvRouter = require('./routes/hypervisor');
 var shiftRouter = require('./routes/shifts');
 var systemsRouter = require('./routes/systems');
 var authRouter = require('./routes/auth');
-
-const hostname = process.env.DOBERVIEW_HOST;
-const port = process.env.DOBERVIEW_PORT;
+var config = require('./config/config');
+const hostname = config.host;
+const port = config.port;
+const monk = require("monk");
 
 var app = express();
 
@@ -25,8 +25,9 @@ app.disable('x-powered-by');
 // dict of expereiments with {<database_name>: <display_name>, ...}
 global.experiments = {'xebra': 'XeBRA', 'pancake': 'PANCAKE'}
 // uri has format mongodb://{user}:{pass}@{host}:{port}
-global.authdb = process.env.DOBERVIEW_AUTH_DB || 'admin';
-global.uri_base = process.env.DOBERVIEW_MONGO_URI;
+global.authdb = config.authdb || 'admin';
+global.uri_base = config.mongo_uri;
+global.mongo_db = monk(`${uri_base}/${config.experiment_name}`, {authSource: authdb});
 // session caching
 const sessions = require('express-session');
 
@@ -56,7 +57,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 console.log(`New connection at ${new Date()}`);
 
-app.use('/', indexRouter);
+app.use('/', systemsRouter);
 app.use('/devices', deviceRouter);
 app.use('/pipeline', pipelineRouter);
 app.use('/alarms', alarmRouter);
