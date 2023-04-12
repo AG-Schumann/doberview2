@@ -264,7 +264,7 @@ router.get('/get_last_points', function(req, res) {
     defstring = `sensors = ${JSON.stringify(q.sensors.split(','))}`;
     filterstring = '|> filter(fn: (r) => contains(value: r.sensor, set: sensors))';
   }
-  db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+  mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
       org: doc['org'],
