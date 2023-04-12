@@ -180,4 +180,43 @@ router.post('/pipeline_ctl', common.ensureAuthenticated, function(req, res) {
 
 });
 
+router.post('/get_pipelines_configs', function(req, res) {
+  var data = req.body;
+  var pipelines = data.pipelines;
+
+  if (typeof pipelines == 'undefined') return res.json([]);
+  db.get('pipelines')
+    .find({'name': {'$in': Object.keys(pipelines)}}, {fields: {'node_config': 1, 'name': 1}})
+    .then(docs => {
+      var ret = {};
+      docs.forEach(doc => {
+        var pipeline = doc.name;
+        var attrs = pipelines[pipeline];
+        ret[pipeline] = attrs.reduce((result, a) => {
+          result[a] = a.split('.').reduce((tot, x) => {return tot[x]}, doc.node_config);
+          return result;
+        }, {});
+      });
+      return res.json(ret);
+    })
+    .catch(err => { res.json({err:err.message}); });
+});
+
+router.post('/set_single_node_config', common.ensureAuthenticated, function(req, res) {
+  var data = req.body;
+  // First check the node_config entry exists: this endpoint isn't meant to create new ones
+  db.get('pipelines')
+    .findOne({'name': data.pipeline}, {'fields': {'node_config': 1}})
+    .then(doc => {
+      if (typeof data.target.split('.').reduce((tot, x) => {return tot[x]}, doc.node_config) == 'undefined')
+        return res.json({err:`${data.target} not in node_config of ${data.pipeline}`});
+      // Now can do the update
+      var op = {$set: {}};
+      op['$set']['node_config.' + data.target] = data.value;
+      db.get('pipelines').update({'name': data.pipeline}, op)
+        .then(res.json({notify_msg: 'Updated pipeline config', notify_status: 'success'}));
+    })
+    .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
 module.exports = router;

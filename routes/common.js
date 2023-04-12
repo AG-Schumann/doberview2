@@ -27,10 +27,10 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function GetRenderConfig(req) {
-  let render_config = {};
-  render_config.experiment = config.experiment;
-  if (req.user) render_config.username = req.user.displayName; else render_config.username = 'Login';
-  return render_config;
+  var config = {};
+  config.experiment = Object.keys(experiments).find(key => experiments[key] === req.session.experiment);
+  if (req.user) config.username = req.user.displayName; else config.username = 'Login';
+  return config;
 }
 
 module.exports = {SendCommand, ensureAuthenticated, GetRenderConfig,};

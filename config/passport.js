@@ -1,6 +1,9 @@
 var passport = require('passport');
+<<<<<<< HEAD
 const https = require('https');
 const config = require('./config');
+=======
+>>>>>>> 2511de0a69fbcc5cda9875d0b7ebdc55f51fac1f
 
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));

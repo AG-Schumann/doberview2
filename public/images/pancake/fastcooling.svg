@@ -22,9 +22,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1"
-     inkscape:cx="665.5"
-     inkscape:cy="522"
+     inkscape:zoom="2.0000001"
+     inkscape:cx="682.74998"
+     inkscape:cy="796.49998"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
@@ -34,6 +34,62 @@
      showguides="false" />
   <svg:defs
      id="defs2">
+    <svg:marker
+       style="overflow:visible"
+       id="Arrow2Mstart"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mstart"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.6) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke:context-stroke;fill-rule:evenodd;fill:context-stroke;stroke-width:0.62500000;stroke-linejoin:round"
+         id="path18949" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible;"
+       id="marker19239"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke:context-stroke;fill-rule:evenodd;fill:context-stroke;stroke-width:0.62500000;stroke-linejoin:round;"
+         id="path19237" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible;"
+       id="Arrow2Mend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke:context-stroke;fill-rule:evenodd;fill:context-stroke;stroke-width:0.62500000;stroke-linejoin:round;"
+         id="path18952" />
+    </svg:marker>
+    <svg:marker
+       style="overflow:visible;"
+       id="Arrow2Lend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Lend"
+       inkscape:isstock="true">
+      <svg:path
+         transform="scale(1.1) rotate(180) translate(1,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke:context-stroke;fill-rule:evenodd;fill:context-stroke;stroke-width:0.62500000;stroke-linejoin:round;"
+         id="path18946" />
+    </svg:marker>
     <svg:marker
        style="overflow:visible;"
        id="marker55454"
@@ -137,7 +193,7 @@
     from {transform:rotate(0deg);}
     to {transform:rotate(360deg);}
 }
- 
+
 .spinner.on {
   animation: spin 4s infinite linear;
   transform: translate(100px, 100px);
@@ -149,22 +205,56 @@
      id="layer1">
     <svg:path
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 289.57,129.11664 v 54.23958 H 187.06 84.55 v -52.91666"
+       d="M 289.57,97.366455 V 151.60602 H 187.06 84.55 V 98.689369"
        id="path2223"
        sodipodi:nodetypes="ccccc" />
     <svg:path
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 269.57,134.73905 v 54.23958 H 167.06 64.55 v -52.91666"
+       d="m 269.57,102.98885 v 54.23958 H 167.06 64.55 v -52.91666"
        id="path2223-4"
        sodipodi:nodetypes="ccccc" />
     <svg:path
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 43.127083,195.26248 h 40.745834 83.608333 v -5.82083"
+       d="m 24.341832,187.36366 h 47.061414 96.567574 v -30.1981"
        id="path3242"
        sodipodi:nodetypes="cccc" />
     <svg:path
-       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 237.24632,203.61176 H 222.10761 191.04375 V 188.92708"
+       sodipodi:type="star"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:3.77953;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path97980"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="119.50105"
+       sodipodi:cy="79.195961"
+       sodipodi:r1="24.758837"
+       sodipodi:r2="12.379418"
+       sodipodi:arg1="1.5707963"
+       sodipodi:arg2="2.6179939"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       transform="matrix(0,-0.10419588,0.15902293,0,127.80404,199.82082)"
+       inkscape:transform-center-x="-0.98430208"
+       d="M 119.50105,103.9548 108.78016,85.38567 98.059271,66.816543 l 21.441779,0 21.44178,-10e-7 -10.72089,18.569128 z" />
+    <svg:path
+       sodipodi:type="star"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:3.77953;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path97980-7"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="119.50105"
+       sodipodi:cy="79.195961"
+       sodipodi:r1="24.758837"
+       sodipodi:r2="12.379418"
+       sodipodi:arg1="1.5707963"
+       sodipodi:arg2="2.6179939"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       transform="matrix(0,-0.10419588,0.15902293,0,223.89014,200.40271)"
+       inkscape:transform-center-x="-0.98430208"
+       d="M 119.50105,103.9548 108.78016,85.38567 98.059271,66.816543 l 21.441779,0 21.44178,-10e-7 -10.72089,18.569128 z" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:0.999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:"
+       d="M 237.24632,187.95119 H 222.10761 191.04375 V 157.17688"
        id="path3242-2"
        sodipodi:nodetypes="cccc" />
     <svg:g
@@ -172,7 +262,7 @@
        transform="translate(-34.276659,-17.130645)" />
     <svg:g
        id="g9529"
-       transform="matrix(1.1477216,0,0,1.0226242,6.7047141,-50.661547)"
+       transform="matrix(1.1477216,0,0,1.0226242,6.7047141,-82.411567)"
        style="fill:#cccccc">
       <svg:path
          id="rect1501"
@@ -182,7 +272,7 @@
     </svg:g>
     <svg:g
        id="g9529-3"
-       transform="matrix(1.0357989,0,0,0.84918172,22.812246,-30.297105)"
+       transform="matrix(1.0357989,0,0,0.84918172,22.812246,-62.047125)"
        style="fill:#cccccc">
       <svg:path
          id="rect1501-7"
@@ -204,7 +294,7 @@
     <svg:g
        id="link_main"
        class="link"
-       transform="translate(54.937499,0.80900216)">
+       transform="translate(54.937499,-30.941011)">
       <svg:g
          id="g158619-1">
         <svg:rect
@@ -233,290 +323,403 @@
        width="28.955645"
        height="13.955644"
        x="162.26816"
-       y="161.77884" />
+       y="130.02927" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_14"
        width="28.955645"
        height="13.955644"
        x="183.4144"
-       y="103.24769" />
+       y="71.497643" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_15"
        width="28.955645"
        height="13.955644"
        x="224.91661"
-       y="103.24769" />
+       y="71.497643" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_20"
        width="28.955645"
        height="13.955644"
        x="100.40998"
-       y="103.24769" />
+       y="71.497643" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_18"
        width="28.955645"
        height="13.955644"
        x="141.91219"
-       y="103.24769" />
+       y="71.497643" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_24"
        width="28.955645"
        height="13.955644"
        x="265.10675"
-       y="76.856789" />
+       y="45.106758" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_23"
        width="28.955645"
        height="13.955644"
        x="265.10675"
-       y="60.784481" />
+       y="29.034451" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_33"
        width="28.955645"
        height="13.955644"
        x="213.70616"
-       y="75.958" />
+       y="44.20797" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_37"
        width="28.955645"
        height="13.955644"
        x="151.65692"
-       y="53.0863" />
+       y="21.336269" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_11"
        width="28.955645"
        height="13.955644"
        x="60.072029"
-       y="146.06693" />
+       y="114.31718" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_13"
        width="28.955645"
        height="13.955644"
        x="60.072029"
-       y="128.27489" />
+       y="96.524887" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_05"
        width="28.955645"
        height="13.955644"
        x="60.072029"
-       y="163.85901" />
+       y="132.10944" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_12"
        width="28.955645"
        height="13.955644"
        x="101.19858"
-       y="146.06693" />
+       y="114.31718" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_10"
        width="28.955999"
        height="13.955644"
        x="101.19858"
-       y="128.27489" />
+       y="96.524887" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_02"
        width="28.955645"
        height="13.955644"
        x="101.19858"
-       y="163.85901" />
+       y="132.10944" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_01"
        width="28.955645"
        height="13.955644"
        x="223.96565"
-       y="146.06693" />
+       y="114.31718" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_07"
        width="28.955645"
        height="13.955644"
        x="223.96565"
-       y="128.27489" />
+       y="96.524887" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_04"
        width="28.955645"
        height="13.955644"
        x="223.96565"
-       y="163.85901" />
+       y="132.10944" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_06"
        width="28.955645"
        height="13.955644"
        x="265.09195"
-       y="146.06693" />
+       y="114.31718" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_08"
        width="28.955645"
        height="13.955644"
        x="265.09195"
-       y="128.27489" />
+       y="96.524887" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_03"
        width="28.955645"
        height="13.955644"
        x="265.09195"
-       y="163.85901" />
+       y="132.10944" />
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="58.929722"
-       y="126.20026"
+       y="94.450294"
        id="text9531"><svg:tspan
          sodipodi:role="line"
          id="tspan9529"
          style="font-size:6.35px;stroke-width:0.264583"
          x="58.929722"
-         y="126.20026">Pads:</svg:tspan></svg:text>
+         y="94.450294">Pads:</svg:tspan></svg:text>
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="100.05627"
-       y="126.20026"
+       y="94.450294"
        id="text9531-5"><svg:tspan
          sodipodi:role="line"
          id="tspan9529-6"
          style="font-size:6.35px;stroke-width:0.264583"
          x="100.05627"
-         y="126.20026">Wall:</svg:tspan></svg:text>
+         y="94.450294">Wall:</svg:tspan></svg:text>
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="223.32326"
-       y="126.20026"
+       y="94.450294"
        id="text9531-8"><svg:tspan
          sodipodi:role="line"
          id="tspan9529-8"
          style="font-size:6.35px;stroke-width:0.264583"
          x="223.32326"
-         y="126.20026">Wall:</svg:tspan></svg:text>
+         y="94.450294">Wall:</svg:tspan></svg:text>
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="264.4498"
-       y="126.20026"
+       y="94.450294"
        id="text9531-5-8"><svg:tspan
          sodipodi:role="line"
          id="tspan9529-6-6"
          style="font-size:6.35px;stroke-width:0.264583"
          x="264.4498"
-         y="126.20026">Pads:</svg:tspan></svg:text>
+         y="94.450294">Pads:</svg:tspan></svg:text>
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="132.41014"
-       y="139.11346"
+       y="107.36367"
        id="text16965"><svg:tspan
          sodipodi:role="line"
          id="tspan16963"
          style="stroke-width:0.264583"
          x="132.41014"
-         y="139.11346">1</svg:tspan></svg:text>
+         y="107.36367">1</svg:tspan></svg:text>
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="132.53157"
-       y="156.89275"
+       y="125.14315"
        id="text16965-7"><svg:tspan
          sodipodi:role="line"
          id="tspan16963-5"
          style="stroke-width:0.264583"
          x="132.53157"
-         y="156.89275">3</svg:tspan></svg:text>
+         y="125.14315">3</svg:tspan></svg:text>
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="132.45665"
-       y="174.60477"
+       y="142.85519"
        id="text16965-5"><svg:tspan
          sodipodi:role="line"
          id="tspan16963-8"
          style="stroke-width:0.264583"
          x="132.45665"
-         y="174.60477">5</svg:tspan></svg:text>
+         y="142.85519">5</svg:tspan></svg:text>
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="214.88043"
-       y="139.22246"
+       y="107.47263"
        id="text16965-76"><svg:tspan
          sodipodi:role="line"
          id="tspan16963-1"
          style="stroke-width:0.264583"
          x="214.88043"
-         y="139.22246">2</svg:tspan></svg:text>
+         y="107.47263">2</svg:tspan></svg:text>
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="215.00188"
-       y="157.00174"
+       y="125.25214"
        id="text16965-7-3"><svg:tspan
          sodipodi:role="line"
          id="tspan16963-5-1"
          style="stroke-width:0.264583"
          x="215.00188"
-         y="157.00174">4</svg:tspan></svg:text>
+         y="125.25214">4</svg:tspan></svg:text>
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="214.92694"
-       y="174.71376"
+       y="142.96419"
        id="text16965-5-4"><svg:tspan
          sodipodi:role="line"
          id="tspan16963-8-2"
          style="stroke-width:0.264583"
          x="214.92694"
-         y="174.71376">6</svg:tspan></svg:text>
-    <svg:g
-       id="g114297"
-       transform="translate(-10.977265,133.5748)">
-      <svg:rect
-         style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="n2dewarfill"
-         width="45.767387"
-         height="35.180824"
-         x="12.921951"
-         y="38.966217" />
-      <svg:rect
-         style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="sensorbox_M_TS_01"
-         width="28.955645"
-         height="13.955644"
-         x="21.50551"
-         y="55.199261" />
-      <svg:path
-         id="rect98897"
-         style="fill:none;stroke:#000000;stroke-width:1.20914"
-         d="m 12.921951,38.966217 c 15.195129,-8.203536 31.515381,-8.453062 45.767388,0 V 74.147045 H 12.921951 Z"
-         sodipodi:nodetypes="ccccc" />
-    </svg:g>
+         y="142.96419">6</svg:tspan></svg:text>
     <svg:path
-       d="m 214.85819,200.34482 v 6.93134 l 11.69706,-6.93134 v 6.93134 z"
-       id="valve_S_TS_01"
+       d="m 207.66899,184.31007 v 6.93134 l 11.69706,-6.93134 v 6.93134 z"
+       id="valve_S_IC_01"
        sodipodi:nodetypes="ccccc"
        class="v findmeeasily"
        style="stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <svg:rect
+       style="fill:#aa0000;stroke:#000000;stroke-width:0.711173;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect10247-2-4-2-81-9-3-1"
+       width="37.475094"
+       height="9.5243702"
+       x="16.917749"
+       y="98.740601" />
+    <svg:text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="26.227127"
+       y="105.39421"
+       id="text13160-7-5-9-2-2-4-8-23"><svg:tspan
+         sodipodi:role="line"
+         id="value_T_IC_36"
+         style="font-size:6.35px;fill:#ffffff;stroke-width:0.264583"
+         x="26.227127"
+         y="105.39421">T_IC_36</svg:tspan></svg:text>
+    <svg:g
+       id="g124293"
+       transform="translate(-3.5524446,39.496089)"
+       style="fill:#000000;stroke:#ffffff">
+      <svg:circle
+         style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0.852235;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path124079"
+         cx="25.269815"
+         cy="64.006599"
+         r="2.5738826" />
+      <svg:circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.625379;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path124079-0"
+         cx="25.269815"
+         cy="64.006599"
+         r="1" />
+    </svg:g>
+    <svg:g
+       id="g114297"
+       transform="translate(-10.03394,125.06277)">
+      <svg:g
+         id="g9363"
+         transform="translate(0,2.1166667)">
+        <svg:rect
+           style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-dashoffset:12.0945"
+           id="n2dewarfillback"
+           width="28.790859"
+           height="24"
+           x="13.945007"
+           y="38" />
+        <svg:rect
+           style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="sensorbox_M_TS_02"
+           width="28.955645"
+           height="13.955644"
+           x="13.780221"
+           y="65.444664" />
+        <svg:path
+           id="rect98897"
+           style="fill:none;stroke:#000000;stroke-width:1.20914"
+           d="m 13.945007,37.217202 c 9.558789,-5.90658 19.82536,-6.08624 28.79086,0 v 25.330345 h -28.79086 z"
+           sodipodi:nodetypes="ccccc" />
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="27.857336"
+           y="48.00563"
+           id="text5254"><svg:tspan
+             sodipodi:role="line"
+             id="tspan5252"
+             style="text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke-width:0.264583"
+             x="27.857336"
+             y="48.00563">Back</svg:tspan></svg:text>
+      </svg:g>
+      <svg:g
+         id="g9363-6"
+         transform="translate(33.152188,2.1166667)">
+        <svg:rect
+           style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:0.999998;stroke-linecap:square;stroke-linejoin:round;stroke-dashoffset:12.0945"
+           id="n2dewarfillfront"
+           width="28.790859"
+           height="24"
+           x="13.945007"
+           y="37.959797" />
+        <svg:rect
+           style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="sensorbox_M_TS_01"
+           width="28.955645"
+           height="13.955644"
+           x="13.780221"
+           y="65.444664" />
+        <svg:path
+           id="rect98897-7"
+           style="fill:none;stroke:#000000;stroke-width:1.20914"
+           d="m 13.945007,37.217202 c 9.558789,-5.90658 19.82536,-6.08624 28.79086,0 v 25.330345 h -28.79086 z"
+           sodipodi:nodetypes="ccccc" />
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="27.932194"
+           y="48.00563"
+           id="text5254-8"><svg:tspan
+             sodipodi:role="line"
+             id="tspan5252-6"
+             style="text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke-width:0.264583"
+             x="27.932194"
+             y="48.00563">Front</svg:tspan></svg:text>
+      </svg:g>
+    </svg:g>
   </svg:g>
   <metadata>
-    <sensors>T_IC_23 T_IC_24 T_IC_20 T_IC_18 T_IC_14 T_IC_15 T_IC_01 T_IC_02 T_IC_03 T_IC_04 T_IC_05 T_IC_06 T_IC_07 T_IC_08 T_IC_10 T_IC_11 T_IC_12 T_IC_13 T_IC_17 T_IC_37 T_IC_33</sensors>
-    <links>main</links>
-    <valves>S_IC_01 S_TS_01</valves>
+    <property
+       targetId="n2dewarfillback"
+       targetAttribute="height"
+       offset="0"
+       scaling="0.15"
+       sensor="M_TS_02"
+       min="0"
+       max="24" />
+    <property
+       targetId="n2dewarfillback"
+       targetAttribute="y"
+       offset="62"
+       scaling="-0.15"
+       sensor="M_TS_02"
+       min="38"
+       max="62" />
+    <property
+       targetId="n2dewarfillfront"
+       targetAttribute="height"
+       offset="0"
+       scaling="0.15"
+       sensor="M_TS_01"
+       min="0"
+       max="24" />
+    <property
+       targetId="n2dewarfillfront"
+       targetAttribute="y"
+       offset="62"
+       scaling="-0.15"
+       sensor="M_TS_01"
+       min="38"
+       max="62" />
   </metadata>
 </svg:svg>

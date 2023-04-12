@@ -13,17 +13,22 @@ var hvRouter = require('./routes/hypervisor');
 var shiftRouter = require('./routes/shifts');
 var systemsRouter = require('./routes/systems');
 var authRouter = require('./routes/auth');
+<<<<<<< HEAD
 var config = require('./config/config');
 const hostname = config.host;
 const port = config.port;
 const monk = require("monk");
+=======
+
+const hostname = process.env.DOBERVIEW_HOST;
+const port = parseInt(process.env.DOBERVIEW_PORT);
+>>>>>>> 2511de0a69fbcc5cda9875d0b7ebdc55f51fac1f
 
 var app = express();
-
 app.disable('x-powered-by');
 
-// dict of expereiments with {<database_name>: <display_name>, ...}
-global.experiments = {'xebra': 'XeBRA', 'pancake': 'PANCAKE'}
+// dict of experiments with {<display_name>: <database_name>, ...}
+global.experiments = {'XeBRA': 'xebra', 'PANCAKE': 'pancake'};
 // uri has format mongodb://{user}:{pass}@{host}:{port}
 global.authdb = config.authdb || 'admin';
 global.uri_base = config.mongo_uri;
@@ -43,8 +48,8 @@ app.use(sessions({
 // Passport auth
 var passport = require('passport');
 require('./config/passport');
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.initialize({}));
+app.use(passport.session({}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -54,7 +59,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/modules', express.static(path.join(__dirname, 'node_modules')));
 console.log(`New connection at ${new Date()}`);
 
 app.use('/', systemsRouter);
@@ -87,7 +92,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

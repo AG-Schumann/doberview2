@@ -5,7 +5,6 @@ var config = {};
 config.mongo_uri = process.env.DOBERVIEW_MONGO_URI;
 config.experiment_name = process.env.DOBERVIEW_EXPERIMENT;
 config.host = process.env.DOBERVIEW_HOST;
-config.port = process.env.DOBERVIEW_PORT;
 config.github_oauth_client_id = process.env.GITHUB_OAUTH_CLIENT_ID;
 config.github_oauth_client_secret = process.env.GITHUB_OAUTH_CLIENT_SECRET;
 config.github_callback_url = process.env.GITHUB_CALLBACK_URI;

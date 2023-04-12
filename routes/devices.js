@@ -6,6 +6,13 @@ var common = require('./common');
 const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage', D: 'time', X: 'other', I: 'current', C: 'capacity'};
 
 router.get('/', function(req, res) {
+  let session = req.session;
+  if (session.experiment) {
+    db = common.GetMongoDb({exp: session.experiment});
+  } else {
+    res.redirect('../');
+    return;
+  }
   var config = common.GetRenderConfig(req);
   res.render('full_system', config);
 });
@@ -87,7 +94,12 @@ router.get('/sensors_grouped', function(req, res) {
     {$sort: {'name': 1}},
     {$group: {
       _id: '$' + group_by,
-      sensors: {$push: {name: '$name', desc: '$description', units: '$units'}}
+      sensors: {$push: {
+        name: '$name',
+        desc: '$description',
+        units: '$units',
+        status: '$status'
+      }}
     }},
     {$sort: {_id: 1}}
   ]).then(docs => res.json(docs))
@@ -243,6 +255,64 @@ router.get('/get_last_point', function(req, res) {
     else {
       return res.json({'value': 'None', 'time_ago': 'None '})
     }
+  }).catch(err => {console.log(err); return res.json({});});
+});
+
+router.get('/get_last_points', function(req, res) {
+  // Get last value recorded by each sensor
+  // Only searches past 24 hours
+  // Optional get argument "sensors": a comma separated list of sensors to get data for
+  // If sensors is not defined, returns data for all sensors
+  var q = url.parse(req.url, true).query;
+  //var q = req.body;
+  var defstring = "";
+  var filterstring = "";
+  if (q.sensors) {
+    defstring = `sensors = ${JSON.stringify(q.sensors.split(','))}`;
+    filterstring = '|> filter(fn: (r) => contains(value: r.sensor, set: sensors))';
+  }
+  db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    var get_url = new url.URL(doc['url'] + '/api/v2/query');
+    var params = new url.URLSearchParams({
+      org: doc['org'],
+      db: doc['db'],
+    });
+    get_url.search = params.toString();
+    //res.json(q);
+    return axios.post(
+      get_url.toString(),
+        `${defstring}
+        from(bucket: "${doc['bucket']}")
+        |> range(start: -24h)
+        |> group(columns: ["sensor"])
+        |> keep(columns:["_time", "_value","sensor"])
+        |> last()
+        ${filterstring}`,
+        {
+          'headers': {
+            'Accept': 'application/csv',
+            'Authorization': `Token ${doc['token']}`,
+            'Content-type': 'application/vnd.flux'
+          },
+        })}).then(resp => {
+          const lines = resp.data.split('\r\n');
+          const keys = lines[0].split(',');
+          const value_index = keys.indexOf('_value');
+          const time_index = keys.indexOf('_time');
+          const sensor_index = keys.indexOf('sensor');
+          return res.json(lines.slice(1).reduce((result, line) => {
+            if ((line.length > 0) & (!line.includes('_value'))) {
+              // Sometimes Influx sends extra header lines!
+              const v = line.split(',');
+              result[v[sensor_index]] = {
+                'value': v[value_index],
+                'sensor': v[sensor_index],
+                'time': v[time_index],
+                'time_ago': ((new Date() - new Date(v[time_index])) / 1000).toFixed(1),
+              };
+            }
+            return result;
+          }, {}));
   }).catch(err => {console.log(err); return res.json({});});
 });
 
