@@ -13,16 +13,10 @@ var hvRouter = require('./routes/hypervisor');
 var shiftRouter = require('./routes/shifts');
 var systemsRouter = require('./routes/systems');
 var authRouter = require('./routes/auth');
-<<<<<<< HEAD
 var config = require('./config/config');
 const hostname = config.host;
 const port = config.port;
 const monk = require("monk");
-=======
-
-const hostname = process.env.DOBERVIEW_HOST;
-const port = parseInt(process.env.DOBERVIEW_PORT);
->>>>>>> 2511de0a69fbcc5cda9875d0b7ebdc55f51fac1f
 
 var app = express();
 app.disable('x-powered-by');
