@@ -21,8 +21,7 @@ const monk = require("monk");
 var app = express();
 app.disable('x-powered-by');
 
-// dict of experiments with {<display_name>: <database_name>, ...}
-global.experiments = {'XeBRA': 'xebra', 'PANCAKE': 'pancake'};
+
 // uri has format mongodb://{user}:{pass}@{host}:{port}
 global.authdb = config.authdb || 'admin';
 global.uri_base = config.mongo_uri;
@@ -56,7 +55,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/modules', express.static(path.join(__dirname, 'node_modules')));
 console.log(`New connection at ${new Date()}`);
 
-app.use('/', systemsRouter);
+app.use('/', deviceRouter);
 app.use('/devices', deviceRouter);
 app.use('/pipeline', pipelineRouter);
 app.use('/alarms', alarmRouter);

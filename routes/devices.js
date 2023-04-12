@@ -6,13 +6,6 @@ var common = require('./common');
 const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage', D: 'time', X: 'other', I: 'current', C: 'capacity'};
 
 router.get('/', function(req, res) {
-  let session = req.session;
-  if (session.experiment) {
-    db = common.GetMongoDb({exp: session.experiment});
-  } else {
-    res.redirect('../');
-    return;
-  }
   var config = common.GetRenderConfig(req);
   res.render('full_system', config);
 });
