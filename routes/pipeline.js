@@ -149,7 +149,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
     }
     until = now.getTime() / 1000 + duration * 60;
   }
-  global.db.get('pipelines').update({name: data.name}, {$set: {silent_until: until}})
+  mongo_db.get('pipelines').update({name: data.name}, {$set: {silent_until: until}})
   return res.json({});
 });
 
@@ -170,7 +170,7 @@ router.post('/get_pipelines_configs', function(req, res) {
   var pipelines = data.pipelines;
 
   if (typeof pipelines == 'undefined') return res.json([]);
-  global.db.get('pipelines')
+  mongo_db.get('pipelines')
     .find({'name': {'$in': Object.keys(pipelines)}}, {fields: {'node_config': 1, 'name': 1}})
     .then(docs => {
       var ret = {};
@@ -190,7 +190,7 @@ router.post('/get_pipelines_configs', function(req, res) {
 router.post('/set_single_node_config', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   // First check the node_config entry exists: this endpoint isn't meant to create new ones
-  global.db.get('pipelines')
+  mongo_db.get('pipelines')
     .findOne({'name': data.pipeline}, {'fields': {'node_config': 1}})
     .then(doc => {
       if (typeof data.target.split('.').reduce((tot, x) => {return tot[x]}, doc.node_config) == 'undefined')
@@ -198,7 +198,7 @@ router.post('/set_single_node_config', common.ensureAuthenticated, function(req,
       // Now can do the update
       var op = {$set: {}};
       op['$set']['node_config.' + data.target] = data.value;
-      global.db.get('pipelines').update({'name': data.pipeline}, op)
+      mongo_db.get('pipelines').update({'name': data.pipeline}, op)
         .then(res.json({notify_msg: 'Updated pipeline config', notify_status: 'success'}));
     })
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
