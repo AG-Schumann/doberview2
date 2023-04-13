@@ -40,9 +40,6 @@ app.use(sessions({
 // Passport auth
 var passport = require('passport');
 require('./config/passport');
-const common = require("./routes/common");
-global.db = common.GetMongoDb({exp: global.default_experiment});
-
 app.use(passport.initialize({}));
 app.use(passport.session({}));
 
