@@ -63,13 +63,6 @@ html
           span.navbar-toggler-icon
         #navbarSupportedContent.collapse.navbar-collapse.justify-content-between
           ul.navbar-nav#navbar_content
-          #select_experiment(style="padding-right: 20px;")
-            .dropdown
-              a.btn.btn-primary.dropdown-toggle(role='button' data-bs-toggle='dropdown' onchange="ChangeExperiment()") #{experiment}
-              ul.dropdown-menu
-                each real_name, display_name in experiments
-                  li
-                    a.dropdown-item(onclick=`ChangeExperiment('${real_name}')`) #{display_name}
           #login
             .nav-item.dropdown(style="padding-right: 0px")
               a#login_dropdown.nav-link.dropdown-toggle(data-bs-toggle='dropdown' href='#' role='button' aria-expanded='false') #{username}

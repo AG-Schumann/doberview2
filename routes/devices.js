@@ -6,20 +6,14 @@ var common = require('./common');
 const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage', D: 'time', X: 'other', I: 'current', C: 'capacity'};
 
 router.get('/', function(req, res) {
-  let session = req.session;
-  if (session.experiment) {
-    global.db = common.GetMongoDb({exp: session.experiment});
-  } else {
-    res.redirect('../');
-    return;
-  }
+
   var config = common.GetRenderConfig(req);
   res.render('full_system', config);
 });
 
 router.get('/params', function(req, res) {
   var ret = {};
-  global.db.get('experiment_config').findOne({name: 'doberview_config'})
+  mongo_db.get('experiment_config').findOne({name: 'doberview_config'})
   .then(doc => {
     ret['subsystems'] = doc.subsystems.map(ss => ss[0]);
     ret['topics'] = doc.topics;
@@ -52,25 +46,25 @@ router.post('/new_sensor', common.ensureAuthenticated, function(req, res) {
   var subsystem = doc.subsystem;
   var num = '01';
   var name;
-  global.db.get('sensors').aggregate([
+  mongo_db.get('sensors').aggregate([
     {$match: {subsystem: subsystem, topic: topic}},
     {$addFields: {number: {$toInt: {$arrayElemAt: [{$split: ['$name', '_']}, 2]}}}},
     {$group: {_id: null, number: {$max: '$number'}}}
   ]).then(docs => {
     if (docs.length != 0)
       num = ('00' + (docs[0].number+1)).slice(-2);
-    return global.db.get('experiment_config').findOne({name: 'doberview_config'});
+    return mongo_db.get('experiment_config').findOne({name: 'doberview_config'});
   }).then(sdoc => {
     var ss = sdoc.subsystems.filter(row => row[0] == subsystem)[0][1];
     doc.name = `${topic_abb}_${ss}_${num}`;
-    return global.db.get('sensors').insert(doc);
-  }).then(() => global.db.get('devices').update({name: doc.device}, {$addToSet: {sensors: doc.name}}))
+    return mongo_db.get('sensors').insert(doc);
+  }).then(() => mongo_db.get('devices').update({name: doc.device}, {$addToSet: {sensors: doc.name}}))
     .then(() => res.json({name: doc.name}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 router.get('/device_list', function(req, res) {
-  global.db.get('devices').distinct('name')
+  mongo_db.get('devices').distinct('name')
   .then(docs => res.json(docs))
   .catch(err => {console.log(err.message); res.json([]);});
 });
@@ -80,7 +74,7 @@ router.get('/device_detail', function(req, res) {
   var device = q.device;
   if (typeof device == 'undefined')
     return res.json({});
-  global.db.get('devices').findOne({name: device})
+  mongo_db.get('devices').findOne({name: device})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -90,7 +84,7 @@ router.get('/sensors_grouped', function(req, res) {
   var group_by = q.group_by;
   if (typeof group_by == 'undefined')
     return res.json([]);
-  global.db.get('sensors').aggregate([
+  mongo_db.get('sensors').aggregate([
     {$sort: {'name': 1}},
     {$group: {
       _id: '$' + group_by,
@@ -107,7 +101,7 @@ router.get('/sensors_grouped', function(req, res) {
 });
 
 router.get('/sensor_list', function(req, res) {
-  global.db.get('sensors').distinct('name')
+  mongo_db.get('sensors').distinct('name')
   .then(docs => res.json(docs))
   .catch(err => {console.log(err.message); res.json([]);});
 });
@@ -117,7 +111,7 @@ router.get('/sensor_detail', function(req, res) {
   var sensor = q.sensor;
   if (typeof sensor == 'undefined')
     return res.json({});
-  global.db.get('sensors').findOne({name: sensor})
+  mongo_db.get('sensors').findOne({name: sensor})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -147,7 +141,7 @@ router.post('/update_device_address', common.ensureAuthenticated, function(req, 
   if (typeof data.serial_id != 'undefined')
     updates['address.serialID'] = data.serial_id;
   if (Object.keys(updates).length != 0) {
-    global.db.get('devices').update({device: device}, {$set: updates})
+    mongo_db.get('devices').update({device: device}, {$set: updates})
       .then(() => res.json({msg: 'Success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else
@@ -178,7 +172,7 @@ router.post('/update_alarm', common.ensureAuthenticated, function(req, res) {
       return res.json({err: 'Invalid alarm parameters'});
     }
   }
-  global.db.get('sensors').update({name: data.sensor}, {$set: updates})
+  mongo_db.get('sensors').update({name: data.sensor}, {$set: updates})
     .then(() => res.json({ret}))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -218,9 +212,8 @@ router.post('/update_sensor', common.ensureAuthenticated, function(req, res) {
     updates['status'] = data.status;
   if (typeof data.description != 'undefined' && data.description != "")
     updates['description'] = data.description;
-  if (typeof data.units != 'undefined')
-    updates['units'] = data.units;
-  global.db.get('sensors').update({name: sensor}, {$set: updates})
+  console.log(updates);
+  mongo_db.get('sensors').update({name: sensor}, {$set: updates})
     .then(() => res.json(ret))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
@@ -231,8 +224,7 @@ router.get('/get_last_point', function(req, res) {
   var topic = topic_lut[sensor.split('_')[0]];
   if (typeof sensor == 'undefined' || typeof topic == 'undefined')
     return res.json({});
-  global.db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
-    doc['url'] = 'http://10.4.73.172:8096';
+  mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
       org: doc['org'],
@@ -281,7 +273,7 @@ router.get('/get_last_points', function(req, res) {
     defstring = `sensors = ${JSON.stringify(q.sensors.split(','))}`;
     filterstring = '|> filter(fn: (r) => contains(value: r.sensor, set: sensors))';
   }
-  global.db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+  mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
       org: doc['org'],
@@ -335,7 +327,7 @@ router.get('/get_data', function(req, res) {
   var topic = topic_lut[sensor.split('_')[0]];
   if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
-  global.db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+  mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
       org: doc['org'],

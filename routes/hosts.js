@@ -3,9 +3,7 @@ var url = require('url');
 var router = express.Router();
 var axios = require('axios');
 var common = require('./common');
-
-const influx_url = process.env.DOBERVIEW_INFLUX_URI;
-
+const config = require('../config/config');
 
 router.get('/', function(req, res) {
   let session = req.session;
@@ -14,6 +12,14 @@ router.get('/', function(req, res) {
   } else
     res.redirect('../');
   var q = url.parse(req.url, true).query;
+  var render_config = common.GetRenderConfig(req);
+  render_config.hosts = config.hosts;
+  render_config.grafana_sysmon_url = config.grafana_sysmon_url;
+  res.render('hosts', render_config);
+});
+
+/*router.get('/params', function(req, res) {
+  return res.json({hosts: ['apollo', 'calliope']});
   var config = common.GetRenderConfig(req);
   config.grafana_sysmon_url = 'http://10.4.73.172:3000/d/WzsbkBwWk/system-mon?orgId=1&kiosk';
   global.db.get("hosts").distinct("name").then(host_list => {
@@ -60,5 +66,5 @@ router.get('/get_history', function(req, res) {
     return res.json(data.map(row => {var x = row.split(','); return [parseFloat(x[2]/1e6), parseFloat(x[3]), parseFloat(x[4])];}));
   }).catch(err => {console.log(err); return res.json([]);});
 });
-
+*/
 module.exports = router;
