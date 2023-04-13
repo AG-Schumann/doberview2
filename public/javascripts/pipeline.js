@@ -29,10 +29,10 @@ function PopulatePipelines(flavor) {
       let n = doc.name;
       if (filter === '' || (n.toUpperCase().indexOf(filter) > -1)) {
         let status = doc.status;
-        if ((status === 'active') && ((doc.silent_until == -1) || doc.silent_until > Date.now()/1000)) status = 'silent';
+        if ((status === 'active') && ((doc.silent_until == -1) || (doc.silent_until > Date.now()/1000))) status = 'silent';
         let last_error = doc.cycle - doc.error; // last error X cycles ago
         let status_color = ((last_error < 5) ? 'danger' : 'success');
-        if (doc.cycle < 5) status_color = 'warning'; // status indicator yellow during pipeline start-up
+        if (doc.cycle <= 5) status_color = 'warning'; // status indicator yellow during pipeline start-up
         if (doc.cycle === 0) status_color = 'secondary'; // status indicator grey when pipeline never ran
         $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
             `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right"` +
