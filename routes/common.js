@@ -1,10 +1,10 @@
 var zmq = require('zeromq');
-const monk = require("monk");
+const config = require('../config/config')
 // Doberview common functions, defined once here rather than in every file
 
 function  SendCommand(req, to, command, delay=0) {
   var logged = new Date().getTime() + delay;
-  return db.get('experiment_config').findOne({name: 'hypervisor'})
+  return mongo_db.get('experiment_config').findOne({name: 'hypervisor'})
   .then((doc) => {
     const sock = new zmq.socket('req');
     sock.connect('tcp://' + doc.host + ':' + doc.comms.command.send);
@@ -27,15 +27,10 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function GetRenderConfig(req) {
-  var config = {};
-  config.experiment = Object.keys(experiments).find(key => experiments[key] === req.session.experiment);
-  if (req.user) config.username = req.user.displayName; else config.username = 'Login';
-  return config;
+  var render_config = {};
+  render_config.experiment = config.experiment_name;
+  if (req.user) render_config.username = req.user.displayName; else render_config.username = 'Login';
+  return render_config;
 }
 
-function GetMongoDb(req) {
-  let selected_exp = req.exp;
-  return monk(`${uri_base}/${selected_exp}`, {authSource: authdb});
-}
-
-module.exports = {SendCommand, ensureAuthenticated, GetRenderConfig, GetMongoDb};
+module.exports = {SendCommand, ensureAuthenticated, GetRenderConfig,};
