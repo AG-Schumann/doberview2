@@ -361,8 +361,7 @@ function UpdateAlarms() {
     return;
   }
   let msg = 'Updated alarm for ' + $("#detail_sensor_name").html();
-  if($("#int_alarm").find('tr').length) {
-    let msg = 'Updated alarm for ' + $("#detail_sensor_name").html();
+  if ($("#int_alarm_body").find('tr').length) {
     let int_alarm_dict = {};
     $('#int_alarm_body tr').each(function() {
       let k = parseInt($(this).find('td:first-child input').val());
