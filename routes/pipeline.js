@@ -66,7 +66,7 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
   mongo_db.get('pipelines').insert(doc)
-      .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
+      .then(() => mongo_db.get('sensors').update({name: {$in: doc['depends_on']}},
           {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
       .then(res.json({notify_msg: 'Pipeline added', notify_status: 'success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
