@@ -55,7 +55,6 @@ console.log(`New connection at ${new Date()}`);
 app.use('/', deviceRouter);
 app.use('/devices', deviceRouter);
 app.use('/pipeline', pipelineRouter);
-app.use('/alarms', alarmRouter);
 app.use('/hosts', hostRouter);
 app.use('/grafana', grafanaRouter);
 app.use('/logs', logRouter);
