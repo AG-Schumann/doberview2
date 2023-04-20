@@ -19,8 +19,10 @@ router.get('/get_pipelines', function(req, res) {
   }
   var flavor = q.flavor;
   var now = new Date();
-  mongo_db.get('pipelines').find({name: {$regex: `^${flavor}_`}}, {projection: {name: 1, status: 1, heartbeat: 1, cycles: 1, rate: 1, error: 1, description: 1, pipeline: 1}})
-  .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.heartbeat)/1000, cycle: doc.cycles, error: doc.error, rate: doc.rate, description: doc.description, pipeline: doc.pipeline}))))
+  mongo_db.get('pipelines').find({name: {$regex: `^${flavor}_`}},
+      {projection: {name: 1, status: 1, silent_until: 1, heartbeat: 1, cycles: 1, rate: 1, error: 1, description: 1, pipeline: 1}})
+  .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, silent_until: doc.silent_until,
+    dt: (now-doc.heartbeat)/1000, cycle: doc.cycles, error: doc.error, rate: doc.rate, description: doc.description, pipeline: doc.pipeline}))))
   .catch(err => {console.log(err.message); return res.json([]);});
 });
 
@@ -51,6 +53,7 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
     return res.json({err: 'Bad input'});
   doc['name'] = doc.name;
   doc['status'] = 'inactive';
+  doc['silent_until'] = parseInt('0');
   doc['description'] = String(doc.description);
   doc['cycles'] = parseInt('0');
   doc['error'] = parseInt('0');
@@ -63,7 +66,7 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
   mongo_db.get('pipelines').insert(doc)
-      .then(() => req.db.get('sensors').update({name: {$in: doc['depends_on']}},
+      .then(() => mongo_db.get('sensors').update({name: {$in: doc['depends_on']}},
           {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
       .then(res.json({notify_msg: 'Pipeline added', notify_status: 'success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -118,40 +121,27 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
   var duration = data.duration;
   var until = null;
   var now = new Date();
-  var flavor = data.name.split('_')[0];
   if (duration == 'forever') {
-    mongo_db.get('pipelines').update({name: data.name}, {$set: {status: 'silent'}})
-    .then(() => res.json({}))
-    .catch(err => {console.log(err.message); return res.json({err: err.message});});
+    until = parseInt('-1');
   } else if (duration == 'monday') {
     var day = now.getDay();
-    if ((1 <= day) && (day <= 4)) {
-      // it's between Monday and Thursday
-      return res.json({err: 'Not available Monday-Thursday'});
-    }
+    if (day === 0) day = 7;  // make Sunday 7 instead of 0
     until = new Date();
     until.setDate(until.getDate() + (8-day));
     until.setHours(9);
     until.setMinutes(0);
+    until = until.getTime()/1000;
   } else if (duration == 'morning') {
-    if ((7 <= now.getHours()) && (now.getHours() <= 17)) {
-      // it's in the working day
-      return res.json({err: 'Not available from 0700 to 1700'});
-    }
-    until = new Date();
-    if (now.getHours() > 17) { // it's evening
-      until.setDate(now.getDate()+1);
-    }
+    until.setDate(now.getDate()+1);
     until.setHours(9);
     until.setMinutes(30);
+    until = until.getTime()/1000;
   } else if (duration == 'evening') {
-    if ((now.getHours() < 8) || (17 < now.getHours())) {
-      // not working hours
-      return res.json({err: 'Only available during working hours'});
-    }
     until = new Date();
+    if (now.getHours() >= 18) until.setDate(now.getDate()+1); // set to next day if it's after 18:00
     until.setHours(18);
     until.setMinutes(0);
+    until = until.getTime()/1000;
   } else {
     try{
       duration = parseInt(duration);
@@ -160,11 +150,9 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
       console.log(err.message);
       return res.json({err: "Invalid duration"});
     }
-    until = new Date(now.getTime() + duration * 60 * 1000);
+    until = now.getTime() / 1000 + duration * 60;
   }
-  var delay = until - now;
-  common.SendCommand(req, `pl_${flavor}`, `pipelinectl_silent ${data.name}`);
-  common.SendCommand(req, `pl_${flavor}`, `pipelinectl_active ${data.name}`, delay);
+  mongo_db.get('pipelines').update({name: data.name}, {$set: {silent_until: until}})
   return res.json({});
 });
 
@@ -185,7 +173,7 @@ router.post('/get_pipelines_configs', function(req, res) {
   var pipelines = data.pipelines;
 
   if (typeof pipelines == 'undefined') return res.json([]);
-  db.get('pipelines')
+  mongo_db.get('pipelines')
     .find({'name': {'$in': Object.keys(pipelines)}}, {fields: {'node_config': 1, 'name': 1}})
     .then(docs => {
       var ret = {};
@@ -205,7 +193,7 @@ router.post('/get_pipelines_configs', function(req, res) {
 router.post('/set_single_node_config', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   // First check the node_config entry exists: this endpoint isn't meant to create new ones
-  db.get('pipelines')
+  mongo_db.get('pipelines')
     .findOne({'name': data.pipeline}, {'fields': {'node_config': 1}})
     .then(doc => {
       if (typeof data.target.split('.').reduce((tot, x) => {return tot[x]}, doc.node_config) == 'undefined')
@@ -213,7 +201,7 @@ router.post('/set_single_node_config', common.ensureAuthenticated, function(req,
       // Now can do the update
       var op = {$set: {}};
       op['$set']['node_config.' + data.target] = data.value;
-      db.get('pipelines').update({'name': data.pipeline}, op)
+      mongo_db.get('pipelines').update({'name': data.pipeline}, op)
         .then(res.json({notify_msg: 'Updated pipeline config', notify_status: 'success'}));
     })
     .catch(err => {console.log(err.message); return res.json({err: err.message});});

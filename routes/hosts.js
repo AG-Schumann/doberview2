@@ -6,12 +6,6 @@ var common = require('./common');
 const config = require('../config/config');
 
 router.get('/', function(req, res) {
-  let session = req.session;
-  if(session.experiment){
-    db = common.GetMongoDb({exp: session.experiment});
-  } else
-    res.redirect('../');
-  var q = url.parse(req.url, true).query;
   var render_config = common.GetRenderConfig(req);
   render_config.hosts = config.hosts;
   render_config.grafana_sysmon_url = config.grafana_sysmon_url;
@@ -22,7 +16,7 @@ router.get('/', function(req, res) {
   return res.json({hosts: ['apollo', 'calliope']});
   var config = common.GetRenderConfig(req);
   config.grafana_sysmon_url = 'http://10.4.73.172:3000/d/WzsbkBwWk/system-mon?orgId=1&kiosk';
-  db.get("hosts").distinct("name").then(host_list => {
+  mongo_db.get("hosts").distinct("name").then(host_list => {
     config.hosts = host_list;
     res.render('hosts', config);
   });
@@ -30,7 +24,7 @@ router.get('/', function(req, res) {
 
 
 router.get('/params', function(req, res) {
-  const host_list = db.get(hosts).distinct("name")
+  const host_list = mongo_db.get(hosts).distinct("name")
   return res.json({hosts: host_list});
 });
 

@@ -13,3 +13,6 @@
   z-index: 100;
 }
 
+#jump_to_list {
+  max-height: 80%;
+}

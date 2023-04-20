@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var deviceRouter = require('./routes/devices');
 var pipelineRouter = require('./routes/pipeline');
 var hostRouter = require('./routes/hosts');
-var alarmRouter = require('./routes/alarms');
 var grafanaRouter = require('./routes/grafana');
 var logRouter = require('./routes/logs');
 var hvRouter = require('./routes/hypervisor');
@@ -16,16 +15,14 @@ var authRouter = require('./routes/auth');
 var config = require('./config/config');
 const hostname = config.host;
 const port = config.port;
-const monk = require("monk");
+var monk = require('monk');
 
 var app = express();
 app.disable('x-powered-by');
 
-
 // uri has format mongodb://{user}:{pass}@{host}:{port}
 global.authdb = config.authdb || 'admin';
-global.uri_base = config.mongo_uri;
-global.mongo_db = monk(`${uri_base}/${config.experiment_name}`, {authSource: authdb});
+global.mongo_db = monk(`${config.mongo_uri}/${config.experiment_name}`, {authSource: authdb});
 // session caching
 const sessions = require('express-session');
 
@@ -58,7 +55,6 @@ console.log(`New connection at ${new Date()}`);
 app.use('/', deviceRouter);
 app.use('/devices', deviceRouter);
 app.use('/pipeline', pipelineRouter);
-app.use('/alarms', alarmRouter);
 app.use('/hosts', hostRouter);
 app.use('/grafana', grafanaRouter);
 app.use('/logs', logRouter);
@@ -96,5 +92,6 @@ app.use(function(req, res) {
 });
 
 app.listen(port, hostname, () => {console.log(`Server running on ${hostname}:${port}`);});
+
 
 module.exports = app;

@@ -6,6 +6,7 @@ var common = require('./common');
 const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage', D: 'time', X: 'other', I: 'current', C: 'capacity'};
 
 router.get('/', function(req, res) {
+
   var config = common.GetRenderConfig(req);
   res.render('full_system', config);
 });
@@ -162,6 +163,14 @@ router.post('/update_alarm', common.ensureAuthenticated, function(req, res) {
     }catch(err) {
       return res.json({err: 'Invalid alarm parameters'});
     }
+  } else {
+    try {
+      updates['alarm_values'] = JSON.parse(data.alarm_values);
+      updates['alarm_recurrence'] = parseInt(data.recurrence);
+      updates['alarm_level'] = parseInt(data.level);
+    } catch (err) {
+      return res.json({err: 'Invalid alarm parameters'});
+    }
   }
   mongo_db.get('sensors').update({name: data.sensor}, {$set: updates})
     .then(() => res.json({ret}))
@@ -169,10 +178,10 @@ router.post('/update_alarm', common.ensureAuthenticated, function(req, res) {
 });
 
 router.post('/update_sensor', common.ensureAuthenticated, function(req, res) {
-  var updates = {};
-  var data = req.body;
-  var sensor = data.sensor;
-  var ret = {notify_msg: 'Sensor updated', notify_status: 'success'};
+  let updates = {};
+  let data = req.body;
+  let sensor = data.sensor;
+  let ret = {notify_msg: 'Sensor updated', notify_status: 'success'};
   if (typeof sensor == 'undefined') {
     console.log(req.body);
     return res.json({err: 'Invalid or missing parameters'});
