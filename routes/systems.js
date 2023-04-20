@@ -2,7 +2,7 @@ var express = require('express');
 var url = require('url');
 var router = express.Router();
 var common = require('./common');
-var config = require('../config/config');
+var config = require('../config/config_pancake');
 
 router.get('/', function(req, res) {
   var render_config = common.GetRenderConfig(req);

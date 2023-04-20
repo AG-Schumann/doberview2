@@ -3,7 +3,7 @@ var url = require('url');
 var router = express.Router();
 var axios = require('axios');
 var common = require('./common');
-const config = require('../config/config');
+const config = require('../config/config_pancake');
 
 router.get('/', function(req, res) {
   var render_config = common.GetRenderConfig(req);

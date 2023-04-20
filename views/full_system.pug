@@ -6,7 +6,7 @@ block extrahead
 block content
   div.main-container
     table.table.table-hover.table-striped(data-bs-spy="scroll" data-bs-target="#navbar" data-bs-offset="0")#sensor_table
-
+    #{sidebar}
   script.
     $(document).ready(function () {
       PopulateNavbar();

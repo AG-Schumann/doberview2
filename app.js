@@ -2,19 +2,9 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-
-var deviceRouter = require('./routes/devices');
-var pipelineRouter = require('./routes/pipeline');
-var hostRouter = require('./routes/hosts');
-var grafanaRouter = require('./routes/grafana');
-var logRouter = require('./routes/logs');
-var hvRouter = require('./routes/hypervisor');
-var shiftRouter = require('./routes/shifts');
-var systemsRouter = require('./routes/systems');
-var authRouter = require('./routes/auth');
-var config = require('./config/config');
+var config = require('./config/config_pancake');
 const hostname = config.host;
-const port = config.port;
+const port = parseInt(config.port);
 var monk = require('monk');
 
 var app = express();
@@ -52,27 +42,38 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/modules', express.static(path.join(__dirname, 'node_modules')));
 console.log(`New connection at ${new Date()}`);
 
+
+const deviceRouter = require('./routes/devices');
 app.use('/', deviceRouter);
 app.use('/devices', deviceRouter);
+if (config.use_systems) {
+  const systemsRouter = require('./routes/systems');
+  app.use('/systems', systemsRouter);
+}
+let pipelineRouter = require('./routes/pipeline');
 app.use('/pipeline', pipelineRouter);
-app.use('/hosts', hostRouter);
-app.use('/grafana', grafanaRouter);
-app.use('/logs', logRouter);
-app.use('/hypervisor', hvRouter);
+if (config.use_hosts) {
+  const hostRouter = require('./routes/hosts');
+  app.use('/hosts', hostRouter);
+}
+const shiftRouter = require('./routes/shifts');
 app.use('/shifts', shiftRouter);
-app.use('/systems', systemsRouter);
-app.use('/auth', authRouter);
-app.get('/logout', function(req, res){
+if (config.use_grafana) {
+  const grafanaRouter = require('./routes/grafana');
+  app.use('/grafana', grafanaRouter);
+}
+const logRouter = require('./routes/logs');
+app.use('/logs', logRouter);
+const hvRouter = require('./routes/hypervisor');
+app.use('/hypervisor', hvRouter);
+
+if (config.use_authentication) {
+  var authRouter = require('./routes/auth');
+  app.use('/auth', authRouter);
+}
+app.get('/logout', function (req, res) {
   req.logout();
   res.redirect(req.header('Referer') || '/');
-});
-app.post('/experiment', function(req, res){
-  console.log("changing experiment to " + req.body.name);
-  let session = req.session;
-  session.experiment = req.body.name;
-  res.json({
-    success: true
-  });
 });
 
 // catch 404 and forward to error handler

@@ -1,5 +1,5 @@
 var zmq = require('zeromq');
-const config = require('../config/config')
+const config = require('../config/config_pancake')
 // Doberview common functions, defined once here rather than in every file
 
 function  SendCommand(req, to, command, delay=0) {
@@ -30,7 +30,28 @@ function GetRenderConfig(req) {
   var render_config = {};
   render_config.experiment = config.experiment_name;
   if (req.user) render_config.username = req.user.displayName; else render_config.username = 'Login';
+  render_config.sidebar = GetSidebar();
   return render_config;
 }
 
-module.exports = {SendCommand, ensureAuthenticated, GetRenderConfig,};
+function GetSidebar() {
+  let content = `<img id="exp_logo" src="/images/pancake.png" alt="Pancake" width="50" style="margin-top:10px"/>`;
+  content += `<ul class="list-unstyled components"><li class="colored" id="loberview">`;
+  content += `<a href="/devices"><i class="fas fa-eye"></i><span>Overview</span></a>`;
+  if (config.use_systems)
+    content += `<a href="/systems"><i class="fas fa-object-group"></i><span>Systems</span></a>`;
+  content += `<a href="/pipeline"><i class="fas fa-code-branch"></i><span>Pipeline</span></a>`;
+  if (config.use_hosts)
+    content += `<a href="/hosts"><i class="fas fa-server"></i> <span>Hosts</span></a>`;
+  content += `<a href="/shifts"><i class="fas fa-users"></i><span>Shifters</span></a>`;
+  if (config.use_grafana)
+    content += `<a href="/grafana"><i class="fas fa-chart-line"></i><span>Grafana</span></a>`;
+  content += `<a href="/logs"><i class="fas fa-book"></i><span>Logs</span></a>`;
+  content += `<a onClick="CommandDropdown()"><i class="fas fa-terminal"></i><span>Command</span></a>`;
+  if (config.use_cameras)
+    content += `<a href="http://10.4.73.233:8090"><i class="fas fa-camera"></i><span>Cameras</span></a>`;
+  content += '</li></ul>';
+  return content
+}
+
+module.exports = {SendCommand, ensureAuthenticated, GetRenderConfig};

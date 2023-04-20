@@ -5,25 +5,11 @@ var LOG_THRESHOLD=3;
 var control_map = {};
 let detail_chart = null;
 
-
 function Notify(msg, type='success') {
   var elem = $("#notify_" + type)
   elem.children().html(msg);
   var toast = new bootstrap.Toast(elem);
   toast.show();
-}
-
-function ChangeExperiment(name) {
-  $.ajax({
-    type: 'POST',
-    url: '/experiment',
-    data: {name: name},
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
-    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
-    complete:  function() {
-      location.reload();
-      }
-  });
 }
 
 function SensorDropdown(sensor) {

@@ -18,7 +18,7 @@ html
     script(src="/modules/bootstrap/dist/js/bootstrap.bundle.js" type="text/javascript")
     script(src="/modules/bootstrap5-toggle/js/bootstrap5-toggle.js" type="text/javascript")
     script(src="/modules/highcharts/highcharts.js", type="text/javascript")
-    script(src="javascripts/default_scripts.js" type="text/javascript")
+    script(src="/javascripts/default_scripts.js" type="text/javascript")
     script(src="https://kit.fontawesome.com/fd56c7481d.js" crossorigin="anonymous" type="text/javascript")
 
     meta(name="application-name" content="pagetitle")
@@ -26,37 +26,7 @@ html
     block extrahead
   body
     #sidebar_wrapper
-      nav#sidebar.colored
-        img#exp_logo(src="/images/pancake.png" alt="Pancake" width="50" style="margin-top:10px")
-        ul.list-unstyled.components
-          li#loberview(class="colored")
-            a(href="/devices")
-              i.fas.fa-eye
-              span Overview
-            a(href="/systems")
-              i.fas.fa-object-group
-              span Systems
-            a(href='/pipeline')
-              i.fas.fa-code-branch
-              span Pipeline
-            a(href='/hosts')
-              i.fas.fa-server
-              span Hosts
-            a(href='/shifts')
-              i.fas.fa-users
-              span Shifters
-            a(href='/grafana')
-              i.fas.fa-chart-line
-              span Grafana
-            a(href='/logs')
-              i.fas.fa-book
-              span Logs
-            a(onclick="CommandDropdown()")
-              i.fas.fa-terminal
-              span Command
-            a(href='http://10.4.73.233:8090')
-              i.fas.fa-camera
-              span Cameras
+      nav#sidebar.colored !{sidebar}
     nav.navbar.fixed-top.navbar-expand-lg.navbar-light.bg-light#navbar
       .container-fluid
         button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
@@ -363,7 +333,7 @@ html
     block content
 
     script.
-      $(document).ready(()=>{
+      $(document).ready(function () {
         $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});
         if ($("#login_dropdown").html() == 'Login') {
           $("#login_button").show();
