@@ -22,6 +22,7 @@ function  SendCommand(req, to, command, delay=0) {
 
 function ensureAuthenticated(req, res, next) {
   //var is_subnet = req.ip.startsWith(process.env.PRIVILEDGED_SUBNET);
+  if (config.use_authentication) { return next(); }
   if (req.isAuthenticated()) { return next(); }
   res.json({notify_msg: 'You must be logged in to do this', notify_status: 'error'});
 }
