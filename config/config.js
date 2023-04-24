@@ -3,11 +3,18 @@ var config = {};
 
 // This file contains all the experiment-specific configurations.
 
-
-config.mongo_uri = process.env.DOBERVIEW_MONGO_URI;
-config.experiment_name = process.env.DOBERVIEW_EXPERIMENT;
+// where your website will be running
 config.host = process.env.DOBERVIEW_HOST;
 config.port = process.env.DOBERVIEW_PORT;
+
+// Connection to MongoDB
+config.mongo_uri = process.env.DOBERVIEW_MONGO_URI;
+config.experiment_name = process.env.DOBERVIEW_EXPERIMENT;
+
+
+// You may want to change your InfluxDB URI from the one stored in MongoDB to something else for testing purposes
+config.override_influx_uri = false;
+config.influx_uri = process.env.INFLUX_URI;
 
 // GitHub Auth
 // If you want to restrict people from changing stuff through the website, set use_authentication=true.

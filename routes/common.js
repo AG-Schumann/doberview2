@@ -1,5 +1,5 @@
 var zmq = require('zeromq');
-const config = require('../config/config_pancake')
+const config = require('../config/config')
 // Doberview common functions, defined once here rather than in every file
 
 function  SendCommand(req, to, command, delay=0) {
@@ -22,7 +22,7 @@ function  SendCommand(req, to, command, delay=0) {
 
 function ensureAuthenticated(req, res, next) {
   //var is_subnet = req.ip.startsWith(process.env.PRIVILEDGED_SUBNET);
-  if (config.use_authentication) { return next(); }
+  if (!config.use_authentication) { return next(); }
   if (req.isAuthenticated()) { return next(); }
   res.json({notify_msg: 'You must be logged in to do this', notify_status: 'error'});
 }
@@ -36,7 +36,7 @@ function GetRenderConfig(req) {
 }
 
 function GetSidebar() {
-  let content = `<img id="exp_logo" src="/images/pancake.png" alt="Pancake" width="50" style="margin-top:10px"/>`;
+  let content = `<img id="exp_logo" src="/images/pancake.png" alt="LOGO" width="50" style="margin-top:10px"/>`;
   content += `<ul class="list-unstyled components"><li class="colored" id="loberview">`;
   content += `<a href="/devices"><i class="fas fa-eye"></i><span>Overview</span></a>`;
   if (config.use_systems)
@@ -50,7 +50,7 @@ function GetSidebar() {
   content += `<a href="/logs"><i class="fas fa-book"></i><span>Logs</span></a>`;
   content += `<a onClick="CommandDropdown()"><i class="fas fa-terminal"></i><span>Command</span></a>`;
   if (config.use_cameras)
-    content += `<a href="http://10.4.73.233:8090"><i class="fas fa-camera"></i><span>Cameras</span></a>`;
+    content += `<a href="` + config.camera_link + `"><i class="fas fa-camera"></i><span>Cameras</span></a>`;
   content += '</li></ul>';
   return content
 }

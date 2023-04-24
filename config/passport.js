@@ -1,5 +1,5 @@
 var passport = require('passport');
-const config = require('./config_pancake');
+const config = require('./config');
 
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));

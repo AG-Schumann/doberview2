@@ -2,7 +2,7 @@ var express = require('express');
 var url = require('url');
 var router = express.Router();
 var common = require('./common');
-const config = require('../config/config_pancake');
+const config = require('../config/config');
 
 router.get('/', function(req, res) {
   var q = url.parse(req.url, true).query;

@@ -3,6 +3,8 @@ var url = require('url');
 var axios = require('axios').default;
 var router = express.Router();
 var common = require('./common');
+var config = require('../config/config');
+
 const topic_lut = {T: 'temperature', L: 'level', F: 'flow', M: 'weight', P: 'pressure', W: 'power', S: 'status', V: 'voltage', D: 'time', X: 'other', I: 'current', C: 'capacity'};
 
 router.get('/', function(req, res) {
@@ -212,7 +214,6 @@ router.post('/update_sensor', common.ensureAuthenticated, function(req, res) {
     updates['status'] = data.status;
   if (typeof data.description != 'undefined' && data.description != "")
     updates['description'] = data.description;
-  console.log(updates);
   mongo_db.get('sensors').update({name: sensor}, {$set: updates})
     .then(() => res.json(ret))
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -225,6 +226,8 @@ router.get('/get_last_point', function(req, res) {
   if (typeof sensor == 'undefined' || typeof topic == 'undefined')
     return res.json({});
   mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    if (config.override_influx_uri)
+      doc['url'] = config.influx_uri;
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
       org: doc['org'],
@@ -274,6 +277,8 @@ router.get('/get_last_points', function(req, res) {
     filterstring = '|> filter(fn: (r) => contains(value: r.sensor, set: sensors))';
   }
   mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    if (config.override_influx_uri)
+      doc['url'] = config.influx_uri;
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
       org: doc['org'],
@@ -328,6 +333,8 @@ router.get('/get_data', function(req, res) {
   if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
   mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    if (config.override_influx_uri)
+      doc['url'] = config.influx_uri;
     var get_url = new url.URL(doc['url'] + '/api/v2/query');
     var params = new url.URLSearchParams({
       org: doc['org'],
