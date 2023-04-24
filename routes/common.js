@@ -7,7 +7,7 @@ function  SendCommand(req, to, command, delay=0) {
   return mongo_db.get('experiment_config').findOne({name: 'hypervisor'})
   .then((doc) => {
     let from = 'doberview';
-    if (req.user !== 'undefined')
+    if (req.user !== undefined)
       from = req.user.displayName;
     const sock = new zmq.socket('req');
     sock.connect('tcp://' + doc.host + ':' + doc.comms.command.send);
@@ -22,6 +22,7 @@ function  SendCommand(req, to, command, delay=0) {
   })
   .catch(err => {console.log(err.message); return {err: err.message};});
 }
+
 
 function ensureAuthenticated(req, res, next) {
   //var is_subnet = req.ip.startsWith(process.env.PRIVILEDGED_SUBNET);
