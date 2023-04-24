@@ -31,28 +31,15 @@ function GetRenderConfig(req) {
   var render_config = {};
   render_config.experiment = config.experiment_name;
   if (req.user) render_config.username = req.user.displayName; else render_config.username = 'Login';
-  render_config.sidebar = GetSidebar();
+  render_config.hide_login = !config.use_authentication;
+  if (config.use_authentication)
+    render_config.github_org = config.github_org;
+  render_config.hide_systems = !config.use_systems;
+  render_config.hide_hosts = !config.use_hosts;
+  render_config.hide_grafana = !config.use_grafana;
+  render_config.hide_cameras = !config.use_cameras;
+  render_config.camera_link = config.camera_link;
   return render_config;
-}
-
-function GetSidebar() {
-  let content = `<img id="exp_logo" src="/images/pancake.png" alt="LOGO" width="50" style="margin-top:10px"/>`;
-  content += `<ul class="list-unstyled components"><li class="colored" id="loberview">`;
-  content += `<a href="/devices"><i class="fas fa-eye"></i><span>Overview</span></a>`;
-  if (config.use_systems)
-    content += `<a href="/systems"><i class="fas fa-object-group"></i><span>Systems</span></a>`;
-  content += `<a href="/pipeline"><i class="fas fa-code-branch"></i><span>Pipeline</span></a>`;
-  if (config.use_hosts)
-    content += `<a href="/hosts"><i class="fas fa-server"></i> <span>Hosts</span></a>`;
-  content += `<a href="/shifts"><i class="fas fa-users"></i><span>Shifters</span></a>`;
-  if (config.use_grafana)
-    content += `<a href="/grafana"><i class="fas fa-chart-line"></i><span>Grafana</span></a>`;
-  content += `<a href="/logs"><i class="fas fa-book"></i><span>Logs</span></a>`;
-  content += `<a onClick="CommandDropdown()"><i class="fas fa-terminal"></i><span>Command</span></a>`;
-  if (config.use_cameras)
-    content += `<a href="` + config.camera_link + `"><i class="fas fa-camera"></i><span>Cameras</span></a>`;
-  content += '</li></ul>';
-  return content
 }
 
 module.exports = {SendCommand, ensureAuthenticated, GetRenderConfig};
