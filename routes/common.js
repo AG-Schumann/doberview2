@@ -6,11 +6,14 @@ function  SendCommand(req, to, command, delay=0) {
   var logged = new Date().getTime() + delay;
   return mongo_db.get('experiment_config').findOne({name: 'hypervisor'})
   .then((doc) => {
+    let from = 'doberview';
+    if (req.user !== 'undefined')
+      from = req.user.displayName;
     const sock = new zmq.socket('req');
     sock.connect('tcp://' + doc.host + ':' + doc.comms.command.send);
     sock.send(JSON.stringify({
       to: to,
-      from: req.user.displayName,
+      from: from,
       command: command,
       time: logged/1000,}));
   })
