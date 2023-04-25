@@ -18,7 +18,7 @@ html
     script(src="/modules/bootstrap/dist/js/bootstrap.bundle.js" type="text/javascript")
     script(src="/modules/bootstrap5-toggle/js/bootstrap5-toggle.js" type="text/javascript")
     script(src="/modules/highcharts/highcharts.js", type="text/javascript")
-    script(src="javascripts/default_scripts.js" type="text/javascript")
+    script(src="/javascripts/default_scripts.js" type="text/javascript")
     script(src="https://kit.fontawesome.com/fd56c7481d.js" crossorigin="anonymous" type="text/javascript")
 
     meta(name="application-name" content="pagetitle")
@@ -27,25 +27,25 @@ html
   body
     #sidebar_wrapper
       nav#sidebar.colored
-        img#exp_logo(src="/images/pancake.png" alt="Pancake" width="50" style="margin-top:10px")
+        img#exp_logo(src="/images/pancake.png" alt="DOBERVIEW" width="50" style="margin-top:10px")
         ul.list-unstyled.components
           li#loberview(class="colored")
             a(href="/devices")
               i.fas.fa-eye
               span Overview
-            a(href="/systems")
+            a(href="/systems" hidden=hide_systems)
               i.fas.fa-object-group
               span Systems
             a(href='/pipeline')
               i.fas.fa-code-branch
               span Pipeline
-            a(href='/hosts')
+            a(href='/hosts' hidden=hide_hosts)
               i.fas.fa-server
               span Hosts
             a(href='/shifts')
               i.fas.fa-users
               span Shifters
-            a(href='/grafana')
+            a(href='/grafana' hidden=hide_grafana)
               i.fas.fa-chart-line
               span Grafana
             a(href='/logs')
@@ -54,7 +54,7 @@ html
             a(onclick="CommandDropdown()")
               i.fas.fa-terminal
               span Command
-            a(href='http://10.4.73.233:8090')
+            a(href=camera_link hidden=hide_cameras)
               i.fas.fa-camera
               span Cameras
     nav.navbar.fixed-top.navbar-expand-lg.navbar-light.bg-light#navbar
@@ -63,7 +63,7 @@ html
           span.navbar-toggler-icon
         #navbarSupportedContent.collapse.navbar-collapse.justify-content-between
           ul.navbar-nav#navbar_content
-          #login
+          #login(hidden=hide_login)
             .nav-item.dropdown(style="padding-right: 0px")
               a#login_dropdown.nav-link.dropdown-toggle(data-bs-toggle='dropdown' href='#' role='button' aria-expanded='false') #{username}
               .dropdown-menu(style="width:300px").dropdown-menu-end.p-2
@@ -76,9 +76,9 @@ html
                     span &nbsp; Logout
                   hr
                   ol#login_help.ps-4
-                    li You must be part of the AG Schumann GitHub organization. If you aren't, ask one of the owners to add you.
+                    li You must be part of the #{github_org} GitHub organization. If you aren't, ask one of the owners to add you.
                     li Set your membership to 'public' in the&nbsp;
-                      a(href="https://github.com/orgs/AG-Schumann/people" target="_blank" rel="noopener noreferrer") settings of the organization.
+                      a(href="https://github.com/orgs/"+github_org+"/people" target="_blank" rel="noopener noreferrer") settings of the organization.
                     li Click the button above and log in with your GitHub credentials.
     #notify_success.toast.bg-success.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
         .toast-body
@@ -363,7 +363,7 @@ html
     block content
 
     script.
-      $(document).ready(()=>{
+      $(document).ready(function () {
         $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});
         if ($("#login_dropdown").html() == 'Login') {
           $("#login_button").show();

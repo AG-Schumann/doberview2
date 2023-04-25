@@ -2,8 +2,10 @@ var express = require('express');
 var url = require('url');
 var router = express.Router();
 var common = require('./common');
+const config = require("../config/config");
 
 function ensureAuthenticated(req, res, next) {
+  if (!config.use_authentication) { return next(); }
   if (req.isAuthenticated()) { return next(); }
   res.redirect('/devices?notify_msg=You must be logged in to do that&notify_status=error');
 }
