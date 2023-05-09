@@ -615,3 +615,25 @@ function ChangeSetpoint() {
   }
 }
 
+function SilenceDropdown(name) {
+  $('#silence_me').html(name);
+  $('#silence_dropdown').modal('show');
+}
+
+function SilencePipeline(duration) {
+  var name = $("#silence_me").html();
+  $.ajax({
+    type: 'POST',
+    url: "/pipeline/pipeline_silence",
+    data: {name: name, duration: duration},
+    success: (data) => {
+      if (typeof data != 'undefined' && typeof data.err != 'undefined')
+        alert(data.err);
+      else
+        $("#silence_dropdown").modal('hide');
+        PopulatePipelines();
+        Notify(data.notify_msg, data.notify_status);
+    },
+    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+  });
+}
