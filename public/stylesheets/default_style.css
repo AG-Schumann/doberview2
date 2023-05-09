@@ -101,7 +101,9 @@ ul.CTAs li a {
 }
 
 .action_button i {
+  margin-left: 5px;
   margin-right: 5px;
+  text-align: center;
 }
 
 #pipelines_of_sensor_table tbody tr td {
