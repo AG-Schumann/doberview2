@@ -289,6 +289,26 @@ html
             button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
             button.btn.btn-primary(type='button') Save changes
 
+    #silence_dropdown.modal.fade
+      .modal-dialog.modal-sm
+        .modal-content
+          .modal-header
+            h5.modal-title
+              span
+                |Silence
+                #silence_me
+            button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+          .modal-body
+            .btn-group-vertical.d-flex.p-2
+              button.btn.btn-primary.my-1(onclick="SilencePipeline(30)") 30 minutes
+              button.btn.btn-primary.my-1(onclick="SilencePipeline(120)") 2 hours
+              button.btn.btn-primary.my-1(onclick="SilencePipeline('evening')") 18:00 today
+              button.btn.btn-primary.my-1(onclick="SilencePipeline('morning')") 09:30 tomorrow
+              button.btn.btn-primary.my-1(onclick="SilencePipeline('monday')") Monday morning
+              button.btn.btn-danger.my-1(onclick="SilencePipeline('forever')") The end of time
+          .modal-footer
+            button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Cancel
+
     #newsensor.modal.fade(tabindex="-1")
       .modal-dialog.modal-lg
         .modal-content
