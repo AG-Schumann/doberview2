@@ -126,14 +126,7 @@ ul.CTAs li a {
 }
 
 .modal-backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   z-index: 1040;
-  background-color: #000;
-  opacity: 0.2;
 }
 
 .modal-backdrop + .modal-backdrop {
@@ -147,5 +140,5 @@ ul.CTAs li a {
 
 #sensorbox.modal.fade.show {
   display: block;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.05);
 }
