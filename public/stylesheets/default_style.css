@@ -101,7 +101,9 @@ ul.CTAs li a {
 }
 
 .action_button i {
+  margin-left: 5px;
   margin-right: 5px;
+  text-align: center;
 }
 
 #pipelines_of_sensor_table tbody tr td {
@@ -116,4 +118,27 @@ ul.CTAs li a {
   word-wrap: break-word;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.modal-container {
+  position: relative;
+  z-index: 1050;
+}
+
+.modal-backdrop {
+  z-index: 1040;
+}
+
+.modal-backdrop + .modal-backdrop {
+  z-index: 1040;
+}
+
+#silence_dropdown.modal.fade.show {
+  display: block;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+#sensorbox.modal.fade.show {
+  display: block;
+  background: rgba(0, 0, 0, 0.05);
 }
