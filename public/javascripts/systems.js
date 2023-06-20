@@ -42,7 +42,7 @@ function SetRefreshRate(rate) {
 function SigFigs(val) {
   LOG_THRESHOLD=3;
   SIG_FIGS=3;
-  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toPrecision(SIG_FIGS) : val.toExponential(SIG_FIGS);
+  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toPrecision(SIG_FIGS) : val.toExponential(SIG_FIGS-1);
 }
 
 function GetAttributeOrDefault(element, attribute, deflt) {
@@ -103,8 +103,8 @@ function Setup(){
   }
 
   // Get a full list of sensors which will need updating
-  regex = /(?<=^val[uv]e_)[^\-]+/; // Extract what comes after value or valve before -
-  var vals = doc.querySelectorAll('[id^=value_], [id^=valve_]');
+  regex = /(?<=(val[uv]e|sensdet)_)[^\-]+/; // Extract what comes after value or valve before -
+  var vals = doc.querySelectorAll('[id^=value_], [id^=valve_], [id*=sensdet_]');
   sensors = new Set(Array.from(vals, n => n.getAttribute('id').match(regex)[0]));
 
   var metadata = doc.querySelector('metadata');
