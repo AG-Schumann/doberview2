@@ -94,7 +94,8 @@ router.get('/sensors_grouped', function(req, res) {
         name: '$name',
         desc: '$description',
         units: '$units',
-        status: '$status'
+        status: '$status',
+        valuemap: '$valuemap'
       }}
     }},
     {$sort: {_id: 1}}

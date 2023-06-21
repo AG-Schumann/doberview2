@@ -115,18 +115,31 @@ function SensorDropdown(sensor) {
       control_map[sensor_detail.name] = [sensor_detail.device, sensor_detail.control_quantity];
       $("#sensor_control").css('display', 'inline');
       if (sensor_detail.topic === 'status') {
-        // this is a valve
-        $("#sensor_valve").prop('hidden', false);
-        $("#sensor_setpoint").prop('hidden', true);
-        $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
-          $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
-          $("#current_valve_state").html(doc.value);
+        let valuemap = sensor_detail.valuemap;
+        if (typeof sensor_detail.valuemap !== 'undefined') {
+          $("#sensor_states").prop('hidden', false);
+          $("#sensor_valve").prop('hidden', true);
+          $("#sensor_setpoint").prop('hidden', true);
+          $("#sensor_states").empty();
+          Object.entries(valuemap).forEach(([state, label]) => {
+            $("#sensor_states").append(`<td><button class="btn btn-primary" id="sensor_valve_btn" onclick="ChangeSetpoint(${state})">${label}</button></td>`);
         });
-        control_map[sensor_detail.name].push((sensor_detail.is_normally_open !== undefined));
+        } else {
+          // this is a valve
+          $("#sensor_valve").prop('hidden', false);
+          $("#sensor_setpoint").prop('hidden', true);
+          $("#sensor_states").prop('hidden', true);
+          $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
+            $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
+            $("#current_valve_state").html(doc.value);
+          });
+          control_map[sensor_detail.name].push((sensor_detail.is_normally_open !== undefined));
+        }
       } else {
         // this is a setpoint
         $("#sensor_valve").prop('hidden', true);
         $("#sensor_setpoint").prop('hidden', false);
+        $("#sensor_states").prop('hidden', true);
         $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
           $("#sensor_setpoint_control").val(doc.value);
         });
@@ -544,7 +557,7 @@ function SendToHypervisor(target, command, msg_if_success=null, delay=0) {
     type: 'POST',
     url: '/hypervisor/command',
     data: {target: target, command: command, delay: delay},
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
+    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }
@@ -604,12 +617,12 @@ function ToggleValve() {
   }
 }
 
-function ChangeSetpoint() {
+function ChangeSetpoint(value) {
   var sensor = $("#detail_sensor_name").html();
   var device = control_map[sensor][0];
   var target = control_map[sensor][1];
-  var value = $("#sensor_setpoint_control").val();
-  if (sensor && target && device && confirm('Confirm setpoint change')) {
+  if (value == undefined) value = $("#sensor_setpoint_control").val();
+  if (sensor && target && device && confirm(`Confirm setpoint change to ${value}`)) {
     SendToHypervisor(device, `set ${target} ${value}`, `set ${target} ${value}`);
   }
 }

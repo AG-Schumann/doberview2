@@ -42,7 +42,7 @@ function SetRefreshRate(rate) {
 function SigFigs(val) {
   LOG_THRESHOLD=3;
   SIG_FIGS=3;
-  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toPrecision(SIG_FIGS) : val.toExponential(SIG_FIGS);
+  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toPrecision(SIG_FIGS) : val.toExponential(SIG_FIGS-1);
 }
 
 function GetAttributeOrDefault(element, attribute, deflt) {
@@ -53,10 +53,12 @@ function GetAttributeOrDefault(element, attribute, deflt) {
 }
 
 function TogglePipelineConfig(e){
-  var element = e.target;
-  var pipeline = element.getAttribute('pipeline');
-  var target = element.getAttribute('target');
-  var value = 1 - parseInt(element.getAttribute('state'));
+  let element = e.target;
+  let pipeline = element.getAttribute('pipeline');
+  let target = element.getAttribute('target');
+  let value = 1 - parseInt(element.getAttribute('state'));
+  let confmsg = `Setting ${pipeline}.${target} to ${value}`;
+  if (!confirm(confmsg)) return;
   $.post('/pipeline/set_single_node_config',
          data={pipeline: pipeline, target: target, value: value},
          data => {
@@ -103,8 +105,8 @@ function Setup(){
   }
 
   // Get a full list of sensors which will need updating
-  regex = /(?<=^val[uv]e_)[^\-]+/; // Extract what comes after value or valve before -
-  var vals = doc.querySelectorAll('[id^=value_], [id^=valve_]');
+  regex = /(?<=(val[uv]e|sensdet)_)[^\-]+/; // Extract what comes after value or valve before -
+  var vals = doc.querySelectorAll('[id^=value_], [id^=valve_], [id*=sensdet_]');
   sensors = new Set(Array.from(vals, n => n.getAttribute('id').match(regex)[0]));
 
   var metadata = doc.querySelector('metadata');
@@ -125,7 +127,7 @@ function Setup(){
     units[s] = data.units;
     for (var element of doc.querySelectorAll(`[id*=_${s}]`)) {
       element.addEventListener('click', function() {SensorDropdown(s);});
-      element.style['cursor'] = 'pointer';
+      element.style.cursor = 'pointer';
     }
     for (var element of doc.querySelectorAll(`[id^=descbox_${s}]`)) {
       element.textContent = `${s} (${units[s]})`;
@@ -137,7 +139,7 @@ function Setup(){
   for (var element of doc.querySelectorAll(`[id^=link_]`)) {
     linktargets[element.id] = element.getAttribute('id').match(regex)[0];
     element.addEventListener('click', LoadSVG);
-    element.style['cursor'] = 'pointer';
+    element.style.cursor = 'pointer';
   }
 
   // Check for pipeline interaction elements
@@ -159,6 +161,7 @@ function Setup(){
     toggle.setAttribute('state', 0);
     toggle.style.strokeWidth = 1;
     toggle.style.fill = '#ff0000';
+    toggle.style.cursor = 'pointer';
     toggle.onclick = TogglePipelineConfig;
     element.parentElement.appendChild(toggle);
     if (!pipelineconfigs[tbpipeline]) pipelineconfigs[tbpipeline] = [];

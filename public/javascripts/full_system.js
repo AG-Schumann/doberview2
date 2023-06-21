@@ -75,11 +75,12 @@ function UpdateOnce(regroup=false) {
          if (!$(`#${doc.name}_status`).length)
            $(`#${group._id}_tbody`).append(`<tr><td id="${doc.name}_desc" onclick="SensorDropdown('${doc.name}')">Loading!</td><td id="${doc.name}_status">Loading!</td></tr>`);
          $(`#${doc.name}_desc`).html(`${doc.desc} (${doc.name})`);
+         var new_status = 'No recent data';
          var last_point = data[0][doc.name];
-         if (last_point && (last_point.value))
-           var new_status = `${SigFigs(last_point.value)} ${doc.units} (${FormatTimeSince(last_point.time_ago)} ago)`;
-         else
-           var new_status = 'No recent data';
+         if (last_point && (last_point.value)) {
+           var displayval = (doc.valuemap == undefined) ? SigFigs(last_point.value) : doc.valuemap[parseInt(last_point.value)];
+           new_status = `${displayval} ${doc.units} (${FormatTimeSince(last_point.time_ago)} ago)`;
+         }
          if (doc.status == 'offline') {
            if (new_status.slice(-1) == ')')
              new_status = new_status.slice(0, -1) + ', ';

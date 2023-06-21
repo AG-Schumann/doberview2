@@ -11,7 +11,7 @@ router.post('/command', common.ensureAuthenticated, function(req, res) {
   var ret = common.SendCommand(req, data.target, data.command, delay);
   if (typeof ret != 'undefined' && typeof ret.err != 'undefined')
     return res.json({err: ret.err});
-  return res.json({notify_msg: 'Command sent', notify_status: 'success'});
+  return res.json({notify_msg: `Sent ${data.command} to ${data.target}`, notify_status: 'success'});
 });
 
 router.get('/status', function(req, res) {
