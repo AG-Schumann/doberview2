@@ -97,7 +97,7 @@ function Setup(){
     fontsize = sensorbox.getAttribute('height') / 2;
     valbox.setAttribute('x', parseFloat(sensorbox.getAttribute('x')) + 1);
     valbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + fontsize*2 - 3);
-    valbox.textContent = `${sensor}`;
+    valbox.textContent = 'N/A';
     valbox.style.fontFamily = 'sans-serif';
     valbox.style.fontSize = `${fontsize}px`;
     sensorbox.parentElement.appendChild(valbox);
