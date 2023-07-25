@@ -18,7 +18,7 @@ html(data-bs-theme="dark")
     script(src="/modules/bootstrap/dist/js/bootstrap.bundle.js" type="text/javascript")
     script(src="/modules/bootstrap5-toggle/js/bootstrap5-toggle.js" type="text/javascript")
     script(src="/modules/highcharts/highcharts.js", type="text/javascript")
-    script(src="javascripts/default_scripts.js" type="text/javascript")
+    script(src="/javascripts/default_scripts.js" type="text/javascript")
     script(src="https://kit.fontawesome.com/fd56c7481d.js" crossorigin="anonymous" type="text/javascript")
 
     meta(name="application-name" content="pagetitle")
@@ -33,19 +33,19 @@ html(data-bs-theme="dark")
             a(href="/devices")
               i.fas.fa-eye
               span Overview
-            a(href="/systems")
+            a(href="/systems" hidden=hide_systems)
               i.fas.fa-object-group
               span Systems
             a(href='/pipeline')
               i.fas.fa-code-branch
               span Pipeline
-            a(href='/hosts')
+            a(href='/hosts' hidden=hide_hosts)
               i.fas.fa-server
               span Hosts
             a(href='/shifts')
               i.fas.fa-users
               span Shifters
-            a(href='/grafana')
+            a(href='/grafana' hidden=hide_grafana)
               i.fas.fa-chart-line
               span Grafana
             a(href='/logs')
@@ -54,7 +54,7 @@ html(data-bs-theme="dark")
             a(onclick="CommandDropdown()")
               i.fas.fa-terminal
               span Command
-            a(href='http://10.4.73.233:8090')
+            a(href=camera_link hidden=hide_cameras)
               i.fas.fa-camera
               span Cameras
     nav.navbar.fixed-top.navbar-expand-lg.navbar-light.bg-light#navbar
@@ -63,14 +63,7 @@ html(data-bs-theme="dark")
           span.navbar-toggler-icon
         #navbarSupportedContent.collapse.navbar-collapse.justify-content-between
           ul.navbar-nav#navbar_content
-          #select_experiment(style="padding-right: 20px;")
-            .dropdown
-              a.btn.btn-primary.dropdown-toggle(role='button' data-bs-toggle='dropdown' onchange="ChangeExperiment()") #{experiment}
-              ul.dropdown-menu
-                each real_name, display_name in experiments
-                  li
-                    a.dropdown-item(onclick=`ChangeExperiment('${real_name}')`) #{display_name}
-          #login
+          #login(hidden=hide_login)
             .nav-item.dropdown(style="padding-right: 0px")
               a#login_dropdown.nav-link.dropdown-toggle(data-bs-toggle='dropdown' href='#' role='button' aria-expanded='false') #{username}
               .dropdown-menu(style="width:300px").dropdown-menu-end.p-2
@@ -83,159 +76,182 @@ html(data-bs-theme="dark")
                     span &nbsp; Logout
                   hr
                   ol#login_help.ps-4
-                    li You must be part of the AG Schumann GitHub organization. If you aren't, ask one of the owners to add you.
+                    li You must be part of the #{github_org} GitHub organization. If you aren't, ask one of the owners to add you.
                     li Set your membership to 'public' in the&nbsp;
-                      a(href="https://github.com/orgs/AG-Schumann/people" target="_blank" rel="noopener noreferrer") settings of the organization.
+                      a(href="https://github.com/orgs/"+github_org+"/people" target="_blank" rel="noopener noreferrer") settings of the organization.
                     li Click the button above and log in with your GitHub credentials.
     #notify_success.toast.bg-success.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
         .toast-body
     #notify_error.toast.bg-danger.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
       .toast-body
-    #sensorbox.modal.fade(tabindex="-1" aria-labelledby="sensorboxLabel" aria-hidden="true")
-      .modal-dialog.modal-xl
-        .modal-content
-          .modal-header
-            h5.modal-title#detail_sensor_name
-            button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
-          .modal-body.row
-            .col-lg-6
-              h5 General info
-              br
-              table
-                tbody
-                  tr
-                    th.py-2 Status
-                    td
-                      input#sensor_status(type="checkbox" data-size='sm' data-width='65px' data-toggle='toggle' data-onstyle='success' data-offstyle='warning' data-on='Online' data-off='Offline')
-                  tr
-                    th.py-2 Device
-                    td
-                      button.btn.btn-primary.btn-sm#sensor_device_name
-                  tr
-                    th.py-2 Description
-                    td
-                      input.form-control-sm(type="text" id="sensor_desc" name="sensor_desc" size='4')
-                  tr
-                    th.py-2 Readout interval &nbsp;
-                    td
-                      input.form-control-sm(type="number" id="readout_interval" name="readout_interval" max="300" size='4')
-                      span &nbsp; s
-                  tr
-                    th.py-2 Units
-                    td
-                      input.form-control-sm(type="text" id="sensor_units" name="sensor_units" placeholder="")
-                  tr
-                    th.py-2 Readout command &nbsp;
-                    td#readout_command(style='font-family:"Courier New",monospace')
-                  tr
-                    th.py-2 Transform:
-                    td
-                      input.form-control-sm(type="text" id="value_xform" name="value_xform" placeholder="0,1")
-                  tr
-                    th.py-2
-                      button.btn.btn-primary(onclick="UpdateSensor()") Update
-              hr
-              h5 Alarms
-              br
-              table#alarm_table.table
-                tbody#int_alarm_body
-                tbody#float_alarm_body
-                  tr
-                    th Low
-                    th High
-                  tr
-                    td
-                      input.form-control-sm(type="number" id="alarm_low" name="alarm_low" size='6')
-                    td
-                      input.form-control-sm(type="number" id="alarm_high" name="alarm_high" size='6')
-                  tr
-                    th Setpoint
-                    th Half-range
-                  tr
-                    td
-                      input.form-control-sm(type="number" id="alarm_mid" name="alarm_mid" size='6')
-                    td
-                      input.form-control-sm(type="number" id="alarm_range" name="alarm_range" size='6')
-                tfoot
-                  tr
-                    th Recurrence
-                    th Base level
-                  tr
-                    td
-                      input.form-control-sm(type="number" id="alarm_recurrence" name="alarm_recurrence" min="1" step="1" size='8')
-                    td
-                      input.form-control-sm(type="number" id="alarm_baselevel" name="alarm_baselevel" min="0" step="1" max="3" size='8')
-                  tr
-                    th.py-2(colspan=2)
-                      button.btn.btn-primary#change_alarms(onclick="UpdateAlarms()") Update alarm
-            .col-lg-6
-              div#sensor_control
-                h5 Control
-                span#control_target(hidden)
+      
+    div.modal-container  
+      #sensorbox.modal.fade(tabindex="-1" aria-labelledby="sensorboxLabel" aria-hidden="true")
+        .modal-dialog.modal-xl
+          .modal-content
+            .modal-header
+              h5.modal-title#detail_sensor_name
+              button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+            .modal-body.row
+              .col-lg-6
+                h5 General info
                 br
                 table
                   tbody
-                    tr#sensor_valve
+                    tr
+                      th.py-2 Status
                       td
-                        button.btn.btn-primary#sensor_valve_btn(onclick="ToggleValve()") Toggle
+                        input#sensor_status(type="checkbox" data-size='sm' data-width='65px' data-toggle='toggle' data-onstyle='success' data-offstyle='warning' data-on='Online' data-off='Offline')
+                    tr
+                      th.py-2 Device
                       td
-                        span#current_valve_state(hidden)
-                    tr#sensor_setpoint
+                        button.btn.btn-primary.btn-sm#sensor_device_name
+                    tr
+                      th.py-2 Description
                       td
-                        input.form-control(type="number" id="sensor_setpoint_control" name="sensor_setpoint_control" size='8')
+                        input.form-control-sm(type="text" id="sensor_desc" name="sensor_desc" size='4')
+                    tr
+                      th.py-2 Readout interval &nbsp;
                       td
-                        button.btn.btn-primary#sensor_setpoint_btn(onclick="ChangeSetpoint()") Set
+                        input.form-control-sm(type="number" id="readout_interval" name="readout_interval" max="300" size='4')
+                        span &nbsp; s
+                    tr
+                      th.py-2 Units
+                      td
+                        input.form-control-sm(type="text" id="sensor_units" name="sensor_units" placeholder="")
+                    tr
+                      th.py-2 Readout command &nbsp;
+                      td#readout_command(style='font-family:"Courier New",monospace')
+                    tr
+                      th.py-2 Transform:
+                      td
+                        input.form-control-sm(type="text" id="value_xform" name="value_xform" placeholder="0,1")
+                    tr
+                      th.py-2
+                        button.btn.btn-primary(onclick="UpdateSensor()") Update
                 hr
-              h5 Recent history
-              br
-              table
-                tbody
-                  tr
-                    th.py2 Last value
-                    td#last_value XXX
-              .d-flex.flex-row
-                .mr-auto.p-2
-                  input#plot_alarms(type="checkbox" data-toggle='toggle' data-width='110px' data-on='<i class="fa-solid fa-eye"></i>&nbsp limits' data-off='<i class="fa-regular fa-eye-slash"></i>&nbsp limits' data-onstyle='danger' data-offstyle='secondary' onchange="DrawSensorHistory()")
-                  input#plot_zoom(type="checkbox" data-toggle='toggle' data-width='130px' data-on='<i class="fa-regular fa-eye-slash"></i>&nbsp outliers' data-off='<i class="fa-solid fa-eye"></i>&nbsp outliers' data-onstyle='primary' data-offstyle='secondary' onchange="DrawSensorHistory()")
-                  input#plot_log(type="checkbox" data-toggle='toggle' data-width='80px' data-on='log' data-off='linear' data-onstyle='primary' data-offstyle='secondary' onchange="DrawSensorHistory()")
-                .p-2(style="margin-left:auto")
-                  select.form-select#selectinterval(onchange="DrawSensorHistory()")
-                    option(value="0") 10m
-                    option(value="1") 1h
-                    option(value="2") 3h
-                    option(value="3") 6h
-                    option(value="4" selected) 12h
-                    option(value="5") 24h
-                    option(value="6") 48h
-                    option(value="7") 72h
-                    option(value="8") 1w
-                    option(value="9") 2w
-                    option(value="10") 4w
-                .p-2
-                  button.btn.btn-outline-secondary.mx-1#refresh_btn(onclick='DrawSensorHistory()')
-                    i.fa.fa-sync-alt
+                h5 Alarms
+                br
+                table#alarm_table.table
+                  tbody#int_alarm_body
+                  tbody#float_alarm_body
+                    tr
+                      th Low
+                      th High
+                    tr
+                      td
+                        input.form-control-sm(type="number" id="alarm_low" name="alarm_low" size='6')
+                      td
+                        input.form-control-sm(type="number" id="alarm_high" name="alarm_high" size='6')
+                    tr
+                      th Setpoint
+                      th Half-range
+                    tr
+                      td
+                        input.form-control-sm(type="number" id="alarm_mid" name="alarm_mid" size='6')
+                      td
+                        input.form-control-sm(type="number" id="alarm_range" name="alarm_range" size='6')
+                  tfoot
+                    tr
+                      th Recurrence
+                      th Base level
+                    tr
+                      td
+                        input.form-control-sm(type="number" id="alarm_recurrence" name="alarm_recurrence" min="1" step="1" size='8')
+                      td
+                        input.form-control-sm(type="number" id="alarm_baselevel" name="alarm_baselevel" min="0" step="1" max="3" size='8')
+                    tr
+                      th.py-2(colspan=2)
+                        button.btn.btn-primary#change_alarms(onclick="UpdateAlarms()") Update alarm
+              .col-lg-6
+                div#sensor_control
+                  h5 Control
+                  span#control_target(hidden)
+                  br
+                  table
+                    tbody
+                      tr#sensor_valve
+                        td
+                          button.btn.btn-primary#sensor_valve_btn(onclick="ToggleValve()") Toggle
+                        td
+                          span#current_valve_state(hidden)
+                      tr#sensor_states(hidden)
+                      tr#sensor_setpoint
+                        td
+                          input.form-control(type="number" id="sensor_setpoint_control" name="sensor_setpoint_control" size='8')
+                        td
+                          button.btn.btn-primary#sensor_setpoint_btn(onclick="ChangeSetpoint()") Set
+                  hr
+                h5 Recent history
+                br
+                table
+                  tbody
+                    tr
+                      th.py2 Last value
+                      td#last_value XXX
+                .d-flex.flex-row
+                  .mr-auto.p-2
+                    input#plot_alarms(type="checkbox" data-toggle='toggle' data-width='110px' data-on='<i class="fa-solid fa-eye"></i>&nbsp limits' data-off='<i class="fa-regular fa-eye-slash"></i>&nbsp limits' data-onstyle='danger' data-offstyle='secondary' onchange="DrawSensorHistory()")
+                    input#plot_zoom(type="checkbox" data-toggle='toggle' data-width='130px' data-on='<i class="fa-regular fa-eye-slash"></i>&nbsp outliers' data-off='<i class="fa-solid fa-eye"></i>&nbsp outliers' data-onstyle='primary' data-offstyle='secondary' onchange="DrawSensorHistory()")
+                    input#plot_log(type="checkbox" data-toggle='toggle' data-width='80px' data-on='log' data-off='linear' data-onstyle='primary' data-offstyle='secondary' onchange="DrawSensorHistory()")
+                  .p-2(style="margin-left:auto")
+                    select.form-select#selectinterval(onchange="DrawSensorHistory()")
+                      option(value="0") 10m
+                      option(value="1") 1h
+                      option(value="2") 3h
+                      option(value="3") 6h
+                      option(value="4" selected) 12h
+                      option(value="5") 24h
+                      option(value="6") 48h
+                      option(value="7") 72h
+                      option(value="8") 1w
+                      option(value="9") 2w
+                      option(value="10") 4w
+                  .p-2
+                    button.btn.btn-outline-secondary.mx-1#refresh_btn(onclick='DrawSensorHistory()')
+                      i.fa.fa-sync-alt
 
-              .container.sensor_chart#sensor_chart
+                .container.sensor_chart#sensor_chart
 
-              h5 Pipelines involving this sensor
-              br
-              button.btn.btn-primary#make_alarm_button(onclick=`MakeAlarm()`) Make new alarm
-              table.table#pipelines_of_sensor_table(style="width:100%;")
-                thead
-                  tr
-                    th(colspan='2') Active
-                tbody#pipelines_active
-                thead
-                  tr
-                    th(colspan='2') Silenced
-                tbody#pipelines_silenced
-                thead
-                  tr
-                    th(colspan='2') Inactive
-                tbody#pipelines_inactive
-              hr
-          .modal-footer
-            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
+                h5 Pipelines involving this sensor
+                br
+                button.btn.btn-primary#make_alarm_button(onclick=`MakeAlarm()`) Make new alarm
+                table.table#pipelines_of_sensor_table(style="width:100%;")
+                  thead
+                    tr
+                      th(colspan='2') Active
+                  tbody#pipelines_active
+                  thead
+                    tr
+                      th(colspan='2') Silenced
+                  tbody#pipelines_silenced
+                  thead
+                    tr
+                      th(colspan='2') Inactive
+                  tbody#pipelines_inactive
+                hr
+            .modal-footer
+              button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
+
+      #silence_dropdown.modal.fade
+        .modal-dialog.modal-sm
+          .modal-content
+            .modal-header
+              h5.modal-title
+                span
+                  |Silence
+                  #silence_me
+              button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+            .modal-body
+              .btn-group-vertical.d-flex.p-2
+                button.btn.btn-primary.my-1(onclick="SilencePipeline(30)") 30 minutes
+                button.btn.btn-primary.my-1(onclick="SilencePipeline(120)") 2 hours
+                button.btn.btn-primary.my-1(onclick="SilencePipeline('evening')") 18:00 today
+                button.btn.btn-primary.my-1(onclick="SilencePipeline('morning')") 09:30 tomorrow
+                button.btn.btn-primary.my-1(onclick="SilencePipeline('monday')") Monday morning
+                button.btn.btn-danger.my-1(onclick="SilencePipeline('forever')") The end of time
+            .modal-footer
+              button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Cancel
 
     #devicebox.modal.fade
       .modal-dialog.modal-lg
@@ -296,7 +312,7 @@ html(data-bs-theme="dark")
             button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
             button.btn.btn-primary(type='button') Save changes
 
-    #newsensor.modal.fade(tabindex="-1")
+    #newsensor.modal.fade
       .modal-dialog.modal-lg
         .modal-content
           .modal-header
@@ -370,7 +386,7 @@ html(data-bs-theme="dark")
     block content
 
     script.
-      $(document).ready(()=>{
+      $(document).ready(function () {
         $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});
         if ($("#login_dropdown").html() == 'Login') {
           $("#login_button").show();

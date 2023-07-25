@@ -5,11 +5,6 @@ var common = require('./common');
 
 
 router.get('/', function(req, res) {
-  let session = req.session;
-  if(session.experiment){
-    global.db = common.GetMongoDb({exp: session.experiment});
-  } else
-    res.redirect('../');
   var q = url.parse(req.url, true).query;
   var load = q.pipeline_id || "";
   var config = common.GetRenderConfig(req);
@@ -24,11 +19,10 @@ router.get('/get_pipelines', function(req, res) {
   }
   var flavor = q.flavor;
   var now = new Date();
-  global.db.get('pipelines').find({name: {$regex: `^${flavor}_`}}, {projection: {name: 1, status: 1, heartbeat: 1,
-      cycles: 1, rate: 1, error: 1, description: 1, pipeline: 1, silent_until: 1}})
-  .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, dt: (now-doc.heartbeat)/1000,
-    cycle: doc.cycles, error: doc.error, rate: doc.rate, description: doc.description, pipeline: doc.pipeline,
-    silent_until: doc.silent_until}))))
+  mongo_db.get('pipelines').find({name: {$regex: `^${flavor}_`}},
+      {projection: {name: 1, status: 1, silent_until: 1, heartbeat: 1, cycles: 1, rate: 1, error: 1, description: 1, pipeline: 1}})
+  .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, silent_until: doc.silent_until,
+    dt: (now-doc.heartbeat)/1000, cycle: doc.cycles, error: doc.error, rate: doc.rate, description: doc.description, pipeline: doc.pipeline}))))
   .catch(err => {console.log(err.message); return res.json([]);});
 });
 
@@ -36,7 +30,7 @@ router.get('/get_pipeline', function(req, res) {
   var q = url.parse(req.url, true).query;
   if (typeof q.name == 'undefined')
     return res.json({});
-  global.db.get('pipelines').findOne({name: q.name})
+  mongo_db.get('pipelines').findOne({name: q.name})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({});});
 });
@@ -45,7 +39,7 @@ router.get('/status', function(req, res) {
   var q = url.parse(req.url, true).query;
   if (typeof q.name == 'undefined')
     return res.json({});
-  global.db.get('pipelines').findOne({name: q.name}, {projection: {status: 1}})
+  mongo_db.get('pipelines').findOne({name: q.name}, {projection: {status: 1}})
   .then(doc => res.json(doc))
   .catch(err => {console.log(err.message); return res.json({});});
 });
@@ -59,6 +53,7 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
     return res.json({err: 'Bad input'});
   doc['name'] = doc.name;
   doc['status'] = 'inactive';
+  doc['silent_until'] = parseInt('0');
   doc['description'] = String(doc.description);
   doc['cycles'] = parseInt('0');
   doc['error'] = parseInt('0');
@@ -70,8 +65,8 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
-  global.db.get('pipelines').insert(doc)
-      .then(() => global.db.get('sensors').update({name: {$in: doc['depends_on']}},
+  mongo_db.get('pipelines').insert(doc)
+      .then(() => mongo_db.get('sensors').update({name: {$in: doc['depends_on']}},
           {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
       .then(res.json({notify_msg: 'Pipeline added', notify_status: 'success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -99,9 +94,9 @@ router.post('/update_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
     doc['node_config'] = {};
-  global.db.get('pipelines').update({_id: doc._id}, doc, {replaceOne: true})
-      .then(() => global.db.get('sensors').update({}, {$pull: {'pipelines': old_name}}, {multi: true}))
-      .then(() => global.db.get('sensors').update({name: {$in: doc['depends_on']}},
+  mongo_db.get('pipelines').update({_id: doc._id}, doc, {replaceOne: true})
+      .then(() => mongo_db.get('sensors').update({}, {$pull: {'pipelines': old_name}}, {multi: true}))
+      .then(() => mongo_db.get('sensors').update({name: {$in: doc['depends_on']}},
           {$addToSet: {'pipelines': doc['name']}}, {multi: true}))
       .then(res.json({notify_msg: 'Pipeline updated', notify_status: 'success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -112,8 +107,8 @@ router.post('/delete_pipeline', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   if (typeof data.pipeline == 'undefined')
     return res.json({err: 'Bad input'})
-  global.db.get('pipelines').remove({name: data.pipeline})
-  .then(() => global.db.get('sensors').update({'pipelines': data.pipeline},
+  mongo_db.get('pipelines').remove({name: data.pipeline})
+  .then(() => mongo_db.get('sensors').update({'pipelines': data.pipeline},
       {$pull: {pipelines: data.pipeline}}, {multi: true}))
   .then(() => res.json({notify_msg: 'Pipeline deleted', notify_status: 'success'}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
@@ -157,7 +152,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
     }
     until = now.getTime() / 1000 + duration * 60;
   }
-  global.db.get('pipelines').update({name: data.name}, {$set: {silent_until: until}})
+  mongo_db.get('pipelines').update({name: data.name}, {$set: {silent_until: until}})
   return res.json({});
 });
 
@@ -178,7 +173,7 @@ router.post('/get_pipelines_configs', function(req, res) {
   var pipelines = data.pipelines;
 
   if (typeof pipelines == 'undefined') return res.json([]);
-  global.db.get('pipelines')
+  mongo_db.get('pipelines')
     .find({'name': {'$in': Object.keys(pipelines)}}, {fields: {'node_config': 1, 'name': 1}})
     .then(docs => {
       var ret = {};
@@ -198,7 +193,7 @@ router.post('/get_pipelines_configs', function(req, res) {
 router.post('/set_single_node_config', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   // First check the node_config entry exists: this endpoint isn't meant to create new ones
-  global.db.get('pipelines')
+  mongo_db.get('pipelines')
     .findOne({'name': data.pipeline}, {'fields': {'node_config': 1}})
     .then(doc => {
       if (typeof data.target.split('.').reduce((tot, x) => {return tot[x]}, doc.node_config) == 'undefined')
@@ -206,7 +201,7 @@ router.post('/set_single_node_config', common.ensureAuthenticated, function(req,
       // Now can do the update
       var op = {$set: {}};
       op['$set']['node_config.' + data.target] = data.value;
-      global.db.get('pipelines').update({'name': data.pipeline}, op)
+      mongo_db.get('pipelines').update({'name': data.pipeline}, op)
         .then(res.json({notify_msg: 'Updated pipeline config', notify_status: 'success'}));
     })
     .catch(err => {console.log(err.message); return res.json({err: err.message});});
