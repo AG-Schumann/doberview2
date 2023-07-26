@@ -1,7 +1,7 @@
 extends layout
 
 block extrahead
-  link(href="/modules/tabulator-tables/dist/css/tabulator_bootstrap5.css" rel="stylesheet")
+  link(href="/modules/tabulator-tables//dist/css/tabulator_bootstrap5.min.css" rel="stylesheet")
   link(href="/modules/jquery-datetimepicker/jquery.datetimepicker.css" rel="stylesheet" )
   script(type="text/javascript" src="/modules/tabulator-tables/dist/js/tabulator.js")
   script(type="text/javascript" src="/modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js")
@@ -32,7 +32,7 @@ block content
         input.form-control#get_name(type="text")
       div.mt-4
         button.btn.btn-primary(onclick="GetLogs()") Fetch
-    div.mt-2#log_table
+    table.mt-2#log_table
 
   script.
     $(document).ready(function() {

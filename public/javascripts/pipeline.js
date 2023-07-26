@@ -11,7 +11,7 @@ function PopulateNavbar() {
       '<input class="form-control" id="searchPipelineInput" type="text" onkeyup="UpdateLoop()" placeholder="Search pipelines">' +
       '<button id="clear_search_btn" class="btn bg-transparent" type="button"  onclick="$(`#searchPipelineInput`).val(``); PopulatePipelines();">' +
       '<i class="fa fa-times"></i></button></div></div></li>';
-  $('#navbar_content').html(content);
+  $('#navbar_content').prepend(content);
 }
 
 function UpdateLoop() {
@@ -76,13 +76,15 @@ function Visualize(doc) {
   }
   var data = [];
   doc.pipeline.forEach(item => {(item.upstream || []).forEach(us =>
-    data.push({from: us, to: item.name, id: us, name: us}));});
+      data.push({from: us, to: item.name, id: us, name: us}));});
   var nodes = doc.pipeline.map(item => ({id: item.name, name: item.name, title: item.type}));
+  const bkg_color = ($(':root').attr('data-bs-theme') === 'dark') ? '#212529' : '#ffffff';
   Highcharts.chart('pipeline_vis', {
     chart: {
       height: 'auto',
       inverted: true,
       title: null,
+      backgroundColor: bkg_color,
     },
     title: {text: null},
     credits: {enabled: false},
@@ -321,7 +323,7 @@ function DeletePipeline() {
           alert(data.err);
         else
           $("#pipelinebox").modal('hide');
-          Notify(data.notify_msg, data.notify_status);
+        Notify(data.notify_msg, data.notify_status);
       },
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
     });
