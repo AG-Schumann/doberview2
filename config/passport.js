@@ -1,17 +1,20 @@
 var passport = require('passport');
+const config = require('./config');
 
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
-var GithubStrategy = require('passport-github2').Strategy;
 
-passport.use("github", new GithubStrategy(
-  {
-    clientID: process.env.GITHUB_OAUTH_CLIENT_ID,
-    clientSecret: process.env.GITHUB_OAUTH_CLIENT_SECRET,
-    callbackURL: "http://10.4.73.172/auth/github/callback",
-    scope: ['user:email', 'user:name', 'user:login', 'user:id'],
-  },function(accessToken, refreshToken, profile, done) {
-        return done(null, profile);
+if (config.use_authentication) {
+    let GithubStrategy = require('passport-github2').Strategy;
+    passport.use("github", new GithubStrategy(
+        {
+            clientID: config.github_oauth_client_id,
+            clientSecret: config.github_oauth_client_secret,
+            callbackURL: config.github_callback_url,
+            scope: ['user:email', 'user:name', 'user:login', 'user:id'],
+        }, function (accessToken, refreshToken, profile, done) {
+            return done(null, profile);
 
-  }));
+        }));
+}

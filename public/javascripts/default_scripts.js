@@ -5,25 +5,11 @@ var LOG_THRESHOLD=3;
 var control_map = {};
 let detail_chart = null;
 
-
 function Notify(msg, type='success') {
   var elem = $("#notify_" + type)
   elem.children().html(msg);
   var toast = new bootstrap.Toast(elem);
   toast.show();
-}
-
-function ChangeExperiment(name) {
-  $.ajax({
-    type: 'POST',
-    url: '/experiment',
-    data: {name: name},
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err);},
-    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
-    complete:  function() {
-      location.reload();
-      }
-  });
 }
 
 function SensorDropdown(sensor) {
@@ -108,18 +94,17 @@ function SensorDropdown(sensor) {
               `data-bs-placement="right" title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n`+
               `last cycle: &nbsp; ${((now-doc.heartbeat)/1000 || 0).toPrecision(1)} s \n`+
               `last error: &nbsp; ${doc.cycles - doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>`;
-          let goto_btn = `<button class="btn btn-primary action_button" `+
-              `onclick="location.href='pipeline?pipeline_id=${pl_name}'"> Go to</button>`;
-          if (doc.status === 'active') {
-            let stop_btn = `<button class="btn btn-danger action_button" `+
-                `onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_stop ${pl_name}')">`+
-                `<i class="fas fa-solid fa-stop"></i>Stop</button>`;
-            $("#pipelines_active").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+stop_btn+`</td><td>`+goto_btn+`</td></tr>`);
-          } else if (doc.status === 'silent') {
-            $("#pipelines_silenced").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+goto_btn+`</td></tr>`);
+          let stop_btn = `<button class="btn btn-danger action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_stop ${pl_name}')"> <i class="fas fa-solid fa-stop"></i></button>`;
+          let start_btn = `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_start ${pl_name}')"><i class="fas fa-solid fa-play"></i></button>`;
+          let restart_btn = `<button class="btn btn-primary action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_restart ${pl_name}')"><i class="fas fa-solid fa-rotate"></i></button>`;
+          let silence_btn = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${pl_name}')"><i class="fas fa-solid fa-bell-slash"></i></button>`;
+          let activate_btn = `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_active ${pl_name}')"><i class="fas fa-solid fa-play"></i></button>`;
+          if ((doc.status === 'active') && ((doc.silent_until == -1) || (doc.silent_until > Date.now()/1000))) {
+            $("#pipelines_silenced").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+activate_btn+`</td><td>`+silence_btn+`</td><td>`+stop_btn+`</td><td>`+restart_btn+`</td></tr>`);
+          } else if (doc.status === 'active') {
+            $("#pipelines_active").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+silence_btn+`</td><td>`+stop_btn+`</td><td>`+restart_btn+`</td></tr>`);
           } else {
-            let start_btn = `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_start ${pl_name}')"><i class="fas fa-solid fa-play"></i>Start</button>`;
-            $("#pipelines_inactive").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+start_btn+`</td><td>`+goto_btn+`</td></tr>`);
+            $("#pipelines_inactive").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+start_btn+`</td></tr>`);
           }
           $('[data-bs-toggle="tooltip"]').tooltip();
         }); // get json
@@ -130,18 +115,31 @@ function SensorDropdown(sensor) {
       control_map[sensor_detail.name] = [sensor_detail.device, sensor_detail.control_quantity];
       $("#sensor_control").css('display', 'inline');
       if (sensor_detail.topic === 'status') {
-        // this is a valve
-        $("#sensor_valve").prop('hidden', false);
-        $("#sensor_setpoint").prop('hidden', true);
-        $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
-          $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
-          $("#current_valve_state").html(doc.value);
+        let valuemap = sensor_detail.valuemap;
+        if (typeof sensor_detail.valuemap !== 'undefined') {
+          $("#sensor_states").prop('hidden', false);
+          $("#sensor_valve").prop('hidden', true);
+          $("#sensor_setpoint").prop('hidden', true);
+          $("#sensor_states").empty();
+          Object.entries(valuemap).forEach(([state, label]) => {
+            $("#sensor_states").append(`<td><button class="btn btn-primary" id="sensor_valve_btn" onclick="ChangeSetpoint(${state})">${label}</button></td>`);
         });
-        control_map[sensor_detail.name].push((sensor_detail.is_normally_open !== undefined));
+        } else {
+          // this is a valve
+          $("#sensor_valve").prop('hidden', false);
+          $("#sensor_setpoint").prop('hidden', true);
+          $("#sensor_states").prop('hidden', true);
+          $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
+            $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
+            $("#current_valve_state").html(doc.value);
+          });
+          control_map[sensor_detail.name].push((sensor_detail.is_normally_open !== undefined));
+        }
       } else {
         // this is a setpoint
         $("#sensor_valve").prop('hidden', true);
         $("#sensor_setpoint").prop('hidden', false);
+        $("#sensor_states").prop('hidden', true);
         $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
           $("#sensor_setpoint_control").val(doc.value);
         });
@@ -361,8 +359,7 @@ function UpdateAlarms() {
     return;
   }
   let msg = 'Updated alarm for ' + $("#detail_sensor_name").html();
-  if($("#int_alarm").find('tr').length) {
-    let msg = 'Updated alarm for ' + $("#detail_sensor_name").html();
+  if ($("#int_alarm_body").find('tr').length) {
     let int_alarm_dict = {};
     $('#int_alarm_body tr').each(function() {
       let k = parseInt($(this).find('td:first-child input').val());
@@ -560,7 +557,7 @@ function SendToHypervisor(target, command, msg_if_success=null, delay=0) {
     type: 'POST',
     url: '/hypervisor/command',
     data: {target: target, command: command, delay: delay},
-    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
+    success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
   });
 }
@@ -620,13 +617,35 @@ function ToggleValve() {
   }
 }
 
-function ChangeSetpoint() {
+function ChangeSetpoint(value) {
   var sensor = $("#detail_sensor_name").html();
   var device = control_map[sensor][0];
   var target = control_map[sensor][1];
-  var value = $("#sensor_setpoint_control").val();
-  if (sensor && target && device && confirm('Confirm setpoint change')) {
+  if (value == undefined) value = $("#sensor_setpoint_control").val();
+  if (sensor && target && device && confirm(`Confirm setpoint change to ${value}`)) {
     SendToHypervisor(device, `set ${target} ${value}`, `set ${target} ${value}`);
   }
 }
 
+function SilenceDropdown(name) {
+  $('#silence_me').html(name);
+  $('#silence_dropdown').modal('show');
+}
+
+function SilencePipeline(duration) {
+  var name = $("#silence_me").html();
+  $.ajax({
+    type: 'POST',
+    url: "/pipeline/pipeline_silence",
+    data: {name: name, duration: duration},
+    success: (data) => {
+      if (typeof data != 'undefined' && typeof data.err != 'undefined')
+        alert(data.err);
+      else
+        $("#silence_dropdown").modal('hide');
+        PopulatePipelines();
+        Notify(data.notify_msg, data.notify_status);
+    },
+    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+  });
+}

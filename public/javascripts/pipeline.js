@@ -29,10 +29,10 @@ function PopulatePipelines(flavor) {
       let n = doc.name;
       if (filter === '' || (n.toUpperCase().indexOf(filter) > -1)) {
         let status = doc.status;
-        if ((status === 'active') && ((doc.silent_until == -1) || doc.silent_until > Date.now()/1000)) status = 'silent';
+        if ((status === 'active') && ((doc.silent_until == -1) || (doc.silent_until > Date.now()/1000))) status = 'silent';
         let last_error = doc.cycle - doc.error; // last error X cycles ago
         let status_color = ((last_error < 5) ? 'danger' : 'success');
-        if (doc.cycle < 5) status_color = 'warning'; // status indicator yellow during pipeline start-up
+        if (doc.cycle <= 5) status_color = 'warning'; // status indicator yellow during pipeline start-up
         if (doc.cycle === 0) status_color = 'secondary'; // status indicator grey when pipeline never ran
         $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
             `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right"` +
@@ -97,11 +97,6 @@ function Visualize(doc) {
     levels: [],
     nodes: nodes,
   });
-}
-
-function SilenceDropdown(name) {
-  $('#silence_me').html(name);
-  $('#silence_dropdown').modal('show');
 }
 
 function AlarmTemplate() {
@@ -335,24 +330,6 @@ function DeletePipeline() {
 
 function StartPipeline(name) {
   PipelineControl('start', name);
-}
-
-function SilencePipeline(duration) {
-  var name = $("#silence_me").html();
-  $.ajax({
-    type: 'POST',
-    url: "/pipeline/pipeline_silence",
-    data: {name: name, duration: duration},
-    success: (data) => {
-      if (typeof data != 'undefined' && typeof data.err != 'undefined')
-        alert(data.err);
-      else
-        $("#silence_dropdown").modal('hide');
-        PopulatePipelines();
-        Notify(data.notify_msg, data.notify_status);
-    },
-    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
-  });
 }
 
 function PipelineControl(action, pipeline) {
