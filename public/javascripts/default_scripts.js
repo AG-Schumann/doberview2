@@ -632,8 +632,8 @@ function SilenceDropdown(name) {
   $('#silence_dropdown').modal('show');
 }
 
-function SilencePipeline(duration) {
-  var name = $("#silence_me").html();
+function SilencePipeline(duration, name) {
+  if (!name) name = $("#silence_me").html();
   $.ajax({
     type: 'POST',
     url: "/pipeline/pipeline_silence",
@@ -648,4 +648,14 @@ function SilencePipeline(duration) {
     },
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
   });
+}
+
+function GetParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return "";
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
