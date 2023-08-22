@@ -37,6 +37,12 @@ router.get('/contact_detail', function(req, res) {
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
+router.get('/alarm_config', function (req, res) {
+  mongo_db.get('experiment_config').findOne({name: 'alarm'})
+      .then(doc => res.json(doc))
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
 router.post('/set_shifters', function(req, res) {
   var shifters = req.body.shifters;
   if (typeof shifters == 'undefined' || shifters.length === 0)
@@ -63,6 +69,37 @@ router.post('/delete_shifter', function(req, res) {
   mongo_db.get('contacts').remove({name: name})
   .then(() => res.json({}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
+router.post('/set_alarm_config', (req, res) => {
+  const formData = req.body;
+  console.log(formData);
+  const entry = {
+    name: 'alarm',
+    silence_duration: [
+      parseInt(formData['silence_durations[0]']),
+      parseInt(formData['silence_durations[1]']),
+      parseInt(formData['silence_durations[2]'])
+    ],
+    escalation_config: [
+      parseInt(formData['escalation_settings[0]']),
+      parseInt(formData['escalation_settings[1]']),
+      parseInt(formData['escalation_settings[2]'])
+    ],
+    recipients: [
+      [formData['recipients[0][0]']],
+      [formData['recipients[1][0]']],
+      [formData['recipients[2][0]'], formData['recipients[2][1]']],
+      [formData['recipients[3][0]']]
+    ],
+    protocols: [
+      [formData['protocols[0][0]']],
+      [formData['protocols[1][0]'], formData['protocols[1][1]']],
+      [formData['protocols[2][0]'], formData['protocols[2][1]'], formData['protocols[2][2]']],
+      [formData['protocols[3][0]'], formData['protocols[3][1]'], formData['protocols[3][2]']]
+    ]
+  };
+  console.log(entry);
 });
 
 module.exports = router;
