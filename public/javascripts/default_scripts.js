@@ -115,29 +115,19 @@ function SensorDropdown(sensor) {
       control_map[sensor_detail.name] = [sensor_detail.device, sensor_detail.control_quantity];
       $("#sensor_control").css('display', 'inline');
       if (sensor_detail.topic === 'status') {
+        $("#sensor_states").prop('hidden', false);
+        $("#sensor_setpoint").prop('hidden', true);
+        $("#sensor_states").empty();
         let valuemap = sensor_detail.valuemap;
-        if (typeof sensor_detail.valuemap !== 'undefined') {
-          $("#sensor_states").prop('hidden', false);
-          $("#sensor_valve").prop('hidden', true);
-          $("#sensor_setpoint").prop('hidden', true);
-          $("#sensor_states").empty();
-          Object.entries(valuemap).forEach(([state, label]) => {
-            $("#sensor_states").append(`<td><button class="btn btn-primary" id="sensor_valve_btn" onclick="ChangeSetpoint(${state})">${label}</button></td>`);
-        });
-        } else {
-          // this is a valve
-          $("#sensor_valve").prop('hidden', false);
-          $("#sensor_setpoint").prop('hidden', true);
-          $("#sensor_states").prop('hidden', true);
-          $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
-            $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
-            $("#current_valve_state").html(doc.value);
-          });
-          control_map[sensor_detail.name].push((sensor_detail.is_normally_open !== undefined));
+        if (typeof valuemap == 'undefined') {
+          $("#sensor_states").html('No value map defined!');
+          valuemap = {};
         }
+        Object.entries(valuemap).forEach(([state, label]) => {
+          $("#sensor_states").append(`<td><button class="btn btn-primary" id="sensor_valve_btn" onclick="ChangeSetpoint(${state})">${label}</button></td>`);
+        });
       } else {
         // this is a setpoint
-        $("#sensor_valve").prop('hidden', true);
         $("#sensor_setpoint").prop('hidden', false);
         $("#sensor_states").prop('hidden', true);
         $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
