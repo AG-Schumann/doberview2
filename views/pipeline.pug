@@ -143,7 +143,10 @@ block content
       setInterval(UpdateLoop, 5000);
       var pipeline = GetParameterByName('pipeline');
       var silence_duration = GetParameterByName('silence');
-      if (pipeline && silence_duration) SilencePipeline(silence_duration, pipeline);
+      if (pipeline && silence_duration) {
+        SilencePipeline(silence_duration, pipeline);
+        window.history.pushState({} , '', '/pipeline' );
+      }
       $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});
       var query_search = new URLSearchParams(window.location.search);
       if (query_search.has('pipeline_id')) {
