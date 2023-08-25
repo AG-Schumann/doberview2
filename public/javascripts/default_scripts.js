@@ -329,10 +329,11 @@ function DrawSensorHistory(sensor) {
               events: {
                 afterSetExtremes(e) {
                   const { chart } = e.target;
-                  binning = string(int(((e.max-e.min)/1000)/600)) + 's'
-                  $.getJSON(`/devices/get_data_from_to?sensor=${sensor}&start=${Math.round(e.min)-1}&stop=${Math.round(e.max)+1}&binning=${binning}`, data => {
-                    chart.series[0].setData(data.filter(row => ((row[0] != null) && (row[1] != null))));
-                  }
+                  let temp_binning = (Math.ceil(((e.max-e.min)/1000)/600)).toString() + 's';
+                  console.log(temp_binning);
+                  $.getJSON(`/devices/get_data_from_to?sensor=${sensor}&start=${Math.round(e.min)-1}&stop=${Math.round(e.max)+1}&binning=${temp_binning}`, zoom_data => {
+                    chart.series[0].setData(zoom_data.filter(row => ((row[0] != null) && (row[1] != null))));
+                  })
                 }
               },
       },
