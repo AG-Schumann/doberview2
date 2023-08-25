@@ -291,35 +291,19 @@ function DeviceDropdown(device) {
   });
 }
 
-function selectEvenlyDistributedElements(array, n) {
-  const totalElements = array.length;
-  if (n >= totalElements) {
-    return array; // Return all elements if n is greater than or equal to array length
-  }
-  const stepSize = totalElements / (n - 1);
-  const selectedElements = [];
-  for (let i = 0; i < n; i++) {
-    const index = Math.min(Math.round(i*stepSize), totalElements - 1);
-    selectedElements.push(array[index]);
-  }
-  return selectedElements;
-}
-
 function DrawSensorHistory(sensor) {
   sensor = sensor || $("#detail_sensor_name").html();
   var unit = $("#sensor_units").html();
   var interval = $("#selectinterval :selected").val();
-  $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=1s`, data => {
+  $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
     let t_min = 0, t_max = 0;
     if (data.length !== 0) {
       t_min = data[0][0];
       t_max = Date.now();
     }
 
-    let display_data = selectEvenlyDistributedElements(data, 600);
-
     let alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
-    let series = [{name: $("#detail_sensor_name").html(), type: 'line', data: display_data.filter(row => ((row[0] != null) && (row[1] != null))), animation: {duration: 250}, color: '#0d6efd'}];
+    let series = [{name: $("#detail_sensor_name").html(), type: 'line', data: data.filter(row => ((row[0] != null) && (row[1] != null))), animation: {duration: 250}, color: '#0d6efd'}];
     if ($("#plot_alarms").prop('checked')) {
       series.push({name: "lower threshold", type: 'area', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', threshold: -Infinity});
       series.push({name: "upper threshold", type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
@@ -355,9 +339,10 @@ function DrawSensorHistory(sensor) {
               events: {
                 afterSetExtremes(e) {
                   const { chart } = e.target;
-                  temp_data = data.filter((d) => d[0] > Math.round(e.min) & d[0] < Math.round(e.max))
-                  display_data = selectEvenlyDistributedElements(temp_data,600)
-                  chart.series[0].setData(display_data.filter(row => ((row[0] != null) && (row[1] != null))));
+                  binning = string(int(((e.max-e.min)/1000)/600)) + 's'
+                  $.getJSON(`/devices/get_data_from_to?sensor=${sensor}&start=${Math.round(e.min)-1}&stop=${Math.round(e.max)+1}&binning=${binning}`, data => {
+                    chart.series[0].setData(data.filter(row => ((row[0] != null) && (row[1] != null))));
+                  }
                 }
               },
       },
