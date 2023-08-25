@@ -115,29 +115,19 @@ function SensorDropdown(sensor) {
       control_map[sensor_detail.name] = [sensor_detail.device, sensor_detail.control_quantity];
       $("#sensor_control").css('display', 'inline');
       if (sensor_detail.topic === 'status') {
+        $("#sensor_states").prop('hidden', false);
+        $("#sensor_setpoint").prop('hidden', true);
+        $("#sensor_states").empty();
         let valuemap = sensor_detail.valuemap;
-        if (typeof sensor_detail.valuemap !== 'undefined') {
-          $("#sensor_states").prop('hidden', false);
-          $("#sensor_valve").prop('hidden', true);
-          $("#sensor_setpoint").prop('hidden', true);
-          $("#sensor_states").empty();
-          Object.entries(valuemap).forEach(([state, label]) => {
-            $("#sensor_states").append(`<td><button class="btn btn-primary" id="sensor_valve_btn" onclick="ChangeSetpoint(${state})">${label}</button></td>`);
-        });
-        } else {
-          // this is a valve
-          $("#sensor_valve").prop('hidden', false);
-          $("#sensor_setpoint").prop('hidden', true);
-          $("#sensor_states").prop('hidden', true);
-          $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
-            $("#sensor_valve_btn").text(doc.value == 0 ? "Open" : "Close");
-            $("#current_valve_state").html(doc.value);
-          });
-          control_map[sensor_detail.name].push((sensor_detail.is_normally_open !== undefined));
+        if (typeof valuemap == 'undefined') {
+          $("#sensor_states").html('No value map defined!');
+          valuemap = {};
         }
+        Object.entries(valuemap).forEach(([state, label]) => {
+          $("#sensor_states").append(`<td><button class="btn btn-primary" id="sensor_valve_btn" onclick="ChangeSetpoint(${state})">${label}</button></td>`);
+        });
       } else {
         // this is a setpoint
-        $("#sensor_valve").prop('hidden', true);
         $("#sensor_setpoint").prop('hidden', false);
         $("#sensor_states").prop('hidden', true);
         $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
@@ -617,17 +607,6 @@ function DeviceCommand(to, cmd) {
   $("#device_command").val("");
 }
 
-function ToggleValve() {
-  let sensor = $("#detail_sensor_name").html();
-  let device = control_map[sensor][0];
-  let target = control_map[sensor][1];
-  let normallyClosed = control_map[sensor][2];
-  let state = $("#current_valve_state").html() == normallyClosed ? 1 : 0;
-  if (sensor && target && device && confirm(`Confirm valve toggle`)) {
-    SendToHypervisor(device, `set ${target} ${state}`, `set ${target} ${state}`);
-  }
-}
-
 function ChangeSetpoint(value) {
   var sensor = $("#detail_sensor_name").html();
   var device = control_map[sensor][0];
@@ -643,8 +622,8 @@ function SilenceDropdown(name) {
   $('#silence_dropdown').modal('show');
 }
 
-function SilencePipeline(duration) {
-  var name = $("#silence_me").html();
+function SilencePipeline(duration, name) {
+  if (!name) name = $("#silence_me").html();
   $.ajax({
     type: 'POST',
     url: "/pipeline/pipeline_silence",
@@ -659,4 +638,14 @@ function SilencePipeline(duration) {
     },
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
   });
+}
+
+function GetParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return "";
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
