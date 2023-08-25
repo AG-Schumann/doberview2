@@ -364,4 +364,44 @@ router.get('/get_data', function(req, res) {
   }).catch(err => {console.log(err); return res.json([]);});
 });
 
+router.get('/get_data_from_to', function(req, res) {
+  var q = url.parse(req.url, true).query;
+  var sensor = q.sensor;
+  var binning = q.binning;
+  var start = q.start;
+  var stop = q.stop;
+  var topic = topic_lut[sensor.split('_')[0]];
+  if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof start == 'undefined' || typeof stop == 'undefined' || typeof topic == 'undefined')
+    return res.json([]);
+  mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
+    if (config.override_influx_uri)
+      doc['url'] = config.influx_uri;
+    var get_url = new url.URL(doc['url'] + '/api/v2/query');
+    var params = new url.URLSearchParams({
+      org: doc['org'],
+      db: doc['db'],
+    });
+    get_url.search = params.toString();
+    return axios.post(
+        get_url.toString(),
+        `from(bucket: "${doc['bucket']}")
+        |> range(start: ${start}, stop: ${stop})
+        |> filter(fn: (r) => r["_measurement"] == "${topic}")
+        |> filter(fn: (r) => r["_field"] == "value")
+        |> filter(fn: (r) => r["sensor"] == "${sensor}")
+        |> keep(columns:["_time", "_value",])
+        |> aggregateWindow(every: ${binning}, fn: mean, createEmpty: false)
+        |> yield(name: "mean")`,
+        {
+          'headers': {
+            'Accept': 'application/csv',
+            'Authorization': `Token ${doc['token']}`,
+            'Content-type': 'application/vnd.flux'
+          },
+        })}).then(resp => {
+          var data = resp.data.split('\r\n').slice(1);
+          return res.json(data.map(row => {var x = row.split(','); return [new Date(x[6]).getTime(), parseFloat(x[5])];}));
+  }).catch(err => {console.log(err); return res.json([]);});
+});
+
 module.exports = router;
