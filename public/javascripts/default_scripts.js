@@ -303,7 +303,7 @@ function DrawSensorHistory(sensor) {
     var upperbound = null;
 
     if ($("#plot_zoom").prop('checked')) {
-      var datasorted = display_data.concat();
+      var datasorted = data.concat();
       datasorted.sort(function(a,b){
         return a[1] - b[1];
       });
@@ -329,9 +329,11 @@ function DrawSensorHistory(sensor) {
               events: {
                 afterSetExtremes(e) {
                   const { chart } = e.target;
+                  let temp_start = Math.floor(e.min * 1e-3);
+                  let temp_stop = Math.ceil(e.max * 1e-3);
                   let temp_binning = (Math.ceil(((e.max-e.min)/1000)/600)).toString() + 's';
                   console.log(temp_binning);
-                  $.getJSON(`/devices/get_data_from_to?sensor=${sensor}&start=${Math.round(e.min)-1}&stop=${Math.round(e.max)+1}&binning=${temp_binning}`, zoom_data => {
+                  $.getJSON(`/devices/get_data_from_to?sensor=${sensor}&start=${temp_start}&stop=${temp_stop}&binning=${temp_binning}`, zoom_data => {
                     chart.series[0].setData(zoom_data.filter(row => ((row[0] != null) && (row[1] != null))));
                   })
                 }
