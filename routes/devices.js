@@ -253,13 +253,14 @@ router.get('/get_last_point', function(req, res) {
         })}).then(resp => {
     if (resp.data.split('\r\n').length > 1) {
       var blob = resp.data.split('\r\n')[1].split(',');
+      const date = new Date(blob[3]);
       return res.json({
         'value': blob[4],
         'time_ago': ((new Date() - new Date(blob[3])) / 1000).toFixed(1),
-        'time': parseInt(blob[3]) / 1e6})
+        'time': date.getTime()})
     }
     else {
-      return res.json({'value': 'None', 'time_ago': 'None '})
+      return res.json({'value': 'None', 'time_ago': 'None ', 'time': 'None'})
     }
   }).catch(err => {console.log(err); return res.json({});});
 });
@@ -328,10 +329,11 @@ router.get('/get_last_points', function(req, res) {
 router.get('/get_data', function(req, res) {
   var q = url.parse(req.url, true).query;
   var sensor = q.sensor;
+  var from = q.from;
+  var to = q.to;
   var binning = q.binning;
-  var history = q.history;
   var topic = topic_lut[sensor.split('_')[0]];
-  if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
+  if (typeof sensor == 'undefined' || typeof from == 'undefined' || typeof to == 'undefined' || typeof binning == 'undefined' || typeof topic == 'undefined')
     return res.json([]);
   mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
     if (config.override_influx_uri)
@@ -345,7 +347,7 @@ router.get('/get_data', function(req, res) {
     return axios.post(
         get_url.toString(),
         `from(bucket: "${doc['bucket']}")
-        |> range(start: -${history})
+        |> range(start: ${from}, stop: ${to})
         |> filter(fn: (r) => r["_measurement"] == "${topic}")
         |> filter(fn: (r) => r["_field"] == "value")
         |> filter(fn: (r) => r["sensor"] == "${sensor}")

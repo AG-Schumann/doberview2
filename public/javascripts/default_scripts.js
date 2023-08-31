@@ -3,7 +3,7 @@ const history = ['10m', '1h', '3h', '6h', '12h', '24h', '48h', '72h', '1w', '2w'
 var SIG_FIGS=3;
 var LOG_THRESHOLD=3;
 var control_map = {};
-let detail_chart = null;
+let detail_chart;
 
 function Notify(msg, type='success') {
   var elem = $("#notify_" + type)
@@ -147,7 +147,7 @@ function SensorDropdown(sensor) {
     } else {
       $("#sensor_control").css('display', 'none');
     }
-    DrawSensorHistory(sensor);
+    InitDiagram(sensor);
     $('#sensorbox').modal('show');
   });
 }
@@ -163,6 +163,7 @@ function AddAlarmLevel(no) {
 function DeleteAlarmLevel(btn) {
   btn.closest('tr').remove();
 }
+
 function MakeAlarm(name, is_int=false) {
   if (typeof name == 'undefined')
     name = $("#detail_sensor_name").html();
@@ -291,66 +292,140 @@ function DeviceDropdown(device) {
   });
 }
 
-function DrawSensorHistory(sensor) {
-  sensor = sensor || $("#detail_sensor_name").html();
-  var unit = $("#sensor_units").html();
-  var interval = $("#selectinterval :selected").val();
-  $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
-    let t_min = 0, t_max = 0;
-    if (data.length !== 0) {
-      t_min = data[0][0];
-      t_max = Date.now();
-    }
-    let alarm_low = parseFloat($("#alarm_low").val()), alarm_high = parseFloat($("#alarm_high").val());
-    let series = [{name: $("#detail_sensor_name").html(), type: 'line', data: data.filter(row => ((row[0] != null) && (row[1] != null))), animation: {duration: 250}, color: '#0d6efd'}];
-    if ($("#plot_alarms").prop('checked')) {
-      series.push({name: "lower threshold", type: 'area', data: [[t_min, alarm_low],[t_max, alarm_low]], animation: {duration: 0}, color: '#ff1111', threshold: -Infinity});
-      series.push({name: "upper threshold", type: 'area', data: [[t_min, alarm_high],[t_max, alarm_high]], animation: {duration: 0}, color: '#ff1111', threshold: Infinity});
-    }
-
-    var lowerbound = null;
-    var upperbound = null;
-
-    if ($("#plot_zoom").prop('checked')) {
-      var datasorted = data.concat();
-      datasorted.sort(function(a,b){
-        return a[1] - b[1];
-      });
-
-      var ymin = datasorted[Math.round(datasorted.length*0.05)][1];
-      var ymax = datasorted[Math.round(datasorted.length*0.95)][1];
-      var upperbound = ymax + (ymax-ymin)/3;
-      var lowerbound = ymin - (ymax-ymin)/3;
-    }
-    
-    detail_chart = Highcharts.chart('sensor_chart', {
-      chart: {
-        zoomType: 'xy',
-        height: '300px',
+function InitDiagram(sensor, start, stop) {
+  var unit = $("#sensor_units").val();
+  detail_chart = Highcharts.chart('sensor_chart', {
+    chart: {
+      zoomType: 'x',
+      height: '300px',
+      events: {
+        load: function () {
+          var refresh = setInterval(() => {
+            $.getJSON(`/devices/get_last_point?sensor=${sensor}`, point => {
+              var time = parseInt(point.time);
+              if (time > this.xAxis[0].getExtremes().dataMax) {
+                console.log('add to plot');
+                this.series[0].addPoint([time, parseFloat(point.value)], true, true);
+                ToggleThresholds();
+                ToggleOutliers();
+                UpdateLastPoint();
+              }
+            });
+            if ($("#sensorbox").is(":hidden"))
+              clearInterval(refresh);
+          }, 1000);
+        }
+      }
+    },
+    series: [
+      {name: $("#detail_sensor_name").html(),
+        data: [],
+        type: 'scatter',
+        animation: {duration: 0},
+        color: '#0d6efd'
       },
+      {name: "lower threshold",
+        data: [],
+        type: 'area',
+        animation: {duration: 0},
+        color: '#ff1111',
+        threshold: -Infinity
+      },
+      {name: "upper threshold",
+        data: [],
+        type: 'area',
+        animation: {duration: 0},
+        color: '#ff1111',
+        threshold: Infinity}
+    ],
+    title: {text: null},
+    credits: {enabled: false},
+    xAxis: {
+      type: 'datetime',
+      crosshair: true,
+
+      events: {
+        afterSetExtremes: function (e) {
+          if (e.trigger === "zoom") {
+            console.log('zoom event');
+            FillSeries(sensor, Math.round(detail_chart.xAxis[0].min/1000), Math.round(detail_chart.xAxis[0].max/1000));
+          }
+        }
+      }
+    },
+    yAxis: {
       title: {text: null},
-      credits: {enabled: false},
-      series: series,
-      xAxis: {type: 'datetime',
-              crosshair: true,
-              min: t_min,
-              max: Date.now()},
-      yAxis: {title: {text: null},
-              crosshair: true,
-              type: $("#plot_log").is(":checked") ? "logarithmic" : "linear",
-              min: lowerbound,
-              max: upperbound
-              },
-      time: {useUTC: false},
-      legend: {enabled: false},
-      tooltip: {
-        //valueDecimals: 3,
-        valueSuffix: unit
+      crosshair: true,
+      type: $("#plot_log").is(":checked") ? "logarithmic" : "linear",
+    },
+    time: {useUTC: false},
+    legend: {enabled: false},
+    tooltip: {
+      pointFormatter: function () {
+        return SigFigs(this.y) + ' ' + unit
       },
-    });
-    $("#last_value").html(SigFigs(series[0].data.at(-1)[1]));
 
+    },
   });
+  FillSeries();
+}
+
+
+function FillSeries(sensor, start, stop) {
+  console.log('filling series');
+  sensor = sensor || $("#detail_sensor_name").html();
+  var interval = $("#selectinterval :selected").val();
+  var bins =  ((start && stop) ? Math.max(Math.round((stop-start)/1000), 1) + 's' : binning[interval]);
+  var start = start || '-' + history[interval];
+  var stop = stop || 'now()';
+  const loadingTimeout = setTimeout(() => {
+    detail_chart.showLoading();
+  }, 100);
+  $.getJSON(`/devices/get_data?sensor=${sensor}&from=${start}&to=${stop}&binning=${bins}`, data => {
+    clearTimeout(loadingTimeout);
+    detail_chart.hideLoading();
+    detail_chart.series[0].setData(data.filter(row => ((row[0] != null) && (row[1] != null))));
+    ToggleThresholds();
+    ToggleOutliers();
+    ToggleLog();
+    UpdateLastPoint();
+  });
+}
+
+function ToggleThresholds() {
+  if ($("#plot_alarms").prop('checked')) {
+    let alarm_low = parseFloat($("#alarm_low").val());
+    let alarm_high = parseFloat($("#alarm_high").val());
+    let t_max = new Date().getTime();
+    detail_chart.series[1].setData([[NaN, alarm_low], [t_max, alarm_low]]);
+    detail_chart.series[2].setData([[NaN, alarm_high], [t_max, alarm_high]]);
+  } else {
+    detail_chart.series[1].setData([]);
+    detail_chart.series[2].setData([]);
+  }
+}
+
+function ToggleOutliers() {
+  // code to remove outliers
+  if ($("#plot_zoom").prop('checked')) {
+    var datasorted = detail_chart.series[0].yData.sort();
+    var ymin = datasorted[Math.round(datasorted.length*0.05)];
+    var ymax = datasorted[Math.round(datasorted.length*0.95)];
+    detail_chart.yAxis[0].setExtremes(ymin - (ymax-ymin)/3, ymax + (ymax-ymin)/3);
+  } else {
+    detail_chart.yAxis[0].setExtremes(null, null);
+  }
+}
+function ToggleLog() {
+  detail_chart.update({
+    yAxis: {
+      type: $("#plot_log").is(":checked") ? "logarithmic" : "linear",
+    }
+  });
+}
+function UpdateLastPoint() {
+  if (detail_chart.series[0].points.length)
+    $("#last_value").html(SigFigs(detail_chart.series[0].points.at(-1).y));
 }
 
 function UpdateAlarms() {

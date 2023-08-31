@@ -191,11 +191,11 @@ html
                       td#last_value XXX
                 .d-flex.flex-row
                   .mr-auto.p-2
-                    input#plot_alarms(type="checkbox" data-toggle='toggle' data-width='110px' data-on='<i class="fa-solid fa-eye"></i>&nbsp limits' data-off='<i class="fa-regular fa-eye-slash"></i>&nbsp limits' data-onstyle='danger' data-offstyle='secondary' onchange="DrawSensorHistory()")
-                    input#plot_zoom(type="checkbox" data-toggle='toggle' data-width='130px' data-on='<i class="fa-regular fa-eye-slash"></i>&nbsp outliers' data-off='<i class="fa-solid fa-eye"></i>&nbsp outliers' data-onstyle='primary' data-offstyle='secondary' onchange="DrawSensorHistory()")
-                    input#plot_log(type="checkbox" data-toggle='toggle' data-width='80px' data-on='log' data-off='linear' data-onstyle='primary' data-offstyle='secondary' onchange="DrawSensorHistory()")
+                    input#plot_alarms(type="checkbox" data-toggle='toggle' data-width='110px' data-on='<i class="fa-solid fa-eye"></i>&nbsp limits' data-off='<i class="fa-regular fa-eye-slash"></i>&nbsp limits' data-onstyle='danger' data-offstyle='secondary' onchange="ToggleThresholds()")
+                    input#plot_zoom(type="checkbox" data-toggle='toggle' data-width='130px' data-on='<i class="fa-regular fa-eye-slash"></i>&nbsp outliers' data-off='<i class="fa-solid fa-eye"></i>&nbsp outliers' data-onstyle='primary' data-offstyle='secondary' onchange="ToggleOutliers()")
+                    input#plot_log(type="checkbox" data-toggle='toggle' data-width='80px' data-on='log' data-off='linear' data-onstyle='primary' data-offstyle='secondary' onchange="ToggleLog()")
                   .p-2(style="margin-left:auto")
-                    select.form-select#selectinterval(onchange="DrawSensorHistory()")
+                    select.form-select#selectinterval(onchange="FillSeries()")
                       option(value="0") 10m
                       option(value="1") 1h
                       option(value="2") 3h
@@ -208,7 +208,7 @@ html
                       option(value="9") 2w
                       option(value="10") 4w
                   .p-2
-                    button.btn.btn-outline-secondary.mx-1#refresh_btn(onclick='DrawSensorHistory()')
+                    button.btn.btn-outline-secondary.mx-1#refresh_btn(onclick='FillSeries()')
                       i.fa.fa-sync-alt
 
                 .container.sensor_chart#sensor_chart
