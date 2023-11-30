@@ -35,11 +35,22 @@
 }
 #sidebar ul li :hover {
   color: #ffffff;
+  fill: #ffffff;
 }
+
 #sidebar ul li a i {
-  margin-right: 5px;
   display: block;
   font-size: 1.5em;
+  margin-bottom: 3px;
+}
+
+#sidebar ul li a svg {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1.5em;
+  width: 30px;
+  height: 30px;
   margin-bottom: 3px;
 }
 #sidebar ul li a span {
@@ -48,6 +59,7 @@
   display: block;
   margin-bottom: 3px;
 }
+
 ul.CTAs {
   padding: 10px;
 }
