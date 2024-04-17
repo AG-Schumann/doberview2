@@ -240,7 +240,7 @@ function ValidatePipeline(echo=true) {
       return false;
     }
     if (flavor == null) {
-      if (node.type.includes('Alarm'))
+      if (node.type.includes('Alarm') || node.type == 'CheckRemoteHeartbeatNode')
         flavor = 'alarm';
       else if (node.type.includes('Control'))
         flavor = 'control';
