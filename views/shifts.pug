@@ -3,6 +3,8 @@ extends layout
 block extrahead
   link(rel="stylesheet" href="/stylesheets/shifts.css")
   script(src="/javascripts/shifts.js" type="text/javascript")
+  script(src="/javascripts/default_scripts.js" type="text/javascript")
+
 
 block content
   #contact_detail.modal.fade(tabindex="-1" aria-hidden="true" )
@@ -64,22 +66,20 @@ block content
        .col-lg-12
          h3 Alarm configuration
          hr
-         form(action="/shifts/set_alarm_config" method='POST')
-           table.table.table-striped
-             thead
-               tr
-                 th
-                 th Level 0
-                 th Level 1
-                 th Level 2
-                 th Level 3
-             tbody
-               tr#silence_durations
-               tr#escalation_settings
-               tr#recipients
-               tr#protocols
-
-           button.btn.btn-primary.float-end(type="submit") Change config
+         table.table.table-striped
+           thead
+             tr
+               th
+               th Level 0
+               th Level 1
+               th Level 2
+               th Level 3
+           tbody
+             tr#silence_durations
+             tr#escalation_settings
+             tr#recipients
+             tr#protocols
+         button.btn.btn-primary.float-end(onclick="SetAlarmConfig()") Change config
 
 
   script.

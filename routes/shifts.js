@@ -72,34 +72,9 @@ router.post('/delete_shifter', function(req, res) {
 });
 
 router.post('/set_alarm_config', (req, res) => {
-  const formData = req.body;
-  console.log(formData);
-  const entry = {
-    name: 'alarm',
-    silence_duration: [
-      parseInt(formData['silence_durations[0]']),
-      parseInt(formData['silence_durations[1]']),
-      parseInt(formData['silence_durations[2]'])
-    ],
-    escalation_config: [
-      parseInt(formData['escalation_settings[0]']),
-      parseInt(formData['escalation_settings[1]']),
-      parseInt(formData['escalation_settings[2]'])
-    ],
-    recipients: [
-      [formData['recipients[0][0]']],
-      [formData['recipients[1][0]']],
-      [formData['recipients[2][0]'], formData['recipients[2][1]']],
-      [formData['recipients[3][0]']]
-    ],
-    protocols: [
-      [formData['protocols[0][0]']],
-      [formData['protocols[1][0]'], formData['protocols[1][1]']],
-      [formData['protocols[2][0]'], formData['protocols[2][1]'], formData['protocols[2][2]']],
-      [formData['protocols[3][0]'], formData['protocols[3][1]'], formData['protocols[3][2]']]
-    ]
-  };
-  console.log(entry);
+  mongo_db.get('experiment_config').update({'name': 'alarm'}, {$set: req.body})
+      .then(() => res.json({notify_msg: 'Alarm config updated', notify_status: 'success'}))
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 module.exports = router;

@@ -44,19 +44,20 @@ function PopulateAlarmConfig() {
       var check_shifters = (doc.recipients[i].includes('shifters') ? 'checked' : '');
       var check_experts = (doc.recipients[i].includes('experts') ? 'checked' : '');;
       var check_everyone = (doc.recipients[i].includes('everyone') ? 'checked' : '');
-      $('#recipients').append(`<td><div><input class="form-check-input" type="checkbox"value="" ${check_shifters}> Shifters</div>
-                <div><input class="form-check-input" type="checkbox"value="" ${check_experts}> Experts</div>
-                <div><input class="form-check-input" type="checkbox"value="" ${check_everyone}> Everyone</div></td>`);
+      $('#recipients').append(`<td><div><input class="form-check-input" type="checkbox" value="shifters" ${check_shifters}> Shifters</div>
+                <div><input class="form-check-input" type="checkbox" value="experts" ${check_experts}> Experts</div>
+                <div><input class="form-check-input" type="checkbox"  value="everyone" ${check_everyone}> Everyone</div></td>`);
+    }
+    for (var i in doc.protocols) {
       var check_mail = (doc.protocols[i].includes('email') ? 'checked' : '');
       var check_sms = (doc.protocols[i].includes('sms') ? 'checked' : '');
       var check_phone = (doc.protocols[i].includes('phone') ? 'checked' : '');
-      $('#protocols').append(`<td><div><input class="form-check-input" type="checkbox"value="" ${check_mail}> Mail</div>
-                <div><input class="form-check-input" type="checkbox"value="" ${check_sms}> SMS</div>
-                <div><input class="form-check-input" type="checkbox"value="" ${check_phone}> Phone call</div></td>`);
+      $('#protocols').append(`<td><div><input class="form-check-input" type="checkbox" value="email" ${check_mail}> Mail</div>
+                <div><input class="form-check-input" type="checkbox" value="sms" ${check_sms}> SMS</div>
+                <div><input class="form-check-input" type="checkbox" value="phone" ${check_phone}> Phone call</div></td>`);
     }
   });
 }
-
 
 function SubmitContact() {
   var shifter = {
@@ -125,10 +126,51 @@ function DeleteShifter(name) {
   }
 }
 
+
 function SetAlarmConfig() {
-  $.post('/shifts/set_alarm_config', (data, status) => {
-    if (typeof data.err != 'undefined')
-      alert(data.err);
+  var newDoc = {
+    silence_duration: [],
+    escalation_config: [],
+    recipients: [],
+    protocols: []
+  };
+
+  // Extract silence duration and escalation settings
+  $('#silence_durations input').each(function(index, element) {
+    newDoc.silence_duration.push(parseInt($(element).val()));
   });
 
+  $('#escalation_settings input').each(function(index, element) {
+    newDoc.escalation_config.push(parseInt($(element).val()));
+  });
+
+  // Extract recipients
+  $('#recipients td').each(function(index, element) {
+    var recipientArray = [];
+    $(element).find('input:checked').each(function() {
+      recipientArray.push($(this).val());
+    });
+    newDoc.recipients.push(recipientArray);
+  });
+
+  // Extract protocols
+  $('#protocols td').each(function(index, element) {
+    var protocolArray = [];
+    $(element).find('input:checked').each(function() {
+      protocolArray.push($(this).val());
+    });
+    newDoc.protocols.push(protocolArray);
+  });
+  $.ajax({
+    type: 'POST',
+    url: '/shifts/set_alarm_config',
+    data: newDoc,
+    success: (data) => {
+      if (typeof data != 'undefined' && typeof data.err != 'undefined')
+        alert(data.err);
+      else
+        Notify(data.notify_msg, data.notify_status);
+    },
+    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+  });
 }
