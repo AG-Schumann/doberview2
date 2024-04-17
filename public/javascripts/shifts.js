@@ -42,7 +42,7 @@ function PopulateAlarmConfig() {
     $('#escalation_settings').append('<td></td>');
     for (var i in doc.recipients) {
       var check_shifters = (doc.recipients[i].includes('shifters') ? 'checked' : '');
-      var check_experts = (doc.recipients[i].includes('experts') ? 'checked' : '');;
+      var check_experts = (doc.recipients[i].includes('experts') ? 'checked' : '');
       var check_everyone = (doc.recipients[i].includes('everyone') ? 'checked' : '');
       $('#recipients').append(`<td><div><input class="form-check-input" type="checkbox" value="shifters" ${check_shifters}> Shifters</div>
                 <div><input class="form-check-input" type="checkbox" value="experts" ${check_experts}> Experts</div>
