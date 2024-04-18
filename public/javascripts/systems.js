@@ -40,6 +40,7 @@ function SetRefreshRate(rate) {
 }
 
 function SigFigs(val) {
+  console.log('SigFigs: ' + val);
   LOG_THRESHOLD=3;
   SIG_FIGS=3;
   return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toPrecision(SIG_FIGS) : val.toExponential(SIG_FIGS-1);

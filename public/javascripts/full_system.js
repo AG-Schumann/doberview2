@@ -1,6 +1,4 @@
-// Settings:
-var SIG_FIGS = 3;
-var LOG_THRESHOLD = 3;
+
 //console.log('Change the number formatting by with the SIG_FIGS and LOG_THRESHOLD variables')
 console.log(`The following configuration settings can be changed by setting the corresponding variable.
   e.g. SIG_FIGS = 4;
