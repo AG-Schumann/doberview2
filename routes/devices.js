@@ -362,7 +362,7 @@ router.get('/get_data', function(req, res) {
           },
         })}).then(resp => {
           var data = resp.data.split('\r\n').slice(1);
-          return res.json(data.map(row => {var x = row.split(','); return [new Date(x[6]).getTime(), parseFloat(x[5])];}));
+          return res.json(data.map(row => {var x = row.split(','); return [new Date(x[3]).getTime(), parseFloat(x[6])];}));
   }).catch(err => {console.log(err); return res.json([]);});
 });
 

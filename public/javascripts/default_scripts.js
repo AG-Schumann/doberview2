@@ -320,8 +320,6 @@ function InitDiagram(sensor) {
             if ($("#auto_refresh").prop('checked')) {
               $.getJSON(`/devices/get_last_point?sensor=${sensor}`, point => {
                 var time = parseInt(point.time);
-                //console.log(this.xAxis[0].getExtremes());
-                //console.log(point.time);
                 if (time > this.xAxis[0].getExtremes().dataMax) {
                   this.series[0].addPoint([time, parseFloat(point.value)], true, true);
                   ToggleOutliers();
@@ -366,7 +364,6 @@ function InitDiagram(sensor) {
       events: {
         afterSetExtremes: function (e) {
           if (e.trigger === "zoom") {
-            console.log('zoom event');
             FillSeries(sensor, Math.round(detail_chart.xAxis[0].min/1000), Math.round(detail_chart.xAxis[0].max/1000));
           }
         }
@@ -384,12 +381,6 @@ function InitDiagram(sensor) {
       valueDecimals: SIG_FIGS,
       valueSuffix: ' ' + unit,
       pointFormat: '<b>{point.y}</b><br/>',
-
-
-      //pointFormatter: function () {
-       //return SigFigs(this.y) + ' ' + unit
-      //},
-
     },
   });
   FillSeries();
@@ -720,17 +711,6 @@ function DeviceCommand(to, cmd) {
     SendToHypervisor(receiver, command, 'Command sent');
   }
   $("#device_command").val("");
-}
-
-function ToggleValve() {
-  let sensor = $("#detail_sensor_name").html();
-  let device = control_map[sensor][0];
-  let target = control_map[sensor][1];
-  let normallyClosed = control_map[sensor][2];
-  let state = $("#current_valve_state").html() == normallyClosed ? 1 : 0;
-  if (sensor && target && device && confirm(`Confirm valve toggle`)) {
-    SendToHypervisor(device, `set ${target} ${state}`, `set ${target} ${state}`);
-  }
 }
 
 function ChangeSetpoint(value) {
