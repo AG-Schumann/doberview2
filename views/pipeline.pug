@@ -110,33 +110,41 @@ block content
 
 
   script.
-    $(document).ready(function() {
-      PopulateNavbar();
-      const options = {
-        "modes": ["tree", "code"],
-        onEditable: function (node) {
-          switch (node.field) {
-            case '_id':
-            case 'cycles':
-            case 'depends_on':
-            case 'error':
-            case 'heartbeat':
-            case 'rate':
-            case 'status':
-              return {field: false, value: false}
-            case 'name':
-            case 'description':
-            case 'pipeline':
-            case 'node_config':
-              return {field: false, value: true}
-            default:
-              return {field: true, value: true}
-          }
+    const options = {
+      "modes": ["tree", "code"],
+      onEditable: function (node) {
+        switch (node.field) {
+          case '_id':
+          case 'cycles':
+          case 'depends_on':
+          case 'error':
+          case 'heartbeat':
+          case 'rate':
+          case 'status':
+            return {field: false, value: false}
+          case 'name':
+          case 'description':
+          case 'pipeline':
+          case 'node_config':
+            return {field: false, value: true}
+          default:
+            return {field: true, value: true}
         }
       }
+    };
 
-      document.jsoneditor = new JSONEditor(document.getElementById('json_text'), options);
+    // Function to set JSONEditor theme
+    function setJsonEditorTheme(theme) {
+      const themeStyles = theme === 'light' ? 'jsoneditor-light' : 'jsoneditor-dark';
+      document.jsoneditor.container.classList.remove('jsoneditor-light', 'jsoneditor-dark');
+      document.jsoneditor.container.classList.add(themeStyles);
+    }
 
+    // Update JSONEditor theme based on data-bs-theme attribute
+    $(document).ready(function () {
+      const initialTheme = $(':root').attr('data-bs-theme');
+      setJsonEditorTheme(initialTheme);
+      PopulateNavbar();
       ['alarm', 'control', 'convert'].forEach(pl => PopulatePipelines(pl));
       setInterval(UpdateLoop, 5000);
       var pipeline = GetParameterByName('pipeline');
@@ -151,3 +159,11 @@ block content
         PipelineDropdown(query_search.get('pipeline_id'));
       };
     });
+
+    $('#bd-theme').on('click', function () {
+      const currentTheme = $(':root').attr('data-bs-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setJsonEditorTheme(newTheme);
+    });
+
+    document.jsoneditor = new JSONEditor(document.getElementById('json_text'), options);
