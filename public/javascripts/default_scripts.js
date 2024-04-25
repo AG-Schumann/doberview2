@@ -312,11 +312,13 @@ function DrawSensorHistory(sensor) {
       var upperbound = ymax + (ymax-ymin)/3;
       var lowerbound = ymin - (ymax-ymin)/3;
     }
-    
+    const currentTheme = $(':root').attr('data-bs-theme');
+    const bkg_color = ((currentTheme === 'light') ? "#ffffff" : "#212529")
     detail_chart = Highcharts.chart('sensor_chart', {
       chart: {
         zoomType: 'xy',
         height: '300px',
+        backgroundColor: bkg_color,
       },
       title: {text: null},
       credits: {enabled: false},
@@ -638,3 +640,48 @@ function GetParameterByName(name, url) {
   if (!results[2]) return "";
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+$(document).ready(function() {
+  'use strict';
+
+  const getStoredTheme = () => localStorage.getItem('theme');
+  const setStoredTheme = theme => localStorage.setItem('theme', theme);
+
+  const getPreferredTheme = () => {
+    const storedTheme = getStoredTheme();
+    if (storedTheme) {
+      return storedTheme;
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  };
+
+  const setTheme = theme => {
+    if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      $(':root').attr('data-bs-theme', 'dark');
+    } else {
+      $(':root').attr('data-bs-theme', theme);
+    }
+    $('#navbar').removeClass('bg-dark bg-light').addClass(theme === 'dark' ? 'bg-dark' : 'bg-light');
+
+    // Update the button icon based on the theme
+    const activeThemeIcon = $('.theme-icon-active');
+    activeThemeIcon.removeClass('fa-sun fa-moon').addClass(theme === 'dark' ? 'fa-moon' : 'fa-sun');
+  };
+
+  setTheme(getPreferredTheme());
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    const storedTheme = getStoredTheme();
+    if (storedTheme !== 'light' && storedTheme !== 'dark') {
+      setTheme(getPreferredTheme());
+    }
+  });
+
+  $('#bd-theme').on('click', function() {
+    const currentTheme = $(':root').attr('data-bs-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    setStoredTheme(newTheme);
+    setTheme(newTheme);
+  });
+});

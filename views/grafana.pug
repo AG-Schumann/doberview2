@@ -1,9 +1,19 @@
 extends layout
 block content
   div.main-container(style="height:960px")
-    iframe(src=`${grafana_url}` title="Grafana" style="width:100%;height:100%")
+    iframe#grafana_embed(src=`${grafana_url}` title="Grafana" style="width:100%;height:100%")
 
 
   script.
     $(document).ready(function() {
+      var currentTheme = $(':root').attr('data-bs-theme');
+      var url = $('iframe#grafana_embed').attr('src');
+      $('iframe#grafana_embed').attr('src', url+`&theme=${currentTheme}`);
+    });
+    $('#bd-theme').on('click', function() {
+      const currentTheme = $(':root').attr('data-bs-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      var url = $('iframe#grafana_embed').attr('src');
+      const newrl = url.split('&theme=')[0] + `&theme=${newTheme}`;
+      $('iframe#grafana_embed').attr('src', newrl);
     });
