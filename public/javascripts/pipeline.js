@@ -220,9 +220,10 @@ function ConvertTemplate() {
 }
 
 function ValidatePipeline(echo=true) {
-  try{
+  let doc;
+  try {
     doc = JSON.parse(JSON.stringify(document.jsoneditor.get()));
-  }catch(err){
+  } catch (err) {
     Notify(err, 'error');
     return false;
   }
@@ -231,7 +232,6 @@ function ValidatePipeline(echo=true) {
     return false;
   }
   var names = [];
-  var flavor = null;
   for (var node of doc.pipeline) {
     if (names.includes(node.name)) {
       Notify('Please give nodes unique names', 'error');
@@ -241,19 +241,7 @@ function ValidatePipeline(echo=true) {
       Notify('Please give nodes meaningful names', 'error');
       return false;
     }
-    if (flavor == null) {
-      if (node.type.includes('Alarm') || node.type == 'CheckRemoteHeartbeatNode')
-        flavor = 'alarm';
-      else if (node.type.includes('Control'))
-        flavor = 'control';
-      else if (node.type == 'InfluxSinkNode')
-        flavor = 'convert';
-    }
     names.push(node.name);
-  }
-  if (!doc.name.startsWith(flavor)) {
-    Notify('The name doesn\'t seem to match the pipeline\'s task', 'error');
-    return false;
   }
   if (echo)
     Notify('Basic validation successful');
