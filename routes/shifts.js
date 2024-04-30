@@ -72,7 +72,13 @@ router.post('/delete_shifter', function(req, res) {
 });
 
 router.post('/set_alarm_config', (req, res) => {
-  mongo_db.get('experiment_config').update({'name': 'alarm'}, {$set: req.body})
+  var data = req.body;
+  var updates = {};
+  updates['silence_duration'] = data.silence_duration.map(parseFloat);
+  updates['escalation_config'] = data.escalation_config.map(parseFloat);
+  updates['recipients'] = data.recipients;
+  updates['protocols'] = data.protocols;
+  mongo_db.get('experiment_config').update({'name': 'alarm'}, {$set: updates})
       .then(() => res.json({notify_msg: 'Alarm config updated', notify_status: 'success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
