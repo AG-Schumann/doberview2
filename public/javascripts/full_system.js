@@ -22,7 +22,7 @@ function PopulateNavbar() {
       '<label class="btn btn-outline-primary" for="groupTopic">Topic</label></div></div></li>' +
       '<li class="nav-item">' +
       '<div class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Jump to</a> ' +
-      '<ul class="dropdown-menu" id="jump_to_list"></ul></div></li>' +
+      '<ul class="dropdown-menu" id="jump_to_list" style="max-height:80vh; overflow-y:scroll;"></ul></div></li>' +
       '<li class="nav-item">' +
       '<div class="input-group pe-3" style="min-width:205px"><span class="input-group-text"><i class="fas fa-solid fa-magnifying-glass"></i>' +
       '</span> <input class="form-control" id="searchSensorInput" type="text" onkeyup="FilterSensors()" placeholder="Search sensor"/> ' +
