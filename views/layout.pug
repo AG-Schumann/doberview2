@@ -59,11 +59,10 @@ html(data-bs-theme="dark")
               span Cameras
     nav.navbar.fixed-top.navbar-expand-lg#navbar
       .container-fluid
+        button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+          span.navbar-toggler-icon
         #navbarSupportedContent.collapse.navbar-collapse.justify-content-between
           ul.navbar-nav#navbar_content
-            li.nav-item
-              button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
-                span.navbar-toggler-icon
             li.nav-item.dropdown
               button#bd-theme.btn.btn-primary(type='button')
                 i.theme-icon-active.fas.fa-solid
