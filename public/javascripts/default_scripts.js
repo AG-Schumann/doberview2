@@ -209,37 +209,6 @@ function MakeAlarm(name, is_int=false) {
   });
 }
 
-function UpdateButtons(device) {
-  $.getJSON(`/hypervisor/device_status?device=${device}`, (doc) => {
-    let control_btn = $("#device_ctrl_btn");
-    let manage_btn = $("#device_manage_btn");
-    if (doc.active === true) {
-      control_btn.text("Stop");
-    } else {
-      control_btn.text("Start");
-    }
-    if (doc.managed === true) {
-      manage_btn.text("Unmanage");
-    } else {
-      manage_btn.text("Manage");
-    }
-    control_btn.off('click').click(function() {
-      if (doc.active === true) {
-        ControlDevice("stop");
-      } else {
-        ControlDevice(`start ${device}`);
-      }
-    });
-    manage_btn.off('click').click(function() {
-      if (doc.managed === true) {
-        ManageDevice('unmanage');
-      } else {
-        ManageDevice('manage');
-      }
-    });
-  });
-}
-let intervalId;
 function DeviceDropdown(device) {
   $("#device_ctrl_btn").prop("onclick", null).off("click");
   $("#device_manage_btn").prop("onclick", null).off("click");
@@ -249,6 +218,34 @@ function DeviceDropdown(device) {
       return;
     $("#detail_device_name").html(data.name);
     $("#device_host").val(data.host).attr('disabled', true);
+    $.getJSON(`/hypervisor/device_status?device=${device}`, (doc) => {
+      let control_btn = $("#device_ctrl_btn");
+      let manage_btn = $("#device_manage_btn");
+      if (doc.active === true) {
+        control_btn.text("Stop");
+      } else {
+        control_btn.text("Start");
+      }
+      if (doc.managed === true) {
+        manage_btn.text("Unmanage");
+      } else {
+        manage_btn.text("Manage");
+      }
+      control_btn.click(function() {
+        if (doc.active === true) {
+          ControlDevice("stop");
+        } else {
+          ControlDevice(`start ${device}`);
+        }
+      })
+      manage_btn.click(function() {
+        if (doc.managed === true) {
+          ManageDevice('unmanage');
+        } else {
+          ManageDevice('manage');
+        }
+      })
+    });
     if (typeof data.address != 'undefined') {
       if (typeof data.address.ip != 'undefined') {
         $("#device_ip").val(data.address.ip);
@@ -270,7 +267,7 @@ function DeviceDropdown(device) {
     $("#device_sensors").empty();
     var sensor_list = data.sensors;
     if (data.multi)
-      sensor_list = data.multi;
+        sensor_list = data.multi;
     sensor_list.forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
     $("#device_sensors").append('<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="PopulateNewSensor()">Add new!</button></li>');
     if (typeof data.commands != 'undefined')
@@ -278,14 +275,7 @@ function DeviceDropdown(device) {
     else
       $("#device_commands_list").html("<li>None</li>");
     $("#device_command_to").val(data.name);
-    UpdateButtons(device); // Initial update
-    $("#devicebox").on('show.bs.modal', function() {
-      intervalId = setInterval(() => {
-        UpdateButtons(device); // Periodic update
-      }, 5000); // Adjust the interval as needed
-    }).on('hidden.bs.modal', function() {
-      clearInterval(intervalId); // Stop the interval when modal is hidden
-    }).modal('show');
+    $("#devicebox").modal('show');
   });
 }
 
