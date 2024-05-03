@@ -223,20 +223,20 @@ function UpdateButtons(device) {
     } else {
       manage_btn.text("Manage");
     }
-    control_btn.click(function() {
+    control_btn.off('click').click(function() {
       if (doc.active === true) {
         ControlDevice("stop");
       } else {
         ControlDevice(`start ${device}`);
       }
-    })
-    manage_btn.click(function() {
+    });
+    manage_btn.off('click').click(function() {
       if (doc.managed === true) {
         ManageDevice('unmanage');
       } else {
         ManageDevice('manage');
       }
-    })
+    });
   });
 }
 
