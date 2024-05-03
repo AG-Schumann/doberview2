@@ -239,7 +239,7 @@ function UpdateButtons(device) {
     });
   });
 }
-
+let intervalId;
 function DeviceDropdown(device) {
   $("#device_ctrl_btn").prop("onclick", null).off("click");
   $("#device_manage_btn").prop("onclick", null).off("click");
@@ -249,10 +249,6 @@ function DeviceDropdown(device) {
       return;
     $("#detail_device_name").html(data.name);
     $("#device_host").val(data.host).attr('disabled', true);
-    UpdateButtons(device); // Initial update
-    setInterval(() => {
-      UpdateButtons(device); // Periodic update
-    }, 1000);
     if (typeof data.address != 'undefined') {
       if (typeof data.address.ip != 'undefined') {
         $("#device_ip").val(data.address.ip);
@@ -274,7 +270,7 @@ function DeviceDropdown(device) {
     $("#device_sensors").empty();
     var sensor_list = data.sensors;
     if (data.multi)
-        sensor_list = data.multi;
+      sensor_list = data.multi;
     sensor_list.forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
     $("#device_sensors").append('<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="PopulateNewSensor()">Add new!</button></li>');
     if (typeof data.commands != 'undefined')
@@ -282,7 +278,14 @@ function DeviceDropdown(device) {
     else
       $("#device_commands_list").html("<li>None</li>");
     $("#device_command_to").val(data.name);
-    $("#devicebox").modal('show');
+    UpdateButtons(device); // Initial update
+    $("#devicebox").on('show.bs.modal', function() {
+      intervalId = setInterval(() => {
+        UpdateButtons(device); // Periodic update
+      }, 5000); // Adjust the interval as needed
+    }).on('hidden.bs.modal', function() {
+      clearInterval(intervalId); // Stop the interval when modal is hidden
+    }).modal('show');
   });
 }
 
