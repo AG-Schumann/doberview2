@@ -223,10 +223,8 @@ function DeviceDropdown(device) {
       let manage_btn = $("#device_manage_btn");
       if (doc.active === true) {
         control_btn.text("Stop");
-        manage_btn.prop('disabled', false);
       } else {
         control_btn.text("Start");
-        manage_btn.prop('disabled', true);
       }
       if (doc.managed === true) {
         manage_btn.text("Unmanage");
