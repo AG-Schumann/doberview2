@@ -26,6 +26,7 @@ router.get('/params', function(req, res) {
 router.post('/new_sensor', common.ensureAuthenticated, function(req, res) {
   var doc = req.body;
   doc.status = 'online';
+  doc.alarm_is_triggered = false;
   var topic = doc.topic;
   if (!Object.values(topic_lut).includes(topic))
     return res.json({err: `Invalid topic: ${topic} ${Object.values(topic_lut).join(',')}`});
