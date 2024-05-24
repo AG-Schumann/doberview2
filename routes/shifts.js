@@ -37,6 +37,12 @@ router.get('/contact_detail', function(req, res) {
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
+router.get('/alarm_config', function (req, res) {
+  mongo_db.get('experiment_config').findOne({name: 'alarm'})
+      .then(doc => res.json(doc))
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
 router.post('/set_shifters', function(req, res) {
   var shifters = req.body.shifters;
   if (typeof shifters == 'undefined' || shifters.length === 0)
@@ -63,6 +69,18 @@ router.post('/delete_shifter', function(req, res) {
   mongo_db.get('contacts').remove({name: name})
   .then(() => res.json({}))
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
+});
+
+router.post('/set_alarm_config', (req, res) => {
+  var data = req.body;
+  var updates = {};
+  updates['silence_duration'] = data.silence_duration.map(parseFloat);
+  updates['escalation_config'] = data.escalation_config.map(parseFloat);
+  updates['recipients'] = data.recipients;
+  updates['protocols'] = data.protocols;
+  mongo_db.get('experiment_config').update({'name': 'alarm'}, {$set: updates})
+      .then(() => res.json({notify_msg: 'Alarm config updated', notify_status: 'success'}))
+      .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
 module.exports = router;

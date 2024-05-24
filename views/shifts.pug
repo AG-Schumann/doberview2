@@ -4,6 +4,7 @@ block extrahead
   link(rel="stylesheet" href="/stylesheets/shifts.css")
   script(src="/javascripts/shifts.js" type="text/javascript")
 
+
 block content
   #contact_detail.modal.fade(tabindex="-1" aria-hidden="true" )
     .modal-dialog.modal-lg
@@ -58,14 +59,34 @@ block content
               th On shift?
           tbody#shift_table
 
-        button.btn.btn-warning(onclick="SubmitShifts()") Set shifters
+        button.btn.btn-primary(onclick="SubmitShifts()") Set shifters
         span &nbsp;
+    .row
+       .col-lg-12
+         h3 Alarm configuration
+         hr
+         table.table.table-striped
+           thead
+             tr
+               th
+               th Level 0
+               th Level 1
+               th Level 2
+               th Level 3
+           tbody
+             tr#silence_durations
+             tr#escalation_settings
+             tr#recipients
+             tr#protocols
+         button.btn.btn-primary.float-end(onclick="SetAlarmConfig()") Change config
+
 
   script.
     $(document).ready(function() {
       PopulateNavbar();
       PopulateTable();
       PopulateOnShift();
+      PopulateAlarmConfig();
     });
     window.onclick = function(event) {
       var elems = document.getElementsByClassName("modal");
