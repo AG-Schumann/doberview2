@@ -12,6 +12,16 @@ function Notify(msg, type='success') {
   toast.show();
 }
 
+function CheckHypervisor() {
+  $.getJSON(`/hypervisor/status`, (doc) => {
+    if (doc.status === 'offline') {
+      $("#offline_alert").show();
+    } else {
+      $("#offline_alert").hide();
+    }
+  });
+}
+
 function SensorDropdown(sensor) {
   $("#alarm_low, #alarm_high").change(() => {let low = parseInt($("#alarm_low").val());
     let high = parseInt($("#alarm_high").val());
