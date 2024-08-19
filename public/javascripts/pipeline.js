@@ -26,9 +26,8 @@ function PopulatePipelines(flavor) {
     $(`#${flavor}_silent`).empty();
     $(`#${flavor}_inactive`).empty();
     data.forEach(doc => {
-      let n = doc.name;
-      let search_n = doc.name.replace(/_/g, '').toUpperCase();
-      if (filter === '' || (search_n.indexOf(filter) > -1)) {
+      let n = doc.name.replace(/_/g, '').toUpperCase();
+      if (filter === '' || (n.indexOf(filter) > -1)) {
         let status = doc.status;
         if ((status === 'active') && ((doc.silent_until == -1) || (doc.silent_until > Date.now()/1000))) {
           status = 'silent';
