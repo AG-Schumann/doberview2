@@ -95,17 +95,17 @@ function UpdateOnce(regroup=false) {
 }
 
 function FilterSensors() {
-
-  var filter = $("#searchSensorInput").val().toUpperCase();
+  var filter = $("#searchSensorInput").val().replace(/_/g, '').toUpperCase();
   var tr = $("#sensor_table").find("tr");
   for (var i = 0; i < tr.length; i++) {
     var sensor_name = tr[i].getElementsByTagName("td")[0];
     if (sensor_name) {
-      var txtValue = sensor_name.textContent || sensor_name.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1)
+      var txtValue = (sensor_name.textContent || sensor_name.innerText).replace(/_/g, '').toUpperCase();
+      if (txtValue.indexOf(filter) > -1) {
         tr[i].style.display = "";
-      else
+      } else {
         tr[i].style.display = "none";
+      }
     }
   }
 }
