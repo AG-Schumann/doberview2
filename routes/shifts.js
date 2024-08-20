@@ -22,7 +22,7 @@ router.get('/on_shift', function (req, res) {
 });
 
 router.get('/get_contacts', function(req, res) {
-  mongo_db.get('contacts').find({}, {projection: {name: 1, on_shift: 1}})
+  mongo_db.get('contacts').find({}, {projection: {name: 1, on_shift: 1, expert: 1}})
       .then(docs => res.json(docs))
       .catch(err => {console.log(err.message); return res.json([]);});
 });

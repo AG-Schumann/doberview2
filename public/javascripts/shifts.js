@@ -3,7 +3,7 @@ function PopulateNavbar() {
   var content = '<li><div class="d-flex"> <button class="btn btn-primary" onclick="ShowDetail(null)">' +
       '<span>Add new &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-user"></i></span>' +
       '</button></div></li>';
-  $('#navbar_content').html(content);
+  $('#navbar_content').prepend(content);
 }
 
 function PopulateOnShift() {
@@ -23,7 +23,16 @@ function PopulateOnShift() {
 function PopulateTable() {
   $.getJSON('/shifts/get_contacts', (data) => {
     $('#shift_table').empty();
-    data.forEach(doc => $("#shift_table").append(`<tr><td onclick=ShowDetail('${doc.name}')>${doc.name}</td><td><input type="checkbox" ${doc.on_shift ?'checked':''}></td><td><i class="fas fa-solid fa-trash" onclick="DeleteShifter('${doc.name}')"></i></td></tr>`));
+    data.forEach(doc => {
+      $("#shift_table").append(`
+        <tr>
+          <td onclick="ShowDetail('${doc.name}')">${doc.name}</td>
+          <td><input type="checkbox" ${doc.on_shift ? 'checked' : ''}></td>
+          <td>${doc.expert ? '<i class="fa-solid fa-square-check"></i></i>' : ''}</td>
+          <td><i class="fas fa-solid fa-trash" onclick="DeleteShifter('${doc.name}')"></i></td>
+        </tr>
+      `);
+    });
   });
 }
 

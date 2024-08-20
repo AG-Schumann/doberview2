@@ -15,7 +15,7 @@ function PopulateNavbar() {
 }
 
 function UpdateLoop() {
-  $(".tooltip").tooltip("hide");
+  $('[data-bs-toggle="tooltip"]').tooltip('dispose');
   ['alarm', 'control', 'convert'].forEach(flavor => PopulatePipelines(flavor));
 }
 
@@ -62,12 +62,11 @@ function PopulatePipelines(flavor) {
         } else {
           $(`#${n}_actions`).html(`${start_button}`);
         }
-        $('[data-bs-toggle="tooltip"]').tooltip();
       }
     }); // data.forEach
+    $('[data-bs-toggle="tooltip"]').tooltip();
   }); // getJSON
 }
-
 function Visualize(doc) {
   if (doc == null) {
     try{
