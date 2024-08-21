@@ -27,18 +27,20 @@ html(data-bs-theme="dark")
   body
     #sidebar_wrapper
       nav#sidebar.bg-dark
-        img#exp_logo(src="/images/pancake.png" alt="Pancake" width="50" style="margin-top:10px")
+        a(href="/")
+          img#exp_logo(src="/images/pancake.png" alt="Pancake" width="40" style="margin-top:15px")
         ul.list-unstyled.components
           li#loberview(class="colored")
-            a(href="/devices")
-              i.fas.fa-eye
-              span Overview
             a(href="/systems" hidden=hide_systems)
               i.fas.fa-object-group
-              span Systems
+              span Overview
+            a(href="/devices")
+              i.fa-solid.fa-table-list
+              span Table view
+
             a(href='/pipeline')
               i.fas.fa-code-branch
-              span Pipeline
+              span Pipelines
             a(href='/hosts' hidden=hide_hosts)
               i.fas.fa-server
               span Hosts
