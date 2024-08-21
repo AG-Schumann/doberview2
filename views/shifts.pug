@@ -53,10 +53,12 @@ block content
         h3 All contacts
         hr
         table.table.table-hover.table-striped(style="width:50%")
-          thead
+          thead#shift_head
             tr
               th Name
-              th On shift?
+              th Shifter
+              th Expert
+              th Delete
           tbody#shift_table
 
         button.btn.btn-primary(onclick="SubmitShifts()") Set shifters

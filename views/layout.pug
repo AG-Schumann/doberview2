@@ -87,7 +87,6 @@ html(data-bs-theme="dark")
         .toast-body
     #notify_error.toast.bg-danger.translate-middle-x(role='alert' aria-live='assertive' aria-atomic='true')
       .toast-body
-      
     div.modal-container  
       #sensorbox.modal.fade(tabindex="-1" aria-labelledby="sensorboxLabel" aria-hidden="true")
         .modal-dialog.modal-xl
@@ -96,7 +95,7 @@ html(data-bs-theme="dark")
               h5.modal-title#detail_sensor_name
               button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
             .modal-body.row
-              .col-lg-6
+              .col-xl-6
                 h5 General info
                 br
                 table
@@ -166,7 +165,7 @@ html(data-bs-theme="dark")
                     tr
                       th.py-2(colspan=2)
                         button.btn.btn-primary#change_alarms(onclick="UpdateAlarms()") Update alarm
-              .col-lg-6
+              .col-xl-6
                 div#sensor_control
                   h5 Control
                   span#control_target(hidden)
