@@ -44,11 +44,14 @@ console.log(`New connection at ${new Date()}`);
 
 
 const deviceRouter = require('./routes/devices');
-app.use('/', deviceRouter);
 app.use('/devices', deviceRouter);
 if (config.use_systems) {
   const systemsRouter = require('./routes/systems');
   app.use('/systems', systemsRouter);
+  app.use('/', systemsRouter); // GUI view should be default when it exists.
+}
+else {
+  app.use('/', deviceRouter); // Else use table view as landing page.
 }
 let pipelineRouter = require('./routes/pipeline');
 app.use('/pipeline', pipelineRouter);

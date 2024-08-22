@@ -1,7 +1,7 @@
 doctype html
 html(data-bs-theme="dark")
   head
-    title=DOBERview
+    title DOBERview Pancake
     link(rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png")
     link(rel="icon" type="image/png" href="/images/favicon-196x196.png" sizes="196x196")
     link(rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96")
@@ -27,18 +27,19 @@ html(data-bs-theme="dark")
   body
     #sidebar_wrapper
       nav#sidebar.bg-dark
-        img#exp_logo(src="/images/pancake.png" alt="Pancake" width="50" style="margin-top:10px")
+        a(href="/")
+          img#exp_logo(src="/images/pancake.png" alt="Pancake" width="40" style="margin-top:15px")
         ul.list-unstyled.components
           li#loberview(class="colored")
-            a(href="/devices")
-              i.fas.fa-eye
-              span Overview
             a(href="/systems" hidden=hide_systems)
               i.fas.fa-object-group
-              span Systems
+              span Overview
+            a(href="/devices")
+              i.fa-solid.fa-table-list
+              span Sensors
             a(href='/pipeline')
               i.fas.fa-code-branch
-              span Pipeline
+              span Pipelines
             a(href='/hosts' hidden=hide_hosts)
               i.fas.fa-server
               span Hosts
