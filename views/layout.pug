@@ -379,12 +379,14 @@ html(data-bs-theme="dark")
                 button.btn.btn-primary(type='button' onclick="DeviceCommand($('#command_to').val(), $('#command').val())") Send
             span Accepted commands:
               ul#accepted_commands_list
-
-
     block content
+    #offline_alert(style="background-color: #dc3545; color: white; position: fixed; bottom: 0; width: 100%; text-align: center; padding: 10px;")
+      i.fa-solid.fa-robot
+      span &nbsp; Hypervisor is offline.
 
     script.
       $(document).ready(function () {
+        CheckHypervisor();
         $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});
         if ($("#login_dropdown").html() == 'Login') {
           $("#login_button").show();
