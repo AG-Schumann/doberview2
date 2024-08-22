@@ -64,6 +64,15 @@ ul.CTAs li a {
 #sidebar .CTAs {
   display: block;
 }
+
+
+
+@media (max-width: 992px) {
+  .navbar-nav .nav-item {
+    padding: 0.5rem 0;
+  }
+}
+
 #navbar {
   margin-left: 65px;
 }
