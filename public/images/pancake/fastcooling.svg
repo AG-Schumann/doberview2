@@ -7,8 +7,8 @@
    viewBox="0 0 297 210"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
-   sodipodi:docname="fastcooling.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="fastcooling_updated.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:svg="http://www.w3.org/2000/svg">
@@ -22,16 +22,18 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="2.0000001"
-     inkscape:cx="682.74998"
-     inkscape:cy="796.49998"
+     inkscape:zoom="0.70710685"
+     inkscape:cx="657.60924"
+     inkscape:cy="335.16858"
      inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:window-height="1011"
+     inkscape:window-x="1920"
+     inkscape:window-y="32"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
-     showguides="false" />
+     showguides="false"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
   <svg:defs
      id="defs2">
     <svg:marker
@@ -317,6 +319,37 @@
              y="202.48842">Cryostat</svg:tspan></svg:text>
       </svg:g>
     </svg:g>
+    <svg:g
+       id="link_cath_gate_anode"
+       class="link"
+       transform="translate(-40.187701,-150.90555)">
+      <svg:g
+         id="g158619-1-7">
+        <svg:rect
+           style="fill:#ff5599;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect35972-4-5-0"
+           width="45.538071"
+           height="13.428596"
+           x="193.57204"
+           y="193.40993" />
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="216.19844"
+           y="202.48842"
+           id="text35980-9-1-9"><svg:tspan
+             sodipodi:role="line"
+             id="linkc-3"
+             style="font-size:6.35px;text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="216.19844"
+             y="202.48842">Bathtub</svg:tspan><svg:tspan
+             sodipodi:role="line"
+             style="font-size:6.35px;text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="216.19844"
+             y="210.42592"
+             id="tspan2436" /></svg:text>
+      </svg:g>
+    </svg:g>
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_17"
@@ -368,20 +401,6 @@
        y="29.034451" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_T_IC_33"
-       width="28.955645"
-       height="13.955644"
-       x="213.70616"
-       y="44.20797" />
-    <svg:rect
-       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_T_IC_37"
-       width="28.955645"
-       height="13.955644"
-       x="151.65692"
-       y="21.336269" />
-    <svg:rect
-       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_11"
        width="28.955645"
        height="13.955644"
@@ -401,6 +420,13 @@
        height="13.955644"
        x="60.072029"
        y="132.10944" />
+    <svg:rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_M_TS_03"
+       width="28.955645"
+       height="13.955644"
+       x="68.174263"
+       y="192.09492" />
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_12"
@@ -617,7 +643,7 @@
     </svg:g>
     <svg:g
        id="g114297"
-       transform="translate(-10.03394,125.06277)">
+       transform="translate(-11.092274,124.5336)">
       <svg:g
          id="g9363"
          transform="translate(0,2.1166667)">
@@ -687,12 +713,16 @@
              y="48.00563">Front</svg:tspan></svg:text>
       </svg:g>
     </svg:g>
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:0.765;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 125.9375,44.094899 v 13.873668 l 99.21354,0.441334 0.0504,-14.663623"
+       id="path1274" />
   </svg:g>
   <metadata>
     <property
        targetId="n2dewarfillback"
        targetAttribute="height"
-       offset="0"
+       offset="-19.05"
        scaling="0.15"
        sensor="M_TS_02"
        min="0"
@@ -700,7 +730,7 @@
     <property
        targetId="n2dewarfillback"
        targetAttribute="y"
-       offset="62"
+       offset="81.05"
        scaling="-0.15"
        sensor="M_TS_02"
        min="38"
@@ -708,7 +738,7 @@
     <property
        targetId="n2dewarfillfront"
        targetAttribute="height"
-       offset="0"
+       offset="-19.05"
        scaling="0.15"
        sensor="M_TS_01"
        min="0"
@@ -716,7 +746,7 @@
     <property
        targetId="n2dewarfillfront"
        targetAttribute="y"
-       offset="62"
+       offset="81.05"
        scaling="-0.15"
        sensor="M_TS_01"
        min="38"
