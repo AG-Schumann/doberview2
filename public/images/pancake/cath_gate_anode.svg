@@ -23,13 +23,13 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="525.20356"
-     inkscape:cy="382.89832"
+     inkscape:zoom="0.99999999"
+     inkscape:cx="550.5"
+     inkscape:cy="447"
      inkscape:window-width="1920"
-     inkscape:window-height="1043"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-height="1011"
+     inkscape:window-x="1920"
+     inkscape:window-y="32"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
      showguides="false"
@@ -37,11 +37,23 @@
   <defs
      id="defs1">
     <rect
+       x="994.66559"
+       y="398.75824"
+       width="117.85151"
+       height="53.912302"
+       id="rect1948" />
+    <rect
        x="81.920461"
        y="67.750218"
        width="106.05048"
        height="42.893629"
        id="rect29209" />
+    <rect
+       x="994.66559"
+       y="398.75824"
+       width="117.85151"
+       height="53.9123"
+       id="rect1948-3" />
   </defs>
   <g
      inkscape:label="Layer 1"
@@ -719,25 +731,19 @@
        x="94.856041"
        y="36.768784" />
     <rect
-       style="fill:#afc6e9;stroke:#000000;stroke-width:1.00527;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.00527;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_T_IC_23"
        width="27.206661"
        height="13.761662"
        x="6.0917115"
        y="117.46775" />
     <rect
-       style="fill:#afc6e9;stroke:#000000;stroke-width:1.00527;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#80b3ff;stroke:#000000;stroke-width:1.00527;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_L_IC_05"
        width="27.206661"
        height="13.761662"
        x="235.96527"
-       y="105.50478" />
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.74297;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
-       d="m 188.81462,112.6189 h 46.64802"
-       id="path73"
-       inkscape:connector-type="polyline"
-       inkscape:connector-curvature="0" />
+       y="108.15063" />
     <g
        id="g66017-7-9-8"
        transform="matrix(0.8837221,0,0,0.9423816,-120.44155,131.41604)">
@@ -816,12 +822,12 @@
        cy="101.31193"
        r="40" />
     <rect
-       style="fill:none;stroke:#000000;stroke-width:1.29973"
+       style="fill:none;stroke:#000000;stroke-width:1.51889"
        id="rect28930"
-       width="56.194454"
-       height="41.00906"
-       x="2.0513718"
-       y="95.824463" />
+       width="77.155998"
+       height="40.789898"
+       x="2.1609542"
+       y="95.934044" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
@@ -908,6 +914,39 @@
        style="fill:none;stroke:#000000;stroke-width:0.191967px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 129.75453,135.32101 h 42.11328"
        id="path1071-3-6-7-5-3-5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.67457px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.333728"
+       x="35.510262"
+       y="121.12248"
+       id="text1838"
+       transform="scale(0.99619624,1.0038183)"><tspan
+         sodipodi:role="line"
+         id="tspan1836"
+         style="font-size:6.67457px;stroke-width:0.333728"
+         x="35.510262"
+         y="121.12248">Top IC </tspan><tspan
+         sodipodi:role="line"
+         style="font-size:6.67457px;stroke-width:0.333728"
+         x="35.510262"
+         y="129.4657"
+         id="tspan1890">Temperature</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,1.5875,5.2916669)"
+       id="text1946"
+       style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="994.66602"
+         y="420.59482"
+         id="tspan3621">Long LM</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-136.53052,-66.428478)"
+       id="text1946-6"
+       style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948-3);display:inline;fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="994.66602"
+         y="420.59482"
+         id="tspan3623">LM</tspan></text>
   </g>
   <metadata
      id="metadata1" />
