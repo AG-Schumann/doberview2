@@ -23,8 +23,8 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="1"
-     inkscape:cx="372"
-     inkscape:cy="486"
+     inkscape:cx="614.5"
+     inkscape:cy="406"
      inkscape:window-width="1920"
      inkscape:window-height="1011"
      inkscape:window-x="1920"
@@ -407,7 +407,7 @@
        inkscape:transform-center-y="-0.98430207"
        inkscape:transform-center-x="4.6615768e-06" />
     <svg:path
-       style="fill:none;stroke:#000000;stroke-width:0.699455;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#000000;stroke-width:0.9;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 275.64918,67.272033 h 7.83151"
        id="path8102" />
     <svg:g
@@ -423,10 +423,10 @@
            sodipodi:nodetypes="cc" />
         <svg:path
            d="m 31.028079,10.550618 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="valve_S_TS_01-5-1-1"
            sodipodi:nodetypes="ccccc"
            class="v findmeeasily"
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="path9020" />
         <svg:path
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 22.436024,37.210693 V 21.425087"
@@ -493,10 +493,10 @@
            id="path9781-8" />
         <svg:path
            d="m 31.028079,10.550618 h -4.47995 l 4.47995,7.616276 h -4.47995 z"
-           id="valve_S_TS_01-5-1-1-8"
            sodipodi:nodetypes="ccccc"
            class="v findmeeasily"
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="path9034" />
         <svg:path
            style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 22.436024,37.210693 V 21.425087"
@@ -869,7 +869,7 @@
        y="96.598206" />
     <svg:rect
        style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_L_XS_06-5"
+       id="sensorbox_M_XS_13"
        width="28.955645"
        height="13.955644"
        x="32.707172"
@@ -890,7 +890,7 @@
        y="96.666924" />
     <svg:rect
        style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_L_XS_04-7"
+       id="sensorbox_M_XS_11"
        width="28.955645"
        height="13.955644"
        x="75.610428"
@@ -946,11 +946,11 @@
        y="90.827293" />
     <svg:rect
        style="fill:#afe9dd;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_P_GS_01-6"
        width="28.955645"
        height="13.955644"
        x="174.66277"
-       y="109.19444" />
+       y="109.19444"
+       id="rect9116" />
     <svg:rect
        style="fill:#afe9dd;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_P_XS_03"
@@ -988,7 +988,7 @@
        y="142.64114" />
     <svg:rect
        style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_L_XS_05-3"
+       id="sensorbox_M_XS_12"
        width="28.955645"
        height="13.955644"
        x="53.81284"
@@ -1307,21 +1307,21 @@
        sodipodi:nodetypes="ccc" />
     <svg:rect
        style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_M_XS_08"
+       id="sensorbox_M_XS_09"
        width="28.955645"
        height="13.955644"
        x="118.55537"
        y="110.69862" />
     <svg:rect
        style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_M_XS_08-3"
+       id="sensorbox_M_XS_08"
        width="28.955645"
        height="13.955644"
        x="141.17616"
        y="156.69339" />
     <svg:rect
        style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_M_XS_08-3-6"
+       id="sensorbox_M_XS_10"
        width="28.955645"
        height="13.955644"
        x="97.14463"
@@ -1347,7 +1347,7 @@
        x="225.04832"
        y="59.96669" />
     <svg:path
-       style="fill:none;stroke:#000000;stroke-width:1.16881;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#000000;stroke-width:0.9;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 215.78468,67.179361 H 244.5879"
        id="path8100" />
     <svg:path
