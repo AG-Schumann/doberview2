@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="0.70710677"
-     inkscape:cx="713.47075"
-     inkscape:cy="278.60007"
+     inkscape:zoom="0.35355339"
+     inkscape:cx="572.7565"
+     inkscape:cy="534.57273"
      inkscape:window-width="1920"
      inkscape:window-height="1011"
      inkscape:window-x="1920"
@@ -725,8 +725,8 @@
        id="sensorbox_L_IC_03"
        width="27.206661"
        height="13.761662"
-       x="237.35196"
-       y="45.631126" />
+       x="237.23604"
+       y="36.768784" />
     <rect
        style="fill:#afc6e9;stroke:#000000;stroke-width:1.00527;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_L_IC_04"
@@ -956,7 +956,7 @@
        style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="994.66602"
          y="420.59482"
-         id="tspan1787">Long LM</tspan></text>
+         id="tspan1254">Long LM</tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,-159.2561,-76.588657)"
@@ -964,7 +964,7 @@
        style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948-3);display:inline;fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="994.66602"
          y="420.59482"
-         id="tspan1789">LM</tspan></text>
+         id="tspan1256">LM</tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,-159.2561,56.837595)"
@@ -972,7 +972,7 @@
        style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948-3-6);display:inline;fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="994.66602"
          y="420.59482"
-         id="tspan1791">LM</tspan></text>
+         id="tspan1258">LM</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 204.81281,9.4237573 h -2.5274 V 26.4274 h 2.15438 v 0 0"
@@ -1121,15 +1121,15 @@
        style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948-3-62);display:inline;fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="994.66602"
          y="420.59482"
-         id="tspan1793">LM</tspan></text>
+         id="tspan1260">LM</tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-16.275517,-70.541141)"
+       transform="matrix(0.26458333,0,0,0.26458333,-16.840647,-76.588657)"
        id="text1946-6-8"
        style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948-3-1);display:inline;fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="994.66602"
          y="420.59482"
-         id="tspan1795">LM</tspan></text>
+         id="tspan1262">LM</tspan></text>
   </g>
   <metadata
      id="metadata1" />
