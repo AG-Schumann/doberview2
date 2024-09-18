@@ -1,0 +1,1136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="308mm"
+   height="210mm"
+   viewBox="0 0 308 210"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="cath_gate_anode.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.35355339"
+     inkscape:cx="572.7565"
+     inkscape:cy="534.57273"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="1920"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     showguides="false"
+     showgrid="false" />
+  <defs
+     id="defs1">
+    <rect
+       x="994.66559"
+       y="398.75824"
+       width="117.85151"
+       height="53.912302"
+       id="rect1948" />
+    <rect
+       x="81.920461"
+       y="67.750218"
+       width="106.05048"
+       height="42.893629"
+       id="rect29209" />
+    <rect
+       x="994.66559"
+       y="398.75824"
+       width="117.85151"
+       height="53.9123"
+       id="rect1948-3" />
+    <rect
+       x="994.66559"
+       y="398.75824"
+       width="117.85151"
+       height="53.9123"
+       id="rect1948-3-6" />
+    <rect
+       x="994.66559"
+       y="398.75824"
+       width="117.85151"
+       height="53.9123"
+       id="rect1948-3-62" />
+    <rect
+       x="994.66559"
+       y="398.75824"
+       width="117.85151"
+       height="53.9123"
+       id="rect1948-3-1" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.777417;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+       id="path27839"
+       sodipodi:type="arc"
+       sodipodi:cx="-150.81117"
+       sodipodi:cy="141.31192"
+       sodipodi:rx="3.9382656"
+       sodipodi:ry="3.4379907"
+       sodipodi:start="3.0967446"
+       sodipodi:end="0.012031465"
+       sodipodi:arc-type="slice"
+       d="m -154.74548,141.46606 a 3.9382656,3.4379907 0 0 1 1.87755,-3.08603 3.9382656,3.4379907 0 0 1 4.00221,-0.0573 3.9382656,3.4379907 0 0 1 1.99253,3.03059 l -3.93798,-0.0414 z"
+       transform="scale(-1,1)" />
+    <g
+       id="g66017-7"
+       transform="matrix(0.93959794,0,0,0.98610018,15.886025,100.82501)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_47 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_47"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_47</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1" /></text>
+    </g>
+    <g
+       id="g66017-7-0"
+       transform="matrix(0.93959794,0,0,0.98610018,15.406477,118.44776)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-0"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-3"><tspan
+           sodipodi:role="line"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711"
+           id="tspan6">T_IC_48 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-3"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_48"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_48</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-0" /></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:6.1123px;fill:#000000;stroke-width:0.25468"
+       x="189.80286"
+       y="142.57343"
+       id="text4-8-8"
+       transform="scale(0.97613639,1.024447)"><tspan
+         sodipodi:role="line"
+         id="tspan4-3-6"
+         style="font-size:6.1123px;stroke-width:0.25468"
+         x="189.80286"
+         y="142.57343">300°</tspan></text>
+    <g
+       id="g66017-7-2"
+       transform="matrix(0.93959794,0,0,0.98610018,15.641572,135.61334)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-4"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-9"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-2"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_49 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-9"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_49"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_49</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-09" /></text>
+    </g>
+    <g
+       id="g66017-7-00"
+       transform="matrix(0.93959794,0,0,0.98610018,-129.94303,100.63583)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-9"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-5"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-6"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_50 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-2"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_50"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_50</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-5" /></text>
+    </g>
+    <g
+       id="g66017-7-9"
+       transform="matrix(0.93959794,0,0,0.98610018,-129.94303,119.65204)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-05"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-6"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-3"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_51 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-6"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_51"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_51</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan2" /><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="77.54248"
+           id="tspan1-08" /></text>
+    </g>
+    <g
+       id="g66017-7-6"
+       transform="translate(-96.569761,250.01033)" />
+    <g
+       id="g66017-7-29"
+       transform="matrix(0.93959794,0,0,0.98610018,-128.79492,-32.500107)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-7"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-56"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-5"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_53 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-30"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_53"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_53</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-8" /></text>
+    </g>
+    <g
+       id="g66017-7-4"
+       transform="matrix(0.93959794,0,0,0.98610018,-128.8986,-14.171823)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-2"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-1"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-9"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_54 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-24"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_54"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_54</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-86" /></text>
+    </g>
+    <g
+       id="g66017-7-3"
+       transform="matrix(0.93959794,0,0,0.98610018,-128.8986,4.156461)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-97"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-37"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-50"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_55 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-21"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_55"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_55</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-1" /></text>
+    </g>
+    <g
+       id="g66017-7-29-2"
+       transform="matrix(0.93959794,0,0,0.98610018,14.128449,19.460148)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-7-3"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-56-3"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-5-7"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_56 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-30-0"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_56"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_56</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-8-1" /></text>
+    </g>
+    <g
+       id="g66017-7-29-0"
+       transform="matrix(0.93959794,0,0,0.98610018,14.128449,2.825558)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-7-38"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-56-36"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-5-0"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_57 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-30-4"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_57"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_57</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-8-2" /></text>
+    </g>
+    <g
+       id="g66017-7-29-9"
+       transform="matrix(0.93959794,0,0,0.98610018,14.057406,-14.171823)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-7-1"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-56-0"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-5-9"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_58 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-30-3"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_58"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_58</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-8-3" /></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:6.1123px;fill:#000000;stroke-width:0.25468"
+       x="107.89771"
+       y="142.57343"
+       id="text4"
+       transform="scale(0.97613639,1.024447)"><tspan
+         sodipodi:role="line"
+         id="tspan4"
+         style="font-size:6.1123px;stroke-width:0.25468"
+         x="107.89771"
+         y="142.57343">30°</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.175px;fill:#000000;stroke-width:0.264583"
+       x="408.81546"
+       y="171.97243"
+       id="text5"><tspan
+         sodipodi:role="line"
+         id="tspan5"
+         style="stroke-width:0.264583"
+         x="408.81546"
+         y="171.97243" /><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.264583"
+         id="tspan7"
+         x="408.81546"
+         y="175.94118" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6.1123px;fill:#000000;stroke-width:0.25468"
+       x="104.45458"
+       y="64.183205"
+       id="text4-1"
+       transform="scale(0.97613639,1.024447)"><tspan
+         sodipodi:role="line"
+         id="tspan4-1"
+         style="font-size:6.1123px;stroke-width:0.25468"
+         x="104.45458"
+         y="64.183205">120°</tspan></text>
+    <g
+       id="g1"
+       transform="matrix(0.93959794,0,0,0.98610018,-119.27459,-93.551061)">
+      <text
+         xml:space="preserve"
+         style="font-size:6.35px;fill:#000000;stroke-width:0.264583"
+         x="319.56393"
+         y="158.47585"
+         id="text4-8"><tspan
+           sodipodi:role="line"
+           id="tspan4-3"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="319.56393"
+           y="158.47585">210°</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:6.35px;fill:#000000;stroke-width:0.264583"
+       x="141.06093"
+       y="283.86331"
+       id="text8"><tspan
+         sodipodi:role="line"
+         id="tspan8"
+         style="stroke-width:0.264583"
+         x="141.06093"
+         y="283.86331" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6.1123px;fill:#000000;stroke-width:0.25468"
+       x="152.49829"
+       y="151.37608"
+       id="text4-8-6"
+       transform="scale(0.97613639,1.024447)"><tspan
+         sodipodi:role="line"
+         id="tspan4-3-66"
+         style="font-size:6.1123px;stroke-width:0.25468"
+         x="152.49829"
+         y="151.37608">0°</tspan></text>
+    <g
+       id="g66017-7-29-9-5"
+       transform="matrix(0.93959794,0,0,0.98610018,14.057406,-31.169204)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-7-1-7"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-56-0-9"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-5-9-8"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_59 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-30-3-4"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_59"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_59</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-8-3-8" /></text>
+    </g>
+    <g
+       id="g66017-7-29-9-0"
+       transform="matrix(0.93959794,0,0,0.98610018,14.057406,-48.166585)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-7-1-4"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-56-0-0"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-5-9-6"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_60 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-30-3-5"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_60"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_60</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-8-3-85" /></text>
+    </g>
+    <g
+       id="g66017-7-29-9-7"
+       transform="matrix(0.93959794,0,0,0.98610018,14.128449,36.094738)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-7-1-5"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-56-0-5"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-5-9-0"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_61 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-30-3-52"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_61"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_61</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1-8-3-7" /></text>
+    </g>
+    <rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.00527;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_L_IC_03"
+       width="27.206661"
+       height="13.761662"
+       x="237.23604"
+       y="36.768784" />
+    <rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.00527;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_L_IC_04"
+       width="27.206661"
+       height="13.761662"
+       x="237.83662"
+       y="169.38837" />
+    <rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.00527;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_L_IC_01"
+       width="27.206661"
+       height="13.761662"
+       x="94.856041"
+       y="170.59265" />
+    <rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.00527;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_L_IC_02"
+       width="27.206661"
+       height="13.761662"
+       x="94.856041"
+       y="36.768784" />
+    <rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.00527;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_23"
+       width="27.206661"
+       height="13.761662"
+       x="6.0917115"
+       y="117.46775" />
+    <rect
+       style="fill:#80b3ff;stroke:#000000;stroke-width:1.00527;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_L_IC_05"
+       width="27.206661"
+       height="13.761662"
+       x="237.83662"
+       y="117.27026" />
+    <g
+       id="g66017-7-9-8"
+       transform="matrix(0.8837221,0,0,0.9423816,-120.44155,131.41604)">
+      <rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.10157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-05-8"
+         width="30.786448"
+         height="14.603068"
+         x="206.09242"
+         y="61.75518" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.72102px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.279076"
+         x="204.85931"
+         y="65.911201"
+         id="text66011-3-6-3"
+         transform="scale(1.0080128,0.99205094)"><tspan
+           sodipodi:role="line"
+           id="tspan66009-9-3-8"
+           style="font-size:3.72102px;stroke-width:0.279076"
+           x="204.85931"
+           y="65.911201">T_IC_52 (°C)</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.69783px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.279076"
+         x="205.53116"
+         y="72.807083"
+         id="text66015-8-6-1"
+         transform="scale(1.0080128,0.99205094)"><tspan
+           sodipodi:role="line"
+           id="value_T_IC_52"
+           style="font-size:6.69783px;stroke-width:0.279076"
+           x="205.53116"
+           y="72.807083">T_IC_52</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:6.69783px;stroke-width:0.279076"
+           x="205.53116"
+           y="81.179367"
+           id="tspan2-3" /><tspan
+           sodipodi:role="line"
+           style="font-size:6.69783px;stroke-width:0.279076"
+           x="205.53116"
+           y="89.551659"
+           id="tspan1-08-5" /></text>
+    </g>
+    <g
+       id="link_main"
+       class="link"
+       transform="translate(-187.48296,-92.409785)">
+      <g
+         id="g158619-1-9">
+        <rect
+           style="fill:#ff5599;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect35972-4-5-3"
+           width="45.538071"
+           height="13.428596"
+           x="193.57204"
+           y="193.40993" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="216.19844"
+           y="202.48842"
+           id="text35980-9-1-8"><tspan
+             sodipodi:role="line"
+             style="font-size:6.35px;text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="216.19844"
+             y="202.48842"
+             id="tspan3"> Cryostat</tspan></text>
+      </g>
+    </g>
+    <circle
+       style="font-variation-settings:normal;opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.657;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+       id="path27833"
+       cx="150.81117"
+       cy="101.31193"
+       r="40" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:1.51889"
+       id="rect28930"
+       width="77.155998"
+       height="40.789898"
+       x="2.1609542"
+       y="95.934044" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="40.166996"
+       y="27.702581"
+       id="text29215"><tspan
+         sodipodi:role="line"
+         id="tspan29213"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="40.166996"
+         y="27.702581">Anode</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="40.166996"
+         y="35.640083"
+         id="tspan29217" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="44.580814"
+       y="45.916565"
+       id="text29221"><tspan
+         sodipodi:role="line"
+         id="tspan29219"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="44.580814"
+         y="45.916565">Gate</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="34.382633"
+       y="65.563431"
+       id="text29225"><tspan
+         sodipodi:role="line"
+         id="tspan29223"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="34.382633"
+         y="65.563431">Cathode</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 118.26325,78.346881 h 66.16925 v 0"
+       id="path1059" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 115.33357,84.677339 h 72.02861"
+       id="path1061" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 123.01616,72.016423 h 56.15479"
+       id="path1063" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.246278px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 131.63463,65.685965 h 37.3642"
+       id="path1065" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 111.81884,91.007797 h 76.99578"
+       id="path1069" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 110.81117,97.338255 h 80"
+       id="path1071" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 110.81117,103.66871 h 80"
+       id="path1071-3" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.262802px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 111.34788,109.99917 h 78.92658"
+       id="path1071-3-6" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.257896px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 112.80772,116.32963 h 76.0069"
+       id="path1071-3-6-7" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.242575px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 117.18883,122.66009 h 67.24468"
+       id="path1071-3-6-7-5" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.224807px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 121.93395,128.99055 h 57.75444"
+       id="path1071-3-6-7-5-3" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.191967px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 129.75453,135.32101 h 42.11328"
+       id="path1071-3-6-7-5-3-5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.67457px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.333728"
+       x="35.510262"
+       y="121.12248"
+       id="text1838"
+       transform="scale(0.99619624,1.0038183)"><tspan
+         sodipodi:role="line"
+         id="tspan1836"
+         style="font-size:6.67457px;stroke-width:0.333728"
+         x="35.510262"
+         y="121.12248">Top IC </tspan><tspan
+         sodipodi:role="line"
+         style="font-size:6.67457px;stroke-width:0.333728"
+         x="35.510262"
+         y="129.4657"
+         id="tspan1890">Temperature</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-24.600366,1.8252063)"
+       id="text1946"
+       style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948);fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="994.66602"
+         y="420.59482"
+         id="tspan1254">Long LM</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-159.2561,-76.588657)"
+       id="text1946-6"
+       style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948-3);display:inline;fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="994.66602"
+         y="420.59482"
+         id="tspan1256">LM</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-159.2561,56.837595)"
+       id="text1946-6-0"
+       style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948-3-6);display:inline;fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="994.66602"
+         y="420.59482"
+         id="tspan1258">LM</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 204.81281,9.4237573 h -2.5274 V 26.4274 h 2.15438 v 0 0"
+       id="path1064" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 204.81281,43.419762 h -2.5274 v 17.003642 h 2.15438 v 0 0"
+       id="path1064-3" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 204.81281,77.415766 h -2.5274 v 17.003642 h 2.15438 v 0 0"
+       id="path1064-3-6" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="196.36191"
+       y="20.202053"
+       id="text1174"><tspan
+         sodipodi:role="line"
+         id="tspan1172"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="196.36191"
+         y="20.202053">A</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="54.578735"
+       y="160.73375"
+       id="text1228"><tspan
+         sodipodi:role="line"
+         id="tspan1226"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="54.578735"
+         y="160.73375">A</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="198.3463"
+       y="160.92293"
+       id="text1228-7"><tspan
+         sodipodi:role="line"
+         id="tspan1226-5"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="198.3463"
+         y="160.92293">A</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="198.24471"
+       y="177.40999"
+       id="text1228-7-3"><tspan
+         sodipodi:role="line"
+         id="tspan1226-5-5"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="198.24471"
+         y="177.40999">G</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="198.24471"
+         y="185.34749"
+         id="tspan1296" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="196.26031"
+       y="53.187744"
+       id="text1228-7-3-7"><tspan
+         sodipodi:role="line"
+         id="tspan1226-5-5-9"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="196.26031"
+         y="53.187744">G</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="196.26031"
+         y="61.125244"
+         id="tspan1296-2" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="54.477135"
+       y="179.62012"
+       id="text1228-7-3-6"><tspan
+         sodipodi:role="line"
+         id="tspan1226-5-5-2"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="54.477135"
+         y="179.62012">G</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="54.477135"
+         y="187.55762"
+         id="tspan1296-9" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="198.24471"
+       y="196.46759"
+       id="text1228-7-3-6-1"><tspan
+         sodipodi:role="line"
+         id="tspan1226-5-5-2-2"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="198.24471"
+         y="196.46759">C</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="198.24471"
+         y="204.40509"
+         id="tspan1296-9-7" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="196.26031"
+       y="86.456924"
+       id="text1228-7-3-6-1-02"><tspan
+         sodipodi:role="line"
+         id="tspan1226-5-5-2-2-3"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="196.26031"
+         y="86.456924">C</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="196.26031"
+         y="94.394424"
+         id="tspan1296-9-7-7" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="54.813686"
+       y="199.099"
+       id="text1228-7-3-6-1-0"><tspan
+         sodipodi:role="line"
+         id="tspan1226-5-5-2-2-9"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="54.813686"
+         y="199.099">C</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:6.35px;stroke-width:0.264583"
+         x="54.813686"
+         y="207.0365"
+         id="tspan1296-9-7-3" /></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-16.275517,53.584207)"
+       id="text1946-6-6"
+       style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948-3-62);display:inline;fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="994.66602"
+         y="420.59482"
+         id="tspan1260">LM</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-16.840647,-76.588657)"
+       id="text1946-6-8"
+       style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1948-3-1);display:inline;fill:#000000;fill-opacity:1;stroke:none"><tspan
+         x="994.66602"
+         y="420.59482"
+         id="tspan1262">LM</tspan></text>
+  </g>
+  <metadata
+     id="metadata1" />
+</svg>
