@@ -12,7 +12,6 @@ router.get('/get_logs', function(req, res) {
   const q = url.parse(req.url, true).query;
   let limit = 10000;
   let tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  console.log(tz);
 
   if (typeof q.limit !== "undefined") {
     limit = parseInt(q.limit, 10);

@@ -177,7 +177,7 @@ function MakeAlarm(name, is_int=false) {
       pipeline: [
         {
           name: 'source',
-          type: 'DeviceRespondingSyncNode',
+          type: 'DeviceRespondingInfluxNode',
           input_var: name
         },
         {
@@ -197,7 +197,7 @@ function MakeAlarm(name, is_int=false) {
       pipeline: [
         {
           name: 'source',
-          type: 'DeviceRespondingSyncNode',
+          type: 'DeviceRespondingInfluxNode',
           input_var: name
         },
         {
