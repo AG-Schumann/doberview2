@@ -2,12 +2,12 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg:svg
-   width="297mm"
+   width="308mm"
    height="210mm"
-   viewBox="0 0 297 210"
+   viewBox="0 0 308 210"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    sodipodi:docname="main.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -22,100 +22,102 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.99999999"
-     inkscape:cx="450.5"
-     inkscape:cy="355"
+     inkscape:zoom="0.72010691"
+     inkscape:cx="480.48421"
+     inkscape:cy="281.90259"
      inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:window-height="1011"
+     inkscape:window-x="1920"
+     inkscape:window-y="32"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
-     showguides="false" />
+     showguides="true"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
   <svg:defs
      id="defs2">
     <svg:marker
-       style="overflow:visible;"
+       style="overflow:visible"
        id="marker55454"
-       refX="0.0"
-       refY="0.0"
+       refX="0"
+       refY="0"
        orient="auto"
        inkscape:stockid="Arrow1Send"
        inkscape:isstock="true">
       <svg:path
-         transform="scale(0.2) rotate(180) translate(6,0)"
-         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path55452" />
     </svg:marker>
     <svg:marker
        style="overflow:visible"
        id="marker55444"
-       refX="0.0"
-       refY="0.0"
+       refX="0"
+       refY="0"
        orient="auto"
        inkscape:stockid="Arrow1Sstart"
        inkscape:isstock="true">
       <svg:path
-         transform="scale(0.2) translate(6,0)"
-         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         transform="matrix(0.2,0,0,0.2,1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path55442" />
     </svg:marker>
     <svg:marker
-       style="overflow:visible;"
+       style="overflow:visible"
        id="Arrow1Send"
-       refX="0.0"
-       refY="0.0"
+       refX="0"
+       refY="0"
        orient="auto"
        inkscape:stockid="Arrow1Send"
        inkscape:isstock="true">
       <svg:path
-         transform="scale(0.2) rotate(180) translate(6,0)"
-         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path55165" />
     </svg:marker>
     <svg:marker
        style="overflow:visible"
        id="Arrow1Sstart"
-       refX="0.0"
-       refY="0.0"
+       refX="0"
+       refY="0"
        orient="auto"
        inkscape:stockid="Arrow1Sstart"
        inkscape:isstock="true">
       <svg:path
-         transform="scale(0.2) translate(6,0)"
-         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         transform="matrix(0.2,0,0,0.2,1.2,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path55162" />
     </svg:marker>
     <svg:marker
-       style="overflow:visible;"
+       style="overflow:visible"
        id="Arrow1Lend"
-       refX="0.0"
-       refY="0.0"
+       refX="0"
+       refY="0"
        orient="auto"
        inkscape:stockid="Arrow1Lend"
        inkscape:isstock="true">
       <svg:path
-         transform="scale(0.8) rotate(180) translate(12.5,0)"
-         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt;"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path55153" />
     </svg:marker>
     <svg:marker
        style="overflow:visible"
        id="Arrow1Lstart"
-       refX="0.0"
-       refY="0.0"
+       refX="0"
+       refY="0"
        orient="auto"
        inkscape:stockid="Arrow1Lstart"
        inkscape:isstock="true">
       <svg:path
-         transform="scale(0.8) translate(12.5,0)"
-         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path55150" />
     </svg:marker>
     <svg:style
@@ -147,6 +149,17 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 72.61507,70.908026 h 7.222114"
+       id="path132432" />
+    <svg:rect
+       style="fill:#aa0000;stroke:#000000;stroke-width:0.994479;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect10247-2-4-2-81-9-3-1"
+       width="37.191788"
+       height="18.766064"
+       x="40.621666"
+       y="61.82552" />
     <svg:rect
        style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect53543"
@@ -376,34 +389,27 @@
        height="13.955644"
        x="80.201385"
        y="62.478954" />
-    <svg:rect
-       style="fill:#aa0000;stroke:#000000;stroke-width:0.994479;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect10247-2-4-2-81-9-3-1"
-       width="37.191788"
-       height="18.766064"
-       x="35.260437"
-       y="62.572903" />
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="44.428169"
+       x="50.249008"
        y="68.883156"
        id="text13160-7-5-9-2-2-4-8-23"><svg:tspan
          sodipodi:role="line"
          id="value_T_TS_03"
          style="font-size:6.35px;fill:#ffffff;stroke-width:0.264583"
-         x="44.428169"
+         x="50.249008"
          y="68.883156">T_TS_03</svg:tspan></svg:text>
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="44.58181"
+       x="50.402649"
        y="78.25296"
        id="text13160-7-5-9-2-2-4-8-23-8"><svg:tspan
          sodipodi:role="line"
          id="value_W_TS_01"
          style="font-size:6.35px;fill:#ffffff;stroke-width:0.264583"
-         x="44.58181"
+         x="50.402649"
          y="78.25296">W_TS_01</svg:tspan></svg:text>
     <svg:rect
        style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -454,6 +460,13 @@
        x="83.109535"
        y="10.341649" />
     <svg:rect
+       style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_M_TS_03"
+       width="28.955645"
+       height="13.955644"
+       x="7.4944191"
+       y="63.147205" />
+    <svg:rect
        style="fill:#afe9dd;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_P_TS_01"
        width="28.955645"
@@ -498,6 +511,122 @@
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="m 87.53203,104.62954 c -1e-6,-45.483474 178.55686,-45.890776 178.55686,0 v 39.2215 c 0,49.1419 -178.556861,48.55595 -178.55686,0 z"
        sodipodi:nodetypes="ccccc" />
+    <svg:g
+       id="g66017-7-5-3"
+       transform="translate(-93.504616,81.65616)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-7-9"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-6-9"><svg:tspan
+           sodipodi:role="line"
+           id="tspan66009-9-2-9"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_49 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-7-1"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_IC_49"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_49</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g66017-7-5"
+       transform="translate(-93.483475,64.370014)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0-7"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3-6"><svg:tspan
+           sodipodi:role="line"
+           id="tspan66009-9-2"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_48 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8-7"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_IC_48"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_48</svg:tspan></svg:text>
+    </svg:g>
+    <svg:g
+       id="g66017-7"
+       transform="translate(-93.550441,46.91456)">
+      <svg:rect
+         style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect66007-0"
+         width="28.955645"
+         height="13.955644"
+         x="203.94884"
+         y="51.658653" />
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.33293"
+         y="55.129711"
+         id="text66011-3"><svg:tspan
+           sodipodi:role="line"
+           id="tspan66009-9"
+           style="font-size:3.52778px;stroke-width:0.264583"
+           x="204.33293"
+           y="55.129711">T_IC_47 (°C)</svg:tspan></svg:text>
+      <svg:text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="204.96988"
+         y="61.667484"
+         id="text66015-8"><svg:tspan
+           sodipodi:role="line"
+           id="value_T_IC_47"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="61.667484">T_IC_47</svg:tspan><svg:tspan
+           sodipodi:role="line"
+           style="font-size:6.35px;stroke-width:0.264583"
+           x="204.96988"
+           y="69.60498"
+           id="tspan1" /></svg:text>
+    </svg:g>
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 226.62246,125.26804 v 16.66875"
+       id="path83259-79-9" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1.41593;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 143.57323,141.54543 h 83.49513"
+       id="path10282-9" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 144.02018,125.51935 V 142.1881"
+       id="path83259-79" />
     <svg:g
        id="g9529"
        transform="translate(28.310418,-5.4106267)">
@@ -604,7 +733,7 @@
         <svg:g
            id="valve_S_IC_04"
            class="spinner on"
-           style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;transform-origin:11% 57.5%"
+           style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;transform-origin: 32.470833px 120.87712px;"
            transform="translate(-0.58414995,-0.02281032)">
           <svg:path
              style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -650,7 +779,7 @@
         <svg:g
            id="valve_S_IV_03"
            class="spinner on"
-           style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;transform-origin:11% 57.5%"
+           style="fill:#008000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;transform-origin: 32.570833px 120.87712px"
            transform="translate(-0.58414995,-0.02281032)">
           <svg:path
              style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -708,7 +837,7 @@
            rx="2.9660001"
            ry="2.9656444" />
         <svg:circle
-           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:4, 4;stroke-dashoffset:3.2;transform-origin:18.27% 72.07%"
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:4, 4;stroke-dashoffset:3.2;transform-origin: 54.236446px 151.34166px"
            id="valve_S_IV_05"
            cx="54.236446"
            cy="151.34166"
@@ -755,7 +884,7 @@
            rx="2.9660001"
            ry="2.9656444" />
         <svg:circle
-           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:4, 4;stroke-dashoffset:3.2;transform-origin:18.27% 72.07%"
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:4, 4;stroke-dashoffset:3.2;transform-origin: 54.239594px 151.34166px"
            id="valve_S_IC_06"
            cx="54.236446"
            cy="151.34166"
@@ -772,7 +901,7 @@
        ry="5.238483" />
     <svg:path
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send)"
-       d="m 185.46497,137.24236 0,-85.760876 h -4.0224 l 1.97188,-1.925683 -1.97188,-2.190268 h 4.0224 V 16.963624"
+       d="M 185.46497,137.24236 V 51.481484 h -4.0224 l 1.97188,-1.925683 -1.97188,-2.190268 h 4.0224 V 16.963624"
        id="path54103"
        sodipodi:nodetypes="ccccccc" />
     <svg:path
@@ -905,7 +1034,7 @@
        style="stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <svg:g
        id="g124293"
-       transform="translate(14.648594,3.0146901)"
+       transform="translate(20.469431,3.0146901)"
        style="fill:#000000;stroke:#ffffff">
       <svg:circle
          style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0.852235;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -922,7 +1051,7 @@
     </svg:g>
     <svg:g
        id="g127217"
-       transform="translate(28.669097,3.3860941)"
+       transform="translate(34.489934,3.3860941)"
        style="fill:#ffffff;stroke:#ffffff;stroke-opacity:1">
       <svg:path
          style="fill:#ffffff;stroke:#ffffff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -944,10 +1073,6 @@
          id="path127211"
          sodipodi:nodetypes="cc" />
     </svg:g>
-    <svg:path
-       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-       d="m 72.61507,70.908026 h 7.222114"
-       id="path132432" />
     <svg:g
        id="link_gassystem"
        class="link"
@@ -998,6 +1123,37 @@
              style="font-size:6.35px;text-align:center;text-anchor:middle;stroke-width:0.264583"
              x="216.19844"
              y="202.48842">Lab</svg:tspan></svg:text>
+      </svg:g>
+    </svg:g>
+    <svg:g
+       id="link_cath_gate_anode"
+       class="link"
+       transform="translate(-42.010316,0.72189859)">
+      <svg:g
+         id="g158619-1-9">
+        <svg:rect
+           style="fill:#ff5599;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect35972-4-5-3"
+           width="45.538071"
+           height="13.428596"
+           x="193.57204"
+           y="193.40993" />
+        <svg:text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="216.19844"
+           y="202.48842"
+           id="text35980-9-1-8"><svg:tspan
+             sodipodi:role="line"
+             style="font-size:6.35px;text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="216.19844"
+             y="202.48842"
+             id="tspan26338"> Bathtub</svg:tspan><svg:tspan
+             sodipodi:role="line"
+             style="font-size:6.35px;text-align:center;text-anchor:middle;stroke-width:0.264583"
+             x="216.19844"
+             y="210.42592"
+             id="tspan26342" /></svg:text>
       </svg:g>
     </svg:g>
     <svg:g
@@ -1193,7 +1349,7 @@
     </svg:g>
     <svg:g
        id="g66005"
-       transform="translate(16.060277,67.802553)">
+       transform="translate(73.300925,77.903843)">
       <svg:rect
          style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect65995"
@@ -1226,7 +1382,7 @@
     </svg:g>
     <svg:g
        id="g66017"
-       transform="translate(16.060277,51.730242)">
+       transform="translate(73.300925,48.844159)">
       <svg:rect
          style="fill:#ffaaaa;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect66007"
@@ -1325,6 +1481,16 @@
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 55.629533,12.909118 V 6.0803816"
        id="path18187" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:0.826181;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 277.07603,107.64686 H 251.33947"
+       id="path83259-7"
+       sodipodi:nodetypes="cc" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:0.826181;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 277.01925,136.65174 -26.20014,-0.0452"
+       id="path83259-7-3"
+       sodipodi:nodetypes="cc" />
   </svg:g>
   <metadata>
     <property
@@ -1352,7 +1518,7 @@
     <property
        targetId="n2dewarfillback"
        targetAttribute="height"
-       offset="0"
+       offset="-19.05"
        scaling="0.15"
        sensor="M_TS_02"
        min="0"
@@ -1360,7 +1526,7 @@
     <property
        targetId="n2dewarfillback"
        targetAttribute="y"
-       offset="62"
+       offset="81.05"
        scaling="-0.15"
        sensor="M_TS_02"
        min="38"
@@ -1368,7 +1534,7 @@
     <property
        targetId="n2dewarfillfront"
        targetAttribute="height"
-       offset="0"
+       offset="-19.05"
        scaling="0.15"
        sensor="M_TS_01"
        min="0"
@@ -1376,7 +1542,7 @@
     <property
        targetId="n2dewarfillfront"
        targetAttribute="y"
-       offset="62"
+       offset="81.05"
        scaling="-0.15"
        sensor="M_TS_01"
        min="38"
