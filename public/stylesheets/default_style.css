@@ -151,3 +151,15 @@ ul.CTAs li a {
   display: block;
   background: rgba(0, 0, 0, 0.05);
 }
+
+#device_sensors {
+  display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+  padding-left: 0; /* Remove left padding to align items fully */
+}
+
+#device_sensors li {
+  flex: 0 0 33%; /* Each list item takes 50% of the container width */
+  margin-bottom: 10px;
+}
