@@ -274,7 +274,7 @@ function startControlButtonUpdate(device) {
   // Initial call to set up the buttons
   updateControlButtons(device);
   // Set interval to refresh the buttons every 5 seconds
-  controlButtonInterval = setInterval(() => updateControlButtons(device), 5000);
+  controlButtonInterval = setInterval(() => updateControlButtons(device), 1000);
 }
 
 function updateControlButtons(device) {
