@@ -303,7 +303,6 @@ $('#devicebox').on('hidden.bs.modal', () => {
   if (controlButtonInterval) clearInterval(controlButtonInterval);
 });
 
-
 function DrawSensorHistory(sensor) {
   sensor = sensor || $("#detail_sensor_name").html();
   var unit = $("#sensor_units").html();
@@ -468,8 +467,6 @@ function UpdateDevice() {
     });
   }
 }
-
-
 
 function PopulateNewSensor() {
   $.getJSON('/devices/params', doc => {
