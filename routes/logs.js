@@ -9,29 +9,60 @@ router.get('/', function(req, res) {
 });
 
 router.get('/get_logs', function(req, res) {
-  var q = url.parse(req.url, true).query;
-  var limit = 10000; // hard limit
+  const q = url.parse(req.url, true).query;
+  let limit = 10000;
   let tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  if(typeof q.limit != "undefined") {
-    limit = parseInt(q.limit);
+
+  if (typeof q.limit !== "undefined") {
+    limit = parseInt(q.limit, 10);
   }
-  var match = {};
-  if (typeof q.from != 'undefined' && typeof q.to != 'undefined') {
-    match['date'] = {$gte:new Date(q.from), $lt:new Date(q.to)};
+
+  let match = {};
+
+  if (typeof q.from !== 'undefined' && typeof q.to !== 'undefined') {
+    match['_id'] = {
+      $gte: new Date(q.from),
+      $lt: new Date(q.to)
+    };
   }
-  if (typeof q.severity != 'undefined') {
-    match['level'] = {$gte: parseInt(q.severity)};
+
+  if (typeof q.severity !== 'undefined') {
+    match['level'] = {$gte: parseInt(q.severity, 10)};
   }
-  if (typeof q.name != 'undefined' && q.name != "") {
+
+  if (typeof q.name !== 'undefined' && q.name !== "") {
     match['name'] = q.name;
   }
+
   mongo_db.get('logs').aggregate([
     {$match: match},
     {$sort: {_id: -1}},
     {$limit: limit},
-    {$project: {name: 1, level: 1, msg: 1, funcname: 1, date: {$dateToString: {date: "$date", timezone:tz, format: "%Y-%m-%d %H:%M:%S.%L"}}, _id: 0}}
-  ]).then(docs => res.json(docs))
-  .catch(err => {console.log(err.message); return res.json([]);});
+    {
+      $project: {
+        name: 1,
+        level: 1,
+        msg: 1,
+        funcname: 1,
+        date: {
+          $dateToString: {
+            date: { $toDate: "$_id" },
+            timezone: tz,
+            format: "%Y-%m-%d %H:%M:%S"
+          }
+        },
+        _id: 0
+      }
+    }
+  ])
+      .then(docs => res.json(docs))
+      .catch(err => {
+        console.log(err.message);
+        return res.json([]);
+      });
 });
+
+module.exports = router;
+
 
 module.exports = router;
