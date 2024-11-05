@@ -72,7 +72,7 @@ router.get('/device_list', function(req, res) {
       .catch(err => {console.log(err.message); res.json([]);});
 });
 
-router.get('/distinct_hostnames', common.ensureAuthenticated, function(req, res) {
+router.get('/distinct_hostnames', function(req, res) {
   mongo_db.get('devices').distinct('host')
       .then(docs => res.json(docs))
       .catch(err => {console.log(err.message); res.json([]);});
