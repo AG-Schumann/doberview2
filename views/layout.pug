@@ -270,7 +270,9 @@ html(data-bs-theme="dark")
                     tr
                       th.py-2 Host &nbsp;
                       td
-                        input.form-control-sm(type="text" id="device_host" name="device_host")
+                        input#device_host.form-control-sm(type="text" list="hostname_options",)
+                        datalist#hostname_options
+
                     tr(class="device_eth")
                       th.py-2 IP
                       td
@@ -286,7 +288,13 @@ html(data-bs-theme="dark")
                     tr(class="device_serial")
                       th.py-2 Baud
                       td
-                        input.form-control-sm(type="number" id="device_baud" name="device_baud")
+                        input#device_baud.form-control-sm(type="number" list="baud_options")
+                        datalist#baud_options
+                          option 9600
+                          option 19200
+                          option 38400
+                          option 57600
+                          option 115200
                     tr(class="device_serial")
                       th.py-2 SerialID &nbsp;
                       td

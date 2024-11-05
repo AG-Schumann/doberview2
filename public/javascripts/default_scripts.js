@@ -222,6 +222,14 @@ function MakeAlarm(name, is_int=false) {
 function DeviceDropdown(device) {
   $("#device_ctrl_btn").prop("onclick", null).off("click");
   $("#device_manage_btn").prop("onclick", null).off("click");
+  $.getJSON(`/devices/distinct_hostnames`, (hosts) => {
+    const dataList = $("#hostname_options");
+    dataList.empty();
+    hosts.forEach(host => {
+      const option = $("<option>").val(host);
+      dataList.append(option);
+    });
+  });
   $.getJSON(`/devices/device_detail?device=${device}`, (data) => {
     $(".modal").modal('hide');
     if (Object.keys(data).length === 0)
@@ -229,6 +237,7 @@ function DeviceDropdown(device) {
     // Populate device details
     $("#detail_device_name").html(data.name);
     $("#device_host").val(data.host);
+
     if (typeof data.address != 'undefined') {
       if (typeof data.address.ip != 'undefined') {
         $("#device_ip").val(data.address.ip);

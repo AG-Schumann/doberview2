@@ -68,8 +68,14 @@ router.post('/new_sensor', common.ensureAuthenticated, function(req, res) {
 
 router.get('/device_list', function(req, res) {
   mongo_db.get('devices').distinct('name')
-  .then(docs => res.json(docs))
-  .catch(err => {console.log(err.message); res.json([]);});
+      .then(docs => res.json(docs))
+      .catch(err => {console.log(err.message); res.json([]);});
+});
+
+router.get('/distinct_hostnames', common.ensureAuthenticated, function(req, res) {
+  mongo_db.get('devices').distinct('host')
+      .then(docs => res.json(docs))
+      .catch(err => {console.log(err.message); res.json([]);});
 });
 
 router.get('/device_detail', function(req, res) {
