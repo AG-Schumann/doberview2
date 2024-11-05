@@ -1,0 +1,43 @@
+extends layout
+
+block extrahead
+    link(href="/modules/jquery-datetimepicker/jquery.datetimepicker.css" rel="stylesheet" )
+    script(type="text/javascript" src="/modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js")
+    script(type="text/javascript" src="javascripts/plotter_scripts.js")
+
+block content
+    div.main-container
+        #sensor_select.modal.fade
+            .modal-dialog.modal-lg
+                .modal-content
+                    .modal-header
+                        h5.modal-title
+                            span Select Sensors to plot
+                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body.row
+                        #sensor_select_list
+                    .modal-footer
+                        button.btn.btn-secondary(type='button' data-bs-dismiss='modal')
+                        button.btn.btn-primary(type='button') Done
+        .d-flex.flex-row.mr-auto
+            #from_select
+                label from: &nbsp;
+                input.form-control(type="text", id="from_select_input" style="width:250px;")
+            #to_select
+                label to: &nbsp;
+                input.form-control(type="text", id="to_select_input" style="width:250px;")
+
+            button.btn.btn-primary(onclick='SelectSensorsDropdown()') Select Sensors
+
+    script.
+        $('#from_select_input').datetimepicker({
+        format: "Y-m-d H:i:s O",
+            value: now_minus_hours(1),
+            showTimezone: true,
+            });
+        $('#to_select_input').datetimepicker({
+        format: "Y-m-d H:i:s O",
+            value: new Date(),
+            showTimezone: true,
+            timezone: "UTC"
+        });
