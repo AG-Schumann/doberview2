@@ -1,0 +1,13 @@
+.selected-cell {
+    background-color: green !important;
+    color: white !important; /* Optional: change text color */
+}
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+.template-item:hover {
+    background-color: #e0e0e0;
+}

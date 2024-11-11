@@ -327,42 +327,69 @@ router.get('/get_last_points', function(req, res) {
 
 
 router.get('/get_data', function(req, res) {
-  var q = url.parse(req.url, true).query;
-  var sensor = q.sensor;
-  var binning = q.binning;
-  var history = q.history;
-  var topic = topic_lut[sensor.split('_')[0]];
-  if (typeof sensor == 'undefined' || typeof binning == 'undefined' || typeof history == 'undefined' || typeof topic == 'undefined')
+  const q = url.parse(req.url, true).query;
+  const sensor = q.sensor;
+  const binning = q.binning;
+  const history = q.history;
+  const start = q.start;
+  const end = q.end;
+  const topic = topic_lut[sensor.split('_')[0]];
+
+  if (typeof sensor === 'undefined' || typeof binning === 'undefined' || (typeof history === 'undefined' && (typeof start === 'undefined' || typeof end === 'undefined')) || typeof topic === 'undefined') {
     return res.json([]);
-  mongo_db.get('experiment_config').findOne({name: 'influx'}).then((doc) => {
-    if (config.override_influx_uri)
+  }
+
+  mongo_db.get('experiment_config').findOne({ name: 'influx' }).then((doc) => {
+    if (config.override_influx_uri) {
       doc['url'] = config.influx_uri;
-    var get_url = new url.URL(doc['url'] + '/api/v2/query');
-    var params = new url.URLSearchParams({
+    }
+    const get_url = new url.URL(doc['url'] + '/api/v2/query');
+    const params = new url.URLSearchParams({
       org: doc['org'],
       db: doc['db'],
     });
     get_url.search = params.toString();
+
+    // Determine range based on history or start/end
+    let rangeClause;
+    if (start && end) {
+      rangeClause = `|> range(start: ${start}, stop: ${end})`;
+    } else {
+      rangeClause = `|> range(start: -${history})`;
+    }
+
+    const query = `
+      from(bucket: "${doc['bucket']}")
+      ${rangeClause}
+      |> filter(fn: (r) => r["_measurement"] == "${topic}")
+      |> filter(fn: (r) => r["_field"] == "value")
+      |> filter(fn: (r) => r["sensor"] == "${sensor}")
+      |> aggregateWindow(every: ${binning}, fn: median, createEmpty: false)
+      |> keep(columns:["_time", "_value"])
+    `;
+
     return axios.post(
         get_url.toString(),
-        `from(bucket: "${doc['bucket']}")
-        |> range(start: -${history})
-        |> filter(fn: (r) => r["_measurement"] == "${topic}")
-        |> filter(fn: (r) => r["_field"] == "value")
-        |> filter(fn: (r) => r["sensor"] == "${sensor}")
-        |> keep(columns:["_time", "_value",])
-        |> aggregateWindow(every: ${binning}, fn: mean, createEmpty: false)
-        |> yield(name: "mean")`,
+        query,
         {
-          'headers': {
+          headers: {
             'Accept': 'application/csv',
             'Authorization': `Token ${doc['token']}`,
             'Content-type': 'application/vnd.flux'
           },
-        })}).then(resp => {
-          var data = resp.data.split('\r\n').slice(1);
-          return res.json(data.map(row => {var x = row.split(','); return [new Date(x[3]).getTime(), parseFloat(x[6])];}));
-  }).catch(err => {console.log(err); return res.json([]);});
+        }
+    );
+  }).then(resp => {
+    const data = resp.data.split('\r\n').slice(1, -2);
+    return res.json(data.map(row => {
+      const x = row.split(',');
+      return [new Date(x[4]).getTime(), parseFloat(x[3])];
+    }));
+  }).catch(err => {
+    console.log(err);
+    return res.json([]);
+  });
 });
+
 
 module.exports = router;

@@ -1,35 +1,91 @@
 extends layout
 
 block extrahead
+    link(rel="stylesheet" href="/stylesheets/plotter_styles.css")
     link(href="/modules/jquery-datetimepicker/jquery.datetimepicker.css" rel="stylesheet" )
     script(type="text/javascript" src="/modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js")
     script(type="text/javascript" src="javascripts/plotter_scripts.js")
-
+    script(src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8")
 block content
     div.main-container
-        #sensor_select.modal.fade
-            .modal-dialog.modal-lg
+        #sensorSelectModal.modal.fade
+            .modal-dialog.modal-fullscreen
                 .modal-content
                     .modal-header
                         h5.modal-title
                             span Select Sensors to plot
-                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-                    .modal-body.row
-                        #sensor_select_list
+                        button.btn-close(type='button' onclick='Plot()' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body
+                        table.table#sensorTable
+                            thead
+                                tr
+                                    //- Column headers for each topic, added dynamically in JavaScript
+                            tbody
+                                tr
+                                    //- Sensor rows will be inserted dynamically for each topic
                     .modal-footer
-                        button.btn.btn-secondary(type='button' data-bs-dismiss='modal')
-                        button.btn.btn-primary(type='button') Done
+                        button.btn.btn-primary(type='button' onclick='Plot()' data-bs-dismiss='modal') Done
+        #saveTemplateModal.modal.fade
+            .modal-dialog.modal-sm
+                .modal-content
+                    .modal-header
+                        h5.modal-title
+                            span Save as Template
+                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body
+                        label.form-label(for="templateName") Name
+                        input#templateName.form-control(type="text" style="width:250px;")
+                    .modal-footer
+                        button.btn.btn-primary(type='button' onclick='SaveTemplate()' data-bs-dismiss='modal') Save
+        #loadTemplateModal.modal.fade
+            .modal-dialog.modal-sm
+                .modal-content
+                    .modal-header
+                        h5.modal-title
+                            span Load Template
+                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body
+                        ul#templateList
+        .d-flex.flex-row.mr-auto
         .d-flex.flex-row.mr-auto
             #from_select
                 label from: &nbsp;
-                input.form-control(type="text", id="from_select_input" style="width:250px;")
+                input#from_select_input.form-control(type="text" style="width:250px;" onchange='ChangeDates()')
             #to_select
                 label to: &nbsp;
-                input.form-control(type="text", id="to_select_input" style="width:250px;")
-
-            button.btn.btn-primary(onclick='SelectSensorsDropdown()') Select Sensors
+                input#to_select_input.form-control(type="text" style="width:250px;" onchange='ChangeDates()')
+            #median_filter
+                label Median filter:
+                .slider-container
+                    input#median_filter_input.form-range(type="range" min="1" max="10" step="1" value="3"
+                        onchange='Plot()', oninput='ChangeBinningLabel()')
+                    span#binning_val
+            #legend_position
+                label Legend position:
+                select#legend_position_select.form-select(onchange="Plot()")
+                    option(value="top left") Top Left
+                    option(value="top right") Top Right
+                    option(value="bottom left") Bottom Left
+                    option(value="bottom right") Bottom Right
+            #templates
+                label Templates:
+                .template-buttons-container
+                    button#saveTemplateButton.btn.btn-primary.me-4(data-bs-toggle="modal" data-bs-target="#saveTemplateModal")
+                        i.fa-solid.fa-floppy-disk
+                    button#loadTemplateButton.btn.btn-primary(onclick='LoadTemplateModal()')
+                        i.fa-solid.fa-folder-open
+            #sensor_select
+                label Select Sensors
+                .sensor-select-button-container
+                    button#sensorButton.btn.btn-primary(onclick='SelectSensorsDropdown()')
+        .row.mt-3
+            #plot
 
     script.
+        $(document).ready(function() {
+            ChangeBinningLabel();
+            updateSensorButtonText();
+        });
         $('#from_select_input').datetimepicker({
         format: "Y-m-d H:i:s O",
             value: now_minus_hours(1),
@@ -41,3 +97,4 @@ block content
             showTimezone: true,
             timezone: "UTC"
         });
+
