@@ -31,5 +31,13 @@ router.post('/save_template', common.ensureAuthenticated, function(req, res) {
         .then(() => res.json(ret))
         .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
-
+router.post("/delete_template", common.ensureAuthenticated, function (req, res) {
+    let data = req.body;
+    let name = data.name;
+    console.log(name);
+    let ret = {notify_msg: `Template '${name}' deleted`, notify_status: 'success'};
+    mongo_db.get('plotter_templates').remove({name: name})
+        .then(() => res.json(ret))
+        .catch(err => {console.log(err.message); return res.json({err: err.message});});
+})
 module.exports = router;

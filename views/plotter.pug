@@ -45,30 +45,47 @@ block content
                             span Load Template
                         button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
                     .modal-body
-                        ul#templateList
+                        ul.list-group#templateList
+        #legendPlacementModal.modal.fade
+            .modal-dialog
+                .modal-content.modal-sm
+                    .modal-header
+                        h5.modal-title
+                            span Legend Placement
+                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body
+                        #placementContainer
+                            // Triangles for corners
+                            #topleft.triangle(onclick='setLegendPosition("top-left")')
+                            #topright.triangle(onclick='setLegendPosition("top-right")')
+                            #bottomleft.triangle(onclick='setLegendPosition("bottom-left")')
+                            #bottomright.triangle(onclick='setLegendPosition("bottom-right")')
+                            // Trapezoids for sides
+                            #topcenter.trapezoid(onclick='setLegendPosition("top-center")')
+                            #bottomcenter.trapezoid(onclick='setLegendPosition("bottom-center")')
+                            #leftcenter.trapezoid(onclick='setLegendPosition("left-center")')
+                            #rightcenter.trapezoid(onclick='setLegendPosition("right-center")')
+
         .d-flex.flex-row.mr-auto
         .d-flex.flex-row.mr-auto
             #from_select
-                label from: &nbsp;
+                label From
                 input#from_select_input.form-control(type="text" style="width:250px;" onchange='ChangeDates()')
             #to_select
-                label to: &nbsp;
+                label To
                 input#to_select_input.form-control(type="text" style="width:250px;" onchange='ChangeDates()')
             #median_filter
-                label Median filter:
+                label Median Filter
                 .slider-container
-                    input#median_filter_input.form-range(type="range" min="1" max="10" step="1" value="3"
+                    input#median_filter_input.form-range(type="range" min="1" max="30" step="1" value="3"
                         onchange='Plot()', oninput='ChangeBinningLabel()')
                     span#binning_val
             #legend_position
-                label Legend position:
-                select#legend_position_select.form-select(onchange="Plot()")
-                    option(value="top left") Top Left
-                    option(value="top right") Top Right
-                    option(value="bottom left") Bottom Left
-                    option(value="bottom right") Bottom Right
+                label Legend Position
+                    .sensor-select-button-container
+                        button#legendButton.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#legendPlacementModal") Place Legend
             #templates
-                label Templates:
+                label Templates
                 .template-buttons-container
                     button#saveTemplateButton.btn.btn-primary.me-4(data-bs-toggle="modal" data-bs-target="#saveTemplateModal")
                         i.fa-solid.fa-floppy-disk
@@ -77,12 +94,21 @@ block content
             #sensor_select
                 label Select Sensors
                 .sensor-select-button-container
-                    button#sensorButton.btn.btn-primary(onclick='SelectSensorsDropdown()')
+                    button#sensorButton.btn.btn-primary(onclick='SelectSensorsModal()')
         .row.mt-3
+            #progress-bar-container
+                .progress
+                    #progress-bar-inner.progress-bar.progress-bar-striped.progress-bar-animated(role="progressbar" style="width: 0%")
             #plot
+
+
 
     script.
         $(document).ready(function() {
+            updateLegendButtonText();
+            $("#progress-bar-container").hide();
+            $(`#topright`).addClass("selected");
+
             ChangeBinningLabel();
             updateSensorButtonText();
         });
