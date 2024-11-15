@@ -2,12 +2,14 @@
     background-color: var(--bs-success) !important;
     color: white !important; /* Optional: change text color */
 }
+
 .slider-container {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-top: 6px;
 }
+
 .template-item:hover {
     background-color: #e0e0e0;
 }
@@ -33,8 +35,9 @@
 .triangle, .trapezoid {
     cursor: pointer;
     position: absolute;
+    transition: border-color 0.3s;
+    border-color: var(--bs-secondary);
 }
-
 
 .triangle {
     width: 0;
@@ -48,19 +51,13 @@
     border-right: 50px solid transparent;
 }
 
-#topleft:hover {
-    border-top: 50px solid var(--bs-light);
-}
-
 #topright {
     top: 0;
     right: 0;
     border-top: 50px solid var(--bs-secondary);
     border-left: 50px solid transparent;
 }
-#topright:hover {
 
-}
 #bottomleft {
     bottom: 0;
     left: 0;
@@ -114,17 +111,6 @@
     right: 0;
 }
 
-.triangle, .trapezoid {
-    cursor: pointer;
-    position: absolute;
-    transition: border-color 0.3s;
-}
-
-/* Default color for borders */
-.triangle, .trapezoid {
-    border-color: var(--bs-secondary);
-}
-
 /* Hover effect for visible borders */
 #topleft:hover { border-top-color: var(--bs-light); }
 #topright:hover { border-top-color: var(--bs-light); }
@@ -137,15 +123,15 @@
 #rightcenter:hover { border-left-color: var(--bs-light); }
 
 /* Selected position style (green) */
-#topleft.selected { border-top-color: green; }
-#topright.selected { border-top-color: green; }
-#bottomleft.selected { border-bottom-color: green; }
-#bottomright.selected { border-bottom-color: green; }
+#topleft.selected { border-top-color: var(--bs-success); }
+#topright.selected { border-top-color: var(--bs-success); }
+#bottomleft.selected { border-bottom-color: var(--bs-success); }
+#bottomright.selected { border-bottom-color: var(--bs-success); }
 
-#topcenter.selected { border-bottom-color: green; }
-#bottomcenter.selected { border-top-color: green; }
-#leftcenter.selected { border-right-color: green; }
-#rightcenter.selected { border-left-color: green; }
+#topcenter.selected { border-bottom-color: var(--bs-success); }
+#bottomcenter.selected { border-top-color: var(--bs-success); }
+#leftcenter.selected { border-right-color: var(--bs-success); }
+#rightcenter.selected { border-left-color: var(--bs-success); }
 
 #progress-bar-container {
     margin-top: 300px;
