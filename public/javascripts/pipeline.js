@@ -11,63 +11,66 @@ function PopulateNavbar() {
       '<input class="form-control" id="searchPipelineInput" type="text" onkeyup="UpdateLoop()" placeholder="Search pipelines">' +
       '<button id="clear_search_btn" class="btn bg-transparent" type="button"  onclick="$(`#searchPipelineInput`).val(``); PopulatePipelines();">' +
       '<i class="fa fa-times"></i></button></div></div></li>';
-  $('#navbar_content').html(content);
+  $('#navbar_content').prepend(content);
 }
 
 function UpdateLoop() {
-  $(".tooltip").tooltip("hide");
+  $('[data-bs-toggle="tooltip"]').tooltip('dispose');
   ['alarm', 'control', 'convert'].forEach(flavor => PopulatePipelines(flavor));
 }
 
 function PopulatePipelines(flavor) {
-  var filter = $("#searchPipelineInput").val().toUpperCase();
+  var filter = $("#searchPipelineInput").val().replace(/_/g, '').toUpperCase();
   $.getJSON(`/pipeline/get_pipelines?flavor=${flavor}`, data => {
     $(`#${flavor}_active`).empty();
     $(`#${flavor}_silent`).empty();
     $(`#${flavor}_inactive`).empty();
     data.forEach(doc => {
-      let n = doc.name;
-      if (filter === '' || (n.toUpperCase().indexOf(filter) > -1)) {
+      let n = doc.name.replace(/_/g, '').toUpperCase();
+      if (filter === '' || (n.indexOf(filter) > -1)) {
         let status = doc.status;
-        if ((status === 'active') && ((doc.silent_until == -1) || (doc.silent_until > Date.now()/1000))) status = 'silent';
+        if ((status === 'active') && ((doc.silent_until == -1) || (doc.silent_until > Date.now()/1000))) {
+          status = 'silent';
+        }
         let last_error = doc.cycle - doc.error; // last error X cycles ago
         let status_color = ((last_error < 5) ? 'danger' : 'success');
         if (doc.cycle <= 5) status_color = 'warning'; // status indicator yellow during pipeline start-up
         if (doc.cycle === 0) status_color = 'secondary'; // status indicator grey when pipeline never ran
-        $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${n}')">` +
+
+        $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${doc.name}')">` +
             `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right"` +
             `title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n` +
             `last cycle: &nbsp; ${(doc.dt || 0).toPrecision(1)} s \n` +
             `last error: &nbsp; ${doc.cycle - doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>` +
-            `<td onclick="PipelineDropdown('${n}')">${n}</td>` +
-            `<td id="${n}_description" onclick="PipelineDropdown('${n}')">${doc.description}</td>` +
-            `<td id="${n}_silent_until" onclick="PipelineDropdown('${n}')" style="display:none;">Loading</td>`+
-            `<td id="${n}_actions">Loading</td><td id="${n}_silent_until"></td></tr>`);
-        let stop_button = `<button class="btn btn-danger action_button" onclick="PipelineControl('stop','${n}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
-        let silence_button = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${n}')"><i class="fas fa-solid fa-bell-slash"></i>Silence</button>`;
-        let activate_button = `<button class="btn btn-success action_button" onclick="PipelineControl('active','${n}')"><i class="fas fa-solid fa-bell"></i>Activate</button>`;
-        let restart_button = `<button class="btn btn-primary action_button" onclick="PipelineControl('restart','${n}')"><i class="fas fa-solid fa-rotate"></i> Restart</button>`;
-        let start_button = `<button class="btn btn-success action_button" onclick="StartPipeline('${n}')"><i class="fas fa-solid fa-play"></i> Start</button>`;
-        if (status === 'active') {
-          $(`#${n}_actions`).html(`${silence_button}${stop_button}${restart_button}`);
-        } else if (status === 'silent') {
-          $(`#${n}_silent_until`).show();
-          if (doc.silent_until == -1) {
-            $(`#${n}_silent_until`).html('the end of time');
-          } else {
-            $(`#${n}_silent_until`).html(new Date(doc.silent_until*1000).toLocaleString());
+            `<td onclick="PipelineDropdown('${doc.name}')">${doc.name}</td>` +
+            `<td id="${doc.name}_description" onclick="PipelineDropdown('${doc.name}')">${doc.description}</td>` +
+            `<td id="${doc.name}_silent_until" onclick="PipelineDropdown('${doc.name}')" style="display:none;">Loading</td>` +
+            `<td id="${doc.name}_actions">Loading</td><td id="${doc.name}_silent_until"></td></tr>`);
 
+        let stop_button = `<button class="btn btn-danger action_button" onclick="PipelineControl('stop','${doc.name}')"><i class="fas fa-solid fa-stop"></i>Stop</button>`;
+        let silence_button = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${doc.name}')"><i class="fas fa-solid fa-bell-slash"></i>Silence</button>`;
+        let activate_button = `<button class="btn btn-success action_button" onclick="PipelineControl('active','${doc.name}')"><i class="fas fa-solid fa-bell"></i>Activate</button>`;
+        let restart_button = `<button class="btn btn-primary action_button" onclick="PipelineControl('restart','${doc.name}')"><i class="fas fa-solid fa-rotate"></i> Restart</button>`;
+        let start_button = `<button class="btn btn-success action_button" onclick="StartPipeline('${doc.name}')"><i class="fas fa-solid fa-play"></i> Start</button>`;
+
+        if (status === 'active') {
+          $(`#${doc.name}_actions`).html(`${silence_button}${stop_button}${restart_button}`);
+        } else if (status === 'silent') {
+          $(`#${doc.name}_silent_until`).show();
+          if (doc.silent_until == -1) {
+            $(`#${doc.name}_silent_until`).html('the end of time');
+          } else {
+            $(`#${doc.name}_silent_until`).html(new Date(doc.silent_until*1000).toLocaleString());
           }
-          $(`#${n}_actions`).html(`${activate_button}${silence_button}${stop_button}${restart_button}`);
+          $(`#${doc.name}_actions`).html(`${activate_button}${silence_button}${stop_button}${restart_button}`);
         } else {
-          $(`#${n}_actions`).html(`${start_button}`);
+          $(`#${doc.name}_actions`).html(`${start_button}`);
         }
-        $('[data-bs-toggle="tooltip"]').tooltip();
       }
     }); // data.forEach
+    $('[data-bs-toggle="tooltip"]').tooltip();
   }); // getJSON
 }
-
 function Visualize(doc) {
   if (doc == null) {
     try{
@@ -76,13 +79,15 @@ function Visualize(doc) {
   }
   var data = [];
   doc.pipeline.forEach(item => {(item.upstream || []).forEach(us =>
-    data.push({from: us, to: item.name, id: us, name: us}));});
+      data.push({from: us, to: item.name, id: us, name: us}));});
   var nodes = doc.pipeline.map(item => ({id: item.name, name: item.name, title: item.type}));
+  const bkg_color = ($(':root').attr('data-bs-theme') === 'dark') ? '#212529' : '#ffffff';
   Highcharts.chart('pipeline_vis', {
     chart: {
       height: 'auto',
       inverted: true,
       title: null,
+      backgroundColor: bkg_color,
     },
     title: {text: null},
     credits: {enabled: false},
@@ -218,9 +223,10 @@ function ConvertTemplate() {
 }
 
 function ValidatePipeline(echo=true) {
-  try{
+  let doc;
+  try {
     doc = JSON.parse(JSON.stringify(document.jsoneditor.get()));
-  }catch(err){
+  } catch (err) {
     Notify(err, 'error');
     return false;
   }
@@ -229,7 +235,6 @@ function ValidatePipeline(echo=true) {
     return false;
   }
   var names = [];
-  var flavor = null;
   for (var node of doc.pipeline) {
     if (names.includes(node.name)) {
       Notify('Please give nodes unique names', 'error');
@@ -239,19 +244,7 @@ function ValidatePipeline(echo=true) {
       Notify('Please give nodes meaningful names', 'error');
       return false;
     }
-    if (flavor == null) {
-      if (node.type.includes('Alarm') || node.type == 'CheckRemoteHeartbeatNode')
-        flavor = 'alarm';
-      else if (node.type.includes('Control'))
-        flavor = 'control';
-      else if (node.type == 'InfluxSinkNode')
-        flavor = 'convert';
-    }
     names.push(node.name);
-  }
-  if (!doc.name.startsWith(flavor)) {
-    Notify('The name doesn\'t seem to match the pipeline\'s task', 'error');
-    return false;
   }
   if (echo)
     Notify('Basic validation successful');
@@ -321,7 +314,7 @@ function DeletePipeline() {
           alert(data.err);
         else
           $("#pipelinebox").modal('hide');
-          Notify(data.notify_msg, data.notify_status);
+        Notify(data.notify_msg, data.notify_status);
       },
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
     });

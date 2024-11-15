@@ -20,7 +20,18 @@
     margin-bottom: 0 !important;
 }
 
-#shift_table tr td i:hover {
+#shift_table tr td,
+#shift_head tr th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+#shift_table tr td:first-child,
+#shift_head tr th:first-child {
+    text-align: left;
+}
+
+#shift_table tr td i.fa-trash:hover {
     color: var(--bs-danger);
 }
 

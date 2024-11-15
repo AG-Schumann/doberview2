@@ -2,7 +2,7 @@ var zmq = require('zeromq');
 const config = require('../config/config')
 // Doberview common functions, defined once here rather than in every file
 
-function  SendCommand(req, to, command, delay=0) {
+async function SendCommand(req, to, command, delay=0) {
   var logged = new Date().getTime() + delay;
   return mongo_db.get('experiment_config').findOne({name: 'hypervisor'})
   .then((doc) => {

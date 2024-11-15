@@ -26,6 +26,7 @@ router.get('/params', function(req, res) {
 router.post('/new_sensor', common.ensureAuthenticated, function(req, res) {
   var doc = req.body;
   doc.status = 'online';
+  doc.alarm_is_triggered = false;
   var topic = doc.topic;
   if (!Object.values(topic_lut).includes(topic))
     return res.json({err: `Invalid topic: ${topic} ${Object.values(topic_lut).join(',')}`});
@@ -67,8 +68,14 @@ router.post('/new_sensor', common.ensureAuthenticated, function(req, res) {
 
 router.get('/device_list', function(req, res) {
   mongo_db.get('devices').distinct('name')
-  .then(docs => res.json(docs))
-  .catch(err => {console.log(err.message); res.json([]);});
+      .then(docs => res.json(docs))
+      .catch(err => {console.log(err.message); res.json([]);});
+});
+
+router.get('/distinct_hostnames', function(req, res) {
+  mongo_db.get('devices').distinct('host')
+      .then(docs => res.json(docs))
+      .catch(err => {console.log(err.message); res.json([]);});
 });
 
 router.get('/device_detail', function(req, res) {
@@ -119,12 +126,16 @@ router.get('/sensor_detail', function(req, res) {
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
-router.post('/update_device_address', common.ensureAuthenticated, function(req, res) {
+router.post('/update_device', common.ensureAuthenticated, function(req, res) {
   var updates = {};
   var data = req.body.data;
   var device = data.device;
   if (typeof device == 'undefined')
     return res.json({err: 'No device defined'});
+  if (typeof data.host == 'undefined')
+    return res.json({err: 'No host defined'});
+  else
+    updates['host'] = data.host;
   if (typeof data.tty != 'undefined')
     updates['address.tty'] = data.tty;
   if (typeof data.ip != 'undefined')
@@ -144,7 +155,7 @@ router.post('/update_device_address', common.ensureAuthenticated, function(req, 
   if (typeof data.serial_id != 'undefined')
     updates['address.serialID'] = data.serial_id;
   if (Object.keys(updates).length != 0) {
-    mongo_db.get('devices').update({device: device}, {$set: updates})
+    mongo_db.get('devices').update({name: device}, {$set: updates})
       .then(() => res.json({msg: 'Success'}))
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
   } else

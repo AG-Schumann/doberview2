@@ -1,0 +1,11 @@
+
+.tabulator-row{
+    background-color: var(--bs-body-bg) !important;
+}
+.tabulator .tabulator-header .tabulator-col{
+    background-color: var(--bs-body-bg) !important;
+}
+
+.tabulator .tabulator-footer{
+    background-color: var(--bs-body-bg) !important;
+}
