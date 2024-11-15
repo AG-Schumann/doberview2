@@ -1,0 +1,126 @@
+extends layout
+
+block extrahead
+    link(rel="stylesheet" href="/stylesheets/plotter_styles.css")
+    link(href="/modules/jquery-datetimepicker/jquery.datetimepicker.css" rel="stylesheet" )
+    script(type="text/javascript" src="/modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js")
+    script(type="text/javascript" src="javascripts/plotter_scripts.js")
+    script(src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8")
+block content
+    div.main-container
+        #sensorSelectModal.modal.fade
+            .modal-dialog.modal-fullscreen
+                .modal-content
+                    .modal-header
+                        h5.modal-title
+                            span Select Sensors to plot
+                        button.btn-close(type='button' onclick='Plot()' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body
+                        table.table#sensorTable
+                            thead
+                                tr
+                                    //- Column headers for each topic, added dynamically in JavaScript
+                            tbody
+                                tr
+                                    //- Sensor rows will be inserted dynamically for each topic
+                    .modal-footer
+                        button.btn.btn-primary(type='button' onclick='Plot()' data-bs-dismiss='modal') Done
+        #saveTemplateModal.modal.fade
+            .modal-dialog.modal-sm
+                .modal-content
+                    .modal-header
+                        h5.modal-title
+                            span Save as Template
+                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body
+                        label.form-label(for="templateName") Name
+                        input#templateName.form-control(type="text" style="width:250px;")
+                    .modal-footer
+                        button.btn.btn-primary(type='button' onclick='SaveTemplate()' data-bs-dismiss='modal') Save
+        #loadTemplateModal.modal.fade
+            .modal-dialog.modal-sm
+                .modal-content
+                    .modal-header
+                        h5.modal-title
+                            span Load Template
+                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body
+                        ul.list-group#templateList
+        #legendPlacementModal.modal.fade
+            .modal-dialog
+                .modal-content.modal-sm
+                    .modal-header
+                        h5.modal-title
+                            span Legend Placement
+                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body
+                        #placementContainer
+                            // Triangles for corners
+                            #topleft.triangle(onclick='setLegendPosition("top-left")')
+                            #topright.triangle(onclick='setLegendPosition("top-right")')
+                            #bottomleft.triangle(onclick='setLegendPosition("bottom-left")')
+                            #bottomright.triangle(onclick='setLegendPosition("bottom-right")')
+                            // Trapezoids for sides
+                            #topcenter.trapezoid(onclick='setLegendPosition("top-center")')
+                            #bottomcenter.trapezoid(onclick='setLegendPosition("bottom-center")')
+                            #leftcenter.trapezoid(onclick='setLegendPosition("left-center")')
+                            #rightcenter.trapezoid(onclick='setLegendPosition("right-center")')
+
+        .d-flex.flex-row.mr-auto
+        .d-flex.flex-row.mr-auto
+            #from_select
+                label From
+                input#from_select_input.form-control(type="text" style="width:250px;" onchange='ChangeDates()')
+            #to_select
+                label To
+                input#to_select_input.form-control(type="text" style="width:250px;" onchange='ChangeDates()')
+            #median_filter
+                label Median Filter
+                .slider-container
+                    input#median_filter_input.form-range(type="range" min="1" max="30" step="1" value="3"
+                        onchange='Plot()', oninput='ChangeBinningLabel()')
+                    span#binning_val
+            #legend_position
+                label Legend Position
+                    .sensor-select-button-container
+                        button#legendButton.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#legendPlacementModal") Place Legend
+            #templates
+                label Templates
+                .template-buttons-container
+                    button#saveTemplateButton.btn.btn-primary.me-4(data-bs-toggle="modal" data-bs-target="#saveTemplateModal")
+                        i.fa-solid.fa-floppy-disk
+                    button#loadTemplateButton.btn.btn-primary(onclick='LoadTemplateModal()')
+                        i.fa-solid.fa-folder-open
+            #sensor_select
+                label Select Sensors
+                .sensor-select-button-container
+                    button#sensorButton.btn.btn-primary(onclick='SelectSensorsModal()')
+        .row.mt-3
+            #progress-bar-container
+                .progress
+                    #progress-bar-inner.progress-bar.progress-bar-striped.progress-bar-animated(role="progressbar" style="width: 0%")
+            #plot
+
+
+
+    script.
+        $(document).ready(function() {
+            updateLegendButtonText();
+            $("#progress-bar-container").hide();
+            $(`#topright`).addClass("selected");
+
+            ChangeBinningLabel();
+            updateSensorButtonText();
+        });
+        $('#from_select_input').datetimepicker({
+        format: "Y-m-d H:i:s O",
+            value: now_minus_hours(1),
+            showTimezone: true,
+            });
+        $('#to_select_input').datetimepicker({
+        format: "Y-m-d H:i:s O",
+            value: new Date(),
+            showTimezone: true,
+            timezone: "UTC"
+        });
+
