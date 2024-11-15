@@ -339,7 +339,6 @@ function DeviceDropdown(device) {
   });
 }
 
-<<<<<<< HEAD
 function InitDiagram(sensor) {
   var unit = $("#sensor_units").val();
   detail_chart = Highcharts.chart('sensor_chart', {
