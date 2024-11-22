@@ -21,7 +21,7 @@ function UpdateLoop() {
 
 function PopulatePipelines(flavor) {
   var filter = $("#searchPipelineInput").val().replace(/_/g, '').toUpperCase();
-  $.getJSON(`/pipeline/get_pipelines?flavor=${flavor}`, data => {
+  $.getJSON(`/pipelines/get_pipelines?flavor=${flavor}`, data => {
     $(`#${flavor}_active`).empty();
     $(`#${flavor}_silent`).empty();
     $(`#${flavor}_inactive`).empty();
@@ -264,7 +264,7 @@ function AddOrUpdatePipeline() {
     if (old_name.startsWith("New")) {
       $.ajax({
         type: 'POST',
-        url: "/pipeline/add_pipeline",
+        url: "/pipelines/add_pipeline",
         data: doc,
         success: (data) => {
           if (typeof data != 'undefined' && typeof data.err != 'undefined')
@@ -280,7 +280,7 @@ function AddOrUpdatePipeline() {
       doc.old_name = old_name;
       $.ajax({
         type: 'POST',
-        url: "/pipeline/update_pipeline",
+        url: "/pipelines/update_pipeline",
         data: doc,
         success: (data) => {
           if (typeof data != 'undefined' && typeof data.err != 'undefined')
@@ -307,7 +307,7 @@ function DeletePipeline() {
   if (confirm(`Are you sure that you want to delete this pipeline?`)) {
     $.ajax({
       type: 'POST',
-      url: '/pipeline/delete_pipeline',
+      url: '/pipelines/delete_pipeline',
       data: {pipeline: name},
       success: (data) => {
         if (typeof data != 'undefined' && typeof data.err != 'undefined')
@@ -328,7 +328,7 @@ function StartPipeline(name) {
 function PipelineControl(action, pipeline) {
   $.ajax({
     type: 'POST',
-    url: "/pipeline/pipeline_ctl",
+    url: "/pipelines/pipeline_ctl",
     data: {cmd: action, name: pipeline},
     success: (data) => {
       if (typeof data != 'undefined' && typeof data.err != 'undefined')
@@ -348,7 +348,7 @@ function NewPipelineDropdown(flavor) {
 }
 
 function PipelineDropdown(pipeline) {
-  $.getJSON(`/pipeline/get_pipeline?name=${pipeline}`, doc => {
+  $.getJSON(`/pipelines/get_pipeline?name=${pipeline}`, doc => {
     $("#detail_pipeline_name").html(doc.name);
     Visualize(doc);
     document.jsoneditor.set(doc);

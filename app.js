@@ -42,19 +42,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/modules', express.static(path.join(__dirname, 'node_modules')));
 console.log(`New connection at ${new Date()}`);
 
-
+const sensorsRouter = require('./routes/sensors');
+app.use('/sensors', sensorsRouter);
 const deviceRouter = require('./routes/devices');
 app.use('/devices', deviceRouter);
 if (config.use_systems) {
-  const systemsRouter = require('./routes/systems');
-  app.use('/systems', systemsRouter);
-  app.use('/', systemsRouter); // GUI view should be default when it exists.
+  const overviewRouter = require('./routes/overview');
+  app.use('/overview', overviewRouter);
+  app.use('/', overviewRouter); // GUI view should be default when it exists.
 }
 else {
   app.use('/', deviceRouter); // Else use table view as landing page.
 }
-let pipelineRouter = require('./routes/pipeline');
-app.use('/pipeline', pipelineRouter);
+let pipelineRouter = require('./routes/pipelines');
+app.use('/pipelines', pipelineRouter);
 if (config.use_hosts) {
   const hostRouter = require('./routes/hosts');
   app.use('/hosts', hostRouter);
@@ -81,11 +82,12 @@ app.get('/logout', function (req, res) {
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+  console.warn(`404 Not Found: ${req.method} ${req.originalUrl}`);
   next(createError(404));
 });
 
 // error handler
-app.use(function(req, res) {
+app.use(function(err, req, res, next) {  // Ensure the error is passed as `err`
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -94,6 +96,7 @@ app.use(function(req, res) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 app.listen(port, hostname, () => {console.log(`Server running on ${hostname}:${port}`);});
 

@@ -6,11 +6,9 @@ block extrahead
   script(src="/modules/highcharts/highcharts-more.js", type="text/javascript")
   script(src="/modules/highcharts/modules/sankey.js", type="text/javascript")
   script(src="/modules/highcharts/modules/organization.js", type="text/javascript")
-  script(src="/javascripts/pipeline.js" type="text/javascript")
-  script(src="/javascripts/default_scripts.js" type="text/javascript")
+  script(src="/javascripts/pipelines_scripts.js" type="text/javascript")
 block content
   - var flavors = ['alarm', 'control', 'convert'];
-  - var states = ['active', 'silent', 'inactive'];
   div.main-container
     #pipelineAccordion.accordion
       each flavor in flavors

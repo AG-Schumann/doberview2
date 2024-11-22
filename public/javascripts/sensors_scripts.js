@@ -57,8 +57,8 @@ function UpdateOnce(regroup=false) {
   if (regroup) $('#sensor_table').html('<thead><tr><th colspan=2>Loading...</th></tr></thead>');
   var group_by = $('#sensor_grouping input:radio:checked').val();
   $.when(
-    $.getJSON('/devices/get_last_points'),
-    $.getJSON(`/devices/sensors_grouped?group_by=${group_by}`)
+    $.getJSON('/sensors/get_last_points'),
+    $.getJSON(`/sensors/grouped?group_by=${group_by}`)
   ).done((data, sensors_grouped) => {
     if (regroup) {
       $("#sensor_table").empty();

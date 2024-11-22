@@ -59,7 +59,7 @@ function TogglePipelineConfig(e){
   let value = 1 - parseInt(element.getAttribute('state'));
   let confmsg = `Setting ${pipeline}.${target} to ${value}`;
   if (!confirm(confmsg)) return;
-  $.post('/pipeline/set_single_node_config',
+  $.post('/pipelines/set_single_node_config',
          data={pipeline: pipeline, target: target, value: value},
          data => {
            if (typeof data != 'undefined' && typeof data.err != 'undefined')
@@ -123,7 +123,7 @@ function Setup(){
     });
     sensors.add(property.getAttribute('sensor'));
   }
-  sensors.forEach(s => $.getJSON(`/devices/sensor_detail?sensor=${s}`, data => {
+  sensors.forEach(s => $.getJSON(`/sensors/detail?sensor=${s}`, data => {
     units[s] = data.units;
     for (var element of doc.querySelectorAll(`[id*=_${s}]`)) {
       element.addEventListener('click', function() {SensorDropdown(s);});
@@ -192,7 +192,7 @@ function LoadSVG(fn) {
 
 function UpdateOnce() {
   var doc = document.getElementById('svg_frame').getSVGDocument();
-  $.getJSON(`/devices/get_last_points?sensors=${[...sensors].join(',')}`, data => {
+  $.getJSON(`/sensors/get_last_points?sensors=${[...sensors].join(',')}`, data => {
     sensors.forEach(s => {
       if (!data[s]) {
         console.log(`No data for sensor ${s}`);
@@ -218,7 +218,7 @@ function UpdateOnce() {
     });
   });
 
-  $.post('/pipeline/get_pipelines_configs',
+  $.post('/pipelines/get_pipelines_configs',
          data={pipelines: pipelineconfigs},
          resp => {
     doc.querySelectorAll('.pipeline_toggler').forEach(e => {

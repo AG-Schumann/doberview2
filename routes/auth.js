@@ -4,7 +4,7 @@ var passport = require('passport');
 var request = require('request');
 
 router.get('/', function(req, res) {
-    res.render('full_system');
+    res.render('sensors');
 });
 
 function checkUrl (req, res, next){

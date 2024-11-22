@@ -29,7 +29,7 @@ function SensorDropdown(sensor) {
   $("#alarm_mid, #alarm_range").change(() => {let mid = parseInt($("#alarm_mid").val());
     let range = parseInt($("#alarm_range").val());
     $("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);});
-  $.getJSON(`/devices/sensor_detail?sensor=${sensor}`, (sensor_detail) => {
+  $.getJSON(`/sensors/detail?sensor=${sensor}`, (sensor_detail) => {
     if (Object.keys(sensor_detail).length === 0)
       return;
     let is_int = sensor_detail.is_int===1;
@@ -93,7 +93,7 @@ function SensorDropdown(sensor) {
       sensor_detail.pipelines.forEach(pl_name => {
         if (pl_name === 'alarm_' + sensor_detail.name)
           $("#make_alarm_button").hide();
-        $.getJSON(`/pipeline/get_pipeline?name=${pl_name}`, doc => {
+        $.getJSON(`/pipelines/get_pipeline?name=${pl_name}`, doc => {
           if (doc == null) return;
           let now = new Date();
           let flavor = `${pl_name}`.split('_')[0];
@@ -140,7 +140,7 @@ function SensorDropdown(sensor) {
         // this is a setpoint
         $("#sensor_setpoint").prop('hidden', false);
         $("#sensor_states").prop('hidden', true);
-        $.getJSON(`/devices/get_last_point?sensor=${sensor_detail.name}`, doc => {
+        $.getJSON(`/sensors/get_last_point?sensor=${sensor_detail.name}`, doc => {
           $("#sensor_setpoint_control").val(doc.value);
         });
       }
@@ -163,6 +163,7 @@ function AddAlarmLevel(no) {
 function DeleteAlarmLevel(btn) {
   btn.closest('tr').remove();
 }
+
 function MakeAlarm(name, is_int=false) {
   if (typeof name == 'undefined')
     name = $("#detail_sensor_name").html();
@@ -211,7 +212,7 @@ function MakeAlarm(name, is_int=false) {
   }
   $.ajax({
     type: 'POST',
-    url: '/pipeline/add_pipeline',
+    url: '/pipelines/add_pipeline',
     data: template,
     success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else {Notify(data.notify_msg, data.notify_status);}},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
@@ -230,7 +231,7 @@ function DeviceDropdown(device) {
       dataList.append(option);
     });
   });
-  $.getJSON(`/devices/device_detail?device=${device}`, (data) => {
+  $.getJSON(`/devices/detail?device=${device}`, (data) => {
     $(".modal").modal('hide');
     if (Object.keys(data).length === 0)
       return;
@@ -316,7 +317,7 @@ function DrawSensorHistory(sensor) {
   sensor = sensor || $("#detail_sensor_name").html();
   var unit = $("#sensor_units").html();
   var interval = $("#selectinterval :selected").val();
-  $.getJSON(`/devices/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
+  $.getJSON(`/sensors/get_data?sensor=${sensor}&history=${history[interval]}&binning=${binning[interval]}`, data => {
     let t_min = 0, t_max = 0;
     if (data.length !== 0) {
       t_min = data[0][0];
@@ -393,7 +394,7 @@ function UpdateAlarms() {
     })
     $.ajax({
       type: 'POST',
-      url: '/devices/update_alarm',
+      url: '/sensors/update_alarm',
       data: {
         sensor: $("#detail_sensor_name").html(),
         alarm_values: JSON.stringify(int_alarm_dict),
@@ -411,7 +412,7 @@ function UpdateAlarms() {
     }
     $.ajax({
       type: 'POST',
-      url: '/devices/update_alarm',
+      url: '/sensors/update_alarm',
       data: {
         sensor: $("#detail_sensor_name").html(),
         thresholds: [$("#alarm_low").val(), $("#alarm_high").val()],
@@ -450,7 +451,7 @@ function UpdateSensor() {
   }
   $.ajax({
     type: 'POST',
-    url: '/devices/update_sensor',
+    url: '/sensors/update',
     data: data,
     success: (data) => {
       if (typeof data.err != 'undefined') alert(data.err); else Notify(data.notify_msg, data.notify_status);},
@@ -469,7 +470,7 @@ function UpdateDevice() {
   if (Object.keys(data).length > 1) {
     $.ajax({
       type:'POST',
-      url: '/devices/update_device',
+      url: '/devices/update',
       data: {data: data},
       success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
@@ -478,13 +479,13 @@ function UpdateDevice() {
 }
 
 function PopulateNewSensor() {
-  $.getJSON('/devices/params', doc => {
+  $.getJSON('/sensors/params', doc => {
     $("#new_subsystem").empty();
     doc.subsystems.forEach(ss => {var s = ss.split('_'); s[0] = s[0][0].toUpperCase() + s[0].slice(1); $("#new_subsystem").append(`<option value="${ss}">${s.join(' ')}</option>`)});
     $("#new_topic").empty();
     doc.topics.forEach(topic => $("#new_topic").append(`<option value="${topic}">${topic}</option>`));
   });
-  $.getJSON('/devices/device_list', devs => {
+  $.getJSON('/devices/lsit', devs => {
     $("#new_device").empty();
     devs.forEach(dev => $("#new_device").append(`<option value="${dev}">${dev}</option>`));
   });
@@ -555,7 +556,7 @@ function SubmitNewSensor() {
     if ($("#new_control").val())
       data.control_quantity = $("#new_control").val();
     $.ajax({
-      url: '/devices/new_sensor',
+      url: '/sensors/new',
       type: 'POST',
       data: data,
       success: (data) => {
@@ -600,7 +601,7 @@ function ManageDevice(action) {
 }
 
 function CommandDropdown() {
-  $.getJSON("/devices/device_list", (data) => {
+  $.getJSON("/devices/list", (data) => {
     $("#command_to").empty();
     $("#command_to").append('<option value="hypervisor">hypervisor</option>');
     data.forEach(sensor => $("#command_to").append(`<option value="${sensor}">${sensor}</option>`));
@@ -612,7 +613,7 @@ function CommandDropdown() {
 }
 
 function GetAcceptedCommands(device) {
-  $.getJSON(`/devices/device_detail?device=${device}`, (data) => {
+  $.getJSON(`/devices/detail?device=${device}`, (data) => {
     if (typeof data.commands != 'undefined')
       $("#accepted_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li style='font-family:monospace'>${cmd.pattern}</li>`,"") || "<li>None</li>");
     else
@@ -648,7 +649,7 @@ function SilencePipeline(duration, name) {
   if (!name) name = $("#silence_me").html();
   $.ajax({
     type: 'POST',
-    url: "/pipeline/pipeline_silence",
+    url: "/pipelines/pipeline_silence",
     data: {name: name, duration: duration},
     success: (data) => {
       if (typeof data != 'undefined' && typeof data.err != 'undefined')

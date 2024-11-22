@@ -7,7 +7,7 @@ var config = require('../config/config');
 router.get('/', function(req, res) {
   var render_config = common.GetRenderConfig(req);
   render_config.main_svg = config.main_svg;
-  res.render('systems', render_config);
+  res.render('overview', render_config);
 });
 
 module.exports = router;
