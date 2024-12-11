@@ -1,13 +1,13 @@
 # doberview2
-A NodeJS-based web frontend for Doberman v5
+A NodeJS-based web frontend for Doberman v6
 
 ## Setup
+  * `git clone` this repository on your server.
+  * `cd doberview2` and run `npm install` inside the repository to install required packages .
 
-`npm install` probably to start, it's been a while since I did this.
+## Configuration
+  * Copy the file `doberview2/config/config.js.example` to `doberview2/config/config.js`. 
+  * Either fill in the required configuration values or set the given environment variables.
 
-You'll also need to set a few environment variables:
-- `DOBERVIEW_HOST`: the hostname of the machine that hosts the website
-- `DOBERVIEW_PORT`: the port number that the website should listen on
-- `DOBERVIEW_EXPERIMENT`: the name of the experiment this instance works for. Should match things in Doberman.
-- `DOBERVIEW_AUTH_DB`: the database in MongoDB to authorize against. Uses `admin` if unspecified.
-- `DOBERVIEW_MONGO_URI`: the URI to connect to mongo. Should look like `mongodb://{username}:{password}@{host}:{port}`. Do not add `/{auth_db}`.
+## Start
+  * run `npm start` or `node app.js` to start  the website on your configured port.
