@@ -67,6 +67,8 @@ if (config.use_grafana) {
 }
 const logRouter = require('./routes/logs');
 app.use('/logs', logRouter);
+const plotterRouter = require('./routes/plotter');
+app.use('/plotter', plotterRouter);
 const hvRouter = require('./routes/hypervisor');
 app.use('/hypervisor', hvRouter);
 
