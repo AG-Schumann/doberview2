@@ -12,7 +12,7 @@ router.get('/', function(req, res) {
   res.render('pipeline', config);
 });
 
-router.get('/get_pipelines', function(req, res) {
+router.get('/by_flavor', function(req, res) {
   var q = url.parse(req.url, true).query;
   if (typeof q.flavor == 'undefined') {
     return res.json([]);
@@ -26,7 +26,7 @@ router.get('/get_pipelines', function(req, res) {
   .catch(err => {console.log(err.message); return res.json([]);});
 });
 
-router.get('/get_pipeline', function(req, res) {
+router.get('/get', function(req, res) {
   var q = url.parse(req.url, true).query;
   if (typeof q.name == 'undefined')
     return res.json({});
@@ -44,7 +44,7 @@ router.get('/status', function(req, res) {
   .catch(err => {console.log(err.message); return res.json({});});
 });
 
-router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
+router.post('/add', common.ensureAuthenticated, function(req, res) {
   var doc = req.body;
   if (typeof doc.name == 'undefined' || 
       !['alarm', 'control', 'convert'].includes(doc.name.split('_')[0]) ||
@@ -72,7 +72,7 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
-router.post('/update_pipeline', common.ensureAuthenticated, function(req, res) {
+router.post('/update', common.ensureAuthenticated, function(req, res) {
   var doc = req.body;
   let old_name = doc.old_name;
   delete doc.old_name;
@@ -103,7 +103,7 @@ router.post('/update_pipeline', common.ensureAuthenticated, function(req, res) {
 
 });
 
-router.post('/delete_pipeline', common.ensureAuthenticated, function(req, res) {
+router.post('/delete', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   if (typeof data.pipeline == 'undefined')
     return res.json({err: 'Bad input'})
@@ -114,7 +114,7 @@ router.post('/delete_pipeline', common.ensureAuthenticated, function(req, res) {
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
-router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) {
+router.post('/silence', common.ensureAuthenticated, function(req, res) {
   // we do the time processing here because we only trust the system clock
   // on the host server.
   var data = req.body;
@@ -156,7 +156,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
   return res.json({});
 });
 
-router.post('/pipeline_ctl', common.ensureAuthenticated, function(req, res) {
+router.post('/control', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   var flavor = data.name.split('_')[0];
   console.log(data);
@@ -168,7 +168,7 @@ router.post('/pipeline_ctl', common.ensureAuthenticated, function(req, res) {
 
 });
 
-router.post('/get_pipelines_configs', function(req, res) {
+router.post('/get_configs', function(req, res) {
   var data = req.body;
   var pipelines = data.pipelines;
 

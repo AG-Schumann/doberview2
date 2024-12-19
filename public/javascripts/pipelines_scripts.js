@@ -1,4 +1,4 @@
-function PopulateNavbar() {
+function PopulatePipelinesNavbar() {
   let content = '<li><div class="d-flex"><div class="dropdown">' +
       '<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">' +
       '<span>Add new &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-code-branch"></i></span></button>' +
@@ -21,7 +21,7 @@ function UpdateLoop() {
 
 function PopulatePipelines(flavor) {
   var filter = $("#searchPipelineInput").val().replace(/_/g, '').toUpperCase();
-  $.getJSON(`/pipelines/get_pipelines?flavor=${flavor}`, data => {
+  $.getJSON(`/pipelines/by_flavor?flavor=${flavor}`, data => {
     $(`#${flavor}_active`).empty();
     $(`#${flavor}_silent`).empty();
     $(`#${flavor}_inactive`).empty();
@@ -71,6 +71,7 @@ function PopulatePipelines(flavor) {
     $('[data-bs-toggle="tooltip"]').tooltip();
   }); // getJSON
 }
+
 function Visualize(doc) {
   if (doc == null) {
     try{
@@ -264,7 +265,7 @@ function AddOrUpdatePipeline() {
     if (old_name.startsWith("New")) {
       $.ajax({
         type: 'POST',
-        url: "/pipelines/add_pipeline",
+        url: "/pipelines/add",
         data: doc,
         success: (data) => {
           if (typeof data != 'undefined' && typeof data.err != 'undefined')
@@ -280,7 +281,7 @@ function AddOrUpdatePipeline() {
       doc.old_name = old_name;
       $.ajax({
         type: 'POST',
-        url: "/pipelines/update_pipeline",
+        url: "/pipelines/update",
         data: doc,
         success: (data) => {
           if (typeof data != 'undefined' && typeof data.err != 'undefined')
@@ -297,7 +298,6 @@ function AddOrUpdatePipeline() {
 
 }
 
-
 function DeletePipeline() {
   var name;
   try {
@@ -307,7 +307,7 @@ function DeletePipeline() {
   if (confirm(`Are you sure that you want to delete this pipeline?`)) {
     $.ajax({
       type: 'POST',
-      url: '/pipelines/delete_pipeline',
+      url: '/pipelines/delete',
       data: {pipeline: name},
       success: (data) => {
         if (typeof data != 'undefined' && typeof data.err != 'undefined')
@@ -328,12 +328,35 @@ function StartPipeline(name) {
 function PipelineControl(action, pipeline) {
   $.ajax({
     type: 'POST',
-    url: "/pipelines/pipeline_ctl",
+    url: "/pipelines/control",
     data: {cmd: action, name: pipeline},
     success: (data) => {
       if (typeof data != 'undefined' && typeof data.err != 'undefined')
         alert(data.err);
       $('.modal').modal('hide');
+      PopulatePipelines();
+      Notify(data.notify_msg, data.notify_status);
+    },
+    error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
+  });
+}
+
+function SilenceDropdown(name) {
+  $('#silence_me').html(name);
+  $('#silence_dropdown').modal('show');
+}
+
+function SilencePipeline(duration, name) {
+  if (!name) name = $("#silence_me").html();
+  $.ajax({
+    type: 'POST',
+    url: "/pipelines/silence",
+    data: {name: name, duration: duration},
+    success: (data) => {
+      if (typeof data != 'undefined' && typeof data.err != 'undefined')
+        alert(data.err);
+      else
+        $("#silence_dropdown").modal('hide');
       PopulatePipelines();
       Notify(data.notify_msg, data.notify_status);
     },
@@ -348,7 +371,7 @@ function NewPipelineDropdown(flavor) {
 }
 
 function PipelineDropdown(pipeline) {
-  $.getJSON(`/pipelines/get_pipeline?name=${pipeline}`, doc => {
+  $.getJSON(`/pipelines/get?name=${pipeline}`, doc => {
     $("#detail_pipeline_name").html(doc.name);
     Visualize(doc);
     document.jsoneditor.set(doc);

@@ -7,7 +7,7 @@ var pipelineconfigs = {};
 
 const TOGGLE_SLIDER_FRACTIONAL_HEIGHT = 0.8;
 
-function PopulateNavbar() {
+function PopulateOverviewNavbar() {
   // Add rate selector to navigation bar
   var allowedrates = [1, 2, 5, 10, 30];
   var content = '<li class="nav-item"><div class="nav-item dropdown">';
@@ -35,14 +35,8 @@ function PopulateNavbar() {
 function SetRefreshRate(rate) {
   if (intervalid != 0)
     clearInterval(intervalid);
-  intervalid = setInterval(UpdateOnce, rate * 1000);
+  intervalid = setInterval(UpdateOverviewOnce, rate * 1000);
   document.querySelector('#currentrefreshrate').innerHTML = rate + ' s';
-}
-
-function SigFigs(val) {
-  LOG_THRESHOLD=3;
-  SIG_FIGS=3;
-  return Math.abs(Math.log10(Math.abs(val))) < LOG_THRESHOLD ? val.toPrecision(SIG_FIGS) : val.toExponential(SIG_FIGS-1);
 }
 
 function GetAttributeOrDefault(element, attribute, deflt) {
@@ -73,7 +67,6 @@ function TogglePipelineConfig(e){
 }
 
 function Setup(){
-  console.log('Setting up fields');
   var doc = document.querySelector('object#svg_frame').getSVGDocument();
  
   var regex = /(?<=^sensorbox_)[^\-]+/; 
@@ -167,7 +160,7 @@ function Setup(){
     if (!pipelineconfigs[tbpipeline]) pipelineconfigs[tbpipeline] = [];
     pipelineconfigs[tbpipeline].push(tbtarget);
   }
-  UpdateOnce();
+  UpdateOverviewOnce();
 }
 
 function LoadSVG(fn) {
@@ -190,7 +183,7 @@ function LoadSVG(fn) {
   console.log(`Loading ${$("#svg_frame").attr('data')}`);
 }
 
-function UpdateOnce() {
+function UpdateOverviewOnce() {
   var doc = document.getElementById('svg_frame').getSVGDocument();
   $.getJSON(`/sensors/get_last_points?sensors=${[...sensors].join(',')}`, data => {
     sensors.forEach(s => {
@@ -218,7 +211,7 @@ function UpdateOnce() {
     });
   });
 
-  $.post('/pipelines/get_pipelines_configs',
+  $.post('/pipelines/get_configs',
          data={pipelines: pipelineconfigs},
          resp => {
     doc.querySelectorAll('.pipeline_toggler').forEach(e => {

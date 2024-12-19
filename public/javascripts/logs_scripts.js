@@ -5,7 +5,7 @@ function GetLogs() {
     var ajax_params = {limit: $("#get_num_input").val(), severity: $("#min_severity").val(), name: $("#get_name").val()};
   }
   new Tabulator('#log_table', {
-    ajaxURL: '/logs/get_logs',
+    ajaxURL: '/logs/get',
     ajaxParams: ajax_params,
     columns: [
       {title: 'Time (local)', field: 'date', sorter: 'string'},

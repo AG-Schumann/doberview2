@@ -8,7 +8,7 @@ router.get('/', function(req, res) {
   res.render('logs', config);
 });
 
-router.get('/get_logs', function(req, res) {
+router.get('/get', function(req, res) {
   const q = url.parse(req.url, true).query;
   let limit = 10000;
   let tz = Intl.DateTimeFormat().resolvedOptions().timeZone;

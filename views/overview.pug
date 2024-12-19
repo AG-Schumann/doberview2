@@ -2,6 +2,9 @@ extends layout
 
 block extrahead
   script(src="/javascripts/overview_scripts.js" type="text/javascript")
+  script(src="javascripts/sensors_scripts.js", type="text/javascript")
+  script(src="javascripts/devices_scripts.js", type="text/javascript")
+
   //link(rel='stylesheet' href="/stylesheets/systems.css")
 
 block content
@@ -10,7 +13,7 @@ block content
       div.modal-header
         h5.modal-title
         button.close(type="button" data-dismiss="modal" aria-label="Close")
-          span(area-hidden="true") &times;
+          span &times;
       div.modal-body
         span(hidden id="") Confirm set valve to
         span(hidden id="") placeholder
@@ -25,7 +28,7 @@ block content
   script.
     $(document).ready(function() {
       document.querySelector('object#svg_frame').addEventListener('load', Setup);
-      PopulateNavbar();
+      PopulateOverviewNavbar();
       LoadSVG('main');
       //setInterval(UpdateOnce, 5000);
       SetRefreshRate(5);

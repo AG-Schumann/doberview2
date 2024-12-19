@@ -30,7 +30,7 @@ config.github_callback_url = process.env.GITHUB_CALLBACK_URI;
 // set use_systems if ou want a graphical system overview tab on your website. This will require a path to your main .svg file
 // link to tutorial here
 config.use_systems = false;
-config.main_svg = process.env.MAIN_SVG; // path to main svg
+config.main_svg = process.env.MAIN_SVG; // path to main svg (e.g. '/images/main.svg';)
 
 // Hosts
 // set use_hosts=true if you want a host overview tab on your website. Current implementation of this is a bit lackluster,
