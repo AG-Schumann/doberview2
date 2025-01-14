@@ -1,9 +1,9 @@
-var sensors = [];
-var units = {};
-var properties = [];
-var linktargets = {};
-var intervalid = 0;
-var pipelineconfigs = {};
+let sensors = [];
+const units = {};
+let properties = [];
+const link_targets = {};
+let interval_id = 0;
+const pipeline_configs = {};
 
 const TOGGLE_SLIDER_FRACTIONAL_HEIGHT = 0.8;
 
@@ -33,9 +33,9 @@ function PopulateOverviewNavbar() {
 }
 
 function SetRefreshRate(rate) {
-  if (intervalid != 0)
-    clearInterval(intervalid);
-  intervalid = setInterval(UpdateOverviewOnce, rate * 1000);
+  if (interval_id !== 0)
+    clearInterval(interval_id);
+  interval_id = setInterval(UpdateOverviewOnce, rate * 1000);
   document.querySelector('#currentrefreshrate').innerHTML = rate + ' s';
 }
 
@@ -68,31 +68,33 @@ function TogglePipelineConfig(e){
 
 function Setup(){
   var doc = document.querySelector('object#svg_frame').getSVGDocument();
- 
-  var regex = /(?<=^sensorbox_)[^\-]+/; 
+
+  var regex = /(?<=^sensorbox_)[^\-]+/;
   for (var sensorbox of doc.querySelectorAll('[id^=sensorbox_]')) {
     var sensor = sensorbox.getAttribute('id').match(regex)[0];
     var suffix = `-${Math.floor(Math.random() * 10000)}`;
     // Add a description box for the sensor
     var descbox = doc.createElementNS("http://www.w3.org/2000/svg", 'text');
     descbox.id = `descbox_${sensor}-${suffix}`;
-    fontsize = sensorbox.getAttribute('height') / 4;
+    let font_size = sensorbox.getAttribute('height') / 4;
     descbox.setAttribute('x', parseFloat(sensorbox.getAttribute('x')) + 1);
-    descbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + fontsize + 0.5);
+    descbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + font_size + 0.5);
     descbox.textContent = `${sensor} (UNITS)`;
     descbox.style.fontFamily = 'sans-serif';
-    descbox.style.fontSize = `${fontsize}px`;
+    descbox.style.fontSize = `${font_size}px`;
     sensorbox.parentElement.appendChild(descbox);
 
     // Add the value box
     var valbox = doc.createElementNS("http://www.w3.org/2000/svg", 'text');
     valbox.id = `value_${sensor}-${suffix}`;
-    fontsize = sensorbox.getAttribute('height') / 2;
+    let value_size = sensorbox.getAttribute('height') / 2;
+    console.log(sensorbox.getAttribute('x'));
+    console.log(typeof sensorbox.getAttribute('x'));
     valbox.setAttribute('x', parseFloat(sensorbox.getAttribute('x')) + 1);
-    valbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + fontsize*2 - 3);
+    valbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + value_size * 2 - 3);
     valbox.textContent = 'N/A';
     valbox.style.fontFamily = 'sans-serif';
-    valbox.style.fontSize = `${fontsize}px`;
+    valbox.style.fontSize = `${value_size}px`;
     sensorbox.parentElement.appendChild(valbox);
 
   }
@@ -130,7 +132,7 @@ function Setup(){
   // Check for links
   regex = /(?<=^link_)[^\-]+/;
   for (var element of doc.querySelectorAll(`[id^=link_]`)) {
-    linktargets[element.id] = element.getAttribute('id').match(regex)[0];
+    link_targets[element.id] = element.getAttribute('id').match(regex)[0];
     element.addEventListener('click', LoadSVG);
     element.style.cursor = 'pointer';
   }
@@ -157,8 +159,8 @@ function Setup(){
     toggle.style.cursor = 'pointer';
     toggle.onclick = TogglePipelineConfig;
     element.parentElement.appendChild(toggle);
-    if (!pipelineconfigs[tbpipeline]) pipelineconfigs[tbpipeline] = [];
-    pipelineconfigs[tbpipeline].push(tbtarget);
+    if (!pipeline_configs[tbpipeline]) pipeline_configs[tbpipeline] = [];
+    pipeline_configs[tbpipeline].push(tbtarget);
   }
   UpdateOverviewOnce();
 }
@@ -167,7 +169,7 @@ function LoadSVG(fn) {
   try {
     // Need to determine new SVG based on event target
     // unless fn is already a string, then get exception
-    fn = linktargets[fn.currentTarget.id];
+    fn = link_targets[fn.currentTarget.id];
   } catch (e) {
     // Was probably a string. Do nothing.
   }
@@ -212,7 +214,7 @@ function UpdateOverviewOnce() {
   });
 
   $.post('/pipelines/get_configs',
-         data={pipelines: pipelineconfigs},
+         data={pipelines: pipeline_configs},
          resp => {
     doc.querySelectorAll('.pipeline_toggler').forEach(e => {
       var state = parseInt(e.getAttribute('state'));

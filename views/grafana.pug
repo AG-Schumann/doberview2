@@ -6,14 +6,16 @@ block content
 
   script.
     $(document).ready(function() {
-      var currentTheme = $(':root').attr('data-bs-theme');
-      var url = $('iframe#grafana_embed').attr('src');
-      $('iframe#grafana_embed').attr('src', url+`&theme=${currentTheme}`);
+      const currentTheme = $(':root').attr('data-bs-theme');
+      let frame = $('iframe#grafana_embed');
+      const url = frame.attr('src');
+      frame.attr('src', url+`&theme=${currentTheme}`);
     });
     $('#bd-theme').on('click', function() {
       const currentTheme = $(':root').attr('data-bs-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      var url = $('iframe#grafana_embed').attr('src');
-      const newrl = url.split('&theme=')[0] + `&theme=${newTheme}`;
-      $('iframe#grafana_embed').attr('src', newrl);
+      let frame = $('iframe#grafana_embed');
+      const url = frame.attr('src');
+      const new_url = url.split('&theme=')[0] + `&theme=${newTheme}`;
+      frame.attr('src', new_url);
     });

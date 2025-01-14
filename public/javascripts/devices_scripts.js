@@ -38,12 +38,20 @@ function DeviceDropdown(device) {
             $(".device_eth").attr('hidden', true);
             $(".device_serial").attr('hidden', true);
         }
-        $("#device_sensors").empty();
+        let device_sensors = $("#device_sensors");
+        device_sensors.empty();
         var sensor_list = data.sensors;
         if (data.multi)
             sensor_list = data.multi;
-        sensor_list.forEach(rd => $("#device_sensors").append(`<li style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button></li>`));
-        $("#device_sensors").append('<li style="margin-bottom:10px;"><button class="btn btn-success btn-sm" onclick="PopulateNewSensor()">Add new!</button></li>');
+        sensor_list.forEach(rd => device_sensors.append(`
+            <li style="margin-bottom:10px;">
+            <button class="btn btn-primary btn-sm" onclick="SensorDropdown('${rd}')">${rd}</button>
+            </li>
+        `));
+        device_sensors.append(
+            '<li style="margin-bottom:10px;">' +
+            '<button class="btn btn-success btn-sm" onclick="PopulateNewSensor()">Add new!</button>' +
+            '</li>');
         if (typeof data.commands != 'undefined')
             $("#device_commands_list").html(data.commands.reduce((tot, cmd) => tot + `<li>${cmd.pattern}</li>`,"") || "<li>None</li>");
         else
@@ -92,13 +100,15 @@ $('#devicebox').on('hidden.bs.modal', () => {
 });
 
 function UpdateDevice() {
-    var data = {device: $("#detail_device_name").html()};
+    let name = $("#detail_device_name").html();
+    var data = {device: name};
     data['host'] = $(`#device_host`).val();
     ['ip', 'port', 'tty', 'baud', 'serial_id'].forEach(key => {
-        if ($(`#device_${key}`).val())
-            data[key] = $(`#device_${key}`).val();
+        const field = $(`#device_${key}`).val();
+        if (field)
+            data[key] = field;
     });
-    var msg = 'Updated device ' + $("#detail_device_name").html();
+    var msg = 'Updated device ' + name;
     if (Object.keys(data).length > 1) {
         $.ajax({
             type:'POST',
@@ -113,7 +123,10 @@ function UpdateDevice() {
 function ControlDevice(action) {
     var device = $("#detail_device_name").html();
     if (device && action) {
-        SendToHypervisor(action == 'stop' ? device : 'hypervisor', action, `${action} sent to ${device}`);
+        SendToHypervisor(
+            action === 'stop' ? device : 'hypervisor',
+            action,
+            `${action} sent to ${device}`);
     }
 }
 

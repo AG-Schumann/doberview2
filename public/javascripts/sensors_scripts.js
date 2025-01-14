@@ -1,12 +1,18 @@
 // Settings:
-var SIG_FIGS = 3;
-var LOG_THRESHOLD = 3;
+const SIG_FIGS = 3;
+const LOG_THRESHOLD = 3;
 //console.log('Change the number formatting by with the SIG_FIGS and LOG_THRESHOLD variables')
 console.log(`The following configuration settings can be changed by setting the corresponding variable.
   e.g. SIG_FIGS = 4;
   SIG_FIGS (default ${SIG_FIGS}): significant figures to display
   LOG_THRESHOLD (default ${LOG_THRESHOLD}): use scientific notation when absolute exponent is larger than this number
 `);
+
+const binning = ['1s', '6s', '10s', '36s', '1m', '2m', '4m', '6m', '14m', '24m', '48m'];
+const history = ['10m', '1h', '3h', '6h', '12h', '24h', '48h', '72h', '1w', '2w', '4w'];
+const control_map = {};
+let detail_chart = null;
+
 
 function PopulateSensorsNavbar() {
   var content = '<li class="nav-item"> <button class="btn btn-primary" onclick="PopulateNewSensor()">' +
@@ -31,9 +37,10 @@ function PopulateSensorsNavbar() {
   $('#navbar_content').prepend(content);
 }
 
-function UpdateSensorTableOnce(regroup=false) {
+function UpdateSensorTableOnce(regroup = false) {
+  console.log('UpdateSensorTableOnce');
   if (regroup) $('#sensor_table').html('<thead><tr><th colspan=2>Loading...</th></tr></thead>');
-  var group_by = $('#sensor_grouping input:radio:checked').val();
+  const group_by = $('#sensor_grouping input:radio:checked').val();
   $.when(
       $.getJSON('/sensors/get_last_points'),
       $.getJSON(`/sensors/grouped?group_by=${group_by}`)
@@ -44,29 +51,39 @@ function UpdateSensorTableOnce(regroup=false) {
     }
     sensors_grouped[0].forEach(group => {
       if (regroup) {
-        var click = group_by == 'device' ? `onclick='DeviceDropdown("${group._id}")'` : "";
-        $("#sensor_table").append(`<thead id=${group._id}><tr ${click}><th colspan=2> ${group._id}</th></tr></thead><tbody id="${group._id}_tbody"></tbody>`);
+        const click = group_by === 'device' ? `onclick='DeviceDropdown("${group._id}")'` : "";
+        $("#sensor_table").append(`
+            <thead id=${group._id}><tr ${click}><th colspan=2> ${group._id}</th></tr></thead>
+            <tbody id="${group._id}_tbody"></tbody>
+        `);
         $("#jump_to_list").append(`<li><a class="dropdown-item py-2" href="#${group._id}">${group._id}</a></li>`);
       }
       group['sensors'].forEach(doc => {
         // Add table row if sensor new
-        if (!$(`#${doc.name}_status`).length)
-          $(`#${group._id}_tbody`).append(`<tr><td id="${doc.name}_desc" onclick="SensorDropdown('${doc.name}')">Loading!</td><td id="${doc.name}_status">Loading!</td></tr>`);
-        $(`#${doc.name}_desc`).html(`${doc.desc} (${doc.name})`);
-        var new_status = 'No recent data';
-        var last_point = data[0][doc.name];
+        let name = doc.name;
+        let status = $(`#${name}_status`);
+        if (!status.length)
+          $(`#${group._id}_tbody`).append(`
+            <tr>
+              <td id="${name}_desc" onclick="SensorDropdown('${name}')">Loading!</td>
+              <td id="${name}_status">Loading!</td>
+            </tr>
+          `);
+        $(`#${name}_desc`).html(`${doc.desc} (${name})`);
+        let new_status = 'No recent data';
+        const last_point = data[0][name];
         if (last_point && (last_point.value)) {
-          var displayval = (doc.valuemap == undefined) ? SigFigs(last_point.value) : doc.valuemap[parseInt(last_point.value)];
-          new_status = `${displayval} ${doc.units} (${FormatTimeSince(last_point.time_ago)} ago)`;
+          const display_value = (doc.valuemap === undefined) ? SigFigs(last_point.value) : doc.valuemap[parseInt(last_point.value)];
+          new_status = `${display_value} ${doc.units} (${FormatTimeSince(last_point.time_ago)} ago)`;
         }
-        if (doc.status == 'offline') {
-          if (new_status.slice(-1) == ')')
+        if (doc.status === 'offline') {
+          if (new_status.slice(-1) === ')')
             new_status = new_status.slice(0, -1) + ', ';
           else
             new_status += ' (';
           new_status += 'offline)';
         }
-        $(`#${doc.name}_status`).html(new_status);
+        $(`#${name}_status`).html(new_status);
       });
     });
   });
@@ -93,18 +110,19 @@ function SensorDropdown(sensor) {
       return;
     let is_int = sensor_detail.is_int===1;
     let roi = $("#readout_interval");
+    let sensor_status = $("#sensor_status");
     if(typeof sensor_detail.multi_sensor == "string") {
       roi.attr('disabled', 'disabled');
       $("#readout_command").html('see ' + sensor_detail.multi_sensor);
-      $("#sensor_status").bootstrapToggle('readonly');
+      sensor_status.bootstrapToggle('readonly');
     } else {
       roi.removeAttr('disabled');
       $("#readout_command").html(sensor_detail.readout_command);
-      $("#sensor_status").bootstrapToggle('enable');
+      sensor_status.bootstrapToggle('enable');
     }
     $("#detail_sensor_name").html(sensor_detail.name);
     $("#sensor_desc").val(sensor_detail.description).attr('size', sensor_detail.description.length + 3);
-    $("#sensor_status").bootstrapToggle(sensor_detail.status === 'online' ? 'on' : 'off');
+    sensor_status.bootstrapToggle(sensor_detail.status === 'online' ? 'on' : 'off');
     roi.val(sensor_detail.readout_interval);
     $("#sensor_units").val(sensor_detail.units);
     if (typeof sensor_detail.value_xform != 'undefined')
@@ -112,20 +130,22 @@ function SensorDropdown(sensor) {
     else
       $("#value_xform").val("");
     let alarm_vals = sensor_detail.alarm_values;
-    $("#int_alarm_body").empty();
+    const int_alarm_body = $("#int_alarm_body");
+    const float_alarm_body = $("#float_alarm_body");
+    int_alarm_body.empty();
     if (is_int) {
-      $("#int_alarm_body").show();
-      $("#float_alarm_body").hide();
-      $("#int_alarm_body").append('<tr><th>Value</th><th>Message</th><th></th>');
+      int_alarm_body.show();
+      float_alarm_body.hide();
+      int_alarm_body.append('<tr><th>Value</th><th>Message</th><th></th>');
       for (let k in alarm_vals) {
 
-        $("#int_alarm_body").append(`<tr><td><input class="form-control-sm" type="number" value="${k}"></td><td><input class="form-control-sm" type="text" value="${alarm_vals[k]}"></td><td><button type="button" class="btn btn-sm btn-primary" onclick="DeleteAlarmLevel(this)">Delete</button></td></tr>`);
+        int_alarm_body.append(`<tr><td><input class="form-control-sm" type="number" value="${k}"></td><td><input class="form-control-sm" type="text" value="${alarm_vals[k]}"></td><td><button type="button" class="btn btn-sm btn-primary" onclick="DeleteAlarmLevel(this)">Delete</button></td></tr>`);
       }
-      $("#int_alarm_body").append(`<tr><td></td><td></td><td><button type="button" class="btn btn-sm btn-primary" onclick="AddAlarmLevel()">Add</button></td></tr>`);
+      int_alarm_body.append(`<tr><td></td><td></td><td><button type="button" class="btn btn-sm btn-primary" onclick="AddAlarmLevel()">Add</button></td></tr>`);
     } else {
-      if (typeof sensor_detail.alarm_thresholds != 'undefined' && sensor_detail.alarm_thresholds.length == 2) {
-        $("#int_alarm_body").hide();
-        $("#float_alarm_body").show();
+      if (typeof sensor_detail.alarm_thresholds != 'undefined' && sensor_detail.alarm_thresholds.length === 2) {
+        int_alarm_body.hide();
+        float_alarm_body.show();
         $("#alarm_low").val(sensor_detail.alarm_thresholds[0]);
         $("#alarm_high").val(sensor_detail.alarm_thresholds[1]);
         $("#alarm_mid").val((sensor_detail.alarm_thresholds[1] + sensor_detail.alarm_thresholds[0]) / 2);
@@ -146,8 +166,7 @@ function SensorDropdown(sensor) {
     $("#pipelines_active").empty();
     $("#pipelines_silenced").empty();
     $("#pipelines_inactive").empty();
-    $("#make_alarm_button").show();
-    $("#make_alarm_button").attr( "onclick", `javascript: MakeAlarm("${sensor_detail.name}", is_int=${is_int});`);
+    $("#make_alarm_button").show().attr( "onclick", `javascript: MakeAlarm("${sensor_detail.name}", is_int=${is_int});`);
     if (typeof sensor_detail.pipelines != 'undefined' && sensor_detail.pipelines.length > 0) {
       sensor_detail.pipelines.forEach(pl_name => {
         if (pl_name === 'alarm_' + sensor_detail.name)
@@ -168,7 +187,7 @@ function SensorDropdown(sensor) {
           let restart_btn = `<button class="btn btn-primary action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_restart ${pl_name}')"><i class="fas fa-solid fa-rotate"></i></button>`;
           let silence_btn = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${pl_name}')"><i class="fas fa-solid fa-bell-slash"></i></button>`;
           let activate_btn = `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_active ${pl_name}')"><i class="fas fa-solid fa-play"></i></button>`;
-          if ((doc.status === 'active') && ((doc.silent_until == -1) || (doc.silent_until > Date.now()/1000))) {
+          if ((doc.status === 'active') && ((doc.silent_until === -1) || (doc.silent_until > Date.now()/1000))) {
             $("#pipelines_silenced").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+activate_btn+`</td><td>`+silence_btn+`</td><td>`+stop_btn+`</td><td>`+restart_btn+`</td></tr>`);
           } else if (doc.status === 'active') {
             $("#pipelines_active").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+silence_btn+`</td><td>`+stop_btn+`</td><td>`+restart_btn+`</td></tr>`);
@@ -183,22 +202,23 @@ function SensorDropdown(sensor) {
     if (typeof sensor_detail.control_quantity != 'undefined') {
       control_map[sensor_detail.name] = [sensor_detail.device, sensor_detail.control_quantity];
       $("#sensor_control").css('display', 'inline');
+      let states = $("#sensor_states");
       if (sensor_detail.topic === 'status') {
-        $("#sensor_states").prop('hidden', false);
+        states.prop('hidden', false);
         $("#sensor_setpoint").prop('hidden', true);
-        $("#sensor_states").empty();
+        states.empty();
         let valuemap = sensor_detail.valuemap;
         if (typeof valuemap == 'undefined') {
-          $("#sensor_states").html('No value map defined!');
+          states.html('No value map defined!');
           valuemap = {};
         }
         Object.entries(valuemap).forEach(([state, label]) => {
-          $("#sensor_states").append(`<td><button class="btn btn-primary" id="sensor_valve_btn" onclick="ChangeSetpoint(${state})">${label}</button></td>`);
+          states.append(`<td><button class="btn btn-primary" id="sensor_valve_btn" onclick="ChangeSetpoint(${state})">${label}</button></td>`);
         });
       } else {
         // this is a setpoint
         $("#sensor_setpoint").prop('hidden', false);
-        $("#sensor_states").prop('hidden', true);
+        states.prop('hidden', true);
         $.getJSON(`/sensors/get_last_point?sensor=${sensor_detail.name}`, doc => {
           $("#sensor_setpoint_control").val(doc.value);
         });
@@ -211,7 +231,7 @@ function SensorDropdown(sensor) {
   });
 }
 
-function AddAlarmLevel(no) {
+function AddAlarmLevel() {
   $("#int_alarm_body > tr").eq($('#int_alarm_body tr').length-2)
       .after('<tr></tr><td><input class="form-control-sm" type="number"></td>' +
           '<td><input class="form-control-sm" type="text"></td>' +
@@ -227,7 +247,7 @@ function MakeAlarm(name, is_int=false) {
   if (typeof name == 'undefined')
     name = $("#detail_sensor_name").html();
   let desc = $("#sensor_desc").val();
-  let template = {};
+  let template;
   if (is_int) {
     template = {
       name: `alarm_${name}`,
@@ -275,7 +295,6 @@ function MakeAlarm(name, is_int=false) {
     data: template,
     success: (data) => {if (typeof data.err != 'undefined') alert(data.err); else {Notify(data.notify_msg, data.notify_status);}},
     error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`),
-    complete:  function() {SensorDropdown(name);}
   });
 }
 
@@ -290,6 +309,16 @@ function FormatTimeSince(seconds) {
     return (v / 60).toFixed(0) + 'm';
   else
     return (v / 60 / 60).toFixed(0) + 'h';
+}
+
+function ChangeSetpoint(value) {
+  var sensor = $("#detail_sensor_name").html();
+  var device = control_map[sensor][0];
+  var target = control_map[sensor][1];
+  if (value == undefined) value = $("#sensor_setpoint_control").val();
+  if (sensor && target && device && confirm(`Confirm setpoint change to ${value}`)) {
+    SendToHypervisor(device, `set ${target} ${value}`, `set ${target} ${value}`);
+  }
 }
 
 function DrawSensorHistory(sensor) {
@@ -320,8 +349,8 @@ function DrawSensorHistory(sensor) {
 
       var ymin = datasorted[Math.round(datasorted.length*0.05)][1];
       var ymax = datasorted[Math.round(datasorted.length*0.95)][1];
-      var upperbound = ymax + (ymax-ymin)/3;
-      var lowerbound = ymin - (ymax-ymin)/3;
+      upperbound = ymax + (ymax-ymin)/3;
+      lowerbound = ymin - (ymax-ymin)/3;
     }
     const currentTheme = $(':root').attr('data-bs-theme');
     const bkg_color = ((currentTheme === 'light') ? "#ffffff" : "#212529")
@@ -357,11 +386,14 @@ function DrawSensorHistory(sensor) {
 }
 
 function UpdateAlarms() {
-  if (!($("#alarm_recurrence").val() && $("#alarm_baselevel").val())) {
+  let recurrence = $("#alarm_recurrence").val();
+  let base_level = $("#alarm_baselevel").val();
+  if (!recurrence && base_level) {
     Notify('Please enter sensible values', 'error');
     return;
   }
-  let msg = 'Updated alarm for ' + $("#detail_sensor_name").html();
+  let name = $("#detail_sensor_name").html();
+  let msg = `Updated alarm for ${name}`;
   if ($("#int_alarm_body").find('tr').length) {
     let int_alarm_dict = {};
     $('#int_alarm_body tr').each(function() {
@@ -375,17 +407,19 @@ function UpdateAlarms() {
       type: 'POST',
       url: '/sensors/update_alarm',
       data: {
-        sensor: $("#detail_sensor_name").html(),
+        sensor: name,
         alarm_values: JSON.stringify(int_alarm_dict),
-        recurrence: $("#alarm_recurrence").val(),
-        level: $("#alarm_baselevel").val(),
+        recurrence: recurrence,
+        level: base_level,
       },
       success: (data) => {
         if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);},
       error: (jqXHR, textStatus, errorCode) => alert(`Error: ${textStatus}, ${errorCode}`)
     });
   } else {
-    if (!($("#alarm_low").val() && $("#alarm_high").val())) {
+    let low = parseFloat($("#alarm_low").val());
+    let high = parseFloat($("#alarm_high").val());
+    if (!(low && high)) {
       Notify('Please enter sensible values', 'error');
       return;
     }
@@ -393,10 +427,10 @@ function UpdateAlarms() {
       type: 'POST',
       url: '/sensors/update_alarm',
       data: {
-        sensor: $("#detail_sensor_name").html(),
-        thresholds: [$("#alarm_low").val(), $("#alarm_high").val()],
-        recurrence: $("#alarm_recurrence").val(),
-        level: $("#alarm_baselevel").val(),
+        sensor: name,
+        thresholds: [low, high],
+        recurrence: recurrence,
+        level: base_level,
       },
       success: (data) => {
         if (typeof data.err != 'undefined') alert(data.err); else Notify(msg, data.notify_status);
@@ -414,10 +448,11 @@ function UpdateSensor() {
     status: $("#sensor_status").is(":checked") ? "online" : 'offline',
     units: $("#sensor_units").val(),
   };
-  if ($("#value_xform").val() != "") {
+  const value_transform = $("#value_xform").val();
+  if (value_transform !== "") {
     var xform;
     try {
-      xform = $("#value_xform").val().split(',').map(parseFloat);
+      xform = value_transform.split(',').map(parseFloat);
     } catch(error) {
       alert(error);
       return;
@@ -426,7 +461,7 @@ function UpdateSensor() {
       Notify('Invalid value transform', 'error');
       return;
     }
-    data.value_xform = $("#value_xform").val();
+    data.value_xform = value_transform;
   }
   $.ajax({
     type: 'POST',
@@ -441,16 +476,21 @@ function UpdateSensor() {
 function PopulateNewSensor() {
   $.getJSON('/sensors/params', doc => {
     $("#new_subsystem").empty();
-    doc.subsystems.forEach(ss => {var s = ss.split('_'); s[0] = s[0][0].toUpperCase() + s[0].slice(1); $("#new_subsystem").append(`<option value="${ss}">${s.join(' ')}</option>`)});
-    $("#new_topic").empty();
-    doc.topics.forEach(topic => $("#new_topic").append(`<option value="${topic}">${topic}</option>`));
+    doc.subsystems.forEach(ss => {
+      const s = ss.split('_');
+      s[0] = s[0][0].toUpperCase() + s[0].slice(1);
+      $("#new_subsystem").append(`<option value="${ss}">${s.join(' ')}</option>`)});
+    const new_topic = $("#new_topic");
+    new_topic.empty();
+    doc.topics.forEach(topic => new_topic.append(`<option value="${topic}">${topic}</option>`));
   });
-  $.getJSON('/devices/lsit', devs => {
-    $("#new_device").empty();
-    devs.forEach(dev => $("#new_device").append(`<option value="${dev}">${dev}</option>`));
+  $.getJSON('/devices/list', devs => {
+    let new_device = $("#new_device");
+    new_device.empty();
+    devs.forEach(dev => new_device.append(`<option value="${dev}">${dev}</option>`));
   });
   $(".modal").modal('hide');
-  $("#newsensor").modal('show');
+  $("#new_sensor").modal('show');
 }
 
 function ValidateNewSensor(echo_ret=true) {
@@ -462,17 +502,19 @@ function ValidateNewSensor(echo_ret=true) {
     Notify('Please enter a sensible readout interval', 'error');
     return false;
   }
-  if ($("#new_topic").val() != 'status' && $("#new_units").val() == "") {
+  const new_topic = $("#new_topic").val();
+  if (new_topic !== 'status' && $("#new_units").val() === "") {
     Notify('Please enter sensible units', 'error');
     return false;
   }
-  if ($("#new_readout_command").val() == "") {
+  if ($("#new_readout_command").val() === "") {
     Notify('Please enter a valid readout command', 'error');
     return false;
   }
-  if ($("#new_value_xform").val() != "") {
+  const new_transform = $("#new_value_xform").val();
+  if (new_transform !== "") {
     try {
-      var a = $("#new_value_xform").val().split(',').map(parseFloat);
+      var a = new_transform.split(',').map(parseFloat);
     } catch(error) {
       Notify('Invalid value transform', 'error');
       return false;
@@ -482,13 +524,14 @@ function ValidateNewSensor(echo_ret=true) {
       return false;
     }
   }
-  if ($("#new_topic").val() == 'status' && !$("#new_integer").is(':checked')) {
+  let new_integer = $("#new_integer");
+  if (new_topic === 'status' && !new_integer.is(':checked')) {
     if (confirm("Is this an integer quantity?")) {
-      $("#new_integer").val(1);
+      new_integer.val(1);
     }
   }
-  if ($("#new_integer").is(":checked") && $("#new_topic").val() != 'status') {
-    Notify($("#new_topic").val() + " doesn't come in integers", 'error');
+  if (new_integer.is(":checked") && new_topic !== 'status') {
+    Notify(new_topic + " doesn't come in integers", 'error');
     return false;
   }
   if (echo_ret)
@@ -498,8 +541,8 @@ function ValidateNewSensor(echo_ret=true) {
 
 function SubmitNewSensor() {
   if (ValidateNewSensor(false)) {
-    var device = $("#new_device").val();
-    var data =  {
+    const device = $("#new_device").val();
+    const data = {
       subsystem: $("#new_subsystem").val(),
       topic: $("#new_topic").val(),
       device: device,
@@ -508,13 +551,14 @@ function SubmitNewSensor() {
       units: $("#new_units").val() || "",
       readout_command: $("#new_readout_command").val(),
       pipelines: [],
-      value_xform: $("new_value_xform").val(),
+      value_xform: $("#new_value_xform").val(),
       subscribers: [],
     };
     if ($("#new_integer").is(":checked"))
       data.is_int = 1;
-    if ($("#new_control").val())
-      data.control_quantity = $("#new_control").val();
+    const new_control_val = $("#new_control").val();
+    if (new_control_val)
+      data.control_quantity = new_control_val;
     $.ajax({
       url: '/sensors/new',
       type: 'POST',

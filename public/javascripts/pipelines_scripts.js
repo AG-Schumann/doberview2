@@ -29,7 +29,7 @@ function PopulatePipelines(flavor) {
       let n = doc.name.replace(/_/g, '').toUpperCase();
       if (filter === '' || (n.indexOf(filter) > -1)) {
         let status = doc.status;
-        if ((status === 'active') && ((doc.silent_until == -1) || (doc.silent_until > Date.now()/1000))) {
+        if ((status === 'active') && ((doc.silent_until === -1) || (doc.silent_until > Date.now()/1000))) {
           status = 'silent';
         }
         let last_error = doc.cycle - doc.error; // last error X cycles ago
@@ -39,7 +39,7 @@ function PopulatePipelines(flavor) {
 
         $(`#${flavor}_${status}`).append(`<tr><td onclick="PipelineDropdown('${doc.name}')">` +
             `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" data-bs-placement="right"` +
-            `title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n` +
+            ` title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n` +
             `last cycle: &nbsp; ${(doc.dt || 0).toPrecision(1)} s \n` +
             `last error: &nbsp; ${doc.cycle - doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>` +
             `<td onclick="PipelineDropdown('${doc.name}')">${doc.name}</td>` +
@@ -56,11 +56,12 @@ function PopulatePipelines(flavor) {
         if (status === 'active') {
           $(`#${doc.name}_actions`).html(`${silence_button}${stop_button}${restart_button}`);
         } else if (status === 'silent') {
-          $(`#${doc.name}_silent_until`).show();
-          if (doc.silent_until == -1) {
-            $(`#${doc.name}_silent_until`).html('the end of time');
+          let silent_until = $(`#${doc.name}_silent_until`);
+          silent_until.show();
+          if (doc.silent_until === -1) {
+            silent_until.html('the end of time');
           } else {
-            $(`#${doc.name}_silent_until`).html(new Date(doc.silent_until*1000).toLocaleString());
+            silent_until.html(new Date(doc.silent_until*1000).toLocaleString());
           }
           $(`#${doc.name}_actions`).html(`${activate_button}${silence_button}${stop_button}${restart_button}`);
         } else {

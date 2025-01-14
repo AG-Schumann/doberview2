@@ -1,7 +1,6 @@
 extends layout
 block extrahead
   script(src="javascripts/hosts_scripts.js" type="text/javascript")
-  link(rel="stylesheet" href="stylesheets/hosts.css")
 
 block content
   div.main-container
@@ -9,14 +8,8 @@ block content
       each host in hosts
         .accordion-item
           h2.accordion-header(id=`${host}_header`)
-            button.accordion-button(type='button' data-bs-toggle='collapse' data-bs-target=`#${host}_tables` aria-expanded='true' aria-controls=`${host}_tables`)
+            button.accordion-button(type='button' data-bs-toggle='collapse' data-bs-target=`#${host}_tables`)
               | #{host.toUpperCase()}
-          .accordion-collapse.collapse(id=`${host}_tables`, aria-labelledby=`${host}_header` data-bs-parent='#hostAccordion')
+          .accordion-collapse.collapse(id=`${host}_tables`)
             .accordion-body
               iframe(src=`${grafana_sysmon_url}&var-hostname=${host}` style="width:100%;height:720px")
-
-
-  script.
-    $(document).ready(function() {
-      SetHosts();
-    });

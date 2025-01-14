@@ -9,7 +9,7 @@ function SetHosts() {
 function UpdatePage() {
   hosts.forEach(h => {
     $.getJSON(`/hosts/get_snapshot?host=${h}`, data => {
-      if (Object.keys(data).length == 0)
+      if (Object.keys(data).length === 0)
         return;
       $(`#load_${h}`).html(`${data.load1} / ${data.load5} / ${data.load15}`);
       if (typeof data.cpu_1_temp != 'undefined')
