@@ -11,3 +11,7 @@ You'll also need to set a few environment variables:
 - `DOBERVIEW_EXPERIMENT`: the name of the experiment this instance works for. Should match things in Doberman.
 - `DOBERVIEW_AUTH_DB`: the database in MongoDB to authorize against. Uses `admin` if unspecified.
 - `DOBERVIEW_MONGO_URI`: the URI to connect to mongo. Should look like `mongodb://{username}:{password}@{host}:{port}`. Do not add `/{auth_db}`.
+
+## How to create interactive graphical overview tab for your experiment
+
+[Documentation](https://github.com/AG-Schumann/doberview2/wiki/Creating-and-editing-SVGs)
