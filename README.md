@@ -18,3 +18,7 @@ Given you have a running doberman system, you need these four configs/envars:
 
 ## Start
   * run `npm start` or `node app.js` to start  the website on your configured port.
+
+## How to create interactive graphical overview tab for your experiment
+
+[Documentation](https://github.com/AG-Schumann/doberview2/wiki/Creating-and-editing-SVGs)

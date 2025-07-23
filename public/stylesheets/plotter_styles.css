@@ -1,0 +1,141 @@
+.selected-cell {
+    background-color: var(--bs-success) !important;
+    color: white !important; /* Optional: change text color */
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.template-item:hover {
+    background-color: #e0e0e0;
+}
+
+#templateList .list-group-item:hover {
+    background-color: var(--bs-success);
+    color: white;
+    cursor: pointer;
+}
+
+#templateList .list-group-item i.fa-trash:hover {
+    color: var(--bs-danger);
+    cursor: pointer;
+}
+
+#placementContainer {
+    width: 200px;
+    height: 150px;
+    position: relative;
+    margin: auto;
+}
+
+.triangle, .trapezoid {
+    cursor: pointer;
+    position: absolute;
+    transition: border-color 0.3s;
+    border-color: var(--bs-secondary);
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+}
+
+#topleft {
+    top: 0;
+    left: 0;
+    border-top: 50px solid var(--bs-secondary);
+    border-right: 50px solid transparent;
+}
+
+#topright {
+    top: 0;
+    right: 0;
+    border-top: 50px solid var(--bs-secondary);
+    border-left: 50px solid transparent;
+}
+
+#bottomleft {
+    bottom: 0;
+    left: 0;
+    border-bottom: 50px solid var(--bs-secondary);
+    border-right: 50px solid transparent;
+}
+
+#bottomright {
+    bottom: 0;
+    right: 0;
+    border-bottom: 50px solid var(--bs-secondary);
+    border-left: 50px solid transparent;
+}
+
+/* Trapezoids for center-top, center-right, center-bottom, center-left */
+
+#topcenter, #bottomcenter {
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    height: 0;
+    width: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+#topcenter {
+    border-bottom: 25px solid var(--bs-secondary);
+    top: 0;
+}
+
+#bottomcenter {
+    border-top: 25px solid var(--bs-secondary);
+    bottom: 0;
+}
+
+#leftcenter, #rightcenter {
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    width: 0;
+    height: 75px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#leftcenter {
+    border-right: 25px solid var(--bs-secondary);
+    left: 0;
+}
+
+#rightcenter {
+    border-left: 25px solid var(--bs-secondary);
+    right: 0;
+}
+
+/* Hover effect for visible borders */
+#topleft:hover { border-top-color: var(--bs-light); }
+#topright:hover { border-top-color: var(--bs-light); }
+#bottomleft:hover { border-bottom-color: var(--bs-light); }
+#bottomright:hover { border-bottom-color: var(--bs-light); }
+
+#topcenter:hover { border-bottom-color: var(--bs-light); }
+#bottomcenter:hover { border-top-color: var(--bs-light); }
+#leftcenter:hover { border-right-color: var(--bs-light); }
+#rightcenter:hover { border-left-color: var(--bs-light); }
+
+/* Selected position style (green) */
+#topleft.selected { border-top-color: var(--bs-success); }
+#topright.selected { border-top-color: var(--bs-success); }
+#bottomleft.selected { border-bottom-color: var(--bs-success); }
+#bottomright.selected { border-bottom-color: var(--bs-success); }
+
+#topcenter.selected { border-bottom-color: var(--bs-success); }
+#bottomcenter.selected { border-top-color: var(--bs-success); }
+#leftcenter.selected { border-right-color: var(--bs-success); }
+#rightcenter.selected { border-left-color: var(--bs-success); }
+
+#progress-bar-container {
+    margin-top: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}

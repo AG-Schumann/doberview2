@@ -22,9 +22,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1"
-     inkscape:cx="614.5"
-     inkscape:cy="406"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="260.9224"
+     inkscape:cy="503.46003"
      inkscape:window-width="1920"
      inkscape:window-height="1011"
      inkscape:window-x="1920"
@@ -869,7 +869,7 @@
        y="96.598206" />
     <svg:rect
        style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_M_XS_13"
+       id="sensorbox_M_XS_08"
        width="28.955645"
        height="13.955644"
        x="32.707172"
@@ -950,7 +950,7 @@
        height="13.955644"
        x="174.66277"
        y="109.19444"
-       id="rect9116" />
+       id="sensorbox_P_GS_05" />
     <svg:rect
        style="fill:#afe9dd;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="sensorbox_P_XS_03"
@@ -988,7 +988,7 @@
        y="142.64114" />
     <svg:rect
        style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_M_XS_12"
+       id="sensorbox_M_XS_09"
        width="28.955645"
        height="13.955644"
        x="53.81284"
@@ -1302,19 +1302,19 @@
        id="path2421" />
     <svg:path
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 18.480784,17.685725 v 3.600146 h 28.694821"
+       d="m 18.547854,20.088963 v 3.600146 h 28.694821"
        id="path2536"
        sodipodi:nodetypes="ccc" />
     <svg:rect
        style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_M_XS_09"
+       id="sensorbox_M_XS_12"
        width="28.955645"
        height="13.955644"
        x="118.55537"
        y="110.69862" />
     <svg:rect
        style="fill:#afc6e9;stroke:#000000;stroke-width:1.04436;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="sensorbox_M_XS_08"
+       id="sensorbox_M_XS_13"
        width="28.955645"
        height="13.955644"
        x="141.17616"
@@ -1398,6 +1398,13 @@
        class="v findmeeasily"
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.648726;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path18206" />
+    <svg:rect
+       style="fill:#ffaaaa;stroke:#000000;stroke-width:1.03441;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="sensorbox_T_IC_23"
+       width="28.867697"
+       height="13.732526"
+       x="174.67278"
+       y="123.16467" />
   </svg:g>
   <metadata>
     <sensors>S_GS_01 S_GS_02 S_GS_05 S_GS_06 S_GS_10 M_XS_01 M_XS_02 M_XS_03 M_XS_04 M_XS_05 M_XS_06 M_XS_07 M_TS_01 L_XS_01 L_XS_02 L_XS_03 L_XS_04 L_XS_05 L_XS_06 S_XS_01 S_XS_03 S_XS_04 S_XS_05 S_XS_06 S_XS_07 P_XS_02 P_XS_01 F_GS_01 P_IC_03 P_GS_01</sensors>
