@@ -82,7 +82,7 @@ function SubmitContact() {
     expert: $("#expert").is(":checked"),
     on_shift: false
   };
-  $.post("/shifts/update_shifter", shifter, (data, status) => {
+  $.post("/shifts/update_shifter", shifter, (data) => {
     if (typeof data.err != 'undefined')
       alert(data.err);
     else
@@ -118,7 +118,7 @@ function SubmitShifts() {
       .filter((i,row) => row.checked)
       .map((i,row) => row.name)
       .toArray(); // jquery is bullshit
-  $.post('/shifts/set_shifters', {shifters: shifters}, (data, status) => {
+  $.post('/shifts/set_shifters', {shifters: shifters}, (data) => {
   if (typeof data.err != 'undefined')
     alert(data.err);
   else
@@ -130,7 +130,7 @@ function DeleteShifter(name) {
   if (name === '')
     return;
   if (confirm(`Are you sure that you want to delete this contact?`)) {
-    $.post('/shifts/delete_shifter', {name: name}, (data, status) => {
+    $.post('/shifts/delete_shifter', {name: name}, (data) => {
       if (typeof data.err != 'undefined')
         alert(data.err);
       else

@@ -49,9 +49,8 @@ router.post('/add', common.ensureAuthenticated, function(req, res) {
   if (typeof doc.name == 'undefined' || 
       !['alarm', 'control', 'convert'].includes(doc.name.split('_')[0]) ||
       typeof doc.pipeline == 'undefined' || 
-      doc.pipeline.length == 0)
+      doc.pipeline.length === 0)
     return res.json({err: 'Bad input'});
-  doc['name'] = doc.name;
   doc['status'] = 'inactive';
   doc['silent_until'] = parseInt('0');
   doc['description'] = String(doc.description);
@@ -60,7 +59,7 @@ router.post('/add', common.ensureAuthenticated, function(req, res) {
   doc['rate'] = -1;
   var depends_on = {};
   doc.pipeline.forEach(n => {
-    if (typeof n.upstream == 'undefined' || n.upstream.length == 0) depends_on[n.input_var] = 1;
+    if (typeof n.upstream == 'undefined' || n.upstream.length === 0) depends_on[n.input_var] = 1;
   });
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
@@ -79,9 +78,8 @@ router.post('/update', common.ensureAuthenticated, function(req, res) {
   if (typeof doc.name == 'undefined' ||
       !['alarm', 'control', 'convert'].includes(doc.name.split('_')[0]) ||
       typeof doc.pipeline == 'undefined' ||
-      doc.pipeline.length == 0)
+      doc.pipeline.length === 0)
     return res.json({err: 'Bad input'});
-  doc['name'] = doc.name;
   doc['status'] = doc.status || 'inactive';
   doc['description'] = String(doc.description);
   doc['cycles'] = parseInt('0');
@@ -89,7 +87,7 @@ router.post('/update', common.ensureAuthenticated, function(req, res) {
   doc['rate'] = -1;
   var depends_on = {};
   doc.pipeline.forEach(n => {
-    if (typeof n.upstream == 'undefined' || n.upstream.length == 0) depends_on[n.input_var] = 1;
+    if (typeof n.upstream == 'undefined' || n.upstream.length === 0) depends_on[n.input_var] = 1;
   });
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
@@ -121,9 +119,9 @@ router.post('/silence', common.ensureAuthenticated, function(req, res) {
   var duration = data.duration;
   var until = null;
   var now = new Date();
-  if (duration == 'forever') {
+  if (duration === 'forever') {
     until = parseInt('-1');
-  } else if (duration == 'monday') {
+  } else if (duration === 'monday') {
     var day = now.getDay();
     if (day === 0) day = 7;  // make Sunday 7 instead of 0
     until = new Date();
@@ -131,12 +129,13 @@ router.post('/silence', common.ensureAuthenticated, function(req, res) {
     until.setHours(9);
     until.setMinutes(0);
     until = until.getTime()/1000;
-  } else if (duration == 'morning') {
+  } else if (duration === 'morning') {
+    until = new Date();
     until.setDate(now.getDate()+1);
     until.setHours(9);
     until.setMinutes(30);
     until = until.getTime()/1000;
-  } else if (duration == 'evening') {
+  } else if (duration === 'evening') {
     until = new Date();
     if (now.getHours() >= 18) until.setDate(now.getDate()+1); // set to next day if it's after 18:00
     until.setHours(18);

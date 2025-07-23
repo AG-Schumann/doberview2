@@ -99,136 +99,194 @@ function SigFigs(val) {
 }
 
 function SensorDropdown(sensor) {
-  $("#alarm_low, #alarm_high").change(() => {let low = parseInt($("#alarm_low").val());
-    let high = parseInt($("#alarm_high").val());
-    $("#alarm_mid").val((high+low)/2); $("#alarm_range").val((high-low)/2);});
-  $("#alarm_mid, #alarm_range").change(() => {let mid = parseInt($("#alarm_mid").val());
-    let range = parseInt($("#alarm_range").val());
-    $("#alarm_low").val(mid-range); $("#alarm_high").val(mid+range);});
+  setupAlarmFieldSyncing();
   $.getJSON(`/sensors/detail?sensor=${sensor}`, (sensor_detail) => {
-    if (Object.keys(sensor_detail).length === 0)
-      return;
-    let is_int = sensor_detail.is_int===1;
-    let roi = $("#readout_interval");
-    let sensor_status = $("#sensor_status");
-    if(typeof sensor_detail.multi_sensor == "string") {
-      roi.attr('disabled', 'disabled');
-      $("#readout_command").html('see ' + sensor_detail.multi_sensor);
-      sensor_status.bootstrapToggle('readonly');
-    } else {
-      roi.removeAttr('disabled');
-      $("#readout_command").html(sensor_detail.readout_command);
-      sensor_status.bootstrapToggle('enable');
-    }
-    $("#detail_sensor_name").html(sensor_detail.name);
-    $("#sensor_desc").val(sensor_detail.description).attr('size', sensor_detail.description.length + 3);
-    sensor_status.bootstrapToggle(sensor_detail.status === 'online' ? 'on' : 'off');
-    roi.val(sensor_detail.readout_interval);
-    $("#sensor_units").val(sensor_detail.units);
-    if (typeof sensor_detail.value_xform != 'undefined')
-      $("#value_xform").val(sensor_detail.value_xform.join(','));
-    else
-      $("#value_xform").val("");
-    let alarm_vals = sensor_detail.alarm_values;
-    const int_alarm_body = $("#int_alarm_body");
-    const float_alarm_body = $("#float_alarm_body");
-    int_alarm_body.empty();
-    if (is_int) {
-      int_alarm_body.show();
-      float_alarm_body.hide();
-      int_alarm_body.append('<tr><th>Value</th><th>Message</th><th></th>');
-      for (let k in alarm_vals) {
+    if (Object.keys(sensor_detail).length === 0) return;
 
-        int_alarm_body.append(`<tr><td><input class="form-control-sm" type="number" value="${k}"></td><td><input class="form-control-sm" type="text" value="${alarm_vals[k]}"></td><td><button type="button" class="btn btn-sm btn-primary" onclick="DeleteAlarmLevel(this)">Delete</button></td></tr>`);
-      }
-      int_alarm_body.append(`<tr><td></td><td></td><td><button type="button" class="btn btn-sm btn-primary" onclick="AddAlarmLevel()">Add</button></td></tr>`);
-    } else {
-      if (typeof sensor_detail.alarm_thresholds != 'undefined' && sensor_detail.alarm_thresholds.length === 2) {
-        int_alarm_body.hide();
-        float_alarm_body.show();
-        $("#alarm_low").val(sensor_detail.alarm_thresholds[0]);
-        $("#alarm_high").val(sensor_detail.alarm_thresholds[1]);
-        $("#alarm_mid").val((sensor_detail.alarm_thresholds[1] + sensor_detail.alarm_thresholds[0]) / 2);
-        $("#alarm_range").val((sensor_detail.alarm_thresholds[1] - sensor_detail.alarm_thresholds[0]) / 2);
-
-      } else {
-        $("#alarm_low").val(null);
-        $("#alarm_high").val(null);
-        $("#alarm_mid").val(null);
-        $("#alarm_range").val(null);
-
-      }
-    }
-    var recurrence = (typeof sensor_detail.alarm_recurrence === 'undefined') ? null : sensor_detail.alarm_recurrence;
-    var base_level = (typeof sensor_detail.alarm_level === 'undefined') ? null : sensor_detail.alarm_level;
-    $("#alarm_recurrence").val(recurrence);
-    $("#alarm_baselevel").val(base_level);
-    $("#pipelines_active").empty();
-    $("#pipelines_silenced").empty();
-    $("#pipelines_inactive").empty();
-    $("#make_alarm_button").show().attr( "onclick", `javascript: MakeAlarm("${sensor_detail.name}", is_int=${is_int});`);
-    if (typeof sensor_detail.pipelines != 'undefined' && sensor_detail.pipelines.length > 0) {
-      sensor_detail.pipelines.forEach(pl_name => {
-        if (pl_name === 'alarm_' + sensor_detail.name)
-          $("#make_alarm_button").hide();
-        $.getJSON(`/pipelines/get?name=${pl_name}`, doc => {
-          if (doc == null) return;
-          let now = new Date();
-          let flavor = `${pl_name}`.split('_')[0];
-          let last_error = doc.cycle - doc.error; // last error X cycles ago
-          let status_color = ((last_error < 5) ? 'danger' : 'success');
-          if(doc.cycle === 0) status_color = 'secondary' // status indicator grey when pipeline never ran
-          let error_status =  `<span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip" `+
-              `data-bs-placement="right" title="process time: &nbsp; ${doc.rate.toPrecision(3)} ms  \n`+
-              `last cycle: &nbsp; ${((now-doc.heartbeat)/1000 || 0).toPrecision(1)} s \n`+
-              `last error: &nbsp; ${doc.cycles - doc.error} cycles ago"><span class="visually-hidden">X</span></span></td>`;
-          let stop_btn = `<button class="btn btn-danger action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_stop ${pl_name}')"> <i class="fas fa-solid fa-stop"></i></button>`;
-          let start_btn = `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_start ${pl_name}')"><i class="fas fa-solid fa-play"></i></button>`;
-          let restart_btn = `<button class="btn btn-primary action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_restart ${pl_name}')"><i class="fas fa-solid fa-rotate"></i></button>`;
-          let silence_btn = `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${pl_name}')"><i class="fas fa-solid fa-bell-slash"></i></button>`;
-          let activate_btn = `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_active ${pl_name}')"><i class="fas fa-solid fa-play"></i></button>`;
-          if ((doc.status === 'active') && ((doc.silent_until === -1) || (doc.silent_until > Date.now()/1000))) {
-            $("#pipelines_silenced").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+activate_btn+`</td><td>`+silence_btn+`</td><td>`+stop_btn+`</td><td>`+restart_btn+`</td></tr>`);
-          } else if (doc.status === 'active') {
-            $("#pipelines_active").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+silence_btn+`</td><td>`+stop_btn+`</td><td>`+restart_btn+`</td></tr>`);
-          } else {
-            $("#pipelines_inactive").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>`+start_btn+`</td></tr>`);
-          }
-          $('[data-bs-toggle="tooltip"]').tooltip();
-        }); // get json
-      }); // for each
-    }
-    $("#sensor_device_name").text(sensor_detail.device).attr('onclick', `DeviceDropdown("${sensor_detail.device}")`);
-    if (typeof sensor_detail.control_quantity != 'undefined') {
-      control_map[sensor_detail.name] = [sensor_detail.device, sensor_detail.control_quantity];
-      $("#sensor_control").css('display', 'inline');
-      let states = $("#sensor_states");
-      if (sensor_detail.topic === 'status') {
-        states.prop('hidden', false);
-        $("#sensor_setpoint").prop('hidden', true);
-        states.empty();
-        let valuemap = sensor_detail.valuemap;
-        if (typeof valuemap == 'undefined') {
-          states.html('No value map defined!');
-          valuemap = {};
-        }
-        Object.entries(valuemap).forEach(([state, label]) => {
-          states.append(`<td><button class="btn btn-primary" id="sensor_valve_btn" onclick="ChangeSetpoint(${state})">${label}</button></td>`);
-        });
-      } else {
-        // this is a setpoint
-        $("#sensor_setpoint").prop('hidden', false);
-        states.prop('hidden', true);
-        $.getJSON(`/sensors/get_last_point?sensor=${sensor_detail.name}`, doc => {
-          $("#sensor_setpoint_control").val(doc.value);
-        });
-      }
-    } else {
-      $("#sensor_control").css('display', 'none');
-    }
+    populateSensorInfo(sensor_detail);
+    handleAlarmUI(sensor_detail);
+    renderPipelines(sensor_detail);
+    setupSensorControl(sensor_detail);
+    populateDeviceInfo(sensor_detail);
     DrawSensorHistory(sensor);
     $('#sensorbox').modal('show');
   });
+}
+
+function setupAlarmFieldSyncing() {
+  $("#alarm_low, #alarm_high").change(() => {
+    let low = parseInt($("#alarm_low").val());
+    let high = parseInt($("#alarm_high").val());
+    $("#alarm_mid").val((high + low) / 2);
+    $("#alarm_range").val((high - low) / 2);
+  });
+
+  $("#alarm_mid, #alarm_range").change(() => {
+    let mid = parseInt($("#alarm_mid").val());
+    let range = parseInt($("#alarm_range").val());
+    $("#alarm_low").val(mid - range);
+    $("#alarm_high").val(mid + range);
+  });
+}
+
+function populateSensorInfo(detail) {
+  const is_int = detail.is_int === 1;
+  const roi = $("#readout_interval");
+  const sensor_status = $("#sensor_status");
+
+  if (typeof detail.multi_sensor === "string") {
+    roi.attr('disabled', 'disabled');
+    $("#readout_command").html('see ' + detail.multi_sensor);
+    sensor_status.bootstrapToggle('readonly');
+  } else {
+    roi.removeAttr('disabled');
+    $("#readout_command").html(detail.readout_command);
+    sensor_status.bootstrapToggle('enable');
+  }
+
+  $("#detail_sensor_name").html(detail.name);
+  $("#sensor_desc").val(detail.description).attr('size', detail.description.length + 3);
+  sensor_status.bootstrapToggle(detail.status === 'online' ? 'on' : 'off');
+  roi.val(detail.readout_interval);
+  $("#sensor_units").val(detail.units);
+  $("#value_xform").val(Array.isArray(detail.value_xform) ? detail.value_xform.join(',') : "");
+}
+
+function handleAlarmUI(detail) {
+  const is_int = detail.is_int === 1;
+  const alarm_vals = detail.alarm_values;
+  const int_alarm_body = $("#int_alarm_body");
+  const float_alarm_body = $("#float_alarm_body");
+
+  int_alarm_body.empty();
+
+  if (is_int) {
+    int_alarm_body.show();
+    float_alarm_body.hide();
+    int_alarm_body.append('<tr><th>Value</th><th>Message</th><th></th>');
+
+    for (let k in alarm_vals) {
+      int_alarm_body.append(`
+        <tr>
+          <td><input class="form-control-sm" type="number" value="${k}"></td>
+          <td><input class="form-control-sm" type="text" value="${alarm_vals[k]}"></td>
+          <td><button type="button" class="btn btn-sm btn-primary" onclick="DeleteAlarmLevel(this)">Delete</button></td>
+        </tr>`);
+    }
+
+    int_alarm_body.append(`
+      <tr><td></td><td></td>
+        <td><button type="button" class="btn btn-sm btn-primary" onclick="AddAlarmLevel()">Add</button></td>
+      </tr>`);
+  } else {
+    float_alarm_body.toggle(true);
+    int_alarm_body.hide();
+
+    if (Array.isArray(detail.alarm_thresholds) && detail.alarm_thresholds.length === 2) {
+      const [low, high] = detail.alarm_thresholds;
+      $("#alarm_low").val(low);
+      $("#alarm_high").val(high);
+      $("#alarm_mid").val((high + low) / 2);
+      $("#alarm_range").val((high - low) / 2);
+    } else {
+      $("#alarm_low, #alarm_high, #alarm_mid, #alarm_range").val(null);
+    }
+  }
+
+  $("#alarm_recurrence").val(detail.alarm_recurrence ?? null);
+  $("#alarm_baselevel").val(detail.alarm_level ?? null);
+  $("#make_alarm_button")
+      .show()
+      .attr("onclick", `javascript: MakeAlarm("${detail.name}", is_int=${is_int});`);
+}
+
+function renderPipelines(detail) {
+  if (!Array.isArray(detail.pipelines)) return;
+
+  $("#pipelines_active, #pipelines_silenced, #pipelines_inactive").empty();
+
+  detail.pipelines.forEach(pl_name => {
+    if (pl_name === 'alarm_' + detail.name) {
+      $("#make_alarm_button").hide();
+    }
+
+    $.getJSON(`/pipelines/get?name=${pl_name}`, doc => {
+      if (!doc) return;
+
+      const now = new Date();
+      const flavor = pl_name.split('_')[0];
+      const last_error = doc.cycle - doc.error;
+      let status_color = 'success';
+      if (doc.cycle === 0) status_color = 'secondary';
+      else if (last_error < 5) status_color = 'danger';
+
+      const error_status = `
+        <span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip"
+          data-bs-placement="right"
+          title="process time: ${doc.rate.toPrecision(3)} ms\n
+                 last cycle: ${(now - doc.heartbeat) / 1000} s\n
+                 last error: ${last_error} cycles ago">
+          <span class="visually-hidden">X</span>
+        </span>`;
+
+      const buttons = {
+        stop: `<button class="btn btn-danger action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_stop ${pl_name}')"><i class="fas fa-solid fa-stop"></i></button>`,
+        start: `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_start ${pl_name}')"><i class="fas fa-solid fa-play"></i></button>`,
+        restart: `<button class="btn btn-primary action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_restart ${pl_name}')"><i class="fas fa-solid fa-rotate"></i></button>`,
+        silence: `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${pl_name}')"><i class="fas fa-solid fa-bell-slash"></i></button>`,
+        activate: `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_active ${pl_name}')"><i class="fas fa-solid fa-play"></i></button>`
+      };
+
+      if (doc.status === 'active' && (doc.silent_until === -1 || doc.silent_until > Date.now() / 1000)) {
+        $("#pipelines_silenced").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>${buttons.activate}</td><td>${buttons.silence}</td><td>${buttons.stop}</td><td>${buttons.restart}</td></tr>`);
+      } else if (doc.status === 'active') {
+        $("#pipelines_active").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>${buttons.silence}</td><td>${buttons.stop}</td><td>${buttons.restart}</td></tr>`);
+      } else {
+        $("#pipelines_inactive").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>${buttons.start}</td></tr>`);
+      }
+
+      $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+  });
+}
+
+function setupSensorControl(detail) {
+  const ctrl = detail.control_quantity;
+  if (!ctrl) {
+    $("#sensor_control").hide();
+    return;
+  }
+
+  control_map[detail.name] = [detail.device, ctrl];
+  $("#sensor_control").show();
+
+  const states = $("#sensor_states");
+  const isStatus = detail.topic === 'status';
+
+  states.prop('hidden', !isStatus);
+  $("#sensor_setpoint").prop('hidden', isStatus);
+
+  if (isStatus) {
+    states.empty();
+    const valuemap = detail.valuemap || {};
+    if (Object.keys(valuemap).length === 0) {
+      states.html('No value map defined!');
+    } else {
+      for (const [state, label] of Object.entries(valuemap)) {
+        states.append(`<td><button class="btn btn-primary" onclick="ChangeSetpoint(${state})">${label}</button></td>`);
+      }
+    }
+  } else {
+    $.getJSON(`/sensors/get_last_point?sensor=${detail.name}`, doc => {
+      $("#sensor_setpoint_control").val(doc.value);
+    });
+  }
+}
+
+function populateDeviceInfo(detail) {
+  $("#sensor_device_name")
+      .text(detail.device)
+      .attr('onclick', `DeviceDropdown("${detail.device}")`);
 }
 
 function AddAlarmLevel() {
