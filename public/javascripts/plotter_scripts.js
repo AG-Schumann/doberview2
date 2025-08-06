@@ -2,6 +2,39 @@ let selectedCells = [];
 let selectedTemplateName = null;
 let selectedLegendPosition = "top-right"; // Default position
 
+$(function () {
+    $('#plotter_date_select').daterangepicker({
+        "timePicker": true,
+        "timePicker24Hour": true,
+        "timePickerSeconds": true,
+
+        "locale": {
+            "format": "DD.MM.YYYY HH:mm:ss",
+            "fromLabel": "From",
+            "toLabel": "To",
+            "customRangeLabel": "Custom",
+            "firstDay": 1
+        },
+        ranges: {
+            'Last 1 Hour': [moment().subtract(1, 'hours'), moment()],
+            'Last 3 Hours': [moment().subtract(3, 'hours'), moment()],
+            'Last 24 Hours': [moment().subtract(24, 'hours'), moment()],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            '2024': [moment("2024-01-01 00:00:00"), moment("2024-12-31 23:59:59")],
+            '1 Year': [moment().subtract(365, 'days'), moment()]
+        },
+        "alwaysShowCalendars": true,
+        "startDate": moment().subtract(1, 'hours'),
+        "endDate": moment(),
+        "opens": "right",
+        "buttonClasses": "btn"
+
+    }, function (start, end) {
+        UpdateBinningAndPlot(start.toDate(), end.toDate());
+    });
+});
 
 function updateSensorButtonText() {
     const button = document.getElementById('sensorButton');
@@ -9,7 +42,7 @@ function updateSensorButtonText() {
 }
 
 function SelectSensorsModal() {
-    $.getJSON(`/devices/sensors_grouped?group_by=topic`, data => {
+    $.getJSON(`/sensors/grouped?group_by=topic`, data => {
         const tableHead = $("#sensorTable thead tr");
         const tableBody = $("#sensorTable tbody");
 
@@ -116,21 +149,6 @@ function setLegendPosition(position) {
     $(`#${position.replace('-', '')}`).addClass("selected");
 }
 
-
-function ChangeDates() {
-    let start = new Date($("#from_select_input").val());
-    let end = new Date($("#to_select_input").val());
-    let min_binning = getMinBinning(start, end);
-    const slider = document.getElementById('median_filter_input');
-    slider.min = min_binning;
-    slider.max = min_binning * 30;
-    slider.value = min_binning * 3;
-    slider.step = min_binning;
-    ChangeBinningLabel();
-    Plot().then(r => {return;});
-
-}
-
 function ChangeBinningLabel() {
     $("#binning_val").text($("#median_filter_input").prop("value") + 's');
 }
@@ -140,24 +158,43 @@ function getMinBinning(start, end) {
     return  Math.max(1, Math.round(total_seconds / 3000)); // load less than 3000 data points
 }
 
-async function Plot() {
+function UpdateBinningAndPlot(start, end) {
+    // Calculate min binning
+    let min_binning = getMinBinning(start, end);
+
+    // Update slider
+    const slider = document.getElementById('median_filter_input');
+    slider.min = min_binning;
+    slider.max = min_binning * 30;
+    slider.value = min_binning * 3;
+    slider.step = min_binning;
+    ChangeBinningLabel();
+
+    // Plot with updated dates
+    Plot(start, end);
+}
+async function Plot(start, end) {
+    // If start/end not provided, pull from daterangepicker
+    if (!start || !end) {
+        const drp = $('#plotter_date_select').data('daterangepicker');
+        start = drp.startDate.toDate();
+        end = drp.endDate.toDate();
+    }
+
     // Hide plot until loaded, show progress bar
     $("#plot").hide();
     let progressPercentage = 0;
     $("#progress-bar-inner").css('width', `${progressPercentage}%`);
     $("#progress-bar-container").show();
 
+    // Binning
+    let binning = $("#median_filter_input").prop("value");
+    let startISO = start.toISOString();
+    let endISO = end.toISOString();
 
-    // Get start, end, and binning
-    let start = new Date($("#from_select_input").val());
-    let tz_offset = start.getTimezoneOffset() * 60000;  // timezone offset in ms
-    let end = new Date($("#to_select_input").val());
-    let binning =  $("#median_filter_input").prop("value");
-    start = start.toISOString();
-    end = end.toISOString();
     // Get sensor details for selected sensors
     const sensorDetailsPromises = selectedCells.map(sensor =>
-        $.getJSON(`/devices/sensor_detail?sensor=${sensor}`)
+        $.getJSON(`/sensors/detail?sensor=${sensor}`)
     );
     try {
         const sensorDetails = await Promise.all(sensorDetailsPromises);
@@ -170,49 +207,47 @@ async function Plot() {
             axisGroups[unitKey].sensors.push(detail.name);
         });
 
-        // give user illusion of progress
+        // Progress update
         progressPercentage += 10;
         $("#progress-bar-inner").css('width', `${progressPercentage}%`);
+        console.log(`/sensors/get_data?start=${startISO}&end=${endISO}&binning=${binning}s`);
 
         // Load data points
         const dataPromises = selectedCells.map(sensor =>
-            $.getJSON(`/devices/get_data?start=${start}&end=${end}&binning=${binning}s&sensor=${sensor}`)
+            $.getJSON(`/sensors/get_data?start=${startISO}&end=${endISO}&binning=${binning}s&sensor=${sensor}`)
                 .then(data => {
                     progressPercentage += (90 / selectedCells.length);
                     $("#progress-bar-inner").css('width', `${progressPercentage}%`);
                     return {
                         name: sensor,
-                        x: data.map(row => new Date(row[0] - tz_offset).toISOString().slice(0, 19).replace('T', ' ')),
+                        x: data.map(row => new Date(row[0]).toISOString().slice(0, 19).replace('T', ' ')),
                         y: data.map(row => row[1]),
                     };
                 })
         );
         const sensorData = await Promise.all(dataPromises);
-        progressPercentage += 90;
-        $("#progress-bar-inner").css('width', `${progressPercentage}%`);
-        // create all traces
+
+        // Build traces
         const traces = [];
         sensorData.forEach(sensor => {
             const sensorDetail = sensorDetails.find(detail => detail.name === sensor.name);
             const axisGroupKey = `${sensorDetail.topic} / ${sensorDetail.units}`;
             const axisId = axisGroups[axisGroupKey].axisId;
-            const legendLabel = sensorDetail.description;
             traces.push({
                 x: sensor.x,
                 y: sensor.y,
-                name: legendLabel,
+                name: sensorDetail.description,
                 yaxis: axisId,
                 type: 'scatter',
             });
         });
         const numberOfAxes = Object.keys(axisGroups).length;
 
-        // general layout
+        // Layout
         const layout = {
             height: 800,
             xaxis: {
                 type: 'date',
-                showticklabels: true,
                 tickangle: 45,
                 domain: [Math.floor((numberOfAxes - 1) / 2) * 0.06, 1 - Math.max(0, Math.floor((numberOfAxes - 2) / 2)) * 0.06]
             },
@@ -220,17 +255,17 @@ async function Plot() {
             hoverinfo: "x+y",
         };
 
-        // layout for each axis
         Object.keys(axisGroups).forEach((axisLabel, index) => {
             const axisName = index === 0 ? 'yaxis' : `yaxis${index + 1}`;
-            axisLabel = axisLabel.endsWith(' ') ? axisLabel.split('/')[0] : axisLabel;
             layout[axisName] = {
-                title: axisLabel,
+                title: axisLabel.endsWith(' ') ? axisLabel.split('/')[0] : axisLabel,
                 overlaying: index === 0 ? undefined : 'y',
                 side: index % 2 === 0 ? 'left' : 'right',
                 position: index % 2 === 0 ? 0.03 * index : 1 - (0.03 * (index - 1)),
             };
         });
+
+        // Show plot
         $("#plot").show();
         $("#progress-bar-container").hide();
         Plotly.newPlot('plot', traces, layout, { responsive: true });
@@ -274,9 +309,18 @@ function LoadTemplateModal() {
 
 async function LoadTemplate(name) {
     $('#loadTemplateModal').modal('hide');
+
+    // Load selected sensors from template
     selectedCells = await $.getJSON(`/plotter/get_sensors?name=${name}`);
     updateSensorButtonText();
-    await Plot();
+
+    // Get current start/end from daterangepicker
+    const drp = $('#plotter_date_select').data('daterangepicker');
+    const start = drp.startDate.toDate();
+    const end = drp.endDate.toDate();
+
+    // Plot with current date range
+    await UpdateBinningAndPlot(start, end);
 }
 
 function DeleteTemplate(name) {
