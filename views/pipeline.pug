@@ -139,26 +139,34 @@ block content
       document.jsoneditor.container.classList.add(themeStyles);
     }
 
-    // Update JSONEditor theme based on data-bs-theme attribute
+
     $(document).ready(function () {
-      const initialTheme = $(':root').attr('data-bs-theme');
-      setJsonEditorTheme(initialTheme);
+
       PopulatePipelinesNavbar();
+
       ['alarm', 'control', 'convert'].forEach(pl => PopulatePipelines(pl));
       setInterval(UpdateLoop, 5000);
+
+      // This is for silencing by URL (i.e. the link from the emails)
       var pipeline = GetParameterByName('pipeline');
       var silence_duration = GetParameterByName('silence');
       if (pipeline && silence_duration) {
         SilencePipeline(silence_duration, pipeline);
-        window.history.pushState({} , '', '/pipeline' );
+        window.history.pushState({} , '', '/pipelines' );
       }
+
       $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});
+
+
       var query_search = new URLSearchParams(window.location.search);
       if (query_search.has('pipeline_id')) {
         PipelineDropdown(query_search.get('pipeline_id'));
       };
     });
 
+    // Dark mode stuff
+    const initialTheme = $(':root').attr('data-bs-theme');
+    setJsonEditorTheme(initialTheme);
     $('#bd-theme').on('click', function () {
       const currentTheme = $(':root').attr('data-bs-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';

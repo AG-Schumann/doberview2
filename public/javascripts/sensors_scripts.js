@@ -206,43 +206,21 @@ function renderPipelines(detail) {
   $("#pipelines_active, #pipelines_silenced, #pipelines_inactive").empty();
 
   detail.pipelines.forEach(pl_name => {
-    if (pl_name === 'alarm_' + detail.name) {
-      $("#make_alarm_button").hide();
-    }
+    if (pl_name === 'alarm_' + detail.name) $("#make_alarm_button").hide();
 
     $.getJSON(`/pipelines/get?name=${pl_name}`, doc => {
       if (!doc) return;
 
-      const now = new Date();
       const flavor = pl_name.split('_')[0];
-      const last_error = doc.cycle - doc.error;
-      let status_color = 'success';
-      if (doc.cycle === 0) status_color = 'secondary';
-      else if (last_error < 5) status_color = 'danger';
+      const badge = pipelineTooltip(doc);
+      const buttons = pipelineButtons(pl_name, flavor, doc.status, doc.silent_until).join('');
 
-      const error_status = `
-        <span class="badge p-2 bg-${status_color} rounded-circle" data-bs-toggle="tooltip"
-          data-bs-placement="right"
-          title="process time: ${doc.rate.toPrecision(3)} ms\n
-                 last cycle: ${(now - doc.heartbeat) / 1000} s\n
-                 last error: ${last_error} cycles ago">
-          <span class="visually-hidden">X</span>
-        </span>`;
-
-      const buttons = {
-        stop: `<button class="btn btn-danger action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_stop ${pl_name}')"><i class="fas fa-solid fa-stop"></i></button>`,
-        start: `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_start ${pl_name}')"><i class="fas fa-solid fa-play"></i></button>`,
-        restart: `<button class="btn btn-primary action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_restart ${pl_name}')"><i class="fas fa-solid fa-rotate"></i></button>`,
-        silence: `<button class="btn btn-secondary action_button" onclick="SilenceDropdown('${pl_name}')"><i class="fas fa-solid fa-bell-slash"></i></button>`,
-        activate: `<button class="btn btn-success action_button" onclick="SendToHypervisor('pl_${flavor}', 'pipelinectl_active ${pl_name}')"><i class="fas fa-solid fa-play"></i></button>`
-      };
-
-      if (doc.status === 'active' && (doc.silent_until === -1 || doc.silent_until > Date.now() / 1000)) {
-        $("#pipelines_silenced").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>${buttons.activate}</td><td>${buttons.silence}</td><td>${buttons.stop}</td><td>${buttons.restart}</td></tr>`);
+      if (doc.status === 'active' && (doc.silent_until === -1 || doc.silent_until > Date.now()/1000)) {
+        $("#pipelines_silenced").append(`<tr><td>${badge}</td><td>${pl_name}</td><td>${buttons}</td></tr>`);
       } else if (doc.status === 'active') {
-        $("#pipelines_active").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>${buttons.silence}</td><td>${buttons.stop}</td><td>${buttons.restart}</td></tr>`);
+        $("#pipelines_active").append(`<tr><td>${badge}</td><td>${pl_name}</td><td>${buttons}</td></tr>`);
       } else {
-        $("#pipelines_inactive").append(`<tr><td>${error_status}</td><td>${pl_name}</td><td>${buttons.start}</td></tr>`);
+        $("#pipelines_inactive").append(`<tr><td>${badge}</td><td>${pl_name}</td><td>${buttons}</td></tr>`);
       }
 
       $('[data-bs-toggle="tooltip"]').tooltip();

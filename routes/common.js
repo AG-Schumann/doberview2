@@ -54,4 +54,5 @@ function GetRenderConfig(req) {
   return render_config;
 }
 
+
 module.exports = {SendCommand, ensureAuthenticated, GetRenderConfig};
