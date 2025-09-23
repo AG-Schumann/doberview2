@@ -141,7 +141,8 @@ block content
 
 
     $(document).ready(function () {
-
+      const initialTheme = $(':root').attr('data-bs-theme');
+      setJsonEditorTheme(initialTheme);
       PopulatePipelinesNavbar();
 
       ['alarm', 'control', 'convert'].forEach(pl => PopulatePipelines(pl));
@@ -165,8 +166,6 @@ block content
     });
 
     // Dark mode stuff
-    const initialTheme = $(':root').attr('data-bs-theme');
-    setJsonEditorTheme(initialTheme);
     $('#bd-theme').on('click', function () {
       const currentTheme = $(':root').attr('data-bs-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';

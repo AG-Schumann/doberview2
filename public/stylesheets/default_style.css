@@ -160,3 +160,7 @@ ul.CTAs li a {
   flex: 0 0 33%; /* Each list item takes 50% of the container width */
   margin-bottom: 10px;
 }
+
+.action_button {
+  margin-right: 10px;
+}

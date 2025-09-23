@@ -38,7 +38,6 @@ function PopulateSensorsNavbar() {
 }
 
 function UpdateSensorTableOnce(regroup = false) {
-  console.log('UpdateSensorTableOnce');
   if (regroup) $('#sensor_table').html('<thead><tr><th colspan=2>Loading...</th></tr></thead>');
   const group_by = $('#sensor_grouping input:radio:checked').val();
   $.when(
@@ -109,6 +108,7 @@ function SensorDropdown(sensor) {
     setupSensorControl(sensor_detail);
     populateDeviceInfo(sensor_detail);
     DrawSensorHistory(sensor);
+    window.currentSensorDetail = sensor_detail;
     $('#sensorbox').modal('show');
   });
 }
@@ -203,29 +203,81 @@ function handleAlarmUI(detail) {
 function renderPipelines(detail) {
   if (!Array.isArray(detail.pipelines)) return;
 
-  $("#pipelines_active, #pipelines_silenced, #pipelines_inactive").empty();
+  const seen = new Set(detail.pipelines);
 
   detail.pipelines.forEach(pl_name => {
     if (pl_name === 'alarm_' + detail.name) $("#make_alarm_button").hide();
 
     $.getJSON(`/pipelines/get?name=${pl_name}`, doc => {
       if (!doc) return;
-
+      let status = doc.status;
+      if (status === 'active' && (doc.silent_until === -1 || doc.silent_until > Date.now()/1000)) {
+        status = 'silent';
+      }
       const flavor = pl_name.split('_')[0];
       const badge = pipelineTooltip(doc);
-      const buttons = pipelineButtons(pl_name, flavor, doc.status, doc.silent_until).join('');
+      const buttons = pipelineButtons(pl_name, flavor, status, doc.silent_until).join('');
 
-      if (doc.status === 'active' && (doc.silent_until === -1 || doc.silent_until > Date.now()/1000)) {
-        $("#pipelines_silenced").append(`<tr><td>${badge}</td><td>${pl_name}</td><td>${buttons}</td></tr>`);
-      } else if (doc.status === 'active') {
-        $("#pipelines_active").append(`<tr><td>${badge}</td><td>${pl_name}</td><td>${buttons}</td></tr>`);
+      // decide which tbody this pipeline belongs in
+      let targetSelector;
+      if (status === 'silent') targetSelector = "#pipelines_silenced";
+      else if (status === 'active') targetSelector = "#pipelines_active";
+      else targetSelector = "#pipelines_inactive";
+      const target = $(targetSelector);
+
+      // find existing row (anywhere, not just in this group)
+      let row = $(`tr[data-pl='${pl_name}']`);
+      const newHtml = `<td>${badge}</td><td>${pl_name}</td><td>${buttons}</td>`;
+
+      if (row.length) {
+        // same group → just update contents
+        if (row.closest("tbody").attr("id") === target.attr("id")) {
+          if (row.html() !== newHtml) {
+            row.html(newHtml);
+          }
+        } else {
+          // moved group → rebuild in correct tbody
+          row.remove();
+          target.append(`<tr data-pl="${pl_name}">${newHtml}</tr>`);
+        }
       } else {
-        $("#pipelines_inactive").append(`<tr><td>${badge}</td><td>${pl_name}</td><td>${buttons}</td></tr>`);
+        // new pipeline row
+        target.append(`<tr data-pl="${pl_name}">${newHtml}</tr>`);
       }
-
-      $('[data-bs-toggle="tooltip"]').tooltip();
     });
   });
+
+  // cleanup: remove rows that no longer belong
+  ["#pipelines_active", "#pipelines_silenced", "#pipelines_inactive"].forEach(sel => {
+    $(sel).find("tr").each(function () {
+      const pl = $(this).data("pl");
+      if (!seen.has(pl)) {
+        $(this).remove();
+      }
+    });
+  });
+}
+
+let pipelineRefreshInterval = null;
+
+function startPipelineRefresh(detail) {
+  // clear any old timer
+  if (pipelineRefreshInterval) clearInterval(pipelineRefreshInterval);
+
+  // initial render
+  renderPipelines(detail);
+
+  // refresh every 3 seconds
+  pipelineRefreshInterval = setInterval(() => {
+    renderPipelines(detail);
+  }, 3000);
+}
+
+function stopPipelineRefresh() {
+  if (pipelineRefreshInterval) {
+    clearInterval(pipelineRefreshInterval);
+    pipelineRefreshInterval = null;
+  }
 }
 
 function setupSensorControl(detail) {

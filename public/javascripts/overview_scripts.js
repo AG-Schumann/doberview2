@@ -88,8 +88,6 @@ function Setup(){
     var valbox = doc.createElementNS("http://www.w3.org/2000/svg", 'text');
     valbox.id = `value_${sensor}-${suffix}`;
     let value_size = sensorbox.getAttribute('height') / 2;
-    console.log(sensorbox.getAttribute('x'));
-    console.log(typeof sensorbox.getAttribute('x'));
     valbox.setAttribute('x', parseFloat(sensorbox.getAttribute('x')) + 1);
     valbox.setAttribute('y', parseFloat(sensorbox.getAttribute('y')) + value_size * 2 - 3);
     valbox.textContent = 'N/A';
@@ -182,7 +180,6 @@ function LoadSVG(fn) {
   fn = p.join('/');
   $("#svg_frame").attr('data', fn);
   //}
-  console.log(`Loading ${$("#svg_frame").attr('data')}`);
 }
 
 function UpdateOverviewOnce() {
@@ -190,7 +187,6 @@ function UpdateOverviewOnce() {
   $.getJSON(`/sensors/get_last_points?sensors=${[...sensors].join(',')}`, data => {
     sensors.forEach(s => {
       if (!data[s]) {
-        console.log(`No data for sensor ${s}`);
         return;
       }
       var value = parseFloat(data[s]['value']);

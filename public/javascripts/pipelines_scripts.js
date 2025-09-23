@@ -56,10 +56,10 @@ function pipelineButtons(pl_name, flavor, status, silent_until) {
     activate: `<button class="btn btn-success action_button" onclick="PipelineControl('active','${pl_name}')"><i class="fas fa-solid fa-bell"></i></button>`
   };
 
-  if (status === 'active') {
-    if (silent_until === -1 || silent_until > Date.now() / 1000) {
+  if (status === 'silent') {
       return [btns.activate, btns.silence, btns.stop, btns.restart];
     }
+  else if (status === 'active') {
     return [btns.silence, btns.stop, btns.restart];
   }
   return [btns.start];

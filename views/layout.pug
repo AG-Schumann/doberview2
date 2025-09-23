@@ -345,7 +345,19 @@ html(data-bs-theme="dark")
     script.
       $(document).ready(function () {
         CheckHypervisor();
-        $('[data-bs-toggle="tooltip"]').tooltip({trigger: 'hover'});
+
+        // Delegated tooltip handling
+        new bootstrap.Tooltip(document.body, {
+          selector: '[data-bs-toggle="tooltip"]',
+          trigger: 'hover'
+        });
+
+        // Ensure only one tooltip at a time
+        document.body.addEventListener('show.bs.tooltip', function (event) {
+          // dispose all other tooltips before showing a new one
+          document.querySelectorAll('.tooltip').forEach(el => el.remove());
+        });
+
         if ($("#login_dropdown").html() == 'Login') {
           $("#login_button").show();
           $("#logout_button").hide();
@@ -355,6 +367,14 @@ html(data-bs-theme="dark")
           $("#logout_button").show();
         }
       });
-      $("#sensorbox").on('hide.bs.modal', function () {
+
+      $('#sensorbox').on('shown.bs.modal', function () {
+        // assume you stored the current detail object somewhere globally when opening
+        if (window.currentSensorDetail) {
+          startPipelineRefresh(window.currentSensorDetail);
+        }
+      });
+      $('#sensorbox').on('hidden.bs.modal', function () {
+        stopPipelineRefresh();
         $("#selectinterval").val(3);
       });
