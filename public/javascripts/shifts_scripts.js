@@ -1,5 +1,5 @@
 
-function PopulateNavbar() {
+function PopulateShiftsNavbar() {
   var content = '<li><div class="d-flex"> <button class="btn btn-primary" onclick="ShowDetail(null)">' +
       '<span>Add new &nbsp<i class="fas fa-solid fa-plus"></i><i class="fas fa-user"></i></span>' +
       '</button></div></li>';
@@ -38,22 +38,26 @@ function PopulateTable() {
 
 function PopulateAlarmConfig() {
   $.getJSON('/shifts/alarm_config', doc => {
-    $('#silence_durations').html('<th> Silence duration / s</th>');
-    $('#escalation_settings').html('<th> Escalate after X messages</td>');
-    $('#recipients').html('<th> Recipients</th>');
-    $('#protocols').html('<th>Protocols</th>');
+    let durations = $('#silence_durations');
+    durations.html('<th>Silence duration / s</th>');
+    let escalations = $('#escalation_settings');
+    escalations.html('<th>Escalate after X messages</td>');
+    let recipients = $('#recipients');
+    recipients.html('<th>Recipients</th>');
+    let protocols = $('#protocols');
+    protocols.html('<th>Protocols</th>');
 
     for (var i in doc.silence_duration) {
-      $('#silence_durations').append(`<td><input class="form-control-sm" type="number" value="${doc.silence_duration[i]}"></td>`);
-      $('#escalation_settings').append(`<td><input class="form-control-sm" type="number" value="${doc.escalation_config[i]}"></td>`);
+      durations.append(`<td><input class="form-control-sm" type="number" value="${doc.silence_duration[i]}"></td>`);
+      escalations.append(`<td><input class="form-control-sm" type="number" value="${doc.escalation_config[i]}"></td>`);
     }
-    $('#silence_durations').append('<td></td>');
-    $('#escalation_settings').append('<td></td>');
+    durations.append('<td></td>');
+    escalations.append('<td></td>');
     for (var i in doc.recipients) {
       var check_shifters = (doc.recipients[i].includes('shifters') ? 'checked' : '');
       var check_experts = (doc.recipients[i].includes('experts') ? 'checked' : '');
       var check_everyone = (doc.recipients[i].includes('everyone') ? 'checked' : '');
-      $('#recipients').append(`<td><div><input class="form-check-input" type="checkbox" value="shifters" ${check_shifters}> Shifters</div>
+      recipients.append(`<td><div><input class="form-check-input" type="checkbox" value="shifters" ${check_shifters}> Shifters</div>
                 <div><input class="form-check-input" type="checkbox" value="experts" ${check_experts}> Experts</div>
                 <div><input class="form-check-input" type="checkbox"  value="everyone" ${check_everyone}> Everyone</div></td>`);
     }
@@ -61,7 +65,7 @@ function PopulateAlarmConfig() {
       var check_mail = (doc.protocols[i].includes('email') ? 'checked' : '');
       var check_sms = (doc.protocols[i].includes('sms') ? 'checked' : '');
       var check_phone = (doc.protocols[i].includes('phone') ? 'checked' : '');
-      $('#protocols').append(`<td><div><input class="form-check-input" type="checkbox" value="email" ${check_mail}> Mail</div>
+      protocols.append(`<td><div><input class="form-check-input" type="checkbox" value="email" ${check_mail}> Mail</div>
                 <div><input class="form-check-input" type="checkbox" value="sms" ${check_sms}> SMS</div>
                 <div><input class="form-check-input" type="checkbox" value="phone" ${check_phone}> Phone call</div></td>`);
     }
@@ -78,7 +82,7 @@ function SubmitContact() {
     expert: $("#expert").is(":checked"),
     on_shift: false
   };
-  $.post("/shifts/update_shifter", shifter, (data, status) => {
+  $.post("/shifts/update_shifter", shifter, (data) => {
     if (typeof data.err != 'undefined')
       alert(data.err);
     else
@@ -114,7 +118,7 @@ function SubmitShifts() {
       .filter((i,row) => row.checked)
       .map((i,row) => row.name)
       .toArray(); // jquery is bullshit
-  $.post('/shifts/set_shifters', {shifters: shifters}, (data, status) => {
+  $.post('/shifts/set_shifters', {shifters: shifters}, (data) => {
   if (typeof data.err != 'undefined')
     alert(data.err);
   else
@@ -123,10 +127,10 @@ function SubmitShifts() {
 }
 
 function DeleteShifter(name) {
-  if (name == '')
+  if (name === '')
     return;
   if (confirm(`Are you sure that you want to delete this contact?`)) {
-    $.post('/shifts/delete_shifter', {name: name}, (data, status) => {
+    $.post('/shifts/delete_shifter', {name: name}, (data) => {
       if (typeof data.err != 'undefined')
         alert(data.err);
       else

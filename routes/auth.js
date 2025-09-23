@@ -2,9 +2,10 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var request = require('request');
+const config = require('../config/config')
 
 router.get('/', function(req, res) {
-    res.render('full_system');
+    res.render('sensors');
 });
 
 function checkUrl (req, res, next){
@@ -22,7 +23,7 @@ router.get('/github', checkUrl,
 router.get('/github/callback',  
   passport.authenticate('github', { failureRedirect: '/' }),
     function(req, res) {
-        request('https://api.github.com/orgs/AG-Schumann/members', { json: true, headers: {'user-agent': 'node.js'} }, (err, res2, body) => {
+        request('https://api.github.com/orgs/'+ config.github_org +'/members', { json: true, headers: {'user-agent': 'node.js'} }, (err, res2, body) => {
             if (err) { return console.log(err); }
             var members = body.map(({login})=> login);
             if (members.includes(req.user.username)) {
@@ -33,5 +34,12 @@ router.get('/github/callback',
             }
         });
     });
+
+router.get('/logout', function(req, res, next) {
+    req.logout(function(err) {
+        if (err) { return next(err); }
+        res.redirect('/');
+    });
+});
 
 module.exports = router;

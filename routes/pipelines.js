@@ -12,7 +12,7 @@ router.get('/', function(req, res) {
   res.render('pipeline', config);
 });
 
-router.get('/get_pipelines', function(req, res) {
+router.get('/by_flavor', function(req, res) {
   var q = url.parse(req.url, true).query;
   if (typeof q.flavor == 'undefined') {
     return res.json([]);
@@ -20,13 +20,15 @@ router.get('/get_pipelines', function(req, res) {
   var flavor = q.flavor;
   var now = new Date();
   mongo_db.get('pipelines').find({name: {$regex: `^${flavor}_`}},
-      {projection: {name: 1, status: 1, silent_until: 1, heartbeat: 1, cycles: 1, rate: 1, error: 1, description: 1, pipeline: 1}})
+      {projection: {name: 1, status: 1, silent_until: 1, heartbeat: 1, startup_cycles: 1, cycles: 1, rate: 1, error: 1,
+          description: 1, pipeline: 1}})
   .then(docs => res.json(docs.map(doc => ({name: doc.name, status: doc.status, silent_until: doc.silent_until,
-    dt: (now-doc.heartbeat)/1000, cycle: doc.cycles, error: doc.error, rate: doc.rate, description: doc.description, pipeline: doc.pipeline}))))
+    heartbeat: doc.heartbeat, startup_cycles: doc.startup_cycles, cycles: doc.cycles, error: doc.error,
+    rate: doc.rate, description: doc.description, pipeline: doc.pipeline}))))
   .catch(err => {console.log(err.message); return res.json([]);});
 });
 
-router.get('/get_pipeline', function(req, res) {
+router.get('/get', function(req, res) {
   var q = url.parse(req.url, true).query;
   if (typeof q.name == 'undefined')
     return res.json({});
@@ -44,14 +46,13 @@ router.get('/status', function(req, res) {
   .catch(err => {console.log(err.message); return res.json({});});
 });
 
-router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
+router.post('/add', common.ensureAuthenticated, function(req, res) {
   var doc = req.body;
   if (typeof doc.name == 'undefined' || 
       !['alarm', 'control', 'convert'].includes(doc.name.split('_')[0]) ||
       typeof doc.pipeline == 'undefined' || 
-      doc.pipeline.length == 0)
+      doc.pipeline.length === 0)
     return res.json({err: 'Bad input'});
-  doc['name'] = doc.name;
   doc['status'] = 'inactive';
   doc['silent_until'] = parseInt('0');
   doc['description'] = String(doc.description);
@@ -60,7 +61,7 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['rate'] = -1;
   var depends_on = {};
   doc.pipeline.forEach(n => {
-    if (typeof n.upstream == 'undefined' || n.upstream.length == 0) depends_on[n.input_var] = 1;
+    if (typeof n.upstream == 'undefined' || n.upstream.length === 0) depends_on[n.input_var] = 1;
   });
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
@@ -72,16 +73,15 @@ router.post('/add_pipeline', common.ensureAuthenticated, function(req, res) {
       .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
-router.post('/update_pipeline', common.ensureAuthenticated, function(req, res) {
+router.post('/update', common.ensureAuthenticated, function(req, res) {
   var doc = req.body;
   let old_name = doc.old_name;
   delete doc.old_name;
   if (typeof doc.name == 'undefined' ||
       !['alarm', 'control', 'convert'].includes(doc.name.split('_')[0]) ||
       typeof doc.pipeline == 'undefined' ||
-      doc.pipeline.length == 0)
+      doc.pipeline.length === 0)
     return res.json({err: 'Bad input'});
-  doc['name'] = doc.name;
   doc['status'] = doc.status || 'inactive';
   doc['description'] = String(doc.description);
   doc['cycles'] = parseInt('0');
@@ -89,7 +89,7 @@ router.post('/update_pipeline', common.ensureAuthenticated, function(req, res) {
   doc['rate'] = -1;
   var depends_on = {};
   doc.pipeline.forEach(n => {
-    if (typeof n.upstream == 'undefined' || n.upstream.length == 0) depends_on[n.input_var] = 1;
+    if (typeof n.upstream == 'undefined' || n.upstream.length === 0) depends_on[n.input_var] = 1;
   });
   doc['depends_on'] = Object.keys(depends_on);
   if (typeof doc.node_config == 'undefined')
@@ -103,7 +103,7 @@ router.post('/update_pipeline', common.ensureAuthenticated, function(req, res) {
 
 });
 
-router.post('/delete_pipeline', common.ensureAuthenticated, function(req, res) {
+router.post('/delete', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   if (typeof data.pipeline == 'undefined')
     return res.json({err: 'Bad input'})
@@ -114,16 +114,16 @@ router.post('/delete_pipeline', common.ensureAuthenticated, function(req, res) {
   .catch(err => {console.log(err.message); return res.json({err: err.message});});
 });
 
-router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) {
+router.post('/silence', common.ensureAuthenticated, function(req, res) {
   // we do the time processing here because we only trust the system clock
   // on the host server.
   var data = req.body;
   var duration = data.duration;
   var until = null;
   var now = new Date();
-  if (duration == 'forever') {
+  if (duration === 'forever') {
     until = parseInt('-1');
-  } else if (duration == 'monday') {
+  } else if (duration === 'monday') {
     var day = now.getDay();
     if (day === 0) day = 7;  // make Sunday 7 instead of 0
     until = new Date();
@@ -131,12 +131,13 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
     until.setHours(9);
     until.setMinutes(0);
     until = until.getTime()/1000;
-  } else if (duration == 'morning') {
+  } else if (duration === 'morning') {
+    until = new Date();
     until.setDate(now.getDate()+1);
     until.setHours(9);
     until.setMinutes(30);
     until = until.getTime()/1000;
-  } else if (duration == 'evening') {
+  } else if (duration === 'evening') {
     until = new Date();
     if (now.getHours() >= 18) until.setDate(now.getDate()+1); // set to next day if it's after 18:00
     until.setHours(18);
@@ -156,7 +157,7 @@ router.post('/pipeline_silence', common.ensureAuthenticated, function(req, res) 
   return res.json({});
 });
 
-router.post('/pipeline_ctl', common.ensureAuthenticated, function(req, res) {
+router.post('/control', common.ensureAuthenticated, function(req, res) {
   var data = req.body;
   var flavor = data.name.split('_')[0];
   console.log(data);
@@ -168,7 +169,7 @@ router.post('/pipeline_ctl', common.ensureAuthenticated, function(req, res) {
 
 });
 
-router.post('/get_pipelines_configs', function(req, res) {
+router.post('/get_configs', function(req, res) {
   var data = req.body;
   var pipelines = data.pipelines;
 

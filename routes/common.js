@@ -1,26 +1,34 @@
-var zmq = require('zeromq');
-const config = require('../config/config')
-// Doberview common functions, defined once here rather than in every file
+const zmq = require("zeromq");
+const config = require("../config/config");
 
-async function SendCommand(req, to, command, delay=0) {
-  var logged = new Date().getTime() + delay;
-  return mongo_db.get('experiment_config').findOne({name: 'hypervisor'})
-  .then((doc) => {
-    let from = 'doberview';
-    if (req.user !== undefined)
+async function SendCommand(req, to, command, delay = 0) {
+  try {
+    const logged = Date.now() + delay;
+
+    const doc = await mongo_db.get("experiment_config").findOne({ name: "hypervisor" });
+
+    let from = "doberview";
+    if (req.user !== undefined) {
       from = req.user.displayName;
-    const sock = new zmq.socket('req');
-    sock.connect('tcp://' + doc.host + ':' + doc.comms.command.send);
-    sock.send(JSON.stringify({
-      to: to,
-      from: from,
-      command: command,
-      time: logged/1000,}));
-  })
-  .then(() => {
-    sock.recv();
-  })
-  .catch(err => {console.log(err.message); return {err: err.message};});
+    }
+
+    const sock = new zmq.Request();
+    await sock.connect(`tcp://${doc.host}:${doc.comms.command.send}`);
+
+    await sock.send(JSON.stringify({
+      to,
+      from,
+      command,
+      time: logged / 1000,
+    }));
+
+    const [result] = await sock.receive();
+    return result.toString();
+
+  } catch (err) {
+    console.error(err.message);
+    return { err: err.message };
+  }
 }
 
 
@@ -45,5 +53,6 @@ function GetRenderConfig(req) {
   render_config.camera_link = config.camera_link;
   return render_config;
 }
+
 
 module.exports = {SendCommand, ensureAuthenticated, GetRenderConfig};

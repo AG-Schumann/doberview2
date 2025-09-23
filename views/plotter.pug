@@ -2,8 +2,9 @@ extends layout
 
 block extrahead
     link(rel="stylesheet" href="/stylesheets/plotter_styles.css")
-    link(href="/modules/jquery-datetimepicker/jquery.datetimepicker.css" rel="stylesheet" )
-    script(type="text/javascript" src="/modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js")
+    link(rel="stylesheet" href="/modules/daterangepicker/daterangepicker.css")
+    script(src="/modules/moment/moment.js", type="text/javascript")
+    script(src="/modules/daterangepicker/daterangepicker.js")
     script(type="text/javascript" src="javascripts/plotter_scripts.js")
     script(src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8")
 block content
@@ -68,12 +69,9 @@ block content
 
         .d-flex.flex-row.mr-auto
         .d-flex.flex-row.mr-auto
-            #from_select
-                label From
-                input#from_select_input.form-control(type="text" style="width:250px;" onchange='ChangeDates()')
-            #to_select
-                label To
-                input#to_select_input.form-control(type="text" style="width:250px;" onchange='ChangeDates()')
+            #plotter_date_selection
+                label Time range
+                input#plotter_date_select.form-control(type="text" style="width:350px;", value="")
             #median_filter
                 label Median Filter
                 .slider-container
@@ -111,16 +109,5 @@ block content
 
             ChangeBinningLabel();
             updateSensorButtonText();
-        });
-        $('#from_select_input').datetimepicker({
-        format: "Y-m-d H:i:s O",
-            value: now_minus_hours(1),
-            showTimezone: true,
-            });
-        $('#to_select_input').datetimepicker({
-        format: "Y-m-d H:i:s O",
-            value: new Date(),
-            showTimezone: true,
-            timezone: "UTC"
         });
 

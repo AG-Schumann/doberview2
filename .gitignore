@@ -1,5 +1,6 @@
 
 config/config.js
+views/*.html
 # Logs
 logs
 *.log
@@ -104,3 +105,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+**/.DS_Store
+.idea
